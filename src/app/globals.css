@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+:root {
+  /* Surfaces */
+  --bg-0: #07090d;
+  --bg-1: #0b0e14;
+  --bg-2: #121722;
+  --bg-3: #1a2030;
+
+  /* Ink */
+  --ink-0: #f5f1e8;
+  --ink-1: #c9c4b8;
+  --ink-2: #8b8779;
+
+  /* Gold */
+  --gold-300: #e8d28a;
+  --gold-500: #c9a648;
+  --gold-700: #8f6e1e;
+
+  /* Trigger accents */
+  --honor: #c9cdd3;
+  --honor-glow: rgba(201, 205, 211, 0.18);
+  --courage: #d4af37;
+  --courage-glow: rgba(212, 175, 55, 0.22);
+  --commitment: #3a3f4b;
+  --commitment-glow: rgba(212, 175, 55, 0.1);
+
+  /* Status */
+  --success: #7fb77e;
+  --danger: #c96b5b;
+
+  /* Lines */
+  --line: rgba(245, 241, 232, 0.1);
+  --line-strong: rgba(245, 241, 232, 0.18);
+
+  /* Radii */
+  --radius-lg-px: 20px;
+  --radius-md-px: 14px;
+  --radius-sm-px: 10px;
+
+  --gold-gradient: linear-gradient(
+    135deg,
+    #8f6e1e 0%,
+    #d4af37 45%,
+    #e8d28a 70%,
+    #b8912f 100%
+  );
+}
+
+@theme inline {
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-ink-0: var(--ink-0);
+  --color-ink-1: var(--ink-1);
+  --color-ink-2: var(--ink-2);
+  --color-gold-300: var(--gold-300);
+  --color-gold-500: var(--gold-500);
+  --color-gold-700: var(--gold-700);
+  --color-honor: var(--honor);
+  --color-courage: var(--courage);
+  --color-commitment: var(--commitment);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+}
+
+html {
+  color-scheme: dark;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100dvh;
+  color: var(--ink-0);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  background-color: var(--bg-0);
+  background-image: radial-gradient(
+    120% 80% at 50% -10%,
+    #1a2030 0%,
+    #0b0e14 55%,
+    #07090d 100%
+  );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Project classes live in the components layer so Tailwind utilities
+   (text sizes, colors, borders) always win when a screen overrides them. */
+@layer components {
+  /* ---------- Type ---------- */
+
+  .font-display {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0.02em;
+    font-weight: 400;
+  }
+
+  .eyebrow {
+    font-size: 13px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  /* ---------- Gold ---------- */
+
+  .text-gold-gradient {
+    background-image: var(--gold-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bg-gold-gradient {
+    background-image: var(--gold-gradient);
+  }
+
+  /* ---------- Glass ---------- */
+
+  .glass {
+    background: linear-gradient(
+      180deg,
+      rgba(26, 32, 48, 0.72),
+      rgba(18, 23, 34, 0.55)
+    );
+    backdrop-filter: blur(18px) saturate(120%);
+    -webkit-backdrop-filter: blur(18px) saturate(120%);
+    border: 1px solid var(--line);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  /* ---------- Ghost watermark words ---------- */
+
+  .ghost-word {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(245, 241, 232, 0.08);
+    white-space: nowrap;
+    line-height: 1;
+  }
+}
+
+/* ---------- Focus ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--gold-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- Motion ---------- */
+
+.fade-in {
+  animation: fade-in 250ms ease-out both;
+}
+
+.rise-in {
+  animation: rise-in 220ms ease-out both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Forms ---------- */
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  color: var(--ink-0);
+  background: transparent;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-2);
+}
+
+select option {
+  background: var(--bg-2);
+  color: var(--ink-0);
+}
