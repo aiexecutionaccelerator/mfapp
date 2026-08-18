@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import BottleVisual from "@/components/BottleVisual";
 import NavAction from "@/components/NavAction";
+import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import { useToast } from "@/components/ui/Toast";
@@ -71,7 +72,7 @@ export default function TriggerPage() {
   }
 
   return (
-    <main className="relative flex min-h-dvh flex-col pt-[calc(env(safe-area-inset-top)+8px)]">
+    <main className="relative flex flex-1 flex-col pt-2">
       <NavAction
         kind="back"
         href={`/mission/declare?trigger=${draft.trigger}`}
@@ -95,9 +96,9 @@ export default function TriggerPage() {
       <Eyebrow accent={draft.trigger} className="mt-6">
         {meta.name}
       </Eyebrow>
-      <p className="font-display mt-3 text-[30px] leading-tight text-ink-0">
+      <h1 className="font-display mt-3 text-[30px] leading-tight text-ink-0">
         {draft.action_text}
-      </p>
+      </h1>
 
       {briefing && <p className="mt-6 text-[17px] text-ink-0">{briefing}</p>}
 
@@ -105,11 +106,11 @@ export default function TriggerPage() {
         {meta.applyLine}
       </p>
 
-      <div className="mt-auto pt-10 pb-10">
+      <BottomActions className="pt-10">
         <Button loading={pending} onClick={start}>
           START MISSION
         </Button>
-      </div>
+      </BottomActions>
     </main>
   );
 }

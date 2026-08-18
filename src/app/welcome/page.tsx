@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useState, type FormEvent } from "react";
 import Wordmark from "@/components/Wordmark";
 import Button from "@/components/ui/Button";
 import Field from "@/components/ui/Field";
@@ -33,9 +33,10 @@ export default function WelcomePage() {
     router.push(profile.onboarding_completed ? "/home" : "/onboarding");
   }
 
-  async function continueWithEmail() {
+  async function continueWithEmail(event?: FormEvent) {
+    event?.preventDefault();
     const address = email.trim();
-    if (!address) return;
+    if (!address || pending) return;
     setPending(true);
     setError(null);
     try {
@@ -53,20 +54,24 @@ export default function WelcomePage() {
   }
 
   return (
-    <main className="relative flex min-h-dvh flex-col pt-[calc(env(safe-area-inset-top)+24px)] pb-10">
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <span className="ghost-word top-[26%] -left-4 text-[64px]">HONOR</span>
-        <span className="ghost-word top-[38%] -left-2 text-[64px]">COURAGE</span>
-        <span className="ghost-word top-[50%] -left-6 text-[64px]">
-          COMMITMENT
-        </span>
-      </div>
-
-      <div className="relative flex justify-center">
+    <main className="flex flex-1 flex-col pt-6 pb-10">
+      <div className="flex justify-center">
         <Wordmark size="lg" />
       </div>
 
-      <div className="relative mt-auto pt-16">
+      {/* Watermark lives in the empty space only — never behind readable text. */}
+      <div
+        aria-hidden
+        className="pointer-events-none relative min-h-16 flex-1 overflow-hidden"
+      >
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 space-y-1">
+          <p className="ghost-word relative text-[64px]">HONOR</p>
+          <p className="ghost-word relative text-[64px]">COURAGE</p>
+          <p className="ghost-word relative text-[64px]">COMMITMENT</p>
+        </div>
+      </div>
+
+      <div className="pt-10">
         <Suspense fallback={null}>
           <DeletedNotice />
         </Suspense>
@@ -76,13 +81,13 @@ export default function WelcomePage() {
           Honor. Courage. Commitment. Put them into action.
         </p>
 
-        <div className="mt-8 space-y-4">
+        <div className="mt-8">
           {demo ? (
             <Button loading={pending} onClick={enterDemo}>
               ENTER DEMO
             </Button>
           ) : (
-            <>
+            <form className="space-y-4" onSubmit={continueWithEmail}>
               <Field
                 label="Email"
                 value={email}
@@ -95,22 +100,28 @@ export default function WelcomePage() {
               {error && (
                 <p className="text-[15px] text-[var(--danger)]">{error}</p>
               )}
-              <Button
-                loading={pending}
-                disabled={!email.trim()}
-                onClick={continueWithEmail}
-              >
+              <Button type="submit" loading={pending} disabled={!email.trim()}>
                 CONTINUE WITH EMAIL
               </Button>
-            </>
+            </form>
           )}
         </div>
 
-        <p className="mt-8 text-center text-[13px] text-ink-2">
-          <a href={LEGAL_PRIVACY_URL}>Privacy</a>
-          <span className="px-2">·</span>
-          <a href={LEGAL_TERMS_URL}>Terms</a>
-        </p>
+        <div className="mt-4 flex items-center justify-center text-[13px] text-ink-2">
+          <a
+            href={LEGAL_PRIVACY_URL}
+            className="inline-flex min-h-12 items-center px-3"
+          >
+            Privacy
+          </a>
+          <span aria-hidden>·</span>
+          <a
+            href={LEGAL_TERMS_URL}
+            className="inline-flex min-h-12 items-center px-3"
+          >
+            Terms
+          </a>
+        </div>
       </div>
     </main>
   );

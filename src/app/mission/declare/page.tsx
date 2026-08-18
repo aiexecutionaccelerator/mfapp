@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import NavAction from "@/components/NavAction";
+import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
@@ -70,7 +71,7 @@ function DeclareInner() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col pt-[calc(env(safe-area-inset-top)+8px)]">
+    <main className="flex flex-1 flex-col pt-2">
       <div className="flex justify-end">
         <NavAction kind="close" href="/home" />
       </div>
@@ -127,11 +128,11 @@ function DeclareInner() {
         </div>
       )}
 
-      <div className="mt-8 pb-10">
+      <BottomActions className="mt-8">
         <Button disabled={!ready} onClick={onContinue}>
           CONTINUE
         </Button>
-      </div>
+      </BottomActions>
     </main>
   );
 }

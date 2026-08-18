@@ -45,12 +45,18 @@ export default function LogPage() {
     missions?.filter((m) => filter === "all" || m.trigger === filter) ?? [];
 
   return (
-    <main className="pt-[calc(env(safe-area-inset-top)+16px)]">
+    <main className="pt-4">
       <Headline>MISSION LOG</Headline>
 
       <div className="mt-5 flex flex-wrap gap-2">
         {FILTERS.map((value) => (
-          <button key={value} type="button" onClick={() => setFilter(value)}>
+          <button
+            key={value}
+            type="button"
+            aria-pressed={filter === value}
+            onClick={() => setFilter(value)}
+            className="flex min-h-12 items-center"
+          >
             <Pill active={filter === value}>{value.toUpperCase()}</Pill>
           </button>
         ))}

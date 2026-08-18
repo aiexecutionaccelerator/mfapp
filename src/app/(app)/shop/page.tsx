@@ -10,14 +10,18 @@ import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
 import { PRODUCT } from "@/content/product";
 import { TRIGGER_ORDER } from "@/content/triggers";
+import { artUrl } from "@/lib/art";
 import { hasShopify } from "@/lib/env";
 
 function Hero() {
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const hero = artUrl(PRODUCT.heroImage);
 
   return (
     <div className="glass relative mt-6 flex items-end justify-center gap-4 overflow-hidden rounded-[20px] px-5 py-8">
-      {!imageLoaded && (
+      {hero ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={hero} alt="" className="w-full" />
+      ) : (
         <>
           {TRIGGER_ORDER.map((trigger) => (
             <BottleVisual key={trigger} trigger={trigger} size={64} />
@@ -29,13 +33,6 @@ function Hero() {
           />
         </>
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={PRODUCT.heroImage}
-        alt=""
-        onLoad={() => setImageLoaded(true)}
-        className={imageLoaded ? "w-full" : "hidden"}
-      />
     </div>
   );
 }
@@ -75,7 +72,8 @@ export default function ShopPage() {
   }
 
   return (
-    <main className="pt-[calc(env(safe-area-inset-top)+8px)]">
+    // Bottom padding clears the fixed CTA bar so no copy is ever unreachable.
+    <main className="pt-2 pb-[148px]">
       <NavAction kind="back" href="/home" />
 
       <Eyebrow className="mt-4">{PRODUCT.eyebrow}</Eyebrow>
@@ -105,18 +103,28 @@ export default function ShopPage() {
 
       <p className="mt-6 text-[17px] text-ink-0">{PRODUCT.positioning}</p>
 
-      <div className="sticky bottom-[calc(env(safe-area-inset-bottom)+76px)] -mx-5 mt-8 bg-[rgba(7,9,13,0.92)] px-5 py-3 backdrop-blur-md">
-        <Button loading={pending} disabled={!configured} onClick={checkout}>
-          {PRODUCT.cta}
-        </Button>
-        {!configured && (
+      {/* Fixed (not sticky) so it never reserves space mid-page or covers the
+          price; constrained to the column like the tab bar. */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+60px)] z-20 flex justify-center">
+        <div
+          className="pointer-events-auto w-full max-w-[430px] px-5 pt-4 pb-3"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(7,9,13,0) 0%, rgba(7,9,13,.94) 16px, var(--bg-0) 100%)",
+          }}
+        >
+          <Button loading={pending} disabled={!configured} onClick={checkout}>
+            {PRODUCT.cta}
+          </Button>
+          {!configured && (
+            <p className="mt-2 text-center text-[13px] text-ink-2">
+              {PRODUCT.notConfigured}
+            </p>
+          )}
           <p className="mt-2 text-center text-[13px] text-ink-2">
-            {PRODUCT.notConfigured}
+            {PRODUCT.ctaNote}
           </p>
-        )}
-        <p className="mt-2 text-center text-[13px] text-ink-2">
-          {PRODUCT.ctaNote}
-        </p>
+        </div>
       </div>
     </main>
   );

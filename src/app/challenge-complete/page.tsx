@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import NavAction from "@/components/NavAction";
+import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Headline from "@/components/ui/Headline";
 import Spinner from "@/components/ui/Spinner";
@@ -58,7 +59,7 @@ export default function ChallengeCompletePage() {
 
   if (!profile || !missions) {
     return (
-      <main className="flex min-h-dvh items-center justify-center text-ink-2">
+      <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
       </main>
     );
@@ -92,7 +93,7 @@ export default function ChallengeCompletePage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col pt-[calc(env(safe-area-inset-top)+8px)]">
+    <main className="flex flex-1 flex-col pt-2">
       <div className="flex justify-end">
         <NavAction kind="close" href="/home" />
       </div>
@@ -112,7 +113,7 @@ export default function ChallengeCompletePage() {
         <Stat label="Commitment Reps" value={stats.reps.commitment} />
       </div>
 
-      <div className="mt-auto space-y-3 pt-10 pb-10">
+      <BottomActions className="pt-10">
         <Button loading={pending} onClick={continueMission}>
           CONTINUE THE MISSION
         </Button>
@@ -125,7 +126,7 @@ export default function ChallengeCompletePage() {
             GET MY CERTIFICATE
           </Button>
         )}
-      </div>
+      </BottomActions>
     </main>
   );
 }

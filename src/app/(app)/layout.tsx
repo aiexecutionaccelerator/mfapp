@@ -19,7 +19,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className="pb-[calc(env(safe-area-inset-bottom)+92px)]">
+      <div className="flex flex-1 flex-col pb-[calc(env(safe-area-inset-bottom)+92px)]">
         {children}
       </div>
       <TabBar />

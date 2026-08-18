@@ -21,7 +21,7 @@ export default function DemoRouter() {
   }, [router]);
 
   return (
-    <div className="flex min-h-dvh items-center justify-center text-ink-2">
+    <div className="flex flex-1 items-center justify-center text-ink-2">
       <Spinner />
     </div>
   );

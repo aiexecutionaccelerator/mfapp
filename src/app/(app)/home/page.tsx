@@ -27,8 +27,9 @@ const COMPLETION_SHOWN_KEY = "mission.completionShown";
 function Skeleton() {
   return (
     <div className="mt-6 space-y-3" aria-hidden>
+      {/* Same height as a loaded TriggerCard (104px body + 2 x 20px padding). */}
       {[0, 1, 2].map((index) => (
-        <div key={index} className="glass h-[104px] rounded-[20px] opacity-50" />
+        <div key={index} className="glass h-[144px] rounded-[20px] opacity-50" />
       ))}
     </div>
   );
@@ -101,7 +102,7 @@ export default function HomePage() {
   const stats = computeStats(missions ?? []);
 
   return (
-    <main className="pt-[calc(env(safe-area-inset-top)+16px)]">
+    <main className="pt-4">
       <div className="flex items-center justify-between gap-3">
         <Wordmark />
         {profile && <DayBadge mode={mode} day={day} />}

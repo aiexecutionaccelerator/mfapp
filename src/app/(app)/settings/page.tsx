@@ -86,7 +86,7 @@ export default function SettingsPage() {
 
   if (!profile) {
     return (
-      <main className="flex min-h-dvh items-center justify-center text-ink-2">
+      <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
       </main>
     );
@@ -178,7 +178,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="pt-[calc(env(safe-area-inset-top)+16px)]">
+    <main className="pt-4">
       <Headline>SETTINGS</Headline>
 
       <Group title="Profile">
@@ -203,27 +203,32 @@ export default function SettingsPage() {
               In-app reminders for active Missions.
             </p>
           </div>
+          {/* 48px hit area around a 32px track. */}
           <button
             type="button"
             role="switch"
             aria-checked={profile.notifications_enabled}
             aria-label="Reminders"
             onClick={toggleNotifications}
-            className={cn(
-              "relative h-8 w-14 shrink-0 rounded-full border transition-colors",
-              profile.notifications_enabled
-                ? "border-[var(--gold-500)] bg-[rgba(201,166,72,.25)]"
-                : "border-[var(--line)] bg-[rgba(18,23,34,.6)]",
-            )}
+            className="flex h-12 w-14 shrink-0 items-center justify-center"
           >
             <span
               className={cn(
-                "absolute top-1 h-6 w-6 rounded-full transition-all",
+                "relative block h-8 w-14 rounded-full border transition-colors",
                 profile.notifications_enabled
-                  ? "left-7 bg-gold-gradient"
-                  : "left-1 bg-[var(--ink-2)]",
+                  ? "border-[var(--gold-500)] bg-[rgba(201,166,72,.25)]"
+                  : "border-[var(--line)] bg-[rgba(18,23,34,.6)]",
               )}
-            />
+            >
+              <span
+                className={cn(
+                  "absolute top-1 h-6 w-6 rounded-full transition-all",
+                  profile.notifications_enabled
+                    ? "left-7 bg-gold-gradient"
+                    : "left-1 bg-[var(--ink-2)]",
+                )}
+              />
+            </span>
           </button>
         </div>
       </Group>
@@ -240,15 +245,21 @@ export default function SettingsPage() {
       </Group>
 
       <Group title="Legal & support">
-        <a href={LEGAL_PRIVACY_URL} className="block min-h-12 text-[17px] text-ink-0">
+        <a
+          href={LEGAL_PRIVACY_URL}
+          className="flex min-h-12 items-center text-[17px] text-ink-0"
+        >
           Privacy Policy
         </a>
-        <a href={LEGAL_TERMS_URL} className="block min-h-12 text-[17px] text-ink-0">
+        <a
+          href={LEGAL_TERMS_URL}
+          className="flex min-h-12 items-center text-[17px] text-ink-0"
+        >
           Terms
         </a>
         <a
           href={`mailto:${SUPPORT_EMAIL}`}
-          className="block min-h-12 text-[17px] text-ink-0"
+          className="flex min-h-12 items-center text-[17px] text-ink-0"
         >
           Support
         </a>

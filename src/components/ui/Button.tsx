@@ -35,16 +35,19 @@ export default function Button({
       type={type}
       disabled={disabled || loading}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-[14px] px-5 text-center text-[15px] font-semibold tracking-[0.08em] transition-opacity duration-200",
+        "relative inline-flex items-center justify-center gap-2 rounded-[14px] px-5 text-center text-[15px] font-semibold tracking-[0.08em] transition-opacity duration-200",
         variant === "ghost" ? "min-h-12" : "min-h-14",
         full ? "w-full" : "w-auto",
         VARIANTS[variant],
         (disabled || loading) && "pointer-events-none opacity-45",
+        // Disabled must read as disabled, not just dim.
+        disabled && !loading && "grayscale-[.55]",
         className,
       )}
       {...rest}
     >
-      {loading && <Spinner size={18} />}
+      {/* Absolute so the label never shifts when the spinner appears. */}
+      {loading && <Spinner size={18} className="absolute left-5" />}
       {children}
     </button>
   );

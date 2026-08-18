@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { use, useEffect, useRef, useState } from "react";
 import NavAction from "@/components/NavAction";
+import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
@@ -108,24 +109,24 @@ export default function CheckinPage({
   }
 
   return (
-    <main className="flex min-h-dvh flex-col pt-[calc(env(safe-area-inset-top)+8px)]">
+    <main className="flex flex-1 flex-col pt-2">
       <div className="flex justify-end">
         <NavAction kind="close" href="/home" />
       </div>
 
-      <div className="mt-10 flex-1">
+      <div className="mt-10">
         <Eyebrow accent={mission.trigger}>
           {TRIGGERS[mission.trigger].name}
         </Eyebrow>
 
         {view === "not-yet" || view === "edit" ? (
           <>
-            <p className="mt-4 text-[22px] leading-snug text-ink-0">
+            <h1 className="mt-4 text-[22px] leading-snug text-ink-0">
               That&apos;s okay. The Mission isn&apos;t over.
-            </p>
+            </h1>
 
-            {view === "edit" ? (
-              <div className="mt-8 space-y-3">
+            {view === "edit" && (
+              <div className="mt-8">
                 <Field
                   label="Your action"
                   value={actionText}
@@ -133,27 +134,6 @@ export default function CheckinPage({
                   maxLength={140}
                   autoFocus
                 />
-                <Button
-                  loading={pending}
-                  disabled={!actionText.trim()}
-                  onClick={save}
-                >
-                  SAVE
-                </Button>
-              </div>
-            ) : (
-              <div className="mt-8 space-y-3">
-                <Button
-                  onClick={() => router.push(`/mission/active/${mission.id}`)}
-                >
-                  TRY AGAIN
-                </Button>
-                <Button variant="secondary" onClick={() => setView("edit")}>
-                  EDIT MISSION
-                </Button>
-                <Button variant="danger" onClick={() => setConfirmEnd(true)}>
-                  END MISSION
-                </Button>
               </div>
             )}
           </>
@@ -164,8 +144,8 @@ export default function CheckinPage({
               {mission.action_text}
             </p>
 
-            {view === "yes" ? (
-              <div className="mt-8 space-y-3">
+            {view === "yes" && (
+              <div className="mt-8">
                 <Field
                   label="What happened? (optional)"
                   value={reflection}
@@ -174,23 +154,48 @@ export default function CheckinPage({
                   multiline
                   autoFocus
                 />
-                <Button loading={pending} onClick={complete}>
-                  COMPLETE MISSION
-                </Button>
-              </div>
-            ) : (
-              <div className="mt-10 space-y-3">
-                <Button onClick={() => setView("yes")}>
-                  YES — MISSION COMPLETE
-                </Button>
-                <Button variant="secondary" onClick={() => setView("not-yet")}>
-                  NOT YET
-                </Button>
               </div>
             )}
           </>
         )}
       </div>
+
+      <BottomActions className="pt-8">
+        {view === "edit" ? (
+          <Button
+            loading={pending}
+            disabled={!actionText.trim()}
+            onClick={save}
+          >
+            SAVE
+          </Button>
+        ) : view === "not-yet" ? (
+          <>
+            <Button onClick={() => router.push(`/mission/active/${mission.id}`)}>
+              TRY AGAIN
+            </Button>
+            <Button variant="secondary" onClick={() => setView("edit")}>
+              EDIT MISSION
+            </Button>
+            <Button variant="danger" onClick={() => setConfirmEnd(true)}>
+              END MISSION
+            </Button>
+          </>
+        ) : view === "yes" ? (
+          <Button loading={pending} onClick={complete}>
+            COMPLETE MISSION
+          </Button>
+        ) : (
+          <>
+            <Button onClick={() => setView("yes")}>
+              YES — MISSION COMPLETE
+            </Button>
+            <Button variant="secondary" onClick={() => setView("not-yet")}>
+              NOT YET
+            </Button>
+          </>
+        )}
+      </BottomActions>
 
       <Sheet
         open={confirmEnd}

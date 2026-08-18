@@ -58,7 +58,7 @@ export default function ProgressPage() {
 
   if (!profile || !missions) {
     return (
-      <main className="flex min-h-dvh items-center justify-center text-ink-2">
+      <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
       </main>
     );
@@ -71,7 +71,7 @@ export default function ProgressPage() {
 
   if (mode === "log") {
     return (
-      <main className="pt-[calc(env(safe-area-inset-top)+16px)]">
+      <main className="pt-4">
         <Headline>BUILD THE EVIDENCE</Headline>
         <div className="mt-6 grid grid-cols-2 gap-3">
           <Stat label="Honor Reps" value={stats.reps.honor} />
@@ -88,7 +88,7 @@ export default function ProgressPage() {
     rawChallengeDay(profile) >= CHALLENGE_LENGTH && !profile.challenge_completed_at;
 
   return (
-    <main className="pt-[calc(env(safe-area-inset-top)+16px)]">
+    <main className="pt-4">
       <Headline>YOUR 30-DAY MISSION</Headline>
 
       <div className="mt-8 flex justify-center">

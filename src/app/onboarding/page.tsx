@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import NavAction from "@/components/NavAction";
 import TriggerCard from "@/components/TriggerCard";
+import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
@@ -57,7 +58,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col pt-[calc(env(safe-area-inset-top)+8px)] pb-10">
+    <main className="flex flex-1 flex-col pt-2">
       <div className="flex items-center justify-between">
         {step > 0 ? (
           <NavAction kind="back" onClick={() => setStep(step - 1)} />
@@ -111,11 +112,11 @@ export default function OnboardingPage() {
               />
             </div>
           )}
-          <div className="mt-8">
+          <BottomActions className="mt-8">
             <Button disabled={!goalReady} onClick={() => setStep(1)}>
               CONTINUE
             </Button>
-          </div>
+          </BottomActions>
         </div>
       )}
 
@@ -127,9 +128,9 @@ export default function OnboardingPage() {
               <TriggerCard key={trigger} trigger={trigger} />
             ))}
           </div>
-          <div className="mt-8">
+          <BottomActions className="mt-8">
             <Button onClick={() => setStep(2)}>CONTINUE</Button>
-          </div>
+          </BottomActions>
         </div>
       )}
 
@@ -147,9 +148,9 @@ export default function OnboardingPage() {
               </div>
             ))}
           </div>
-          <div className="mt-8">
+          <BottomActions className="mt-8">
             <Button onClick={() => setStep(3)}>CONTINUE</Button>
-          </div>
+          </BottomActions>
         </div>
       )}
 
@@ -160,11 +161,11 @@ export default function OnboardingPage() {
             For the next 30 days, don&apos;t just wear the fragrances. Give them
             a job.
           </p>
-          <div className="mt-8">
+          <BottomActions className="mt-8">
             <Button loading={pending} onClick={finish}>
               START MY MISSION
             </Button>
-          </div>
+          </BottomActions>
         </div>
       )}
     </main>

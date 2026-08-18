@@ -72,7 +72,7 @@ function VerifyInner() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col pt-[calc(env(safe-area-inset-top)+8px)] pb-10">
+    <main className="flex flex-1 flex-col pt-2 pb-10">
       <NavAction kind="back" href="/welcome" />
 
       <div className="mt-8">
@@ -81,35 +81,40 @@ function VerifyInner() {
           We sent a 6-digit code to {email}.
         </p>
 
-        <input
-          value={code}
-          onChange={(event) => onCodeChange(event.target.value)}
-          inputMode="numeric"
-          autoComplete="one-time-code"
-          aria-label="6-digit code"
-          autoFocus
-          className="font-display mt-8 w-full rounded-[14px] border border-[var(--line)] bg-[rgba(18,23,34,.6)] px-4 py-4 text-center text-[40px] tracking-[0.3em] text-ink-0 outline-none focus:border-[var(--gold-500)]"
-        />
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void verify(code);
+          }}
+        >
+          <input
+            value={code}
+            onChange={(event) => onCodeChange(event.target.value)}
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            aria-label="6-digit code"
+            autoFocus
+            // The tracking adds a trailing gap; indent by the same amount so
+            // the digits sit optically centred.
+            className="font-display mt-8 w-full rounded-[14px] border border-[var(--line)] bg-[rgba(18,23,34,.6)] px-4 py-4 text-center text-[40px] tracking-[0.3em] indent-[0.3em] text-ink-0 outline-none focus:border-[var(--gold-500)]"
+          />
 
-        {error && (
-          <p className="mt-3 text-[15px] text-[var(--danger)]">{error}</p>
-        )}
+          {error && (
+            <p className="mt-3 text-[15px] text-[var(--danger)]">{error}</p>
+          )}
 
-        <div className="mt-6 space-y-2">
-          <Button
-            loading={pending}
-            disabled={code.length !== 6}
-            onClick={() => verify(code)}
-          >
-            VERIFY
-          </Button>
-          <Button variant="ghost" disabled={cooldown > 0} onClick={resend}>
-            {cooldown > 0 ? `Resend code (${cooldown}s)` : "Resend code"}
-          </Button>
-          <Button variant="ghost" onClick={() => router.push("/welcome")}>
-            Use a different email
-          </Button>
-        </div>
+          <div className="mt-6 space-y-2">
+            <Button type="submit" loading={pending} disabled={code.length !== 6}>
+              VERIFY
+            </Button>
+            <Button variant="ghost" disabled={cooldown > 0} onClick={resend}>
+              {cooldown > 0 ? `Resend code (${cooldown}s)` : "Resend code"}
+            </Button>
+            <Button variant="ghost" onClick={() => router.push("/welcome")}>
+              Use a different email
+            </Button>
+          </div>
+        </form>
       </div>
     </main>
   );

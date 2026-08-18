@@ -51,12 +51,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           role="alert"
           className="fixed inset-x-0 bottom-0 z-50 flex justify-center px-5 pb-[calc(env(safe-area-inset-bottom)+96px)]"
         >
-          <div className="glass rise-in flex w-full max-w-[390px] items-center gap-3 rounded-[14px] p-4">
+          <div className="glass rise-in flex w-full max-w-[390px] items-center gap-2 rounded-[14px] p-4">
             <p className="flex-1 text-[15px] text-ink-0">{toast.message}</p>
             {toast.retry && (
               <button
                 type="button"
-                className="eyebrow shrink-0 text-gold-300"
+                className="eyebrow -my-2 flex min-h-11 shrink-0 items-center px-2 text-gold-300"
                 onClick={() => {
                   const retry = toast.retry;
                   setToast(null);
@@ -69,7 +69,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <button
               type="button"
               aria-label="Dismiss"
-              className="shrink-0 text-ink-2"
+              className="-my-2 -mr-2 flex h-11 w-11 shrink-0 items-center justify-center text-[20px] text-ink-2"
               onClick={() => setToast(null)}
             >
               ×

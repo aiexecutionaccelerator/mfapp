@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
+import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
@@ -73,7 +74,7 @@ export default function CompletePage({
   const totalCompleted = computeStats(missions).completed;
 
   return (
-    <main className="fade-in flex min-h-dvh flex-col pt-[calc(env(safe-area-inset-top)+40px)]">
+    <main className="fade-in flex flex-1 flex-col pt-10">
       <div className="flex justify-center">
         <GoldCoin />
       </div>
@@ -96,12 +97,12 @@ export default function CompletePage({
         {pickCompletionLine(totalCompleted)}
       </p>
 
-      <div className="mt-auto space-y-3 pt-10 pb-10">
+      <BottomActions className="pt-10">
         <Button onClick={() => router.push("/home")}>DONE</Button>
         <Button variant="secondary" onClick={() => router.push("/progress")}>
           VIEW MY PROGRESS
         </Button>
-      </div>
+      </BottomActions>
     </main>
   );
 }

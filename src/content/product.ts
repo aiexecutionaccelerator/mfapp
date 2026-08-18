@@ -22,5 +22,6 @@ export const PRODUCT = {
   notConfigured: "Checkout not configured",
   homeCardEyebrow: "DON'T OWN THE MISSION SYSTEM?",
   homeCardText: "Get the complete system — $597",
-  heroImage: "/images/system-black-edition.png",
+  /** Filename under public/images — see lib/art.ts. */
+  heroImage: "system-black-edition.png",
 } as const;

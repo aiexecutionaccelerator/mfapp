@@ -42,21 +42,21 @@ export default function LogDetailPage({
 
   if (!mission) {
     return (
-      <main className="flex min-h-dvh items-center justify-center text-ink-2">
+      <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
       </main>
     );
   }
 
   return (
-    <main className="pt-[calc(env(safe-area-inset-top)+8px)]">
+    <main className="pt-2">
       <NavAction kind="back" href="/log" />
 
       <div className="mt-6">
         <Eyebrow accent={mission.trigger}>
           {TRIGGERS[mission.trigger].name}
         </Eyebrow>
-        <Headline level={2} className="mt-3">
+        <Headline level={2} className="mt-3 break-words">
           {mission.action_text}
         </Headline>
       </div>

@@ -2,6 +2,7 @@
 
 import { ChevronLeft, X } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 interface NavActionProps {
   kind: "back" | "close";
@@ -13,8 +14,11 @@ interface NavActionProps {
 export default function NavAction({ kind, href, onClick }: NavActionProps) {
   const label = kind === "back" ? "Go back" : "Close";
   const Icon = kind === "back" ? ChevronLeft : X;
-  const className =
-    "-ml-3 flex h-12 w-12 items-center justify-center text-ink-1";
+  // Pull the icon out to the 20px gutter on whichever side it sits.
+  const className = cn(
+    "flex h-12 w-12 items-center justify-center text-ink-1",
+    kind === "back" ? "-ml-3" : "-mr-3",
+  );
 
   if (href) {
     return (

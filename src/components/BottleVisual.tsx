@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import { artUrl } from "@/lib/art";
 import type { Trigger } from "@/lib/data/types";
 import { cn } from "@/lib/utils";
 
@@ -14,8 +12,8 @@ const FINISH: Record<Trigger, string> = {
 };
 
 /**
- * Placeholder bottle. Real art drops in at /images/bottle-{trigger}.png —
- * the image is used as soon as that file exists, otherwise the silhouette shows.
+ * Placeholder bottle. Real art drops in at /images/bottle-{trigger}.png and is
+ * used as soon as it is registered in lib/art.ts.
  */
 export default function BottleVisual({
   trigger,
@@ -26,9 +24,9 @@ export default function BottleVisual({
   size?: number;
   className?: string;
 }) {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const width = size;
   const height = Math.round(size * 1.45);
+  const src = artUrl(`bottle-${trigger}.png`);
 
   return (
     <div
@@ -36,7 +34,16 @@ export default function BottleVisual({
       style={{ width, height }}
       aria-hidden
     >
-      {!imageLoaded && (
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt=""
+          width={width}
+          height={height}
+          className="absolute inset-0 h-full w-full object-contain"
+        />
+      ) : (
         <div className="absolute inset-0 flex flex-col items-center">
           <div
             className="rounded-[2px]"
@@ -55,18 +62,6 @@ export default function BottleVisual({
           />
         </div>
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={`/images/bottle-${trigger}.png`}
-        alt=""
-        width={width}
-        height={height}
-        onLoad={() => setImageLoaded(true)}
-        className={cn(
-          "absolute inset-0 h-full w-full object-contain",
-          imageLoaded ? "block" : "hidden",
-        )}
-      />
     </div>
   );
 }

@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import { artUrl } from "@/lib/art";
 import { cn } from "@/lib/utils";
 
 function Crest({ size }: { size: number }) {
@@ -30,7 +28,7 @@ function Crest({ size }: { size: number }) {
   );
 }
 
-/** Real logo drops in at /images/logo.svg — used automatically once it exists. */
+/** Real logo drops in at /images/logo.svg — used once registered in lib/art.ts. */
 export default function Wordmark({
   size = "sm",
   className,
@@ -38,19 +36,15 @@ export default function Wordmark({
   size?: "sm" | "lg";
   className?: string;
 }) {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const textSize = size === "lg" ? "text-[34px]" : "text-[22px]";
   const crestSize = size === "lg" ? 30 : 20;
+  const logo = artUrl("logo.svg");
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      {imageLoaded ? (
+      {logo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src="/images/logo.svg"
-          alt="Mission"
-          className={size === "lg" ? "h-9" : "h-6"}
-        />
+        <img src={logo} alt="Mission" className={size === "lg" ? "h-9" : "h-6"} />
       ) : (
         <>
           <Crest size={crestSize} />
@@ -63,15 +57,6 @@ export default function Wordmark({
             MISSION
           </span>
         </>
-      )}
-      {!imageLoaded && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src="/images/logo.svg"
-          alt=""
-          className="hidden"
-          onLoad={() => setImageLoaded(true)}
-        />
       )}
     </div>
   );
