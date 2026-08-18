@@ -66,6 +66,10 @@ function requireMission(id: string): Mission {
 }
 
 export const localBackend: DataBackend = {
+  async loadAll() {
+    return { profile: readProfile(), missions: sorted(readMissions()) };
+  },
+
   async getProfile() {
     return readProfile();
   },

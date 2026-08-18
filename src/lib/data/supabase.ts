@@ -1,5 +1,10 @@
 import { createClient } from "@/lib/supabase/client";
-import type { DataBackend, Mission, Profile } from "@/lib/data/types";
+import type {
+  AppSnapshot,
+  DataBackend,
+  Mission,
+  Profile,
+} from "@/lib/data/types";
 
 /** Supabase backend — used whenever Supabase env vars are configured. */
 
@@ -20,6 +25,31 @@ async function requireUser() {
 }
 
 export const supabaseBackend: DataBackend = {
+  /**
+   * One RPC instead of getUser + two selects. The function is security invoker,
+   * so RLS still applies. Falls back to the plain selects when the RPC is not
+   * deployed yet (migration 0002) or fails for any other reason.
+   */
+  async loadAll(): Promise<AppSnapshot> {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("get_app_data");
+    if (!error && data) {
+      const payload = data as {
+        profile: Profile | null;
+        missions: Mission[] | null;
+      };
+      if (payload.profile) {
+        return { profile: payload.profile, missions: payload.missions ?? [] };
+      }
+    }
+
+    const [profile, missions] = await Promise.all([
+      supabaseBackend.getProfile(),
+      supabaseBackend.listMissions(),
+    ]);
+    return { profile, missions };
+  },
+
   async getProfile(): Promise<Profile> {
     const { supabase, user } = await requireUser();
 

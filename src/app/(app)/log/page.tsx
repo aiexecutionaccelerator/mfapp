@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MissionRow from "@/components/MissionRow";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
@@ -10,8 +10,8 @@ import Pill from "@/components/ui/Pill";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import { TRIGGER_ORDER } from "@/content/triggers";
-import { data } from "@/lib/data";
-import type { Mission, Trigger } from "@/lib/data/types";
+import { useAppData } from "@/lib/data/store";
+import type { Trigger } from "@/lib/data/types";
 
 type Filter = "all" | Trigger;
 
@@ -21,25 +21,15 @@ export default function LogPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [missions, setMissions] = useState<Mission[] | null>(null);
+  const { missions, error, refresh } = useAppData();
   const [filter, setFilter] = useState<Filter>("all");
 
-  const load = useCallback(
-    async function run(): Promise<void> {
-      try {
-        setMissions(await data.listMissions());
-      } catch {
-        showToast("Couldn't load your Mission Log.", {
-          retry: () => void run(),
-        });
-      }
-    },
-    [showToast],
-  );
-
   useEffect(() => {
-    void load();
-  }, [load]);
+    if (!error) return;
+    showToast("Couldn't load your Mission Log.", {
+      retry: () => void refresh(),
+    });
+  }, [error, refresh, showToast]);
 
   const visible =
     missions?.filter((m) => filter === "all" || m.trigger === filter) ?? [];

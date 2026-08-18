@@ -2,7 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
@@ -12,8 +12,7 @@ import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import pkg from "../../../../package.json";
 import { readDevDayOverride, setDevDayOverride } from "@/lib/challenge";
-import { data } from "@/lib/data";
-import type { Profile } from "@/lib/data/types";
+import { store, useAppData } from "@/lib/data/store";
 import {
   DEV_TOOLS,
   LEGAL_PRIVACY_URL,
@@ -53,36 +52,32 @@ export default function SettingsPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const { profile, error, refresh } = useAppData();
   const [name, setName] = useState("");
   const [devValue, setDevValue] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
-
-  const load = useCallback(
-    async function run(): Promise<void> {
-      try {
-        const next = await data.getProfile();
-        setProfile(next);
-        setName(next.display_name ?? "");
-        const override = readDevDayOverride();
-        setDevValue(
-          next.challenge_completed_at
-            ? "post"
-            : override !== null
-              ? String(override)
-              : "",
-        );
-      } catch {
-        showToast("Couldn't load your settings.", { retry: () => void run() });
-      }
-    },
-    [showToast],
-  );
+  // Seed the editable fields once; a background revalidate must not clobber typing.
+  const seeded = useRef(false);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    if (!error) return;
+    showToast("Couldn't load your settings.", { retry: () => void refresh() });
+  }, [error, refresh, showToast]);
+
+  useEffect(() => {
+    if (!profile || seeded.current) return;
+    seeded.current = true;
+    setName(profile.display_name ?? "");
+    const override = readDevDayOverride();
+    setDevValue(
+      profile.challenge_completed_at
+        ? "post"
+        : override !== null
+          ? String(override)
+          : "",
+    );
+  }, [profile]);
 
   if (!profile) {
     return (
@@ -97,7 +92,7 @@ export default function SettingsPage() {
     const trimmed = name.trim();
     if (trimmed === (profile.display_name ?? "")) return;
     try {
-      setProfile(await data.updateProfile({ display_name: trimmed || null }));
+      await store.updateProfile({ display_name: trimmed || null });
     } catch {
       showToast("Couldn't save your name. Please try again.", {
         retry: () => void saveName(),
@@ -108,11 +103,9 @@ export default function SettingsPage() {
   async function toggleNotifications() {
     if (!profile) return;
     try {
-      setProfile(
-        await data.updateProfile({
-          notifications_enabled: !profile.notifications_enabled,
-        }),
-      );
+      await store.updateProfile({
+        notifications_enabled: !profile.notifications_enabled,
+      });
     } catch {
       showToast("Couldn't save that. Please try again.", {
         retry: () => void toggleNotifications(),
@@ -126,7 +119,7 @@ export default function SettingsPage() {
     try {
       if (value === "new") {
         setDevDayOverride(null);
-        await data.updateProfile({
+        await store.updateProfile({
           primary_goal: null,
           onboarding_completed: false,
           challenge_start_date: null,
@@ -138,15 +131,13 @@ export default function SettingsPage() {
       }
       if (value === "post") {
         setDevDayOverride(null);
-        setProfile(
-          await data.updateProfile({
-            challenge_completed_at: new Date().toISOString(),
-          }),
-        );
+        await store.updateProfile({
+          challenge_completed_at: new Date().toISOString(),
+        });
         return;
       }
       setDevDayOverride(Number(value));
-      setProfile(await data.updateProfile({ challenge_completed_at: null }));
+      await store.updateProfile({ challenge_completed_at: null });
     } catch {
       showToast("Couldn't change the challenge state.");
     }
@@ -154,7 +145,7 @@ export default function SettingsPage() {
 
   async function signOut() {
     try {
-      await data.signOut();
+      await store.signOut();
       router.replace("/welcome");
     } catch {
       showToast("Couldn't sign out. Please try again.", {
@@ -166,8 +157,8 @@ export default function SettingsPage() {
   async function deleteAccount() {
     setDeleting(true);
     try {
-      await data.deleteAccount();
-      await data.signOut();
+      await store.deleteAccount();
+      await store.signOut();
       router.replace("/welcome?deleted=1");
     } catch {
       setDeleting(false);
@@ -296,7 +287,7 @@ export default function SettingsPage() {
       </Group>
 
       <p className="mt-8 text-center text-[13px] text-ink-2">
-        Mission v{pkg.version}
+        Mission Fragrances v{pkg.version}
       </p>
 
       <Sheet

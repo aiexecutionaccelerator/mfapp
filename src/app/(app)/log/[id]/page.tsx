@@ -1,15 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { use, useEffect } from "react";
 import NavAction from "@/components/NavAction";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
 import Spinner from "@/components/ui/Spinner";
 import { TRIGGERS } from "@/content/triggers";
-import { data } from "@/lib/data";
-import type { Mission } from "@/lib/data/types";
+import { useAppData } from "@/lib/data/store";
 import { formatDateTime } from "@/lib/utils";
 
 const STATUS_LABEL = {
@@ -25,20 +24,12 @@ export default function LogDetailPage({
 }) {
   const { id } = use(params);
   const router = useRouter();
-  const [mission, setMission] = useState<Mission | null>(null);
+  const { missions, error } = useAppData();
+  const mission = missions?.find((m) => m.id === id) ?? null;
 
   useEffect(() => {
-    data
-      .getMission(id)
-      .then((found) => {
-        if (!found) {
-          router.replace("/log");
-          return;
-        }
-        setMission(found);
-      })
-      .catch(() => router.replace("/log"));
-  }, [id, router]);
+    if (error || (missions && !mission)) router.replace("/log");
+  }, [error, missions, mission, router]);
 
   if (!mission) {
     return (

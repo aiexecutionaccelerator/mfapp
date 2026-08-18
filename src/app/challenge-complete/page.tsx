@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import NavAction from "@/components/NavAction";
 import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
@@ -9,8 +9,7 @@ import Headline from "@/components/ui/Headline";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import { CHALLENGE_LENGTH, rawChallengeDay } from "@/lib/challenge";
-import { data } from "@/lib/data";
-import type { Mission, Profile } from "@/lib/data/types";
+import { store, useAppData } from "@/lib/data/store";
 import { computeStats } from "@/lib/stats";
 
 function Stat({ label, value }: { label: string; value: number }) {
@@ -26,38 +25,24 @@ export default function ChallengeCompletePage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [missions, setMissions] = useState<Mission[] | null>(null);
+  const { profile, missions, error, refresh } = useAppData();
   const [pending, setPending] = useState(false);
 
-  const load = useCallback(
-    async function run(): Promise<void> {
-      try {
-        const [nextProfile, nextMissions] = await Promise.all([
-          data.getProfile(),
-          data.listMissions(),
-        ]);
-        if (
-          !nextProfile.challenge_completed_at &&
-          rawChallengeDay(nextProfile) < CHALLENGE_LENGTH
-        ) {
-          router.replace("/home");
-          return;
-        }
-        setProfile(nextProfile);
-        setMissions(nextMissions);
-      } catch {
-        showToast("Couldn't load your Mission.", { retry: () => void run() });
-      }
-    },
-    [router, showToast],
-  );
+  const reachable =
+    profile !== null &&
+    (Boolean(profile.challenge_completed_at) ||
+      rawChallengeDay(profile) >= CHALLENGE_LENGTH);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    if (profile && !reachable) router.replace("/home");
+  }, [profile, reachable, router]);
 
-  if (!profile || !missions) {
+  useEffect(() => {
+    if (!error) return;
+    showToast("Couldn't load your Mission.", { retry: () => void refresh() });
+  }, [error, refresh, showToast]);
+
+  if (!profile || !missions || !reachable) {
     return (
       <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
@@ -70,7 +55,7 @@ export default function ChallengeCompletePage() {
   async function continueMission() {
     setPending(true);
     try {
-      await data.updateProfile({
+      await store.updateProfile({
         challenge_completed_at: new Date().toISOString(),
       });
       router.replace("/home");
@@ -84,7 +69,7 @@ export default function ChallengeCompletePage() {
 
   async function requestCertificate() {
     try {
-      setProfile(await data.updateProfile({ certificate_requested: true }));
+      await store.updateProfile({ certificate_requested: true });
     } catch {
       showToast("Couldn't save that. Please try again.", {
         retry: () => void requestCertificate(),

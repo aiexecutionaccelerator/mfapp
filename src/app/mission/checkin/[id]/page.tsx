@@ -11,8 +11,7 @@ import Headline from "@/components/ui/Headline";
 import Sheet from "@/components/ui/Sheet";
 import { useToast } from "@/components/ui/Toast";
 import { TRIGGERS } from "@/content/triggers";
-import { data } from "@/lib/data";
-import type { Mission } from "@/lib/data/types";
+import { useAppData, store } from "@/lib/data/store";
 import { clearReminderFor } from "@/lib/utils";
 
 type View = "ask" | "yes" | "not-yet" | "edit";
@@ -26,35 +25,39 @@ export default function CheckinPage({
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [mission, setMission] = useState<Mission | null>(null);
+  const { missions, error } = useAppData();
+  const found = missions?.find((m) => m.id === id) ?? null;
+  const mission = found?.status === "active" ? found : null;
+
   const [view, setView] = useState<View>("ask");
   const [reflection, setReflection] = useState("");
   const [actionText, setActionText] = useState("");
   const [pending, setPending] = useState(false);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const submitting = useRef(false);
+  const seeded = useRef(false);
 
   useEffect(() => {
-    data
-      .getMission(id)
-      .then((found) => {
-        if (!found) {
-          router.replace("/home");
-          return;
-        }
-        if (found.status === "completed") {
-          router.replace(`/mission/complete/${found.id}`);
-          return;
-        }
-        if (found.status === "ended") {
-          router.replace("/home");
-          return;
-        }
-        setMission(found);
-        setActionText(found.action_text);
-      })
-      .catch(() => router.replace("/home"));
-  }, [id, router]);
+    if (error) {
+      router.replace("/home");
+      return;
+    }
+    if (!missions) return;
+    if (!found || found.status === "ended") {
+      router.replace("/home");
+      return;
+    }
+    if (found.status === "completed") {
+      router.replace(`/mission/complete/${found.id}`);
+    }
+  }, [error, missions, found, router]);
+
+  // Seed the edit field once, so a background revalidate cannot clobber typing.
+  useEffect(() => {
+    if (!mission || seeded.current) return;
+    seeded.current = true;
+    setActionText(mission.action_text);
+  }, [mission]);
 
   if (!mission) return null;
 
@@ -63,7 +66,7 @@ export default function CheckinPage({
     submitting.current = true;
     setPending(true);
     try {
-      const completed = await data.completeMission(mission.id, reflection);
+      const completed = await store.completeMission(mission.id, reflection);
       clearReminderFor(completed.id);
       router.replace(`/mission/complete/${completed.id}`);
     } catch {
@@ -81,7 +84,7 @@ export default function CheckinPage({
     if (!trimmed) return;
     setPending(true);
     try {
-      await data.updateMissionAction(mission.id, trimmed);
+      await store.updateMissionAction(mission.id, trimmed);
       router.replace(`/mission/active/${mission.id}`);
     } catch {
       setPending(false);
@@ -95,7 +98,7 @@ export default function CheckinPage({
     if (!mission) return;
     setPending(true);
     try {
-      await data.endMission(mission.id);
+      await store.endMission(mission.id);
       clearReminderFor(mission.id);
       setConfirmEnd(false);
       showToast("Mission ended. No penalty. Start again anytime.");

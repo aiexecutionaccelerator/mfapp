@@ -1,15 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { use, useEffect } from "react";
 import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
 import { pickCompletionLine } from "@/content/completionLines";
 import { TRIGGERS } from "@/content/triggers";
-import { data } from "@/lib/data";
-import type { Mission } from "@/lib/data/types";
+import { useAppData } from "@/lib/data/store";
 import { computeStats, repNumberFor } from "@/lib/stats";
 
 function GoldCoin() {
@@ -50,25 +49,15 @@ export default function CompletePage({
   const { id } = use(params);
   const router = useRouter();
 
-  const [mission, setMission] = useState<Mission | null>(null);
-  const [missions, setMissions] = useState<Mission[]>([]);
+  const { missions, error } = useAppData();
+  const found = missions?.find((item) => item.id === id) ?? null;
+  const mission = found?.status === "completed" ? found : null;
 
   useEffect(() => {
-    data
-      .listMissions()
-      .then((all) => {
-        const found = all.find((item) => item.id === id) ?? null;
-        if (!found || found.status !== "completed") {
-          router.replace("/home");
-          return;
-        }
-        setMissions(all);
-        setMission(found);
-      })
-      .catch(() => router.replace("/home"));
-  }, [id, router]);
+    if (error || (missions && !mission)) router.replace("/home");
+  }, [error, missions, mission, router]);
 
-  if (!mission) return null;
+  if (!mission || !missions) return null;
 
   const repNumber = repNumberFor(missions, mission);
   const totalCompleted = computeStats(missions).completed;

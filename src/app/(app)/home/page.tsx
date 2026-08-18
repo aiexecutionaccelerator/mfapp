@@ -3,7 +3,7 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DayBadge from "@/components/DayBadge";
 import RepCounts from "@/components/RepCounts";
 import TriggerCard from "@/components/TriggerCard";
@@ -16,8 +16,8 @@ import { useToast } from "@/components/ui/Toast";
 import { PRODUCT } from "@/content/product";
 import { TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
 import { challengeDay, getMode, getPhase } from "@/lib/challenge";
-import { data } from "@/lib/data";
-import type { Mission, Profile } from "@/lib/data/types";
+import { store, useAppData } from "@/lib/data/store";
+import type { Mission } from "@/lib/data/types";
 import { isDemo } from "@/lib/env";
 import { computeStats } from "@/lib/stats";
 import { readReminder, todayLocal } from "@/lib/utils";
@@ -35,56 +35,64 @@ function Skeleton() {
   );
 }
 
+/**
+ * Mounts only once the Missions are loaded, so the reminder check reads
+ * localStorage after hydration and settles once per active Mission.
+ */
+function ActiveMissionBanner({ mission }: { mission: Mission }) {
+  const router = useRouter();
+  const [reminderDue] = useState(() => {
+    const reminder = readReminder();
+    return Boolean(
+      reminder &&
+        reminder.missionId === mission.id &&
+        new Date(reminder.at).getTime() <= Date.now(),
+    );
+  });
+
+  return (
+    <GlassCard accent={mission.trigger} className="mt-6">
+      <Eyebrow accent={mission.trigger} tone="gold">
+        {reminderDue ? "REMINDER" : "MISSION ACTIVE"} ·{" "}
+        {TRIGGERS[mission.trigger].name}
+      </Eyebrow>
+      <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
+        {mission.action_text}
+      </p>
+      <div className="mt-5 space-y-2">
+        <Button onClick={() => router.push(`/mission/checkin/${mission.id}`)}>
+          CHECK IN NOW
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={() => router.push(`/mission/active/${mission.id}`)}
+        >
+          Open Mission
+        </Button>
+      </div>
+    </GlassCard>
+  );
+}
+
 export default function HomePage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [missions, setMissions] = useState<Mission[] | null>(null);
-  const [reminderDue, setReminderDue] = useState(false);
-
-  const load = useCallback(
-    async function run(): Promise<void> {
-      try {
-        const [nextProfile, nextMissions] = await Promise.all([
-          data.getProfile(),
-          data.listMissions(),
-        ]);
-
-        // Backfill a missing start date once, so Day 1 is anchored.
-        if (
-          !isDemo() &&
-          nextProfile.onboarding_completed &&
-          !nextProfile.challenge_start_date
-        ) {
-          setProfile(
-            await data.updateProfile({ challenge_start_date: todayLocal() }),
-          );
-        } else {
-          setProfile(nextProfile);
-        }
-        setMissions(nextMissions);
-
-        const active = nextMissions.find((m) => m.status === "active");
-        const reminder = active ? readReminder() : null;
-        setReminderDue(
-          Boolean(
-            reminder &&
-              active &&
-              reminder.missionId === active.id &&
-              new Date(reminder.at).getTime() <= Date.now(),
-          ),
-        );
-      } catch {
-        showToast("Couldn't load your Missions.", { retry: () => void run() });
-      }
-    },
-    [showToast],
-  );
+  const { profile, missions, error, refresh } = useAppData();
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    if (!error) return;
+    showToast("Couldn't load your Missions.", { retry: () => void refresh() });
+  }, [error, refresh, showToast]);
+
+  // Backfill a missing start date once, so Day 1 is anchored.
+  useEffect(() => {
+    if (isDemo() || !profile) return;
+    if (!profile.onboarding_completed || profile.challenge_start_date) return;
+    void store.updateProfile({ challenge_start_date: todayLocal() }).catch(
+      () => {},
+    );
+  }, [profile]);
 
   const activeMission = missions?.find((m) => m.status === "active") ?? null;
 
@@ -124,32 +132,10 @@ export default function HomePage() {
       ) : (
         <>
           {activeMission && (
-            <GlassCard accent={activeMission.trigger} className="mt-6">
-              <Eyebrow accent={activeMission.trigger} tone="gold">
-                {reminderDue ? "REMINDER" : "MISSION ACTIVE"} ·{" "}
-                {TRIGGERS[activeMission.trigger].name}
-              </Eyebrow>
-              <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
-                {activeMission.action_text}
-              </p>
-              <div className="mt-5 space-y-2">
-                <Button
-                  onClick={() =>
-                    router.push(`/mission/checkin/${activeMission.id}`)
-                  }
-                >
-                  CHECK IN NOW
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() =>
-                    router.push(`/mission/active/${activeMission.id}`)
-                  }
-                >
-                  Open Mission
-                </Button>
-              </div>
-            </GlassCard>
+            <ActiveMissionBanner
+              key={activeMission.id}
+              mission={activeMission}
+            />
           )}
 
           <div className="mt-6 space-y-3">

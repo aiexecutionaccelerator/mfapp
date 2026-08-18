@@ -10,41 +10,41 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import { useToast } from "@/components/ui/Toast";
 import { pickBriefing } from "@/content/missionBriefings";
 import { TRIGGERS, TRIGGER_ACCENTS } from "@/content/triggers";
-import { data } from "@/lib/data";
-import type { MissionDraft } from "@/lib/data/types";
+import { store, useAppData } from "@/lib/data/store";
+import type { Mission } from "@/lib/data/types";
 import { clearDraft, readDraft } from "@/lib/utils";
 
+/**
+ * Waits for the shared cache so the screen below can read the draft and pick a
+ * briefing once, on mount, and keep both frozen while the user is on it.
+ */
 export default function TriggerPage() {
+  const { missions, error } = useAppData();
+  if (!missions && !error) return null;
+  return <TriggerScreen missions={missions ?? []} />;
+}
+
+function TriggerScreen({ missions }: { missions: Mission[] }) {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [draft, setDraft] = useState<MissionDraft | null>(null);
-  const [briefing, setBriefing] = useState<string | null>(null);
+  const [draft] = useState(readDraft);
+  const [briefing] = useState(() =>
+    draft
+      ? pickBriefing(
+          draft.trigger,
+          missions.filter((mission) => mission.trigger === draft.trigger).length,
+        ).text
+      : null,
+  );
   const [pending, setPending] = useState(false);
   const starting = useRef(false);
 
   useEffect(() => {
-    const current = readDraft();
-    if (!current) {
-      router.replace("/home");
-      return;
-    }
-    data
-      .listMissions()
-      .then((missions) => {
-        const count = missions.filter(
-          (mission) => mission.trigger === current.trigger,
-        ).length;
-        setDraft(current);
-        setBriefing(pickBriefing(current.trigger, count).text);
-      })
-      .catch(() => {
-        setDraft(current);
-        setBriefing(pickBriefing(current.trigger, 0).text);
-      });
-  }, [router]);
+    if (!draft) router.replace("/home");
+  }, [draft, router]);
 
-  if (!draft) return null;
+  if (!draft || !briefing) return null;
 
   const meta = TRIGGERS[draft.trigger];
   const tone = TRIGGER_ACCENTS[draft.trigger];
@@ -54,7 +54,7 @@ export default function TriggerPage() {
     starting.current = true;
     setPending(true);
     try {
-      const mission = await data.createMission({
+      const mission = await store.createMission({
         trigger: draft.trigger,
         action_text: draft.action_text,
         action_category: draft.action_category,

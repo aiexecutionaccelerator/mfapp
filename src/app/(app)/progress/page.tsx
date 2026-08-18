@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
@@ -16,8 +16,7 @@ import {
   getPhase,
   rawChallengeDay,
 } from "@/lib/challenge";
-import { data } from "@/lib/data";
-import type { Mission, Profile } from "@/lib/data/types";
+import { useAppData } from "@/lib/data/store";
 import { computeStats } from "@/lib/stats";
 
 function Stat({ label, value }: { label: string; value: string | number }) {
@@ -33,28 +32,12 @@ export default function ProgressPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [missions, setMissions] = useState<Mission[] | null>(null);
-
-  const load = useCallback(
-    async function run(): Promise<void> {
-      try {
-        const [nextProfile, nextMissions] = await Promise.all([
-          data.getProfile(),
-          data.listMissions(),
-        ]);
-        setProfile(nextProfile);
-        setMissions(nextMissions);
-      } catch {
-        showToast("Couldn't load your progress.", { retry: () => void run() });
-      }
-    },
-    [showToast],
-  );
+  const { profile, missions, error, refresh } = useAppData();
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    if (!error) return;
+    showToast("Couldn't load your progress.", { retry: () => void refresh() });
+  }, [error, refresh, showToast]);
 
   if (!profile || !missions) {
     return (

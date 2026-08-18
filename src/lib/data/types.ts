@@ -32,7 +32,14 @@ export interface MissionDraft {
   action_category: string | null;
 }
 
+export interface AppSnapshot {
+  profile: Profile;
+  missions: Mission[];
+}
+
 export interface DataBackend {
+  /** Profile + missions in one round-trip — used for the initial load. */
+  loadAll(): Promise<AppSnapshot>;
   getProfile(): Promise<Profile>;
   updateProfile(patch: Partial<Profile>): Promise<Profile>;
   /** newest first */

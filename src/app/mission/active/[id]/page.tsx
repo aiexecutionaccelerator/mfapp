@@ -10,8 +10,7 @@ import Headline from "@/components/ui/Headline";
 import Sheet from "@/components/ui/Sheet";
 import { useToast } from "@/components/ui/Toast";
 import { TRIGGERS } from "@/content/triggers";
-import { data } from "@/lib/data";
-import type { Mission } from "@/lib/data/types";
+import { useAppData } from "@/lib/data/store";
 import { relativeTime, writeReminder } from "@/lib/utils";
 
 const OPTIONS: { label: string; minutes: number | "tonight" }[] = [
@@ -38,25 +37,25 @@ export default function ActiveMissionPage({
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [mission, setMission] = useState<Mission | null>(null);
+  const { missions, error } = useAppData();
+  const found = missions?.find((m) => m.id === id) ?? null;
+  const mission = found?.status === "active" ? found : null;
   const [sheetOpen, setSheetOpen] = useState(false);
 
   useEffect(() => {
-    data
-      .getMission(id)
-      .then((found) => {
-        if (!found || found.status === "ended") {
-          router.replace("/home");
-          return;
-        }
-        if (found.status === "completed") {
-          router.replace(`/mission/complete/${found.id}`);
-          return;
-        }
-        setMission(found);
-      })
-      .catch(() => router.replace("/home"));
-  }, [id, router]);
+    if (error) {
+      router.replace("/home");
+      return;
+    }
+    if (!missions) return;
+    if (!found || found.status === "ended") {
+      router.replace("/home");
+      return;
+    }
+    if (found.status === "completed") {
+      router.replace(`/mission/complete/${found.id}`);
+    }
+  }, [error, missions, found, router]);
 
   if (!mission) return null;
 
