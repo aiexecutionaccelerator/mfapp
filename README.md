@@ -96,6 +96,74 @@ page falls back to the static `$597` on any error and never blocks render on it.
 4. In Supabase → Authentication → URL Configuration, add the deployed origin to
    the allowed redirect URLs.
 
+## Deploy — Cloudflare (recommended, free)
+
+The app also runs on Cloudflare Workers via
+[`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare). This is the
+recommended target: the free plan covers this app, and Vercel above stays valid
+as an alternative. Nothing about the Next.js code changes — the App Router,
+route handlers and the Next middleware/proxy (`src/proxy.ts`) are all supported
+by OpenNext and are bundled into the Worker.
+
+Config lives in `wrangler.jsonc` and `open-next.config.ts` at the repo root.
+`.open-next/` is build output and is gitignored.
+
+### Prerequisites
+
+- A Cloudflare account (free plan is enough).
+- `npx wrangler login` once per machine.
+
+### Environment variables
+
+`NEXT_PUBLIC_*` values are inlined into the client bundle **at build time**, so
+they must exist in the environment that runs `cf:build` — locally that is your
+`.env.local`; in CI, set them as CI environment variables.
+
+Server-side reads also need them at runtime, so set the same values on the
+Worker (dashboard → **Workers & Pages** → `mission-app` → **Settings** →
+**Variables and Secrets**, or a `vars` block in `wrangler.jsonc`):
+
+| Cloudflare type | Variables |
+| --- | --- |
+| Plain text var | every `NEXT_PUBLIC_*` from `.env.example` |
+| **Secret** | `SUPABASE_SERVICE_ROLE_KEY` |
+
+`SUPABASE_SERVICE_ROLE_KEY` must be a **secret**, never a plain var and never
+prefixed with `NEXT_PUBLIC_`. Set it with:
+
+```bash
+npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+```
+
+With no Supabase values set, the deployed app boots into demo mode exactly like
+local dev.
+
+### Build, preview, deploy
+
+```bash
+npm run cf:build     # next build + OpenNext bundle into .open-next/
+npm run cf:preview   # run the built Worker locally in workerd
+npm run cf:deploy    # build + publish to Cloudflare
+```
+
+### Custom domain
+
+1. Deploy once so the `mission-app` Worker exists.
+2. Cloudflare dashboard → **Workers & Pages** → `mission-app` → **Settings** →
+   **Domains & Routes** → **Add** → **Custom domain** →
+   `app.missionfragrances.com`. Cloudflare creates the proxied CNAME in the
+   `missionfragrances.com` zone for you (the zone must be on Cloudflare DNS).
+3. Set `NEXT_PUBLIC_APP_URL` to `https://app.missionfragrances.com` and rebuild.
+4. In Supabase → Authentication → URL Configuration, add that origin to the
+   allowed redirect URLs.
+
+### Keep Supabase awake
+
+Free Supabase projects pause after 7 days of inactivity. A tiny scheduled Worker
+in `workers/keepalive/` pings the REST API once a day to prevent that — see
+[`workers/keepalive/README.md`](workers/keepalive/README.md). It is deployed
+separately and is not part of this package.
+
 ## Dev tools flag
 
 With `NEXT_PUBLIC_DEV_TOOLS=true`, Settings shows a **Developer** section with a

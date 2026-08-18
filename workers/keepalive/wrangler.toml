@@ -1,0 +1,10 @@
+name = "mission-supabase-keepalive"
+main = "src/index.ts"
+compatibility_date = "2025-03-25"
+
+[triggers]
+crons = ["0 9 * * *"]
+
+# Secrets (never commit these — set with `npx wrangler secret put <NAME>`):
+#   SUPABASE_URL
+#   SUPABASE_ANON_KEY
