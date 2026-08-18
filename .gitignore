@@ -52,3 +52,4 @@ next-env.d.ts
 
 # audit captures are large; kept locally only
 /docs/screenshots/audit/
+supabase/.temp/
