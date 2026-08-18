@@ -11,9 +11,17 @@ export const SHOPIFY_MISSION_VARIANT_ID =
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "";
 export const DEV_TOOLS = process.env.NEXT_PUBLIC_DEV_TOOLS === "true";
 
+/** VAPID public key for Web Push. Empty ⇒ in-app reminders only. */
+export const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
+
 /** Demo mode runs entirely on-device when Supabase is not configured. */
 export function isDemo(): boolean {
   return !SUPABASE_URL || !SUPABASE_ANON_KEY;
+}
+
+/** Push needs a real backend to store the subscription and a VAPID key. */
+export function hasPush(): boolean {
+  return !isDemo() && Boolean(VAPID_PUBLIC_KEY);
 }
 
 export function hasShopify(): boolean {

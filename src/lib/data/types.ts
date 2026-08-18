@@ -56,6 +56,9 @@ export interface DataBackend {
   completeMission(id: string, reflection?: string | null): Promise<Mission>;
   endMission(id: string): Promise<Mission>;
   updateMissionAction(id: string, action_text: string): Promise<Mission>;
+  /** Replaces any pending push reminder for this Mission. No-op in demo. */
+  scheduleReminder(missionId: string, sendAt: Date): Promise<void>;
+  cancelReminders(missionId: string): Promise<void>;
   deleteAccount(): Promise<void>;
   signOut(): Promise<void>;
 }

@@ -40,6 +40,12 @@ export default function PrivacyPage() {
             setting and 30-Day Mission progress.
           </li>
           <li>
+            <strong className="text-ink-0">Notifications:</strong> if you turn
+            on device notifications, your browser&rsquo;s push subscription
+            endpoint (a device token) — deleted when you turn notifications off
+            or delete your account.
+          </li>
+          <li>
             <strong className="text-ink-0">Technical:</strong> standard server
             logs (IP address, browser type, timestamps) needed to run and secure
             the service.

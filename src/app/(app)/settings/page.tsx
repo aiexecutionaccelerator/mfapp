@@ -3,6 +3,9 @@
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import ReminderExplainer, {
+  REMINDER_EXPLAINER_TITLE,
+} from "@/components/ReminderExplainer";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
@@ -19,6 +22,13 @@ import {
   LEGAL_TERMS_URL,
   SUPPORT_EMAIL,
 } from "@/lib/env";
+import {
+  getPermission,
+  hasActiveSubscription,
+  subscribeToPush,
+  unsubscribeFromPush,
+  usePushSupport,
+} from "@/lib/push";
 import { cn } from "@/lib/utils";
 
 const DEV_OPTIONS = [
@@ -57,6 +67,10 @@ export default function SettingsPage() {
   const [devValue, setDevValue] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [pushOn, setPushOn] = useState(false);
+  const [explainerOpen, setExplainerOpen] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const support = usePushSupport();
   // Seed the editable fields once; a background revalidate must not clobber typing.
   const seeded = useRef(false);
 
@@ -64,6 +78,10 @@ export default function SettingsPage() {
     if (!error) return;
     showToast("Couldn't load your settings.", { retry: () => void refresh() });
   }, [error, refresh, showToast]);
+
+  useEffect(() => {
+    void hasActiveSubscription().then(setPushOn);
+  }, []);
 
   useEffect(() => {
     if (!profile || seeded.current) return;
@@ -100,17 +118,54 @@ export default function SettingsPage() {
     }
   }
 
-  async function toggleNotifications() {
-    if (!profile) return;
+  async function saveNotifications(enabled: boolean) {
     try {
-      await store.updateProfile({
-        notifications_enabled: !profile.notifications_enabled,
-      });
+      await store.updateProfile({ notifications_enabled: enabled });
     } catch {
       showToast("Couldn't save that. Please try again.", {
-        retry: () => void toggleNotifications(),
+        retry: () => void saveNotifications(enabled),
       });
     }
+  }
+
+  async function toggleNotifications() {
+    if (!profile) return;
+
+    if (profile.notifications_enabled) {
+      await unsubscribeFromPush().catch(() => {});
+      setPushOn(false);
+      await saveNotifications(false);
+      return;
+    }
+
+    // Turning on: ask for the device only once we have explained why.
+    if (support === "supported") {
+      if (getPermission() !== "granted") {
+        setExplainerOpen(true);
+        return;
+      }
+      setPushOn((await subscribeToPush()) === "granted");
+    }
+    await saveNotifications(true);
+  }
+
+  async function allowNotifications() {
+    setSubscribing(true);
+    const result = await subscribeToPush();
+    setSubscribing(false);
+    setExplainerOpen(false);
+    setPushOn(result === "granted");
+    if (result === "denied") {
+      showToast(
+        "Notifications are off for this site. We'll flag the Mission in-app instead.",
+      );
+    }
+    await saveNotifications(true);
+  }
+
+  async function keepInAppOnly() {
+    setExplainerOpen(false);
+    await saveNotifications(true);
   }
 
   async function applyDevState(value: string) {
@@ -168,6 +223,13 @@ export default function SettingsPage() {
     }
   }
 
+  const reminderHelper =
+    support === "ios-needs-install"
+      ? "Add to Home Screen to enable notifications on iPhone"
+      : profile.notifications_enabled && pushOn
+        ? "Device notifications on"
+        : "In-app reminders only";
+
   return (
     <main className="pt-4">
       <Headline>SETTINGS</Headline>
@@ -190,9 +252,7 @@ export default function SettingsPage() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-[17px] text-ink-0">Reminders</p>
-            <p className="mt-1 text-[13px] text-ink-2">
-              In-app reminders for active Missions.
-            </p>
+            <p className="mt-1 text-[13px] text-ink-2">{reminderHelper}</p>
           </div>
           {/* 48px hit area around a 32px track. */}
           <button
@@ -289,6 +349,18 @@ export default function SettingsPage() {
       <p className="mt-8 text-center text-[13px] text-ink-2">
         Mission Fragrances v{pkg.version}
       </p>
+
+      <Sheet
+        open={explainerOpen}
+        title={REMINDER_EXPLAINER_TITLE}
+        onClose={() => void keepInAppOnly()}
+      >
+        <ReminderExplainer
+          loading={subscribing}
+          onAllow={() => void allowNotifications()}
+          onNotNow={() => void keepInAppOnly()}
+        />
+      </Sheet>
 
       <Sheet
         open={confirmDelete}

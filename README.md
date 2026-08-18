@@ -36,6 +36,7 @@ have:
 | `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` | e.g. `mission-fragrances.myshopify.com` |
 | `NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN` | Client-safe Storefront token |
 | `NEXT_PUBLIC_SHOPIFY_MISSION_VARIANT_ID` | `gid://shopify/ProductVariant/…` |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Web Push public key. Empty ⇒ in-app reminders only. Baked in at build time. |
 | `NEXT_PUBLIC_APP_URL` | Public app URL |
 | `NEXT_PUBLIC_DEV_TOOLS` | `true` shows the hidden Developer section in Settings |
 
@@ -66,6 +67,38 @@ See `supabase/README.md` for the full walkthrough:
    sign-in code (6–10 digits, per your Auth settings) is emailed instead of a link.
 4. Put the service-role key in the server-side environment only (Vercel project
    env, not `NEXT_PUBLIC_*`).
+
+## Push reminders
+
+"Remind me later" sends one real notification — **"Your Mission is active. Did
+you do it?"** — at the chosen time, and tapping it opens the check-in screen.
+Nothing else is ever pushed: no marketing, no streaks, no campaigns. The in-app
+Home banner stays as the fallback on every browser and always fires too.
+
+Moving parts:
+
+- `public/sw.js` — service worker with `push` + `notificationclick` handlers.
+  No caching, no `fetch` handler. Registered from `AppShell` in real mode only.
+- `src/lib/push.ts` — support detection, subscribe, unsubscribe.
+- `supabase/migrations/0003_push.sql` — `push_subscriptions` + `reminders`,
+  both RLS-scoped to `auth.uid()`.
+- `supabase/functions/send-reminders/` — Deno Edge Function run once a minute
+  by pg_cron, sends with `web-push` + VAPID, cleans up dead endpoints.
+
+Support is per-browser:
+
+| Browser | Behavior |
+| --- | --- |
+| Android Chrome, desktop Chrome/Edge/Firefox | Device notification + in-app banner |
+| iOS/iPadOS, app **installed** to the Home Screen | Device notification + in-app banner |
+| iOS/iPadOS Safari, not installed | Sheet explaining Add to Home Screen; in-app banner |
+| Anything else | In-app banner only |
+
+Permission is never requested during onboarding — only from an explainer sheet
+after the user picks a reminder time, or from the Settings toggle.
+
+Setup (VAPID keys, function secrets, deploy, cron SQL) is in
+[`supabase/README.md`](supabase/README.md) §5.
 
 ## Shopify setup
 
@@ -219,12 +252,14 @@ and hero panel.
 
 ## Known V1 limitations
 
-- **No push reminders.** "Remind me later" stores a time in `localStorage` and
-  only surfaces inside the app, on the Home active-Mission banner.
+- **Push reminders need setup.** Without `NEXT_PUBLIC_VAPID_PUBLIC_KEY` and the
+  deployed `send-reminders` function, "Remind me later" falls back to the
+  `localStorage` reminder on the Home active-Mission banner. Demo mode never
+  pushes.
 - **Checkout completion is not observed.** No order record is created anywhere and
   the app cannot tell whether a Shopify checkout completed.
 - **The certificate is fulfilled manually.** `GET MY CERTIFICATE` sets
   `certificate_requested`; nothing is emailed automatically.
 - **Demo mode is device-local.** Clearing site data erases everything, and demo
   data never syncs anywhere.
-- No service worker, so there is no offline support.
+- The service worker handles push only — there is no offline support or caching.

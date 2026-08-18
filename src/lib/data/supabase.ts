@@ -190,6 +190,31 @@ export const supabaseBackend: DataBackend = {
     return data as unknown as Mission;
   },
 
+  async scheduleReminder(missionId, sendAt): Promise<void> {
+    const { supabase, user } = await requireUser();
+    const { error: deleteError } = await supabase
+      .from("reminders")
+      .delete()
+      .eq("mission_id", missionId);
+    if (deleteError) throw deleteError;
+
+    const { error } = await supabase.from("reminders").insert({
+      user_id: user.id,
+      mission_id: missionId,
+      send_at: sendAt.toISOString(),
+    });
+    if (error) throw error;
+  },
+
+  async cancelReminders(missionId): Promise<void> {
+    const { supabase } = await requireUser();
+    const { error } = await supabase
+      .from("reminders")
+      .delete()
+      .eq("mission_id", missionId);
+    if (error) throw error;
+  },
+
   async deleteAccount(): Promise<void> {
     const response = await fetch("/api/account/delete", { method: "POST" });
     if (!response.ok) {

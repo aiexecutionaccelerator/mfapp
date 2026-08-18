@@ -66,7 +66,107 @@ team members. Configure **Authentication → SMTP Settings** with Brevo (free,
    With RLS on and the policies above, user B cannot read or update user A's
    rows even by guessing an id.
 
-## 5. Account deletion
+## 5. Web Push reminders
+
+Only one notification is ever sent: **"Your Mission is active. Did you do it?"**
+at the time the user picked on the Mission Active screen. Tapping it opens
+`/mission/checkin/{missionId}`. No marketing, no streaks, no campaigns.
+
+### 5.1 Apply migration 0003
+
+Run `migrations/0003_push.sql` (SQL editor or `supabase db push`). It creates
+`push_subscriptions` and `reminders` with RLS that scopes every row to
+`auth.uid()`. The pg_cron schedule at the bottom of that file is commented out
+on purpose — it carries placeholders and is step 5.5 below.
+
+### 5.2 Generate VAPID keys
+
+```bash
+npx web-push generate-vapid-keys
+```
+
+Put the **public** key in the app environment as
+`NEXT_PUBLIC_VAPID_PUBLIC_KEY` (it is baked into the client bundle at build
+time, so it must be set before `next build` / `cf:build`). The **private** key
+never leaves the function secrets.
+
+### 5.3 Set the function secrets
+
+`CRON_SECRET` is any long random string — generate one with
+`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
+
+```bash
+supabase link --project-ref <PROJECT_REF>
+supabase secrets set \
+  VAPID_PUBLIC_KEY=<public key> \
+  VAPID_PRIVATE_KEY=<private key> \
+  VAPID_SUBJECT=mailto:antonio@missionfragrances.com \
+  CRON_SECRET=<random string>
+```
+
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected into Edge Functions
+automatically — do not set them by hand.
+
+### 5.4 Deploy the function
+
+```bash
+supabase functions deploy send-reminders --no-verify-jwt
+```
+
+`--no-verify-jwt` is required because pg_cron calls it with the `CRON_SECRET`
+bearer token instead of a user JWT; the function rejects any request whose
+`Authorization` header is not `Bearer <CRON_SECRET>`.
+
+### 5.5 Enable pg_cron / pg_net and schedule it
+
+Dashboard → **Database → Extensions** → enable `pg_cron` and `pg_net` (or run
+`create extension if not exists pg_cron;` and
+`create extension if not exists pg_net with schema extensions;`).
+
+Then, in the SQL editor, with `<PROJECT_REF>` and `<CRON_SECRET>` replaced:
+
+```sql
+select cron.schedule(
+  'send-reminders',
+  '* * * * *',
+  $$
+  select net.http_post(
+    url := 'https://<PROJECT_REF>.supabase.co/functions/v1/send-reminders',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'Authorization', 'Bearer <CRON_SECRET>'
+    ),
+    body := '{}'::jsonb,
+    timeout_milliseconds := 30000
+  );
+  $$
+);
+```
+
+Check it with `select * from cron.job;` and
+`select * from cron.job_run_details order by start_time desc limit 10;`.
+Remove it with `select cron.unschedule('send-reminders');`.
+
+### 5.6 What the function does each minute
+
+1. Selects up to 200 reminders with `sent_at is null and send_at <= now()`.
+2. Deletes any whose Mission is no longer `active`.
+3. Sends the notification to every `push_subscriptions` row of those users.
+4. Marks the reminders `sent_at`.
+5. Deletes any subscription whose endpoint returned 404 or 410.
+
+### 5.7 Verify end to end
+
+1. On Android Chrome (or desktop Chrome), sign in, start a Mission, tap
+   **REMIND ME LATER → 30 minutes → ALLOW NOTIFICATIONS**.
+2. `select * from public.push_subscriptions;` shows one row for your user.
+3. `select * from public.reminders;` shows one unsent row.
+4. `update public.reminders set send_at = now() where sent_at is null;` and wait
+   for the next minute — the notification arrives and `sent_at` fills in.
+5. On iPhone the app must first be added to the Home Screen; Safari itself
+   cannot receive Web Push.
+
+## 6. Account deletion
 
 `POST /api/account/delete` verifies the caller's session cookie, then uses the
 service-role client to delete the user's `missions`, their `profiles` row, and

@@ -107,6 +107,18 @@ function clearCache(): void {
   publish(EMPTY);
 }
 
+/**
+ * A Mission that is over must never fire a push. A failure here must not fail
+ * the completion the user just made, so it is best-effort.
+ */
+async function dropReminders(missionId: string): Promise<void> {
+  try {
+    await data.cancelReminders(missionId);
+  } catch {
+    /* the Edge Function drops reminders for non-active Missions too */
+  }
+}
+
 /* ---------- writes ---------- */
 
 export const store = {
@@ -132,13 +144,23 @@ export const store = {
   ): Promise<Mission> {
     const mission = await data.completeMission(id, reflection);
     putMission(mission);
+    await dropReminders(id);
     return mission;
   },
 
   async endMission(id: string): Promise<Mission> {
     const mission = await data.endMission(id);
     putMission(mission);
+    await dropReminders(id);
     return mission;
+  },
+
+  scheduleReminder(missionId: string, sendAt: Date): Promise<void> {
+    return data.scheduleReminder(missionId, sendAt);
+  },
+
+  cancelReminders(missionId: string): Promise<void> {
+    return data.cancelReminders(missionId);
   },
 
   async updateMissionAction(id: string, action_text: string): Promise<Mission> {

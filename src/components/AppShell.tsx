@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import DemoBanner from "@/components/DemoBanner";
+import ServiceWorkerRegistrar from "@/components/ServiceWorkerRegistrar";
 import { isDemo } from "@/lib/env";
 
 export default function AppShell({ children }: { children: ReactNode }) {
@@ -10,7 +11,10 @@ export default function AppShell({ children }: { children: ReactNode }) {
         {isDemo() ? (
           <DemoBanner />
         ) : (
-          <div aria-hidden className="h-[env(safe-area-inset-top)] shrink-0" />
+          <>
+            <div aria-hidden className="h-[env(safe-area-inset-top)] shrink-0" />
+            <ServiceWorkerRegistrar />
+          </>
         )}
         {children}
       </div>

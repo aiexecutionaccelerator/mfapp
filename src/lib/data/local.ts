@@ -135,6 +135,12 @@ export const localBackend: DataBackend = {
     return saveMission({ ...requireMission(id), action_text });
   },
 
+  // Demo mode has no server to push from — the localStorage reminder written
+  // by the Mission Active screen still drives the Home banner.
+  async scheduleReminder() {},
+
+  async cancelReminders() {},
+
   async deleteAccount() {
     if (typeof window === "undefined") return;
     window.localStorage.removeItem(PROFILE_KEY);
