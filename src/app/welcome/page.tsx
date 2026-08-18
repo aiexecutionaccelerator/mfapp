@@ -6,6 +6,7 @@ import Wordmark from "@/components/Wordmark";
 import Button from "@/components/ui/Button";
 import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
+import { ART, artUrl } from "@/lib/art";
 import { data } from "@/lib/data";
 import { LEGAL_PRIVACY_URL, LEGAL_TERMS_URL, isDemo } from "@/lib/env";
 import { createClient } from "@/lib/supabase/client";
@@ -23,6 +24,7 @@ function DeletedNotice() {
 export default function WelcomePage() {
   const router = useRouter();
   const demo = isDemo();
+  const hero = artUrl(ART.hero);
   const [email, setEmail] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +61,7 @@ export default function WelcomePage() {
         <Wordmark size="lg" />
       </div>
 
-      {/* Watermark lives in the empty space only — never behind readable text. */}
+      {/* Hero lives in the empty space only — never behind readable text. */}
       <div
         aria-hidden
         className="pointer-events-none relative min-h-16 flex-1 overflow-hidden"
@@ -69,6 +71,15 @@ export default function WelcomePage() {
           <p className="ghost-word relative text-[64px]">COURAGE</p>
           <p className="ghost-word relative text-[64px]">COMMITMENT</p>
         </div>
+        {hero && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={hero}
+            alt=""
+            className="absolute inset-0 m-auto h-[92%] max-h-[420px] w-auto object-contain"
+            style={{ filter: "drop-shadow(0 24px 40px rgba(0,0,0,.55))" }}
+          />
+        )}
       </div>
 
       <div className="pt-10">

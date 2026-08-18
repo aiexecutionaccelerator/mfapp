@@ -22,7 +22,7 @@ export function hasShopify(): boolean {
   );
 }
 
-// TODO: replace with the real legal URLs before launch.
-export const LEGAL_PRIVACY_URL = "#";
-export const LEGAL_TERMS_URL = "#";
-export const SUPPORT_EMAIL = "support@missionfragrances.com";
+// In-app legal pages (src/app/privacy, src/app/terms).
+export const LEGAL_PRIVACY_URL = "/privacy";
+export const LEGAL_TERMS_URL = "/terms";
+export const SUPPORT_EMAIL = "antonio@missionfragrances.com";

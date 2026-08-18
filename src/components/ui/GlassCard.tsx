@@ -33,9 +33,8 @@ export default function GlassCard({
           aria-hidden
           className="absolute top-0 bottom-0 left-0 w-[2px]"
           style={{
-            background: tone.goldTrim
-              ? "linear-gradient(180deg,#8F6E1E,#D4AF37,#E8D28A)"
-              : tone.color,
+            background: tone.color,
+            boxShadow: tone.edge ? `1px 0 0 ${tone.edge}` : undefined,
           }}
         />
       )}

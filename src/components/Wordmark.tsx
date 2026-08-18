@@ -1,4 +1,4 @@
-import { artUrl } from "@/lib/art";
+import { ART, artUrl } from "@/lib/art";
 import { cn } from "@/lib/utils";
 
 function Crest({ size }: { size: number }) {
@@ -28,7 +28,7 @@ function Crest({ size }: { size: number }) {
   );
 }
 
-/** Real logo drops in at /images/logo.svg — used once registered in lib/art.ts. */
+/** Brand wordmark image; falls back to typeset MISSION ⟡ FRAGRANCES. */
 export default function Wordmark({
   size = "sm",
   className,
@@ -36,18 +36,17 @@ export default function Wordmark({
   size?: "sm" | "lg";
   className?: string;
 }) {
-  const textSize = size === "lg" ? "text-[34px]" : "text-[22px]";
+  const textSize = size === "lg" ? "text-[30px]" : "text-[18px]";
   const crestSize = size === "lg" ? 30 : 20;
-  const logo = artUrl("logo.svg");
+  const logo = artUrl(ART.wordmark);
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
       {logo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={logo} alt="Mission" className={size === "lg" ? "h-9" : "h-6"} />
+        <img src={logo} alt="Mission Fragrances" className={size === "lg" ? "h-9 w-auto" : "h-[22px] w-auto"} />
       ) : (
         <>
-          <Crest size={crestSize} />
           <span
             className={cn(
               "font-display tracking-[0.14em] text-gold-gradient",
@@ -55,6 +54,15 @@ export default function Wordmark({
             )}
           >
             MISSION
+          </span>
+          <Crest size={crestSize} />
+          <span
+            className={cn(
+              "font-display tracking-[0.14em] text-gold-gradient",
+              textSize,
+            )}
+          >
+            FRAGRANCES
           </span>
         </>
       )}

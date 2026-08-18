@@ -19,14 +19,14 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Mission", template: "%s · Mission" },
+  title: { default: "Mission Fragrances", template: "%s · Mission Fragrances" },
   description: "Honor. Courage. Commitment. Put them into action.",
   manifest: "/manifest.webmanifest",
-  applicationName: "Mission",
+  applicationName: "Mission Fragrances",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Mission",
+    title: "Mission Fragrances",
   },
   icons: {
     icon: "/icons/icon-192.png",

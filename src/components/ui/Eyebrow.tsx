@@ -11,7 +11,7 @@ export function AccentDot({ trigger }: { trigger: Trigger }) {
       className="inline-block h-2 w-2 shrink-0 rounded-full"
       style={{
         background: tone.color,
-        boxShadow: tone.goldTrim ? "0 0 0 1px var(--gold-500)" : undefined,
+        boxShadow: tone.edge ? `0 0 0 1px ${tone.edge}` : undefined,
       }}
     />
   );

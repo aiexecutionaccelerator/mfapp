@@ -8,36 +8,50 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
 import { pickCompletionLine } from "@/content/completionLines";
 import { TRIGGERS } from "@/content/triggers";
+import { ART, artUrl } from "@/lib/art";
 import { useAppData } from "@/lib/data/store";
 import { computeStats, repNumberFor } from "@/lib/stats";
 
 function GoldCoin() {
+  const crest = artUrl(ART.crest);
   return (
-    <svg width="96" height="96" viewBox="0 0 96 96" fill="none" aria-hidden>
-      <defs>
-        <linearGradient id="coin-gold" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#8F6E1E" />
-          <stop offset="45%" stopColor="#D4AF37" />
-          <stop offset="70%" stopColor="#E8D28A" />
-          <stop offset="100%" stopColor="#B8912F" />
-        </linearGradient>
-      </defs>
-      <circle
-        cx="48"
-        cy="48"
-        r="42"
-        stroke="url(#coin-gold)"
-        strokeWidth="3"
-        fill="rgba(212,175,55,.06)"
-      />
-      <path
-        d="M32 49.5 43 60l21-24"
-        stroke="url(#coin-gold)"
-        strokeWidth="4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <div className="relative h-24 w-24" aria-hidden>
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none" className="absolute inset-0">
+        <defs>
+          <linearGradient id="coin-gold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#8F6E1E" />
+            <stop offset="45%" stopColor="#D4AF37" />
+            <stop offset="70%" stopColor="#E8D28A" />
+            <stop offset="100%" stopColor="#B8912F" />
+          </linearGradient>
+        </defs>
+        <circle
+          cx="48"
+          cy="48"
+          r="42"
+          stroke="url(#coin-gold)"
+          strokeWidth="3"
+          fill="rgba(212,175,55,.06)"
+        />
+        {!crest && (
+          <path
+            d="M32 49.5 43 60l21-24"
+            stroke="url(#coin-gold)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        )}
+      </svg>
+      {crest && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={crest}
+          alt=""
+          className="absolute inset-0 m-auto h-12 w-12 object-contain"
+        />
+      )}
+    </div>
   );
 }
 

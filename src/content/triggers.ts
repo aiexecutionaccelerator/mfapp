@@ -21,17 +21,16 @@ export const TRIGGERS = {
 
 export const TRIGGER_ORDER = ["honor", "courage", "commitment"] as const;
 
-/** Accents: Honor = silver, Courage = gold, Commitment = smoke with gold trim. */
+/**
+ * Accents match the bottles: Honor = silver, Courage = gold, Commitment = black.
+ * Black needs a faint light edge to read against the dark UI (`edge`).
+ */
 export const TRIGGER_ACCENTS = {
-  honor: { color: "var(--honor)", glow: "var(--honor-glow)", goldTrim: false },
-  courage: {
-    color: "var(--courage)",
-    glow: "var(--courage-glow)",
-    goldTrim: false,
-  },
+  honor: { color: "var(--honor)", glow: "var(--honor-glow)", edge: null },
+  courage: { color: "var(--courage)", glow: "var(--courage-glow)", edge: null },
   commitment: {
     color: "var(--commitment)",
     glow: "var(--commitment-glow)",
-    goldTrim: true,
+    edge: "rgba(245,241,232,.32)",
   },
 } as const;

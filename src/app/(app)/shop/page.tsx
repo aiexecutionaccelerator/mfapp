@@ -17,10 +17,15 @@ function Hero() {
   const hero = artUrl(PRODUCT.heroImage);
 
   return (
-    <div className="glass relative mt-6 flex items-end justify-center gap-4 overflow-hidden rounded-[20px] px-5 py-8">
+    <div className="glass relative mt-6 flex items-end justify-center gap-4 overflow-hidden rounded-[20px] px-5 py-6">
       {hero ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={hero} alt="" className="w-full" />
+        <img
+          src={hero}
+          alt="Mission Fragrances — the complete set, Black Edition"
+          className="max-h-[300px] w-full object-contain"
+          style={{ filter: "drop-shadow(0 16px 28px rgba(0,0,0,.5))" }}
+        />
       ) : (
         <>
           {TRIGGER_ORDER.map((trigger) => (

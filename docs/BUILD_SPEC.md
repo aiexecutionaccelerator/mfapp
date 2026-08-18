@@ -134,7 +134,7 @@ Near-black navy/charcoal backgrounds with soft radial glow, warm gold gradient t
 --honor-glow: rgba(201,205,211,.18)
 --courage: #D4AF37     /* gold */
 --courage-glow: rgba(212,175,55,.22)
---commitment: #3A3F4B  /* smoke, with gold trim */
+--commitment: #050609  /* black (matches the bottle); rendered with a faint light edge */
 --commitment-glow: rgba(212,175,55,.10)
 --success: #7FB77E
 --danger: #C96B5B
