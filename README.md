@@ -63,7 +63,7 @@ See `supabase/README.md` for the full walkthrough:
 1. Create a project → copy URL + anon key into `.env.local`.
 2. Run `supabase/migrations/0001_init.sql` in the SQL editor, or `supabase db push`.
 3. Authentication → Email Templates → **Magic Link** → include `{{ .Token }}` so a
-   6-digit code is emailed instead of a link.
+   sign-in code (6–10 digits, per your Auth settings) is emailed instead of a link.
 4. Put the service-role key in the server-side environment only (Vercel project
    env, not `NEXT_PUBLIC_*`).
 

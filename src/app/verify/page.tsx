@@ -7,6 +7,8 @@ import Button from "@/components/ui/Button";
 import Headline from "@/components/ui/Headline";
 import { createClient } from "@/lib/supabase/client";
 
+const MIN_CODE_LENGTH = 6;
+const MAX_CODE_LENGTH = 10;
 const RESEND_COOLDOWN = 30;
 
 function VerifyInner() {
@@ -28,7 +30,7 @@ function VerifyInner() {
 
   const verify = useCallback(
     async (token: string) => {
-      if (submitting.current || token.length !== 6) return;
+      if (submitting.current || token.length < MIN_CODE_LENGTH) return;
       submitting.current = true;
       setPending(true);
       setError(null);
@@ -51,10 +53,10 @@ function VerifyInner() {
   );
 
   function onCodeChange(value: string) {
-    const digits = value.replace(/\D/g, "").slice(0, 6);
+    // Supabase OTP length is configurable (6–10 digits); accept the range and
+    // let the user submit explicitly rather than guessing when it's complete.
+    const digits = value.replace(/\D/g, "").slice(0, MAX_CODE_LENGTH);
     setCode(digits);
-    // Auto-submit as soon as the code is complete.
-    if (digits.length === 6) void verify(digits);
   }
 
   async function resend() {
@@ -78,7 +80,7 @@ function VerifyInner() {
       <div className="mt-8">
         <Headline level={2}>CHECK YOUR EMAIL</Headline>
         <p className="mt-3 text-[17px] text-ink-1">
-          We sent a 6-digit code to {email}.
+          We sent a sign-in code to {email}.
         </p>
 
         <form
@@ -92,7 +94,7 @@ function VerifyInner() {
             onChange={(event) => onCodeChange(event.target.value)}
             inputMode="numeric"
             autoComplete="one-time-code"
-            aria-label="6-digit code"
+            aria-label="Sign-in code"
             autoFocus
             // The tracking adds a trailing gap; indent by the same amount so
             // the digits sit optically centred.
@@ -104,7 +106,7 @@ function VerifyInner() {
           )}
 
           <div className="mt-6 space-y-2">
-            <Button type="submit" loading={pending} disabled={code.length !== 6}>
+            <Button type="submit" loading={pending} disabled={code.length < MIN_CODE_LENGTH}>
               VERIFY
             </Button>
             <Button variant="ghost" disabled={cooldown > 0} onClick={resend}>

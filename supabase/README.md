@@ -27,7 +27,7 @@ The migration creates `profiles` and `missions`, the `updated_at` triggers, the
 `handle_new_user` signup trigger, and row-level-security policies that restrict
 every row to `auth.uid()`.
 
-## 3. Configure the 6-digit OTP email
+## 3. Configure the OTP code email
 
 The app signs in with `signInWithOtp` + `verifyOtp`, so the email must contain a
 **code**, not a magic link.
@@ -42,8 +42,19 @@ include `{{ .Token }}`:
 <p>The code expires in 60 minutes. If you didn't request it, ignore this email.</p>
 ```
 
-Keep **Authentication → Providers → Email** enabled with "Confirm email" on;
-`shouldCreateUser: true` means the same flow works for sign-up and sign-in.
+Then go to **Authentication → Sign In / Providers → Email** and turn **"Confirm
+email" OFF**. With it on, brand-new users receive the *Confirm sign up* template
+(a link) instead of the OTP template above. The OTP code already verifies the
+address, so confirmation adds nothing. `shouldCreateUser: true` means the same
+flow works for sign-up and sign-in.
+
+Code length: Supabase defaults to an 8-digit OTP (configurable 6–10 under
+Authentication → Settings → "Email OTP length"). The app accepts any length in
+that range.
+
+Custom SMTP is required: Supabase's built-in mailer only delivers to project
+team members. Configure **Authentication → SMTP Settings** with Brevo (free,
+`smtp-relay.brevo.com:587`) or Resend (`smtp.resend.com:465`, user `resend`).
 
 ## 4. Verify RLS with two users
 
