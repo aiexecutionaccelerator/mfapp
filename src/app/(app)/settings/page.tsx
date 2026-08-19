@@ -31,6 +31,12 @@ import {
 } from "@/lib/push";
 import { cn } from "@/lib/utils";
 
+/** "0.5.0-beta" → "Beta 0.5"; "1.2.0" → "v1.2.0". */
+function formatVersion(v: string): string {
+  const m = v.match(/^(\d+)\.(\d+)\.\d+-beta/);
+  return m ? `Beta ${m[1]}.${m[2]}` : `v${v}`;
+}
+
 const DEV_OPTIONS = [
   { value: "new", label: "New user" },
   { value: "1", label: "Day 1" },
@@ -347,7 +353,7 @@ export default function SettingsPage() {
       </Group>
 
       <p className="mt-8 text-center text-[13px] text-ink-2">
-        Mission Fragrances v{pkg.version}
+        Mission Fragrances · {formatVersion(pkg.version)}
       </p>
 
       <Sheet
