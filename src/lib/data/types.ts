@@ -32,13 +32,20 @@ export interface MissionDraft {
   action_category: string | null;
 }
 
+/** One finished course lesson. `lesson_id` indexes `content/course.ts`. */
+export interface CourseProgress {
+  lesson_id: string;
+  completed_at: string;
+}
+
 export interface AppSnapshot {
   profile: Profile;
   missions: Mission[];
+  courseProgress: CourseProgress[];
 }
 
 export interface DataBackend {
-  /** Profile + missions in one round-trip — used for the initial load. */
+  /** Profile + missions + course progress in one round-trip (initial load). */
   loadAll(): Promise<AppSnapshot>;
   getProfile(): Promise<Profile>;
   updateProfile(patch: Partial<Profile>): Promise<Profile>;
@@ -56,6 +63,12 @@ export interface DataBackend {
   completeMission(id: string, reflection?: string | null): Promise<Mission>;
   endMission(id: string): Promise<Mission>;
   updateMissionAction(id: string, action_text: string): Promise<Mission>;
+  /** newest last — the order they were finished in */
+  listCourseProgress(): Promise<CourseProgress[]>;
+  /** idempotent: completing an already-complete lesson returns the first row */
+  completeLesson(lessonId: string): Promise<CourseProgress>;
+  /** Not exposed in the UI — kept for dev and for undoing a mistap later. */
+  uncompleteLesson(lessonId: string): Promise<void>;
   /** Replaces any pending push reminder for this Mission. No-op in demo. */
   scheduleReminder(missionId: string, sendAt: Date): Promise<void>;
   cancelReminders(missionId: string): Promise<void>;

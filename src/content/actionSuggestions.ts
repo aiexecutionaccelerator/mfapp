@@ -4,42 +4,97 @@ import { slugify } from "@/lib/utils";
 export interface ActionSuggestion {
   id: string;
   trigger: Trigger;
+  /** The declared action, shown as the row's first line. */
   text: string;
-  category: string;
+  /** One line under it, so the man knows what he is signing up for. */
+  definition: string;
 }
 
-const RAW: Record<Trigger, string[]> = {
+const RAW: Record<Trigger, Array<{ text: string; definition: string }>> = {
+  // From the course lesson "The Importance of Honor".
   honor: [
-    "Stay calm under pressure",
-    "Be fully present",
-    "Tell the truth directly",
-    "Lead by example",
-    "Keep my standard",
+    {
+      text: "Maintain my standards in the face of adversity",
+      definition:
+        "Hold the line on what you value when it would be easier to let it slide.",
+    },
+    {
+      text: "Keep my word",
+      definition:
+        "Do exactly what you said you would do, when you said you would do it.",
+    },
+    {
+      text: "Take responsibility for a mistake",
+      definition: "Own it, say it plainly, and start making it right.",
+    },
+    {
+      text: "Stand up for what I believe in",
+      definition: "Voice your position even when it's unpopular or uncomfortable.",
+    },
+    {
+      text: "Lead by example",
+      definition: "Act the way you want the people around you to act.",
+    },
   ],
+  // From the course lesson "The Importance of Courage".
   courage: [
-    "Make the call",
-    "Speak up",
-    "Introduce myself",
-    "Have the difficult conversation",
-    "Ask the question",
+    {
+      text: "Face a small fear today",
+      definition: "The ladder, the call, the room. Do the thing you've been avoiding.",
+    },
+    {
+      text: "Say no to something I don't want to do",
+      definition:
+        "Decline it plainly. No long excuse. You won't win a medal — you'll win the fear.",
+    },
+    {
+      text: "Stick to the plan when it could go wrong",
+      definition: "Hold course when the doubt shows up.",
+    },
+    {
+      text: "Make the tough decision under pressure",
+      definition: "Decide what's right and act on it, stress and all.",
+    },
+    {
+      text: "Lead by example in a hard moment",
+      definition: "Be the one who moves first when nobody else will.",
+    },
   ],
+  // From the course lesson "The Importance of Commitment".
   commitment: [
-    "Finish the workout",
-    "Complete deep work",
-    "Finish the project",
-    "Keep the promise",
-    "Do the task I keep postponing",
+    {
+      text: "Do what I planned instead of what I feel like",
+      definition:
+        "The gym over sleeping in. The healthy meal over fast food. Today's decision, not today's mood.",
+    },
+    {
+      text: "Finish what I started",
+      definition: "The project, the book, the set. Close it out, obstacles and all.",
+    },
+    {
+      text: "Keep a promise I made",
+      definition: "To someone else or to yourself. Fulfill the obligation.",
+    },
+    {
+      text: "Hold my daily discipline",
+      definition:
+        "The morning routine, the practice, the habit — done, no renegotiating.",
+    },
+    {
+      text: "See plans with others through to the end",
+      definition: "You said you'd be there. Be there, and stay.",
+    },
   ],
 };
 
 export const ACTION_SUGGESTIONS: ActionSuggestion[] = (
   Object.keys(RAW) as Trigger[]
 ).flatMap((trigger) =>
-  RAW[trigger].map((text) => ({
+  RAW[trigger].map(({ text, definition }) => ({
     id: `${trigger}-${slugify(text)}`,
     trigger,
     text,
-    category: slugify(text),
+    definition,
   })),
 );
 

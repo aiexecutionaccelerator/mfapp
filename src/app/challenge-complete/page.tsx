@@ -25,7 +25,7 @@ export default function ChallengeCompletePage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const { profile, missions, error, refresh } = useAppData();
+  const { profile, missions, courseProgress, error, refresh } = useAppData();
   const [pending, setPending] = useState(false);
 
   const reachable =
@@ -42,7 +42,7 @@ export default function ChallengeCompletePage() {
     showToast("Couldn't load your Mission.", { retry: () => void refresh() });
   }, [error, refresh, showToast]);
 
-  if (!profile || !missions || !reachable) {
+  if (!profile || !missions || !courseProgress || !reachable) {
     return (
       <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
@@ -50,7 +50,7 @@ export default function ChallengeCompletePage() {
     );
   }
 
-  const stats = computeStats(missions);
+  const stats = computeStats(missions, courseProgress);
 
   async function continueMission() {
     setPending(true);
@@ -96,6 +96,7 @@ export default function ChallengeCompletePage() {
         <Stat label="Honor Reps" value={stats.reps.honor} />
         <Stat label="Courage Reps" value={stats.reps.courage} />
         <Stat label="Commitment Reps" value={stats.reps.commitment} />
+        <Stat label="Course Reps" value={stats.reps.course} />
       </div>
 
       <BottomActions className="pt-10">

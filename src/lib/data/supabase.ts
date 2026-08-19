@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/client";
 import type {
   AppSnapshot,
+  CourseProgress,
   DataBackend,
   Mission,
   Profile,
@@ -37,17 +38,27 @@ export const supabaseBackend: DataBackend = {
       const payload = data as {
         profile: Profile | null;
         missions: Mission[] | null;
+        course_progress?: CourseProgress[] | null;
       };
       if (payload.profile) {
-        return { profile: payload.profile, missions: payload.missions ?? [] };
+        return {
+          profile: payload.profile,
+          missions: payload.missions ?? [],
+          // Still the 0002 function? Ask for the progress separately rather
+          // than reporting an empty course.
+          courseProgress:
+            payload.course_progress ??
+            (await supabaseBackend.listCourseProgress().catch(() => [])),
+        };
       }
     }
 
-    const [profile, missions] = await Promise.all([
+    const [profile, missions, courseProgress] = await Promise.all([
       supabaseBackend.getProfile(),
       supabaseBackend.listMissions(),
+      supabaseBackend.listCourseProgress().catch(() => []),
     ]);
-    return { profile, missions };
+    return { profile, missions, courseProgress };
   },
 
   async getProfile(): Promise<Profile> {
@@ -188,6 +199,53 @@ export const supabaseBackend: DataBackend = {
       .single();
     if (error) throw error;
     return data as unknown as Mission;
+  },
+
+  async listCourseProgress(): Promise<CourseProgress[]> {
+    const { supabase, user } = await requireUser();
+    const { data, error } = await supabase
+      .from("course_progress")
+      .select("lesson_id,completed_at")
+      .eq("user_id", user.id)
+      .order("completed_at", { ascending: true });
+    if (error) throw error;
+    return (data ?? []) as unknown as CourseProgress[];
+  },
+
+  async completeLesson(lessonId): Promise<CourseProgress> {
+    const { supabase, user } = await requireUser();
+    const { data, error } = await supabase
+      .from("course_progress")
+      .upsert(
+        { user_id: user.id, lesson_id: lessonId },
+        { onConflict: "user_id,lesson_id", ignoreDuplicates: true },
+      )
+      .select("lesson_id,completed_at");
+    if (error) throw error;
+
+    const inserted = (data ?? [])[0] as unknown as CourseProgress | undefined;
+    if (inserted) return inserted;
+
+    // Already complete — the first completion is the one that counts.
+    const { data: existing, error: readError } = await supabase
+      .from("course_progress")
+      .select("lesson_id,completed_at")
+      .eq("user_id", user.id)
+      .eq("lesson_id", lessonId)
+      .maybeSingle();
+    if (readError) throw readError;
+    if (!existing) throw new Error("Could not save your progress");
+    return existing as unknown as CourseProgress;
+  },
+
+  async uncompleteLesson(lessonId): Promise<void> {
+    const { supabase, user } = await requireUser();
+    const { error } = await supabase
+      .from("course_progress")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("lesson_id", lessonId);
+    if (error) throw error;
   },
 
   async scheduleReminder(missionId, sendAt): Promise<void> {

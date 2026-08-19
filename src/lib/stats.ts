@@ -1,17 +1,32 @@
 import { differenceInCalendarDays } from "date-fns";
-import type { Mission, Trigger } from "@/lib/data/types";
+import type { CourseProgress, Mission, Trigger } from "@/lib/data/types";
+
+/** A rep is a rep: three from Missions, one from finishing a course lesson. */
+export type RepKey = Trigger | "course";
+
+export const REP_ORDER: RepKey[] = [
+  "honor",
+  "courage",
+  "commitment",
+  "course",
+];
 
 export interface Stats {
-  reps: Record<Trigger, number>;
+  reps: Record<RepKey, number>;
   started: number;
   completed: number;
   ended: number;
   /** completed / (completed + ended) — only meaningful when denominator >= 3 */
   followThroughRate: number | null;
   last30DaysCompleted: number;
+  lessonsCompleted: number;
 }
 
-export function computeStats(missions: Mission[], now: Date = new Date()): Stats {
+export function computeStats(
+  missions: Mission[],
+  courseProgress: CourseProgress[] = [],
+  now: Date = new Date(),
+): Stats {
   const completedMissions = missions.filter((m) => m.status === "completed");
   const ended = missions.filter((m) => m.status === "ended").length;
   const denominator = completedMissions.length + ended;
@@ -22,6 +37,7 @@ export function computeStats(missions: Mission[], now: Date = new Date()): Stats
       courage: completedMissions.filter((m) => m.trigger === "courage").length,
       commitment: completedMissions.filter((m) => m.trigger === "commitment")
         .length,
+      course: courseProgress.length,
     },
     started: missions.length,
     completed: completedMissions.length,
@@ -33,6 +49,7 @@ export function computeStats(missions: Mission[], now: Date = new Date()): Stats
         m.completed_at &&
         differenceInCalendarDays(now, new Date(m.completed_at)) <= 30,
     ).length,
+    lessonsCompleted: courseProgress.length,
   };
 }
 

@@ -2,7 +2,12 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { data } from "@/lib/data";
-import type { Mission, Profile, Trigger } from "@/lib/data/types";
+import type {
+  CourseProgress,
+  Mission,
+  Profile,
+  Trigger,
+} from "@/lib/data/types";
 
 /**
  * One shared, in-memory copy of the signed-in user's profile + missions.
@@ -21,10 +26,16 @@ const STALE_MS = 30_000;
 interface Cache {
   profile: Profile | null;
   missions: Mission[] | null;
+  courseProgress: CourseProgress[] | null;
   error: Error | null;
 }
 
-const EMPTY: Cache = { profile: null, missions: null, error: null };
+const EMPTY: Cache = {
+  profile: null,
+  missions: null,
+  courseProgress: null,
+  error: null,
+};
 
 let cache: Cache = EMPTY;
 let loadedAt = 0;
@@ -55,9 +66,9 @@ function load(): Promise<void> {
   if (inFlight) return inFlight;
   inFlight = data
     .loadAll()
-    .then(({ profile, missions }) => {
+    .then(({ profile, missions, courseProgress }) => {
       loadedAt = Date.now();
-      publish({ profile, missions, error: null });
+      publish({ profile, missions, courseProgress, error: null });
     })
     .catch((cause: unknown) => {
       publish({
@@ -77,7 +88,11 @@ export function refreshAppData(): Promise<void> {
 }
 
 function ensureLoaded(): void {
-  if (cache.profile === null || cache.missions === null) {
+  if (
+    cache.profile === null ||
+    cache.missions === null ||
+    cache.courseProgress === null
+  ) {
     void load();
     return;
   }
@@ -100,6 +115,22 @@ function putMission(mission: Mission): void {
     (a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime(),
   );
   publish({ ...cache, missions: next });
+}
+
+function putCourseProgress(row: CourseProgress): void {
+  const current = cache.courseProgress;
+  if (!current) return;
+  if (current.some((item) => item.lesson_id === row.lesson_id)) return;
+  publish({ ...cache, courseProgress: [...current, row] });
+}
+
+function dropCourseProgress(lessonId: string): void {
+  const current = cache.courseProgress;
+  if (!current) return;
+  publish({
+    ...cache,
+    courseProgress: current.filter((item) => item.lesson_id !== lessonId),
+  });
 }
 
 function clearCache(): void {
@@ -169,6 +200,18 @@ export const store = {
     return mission;
   },
 
+  async completeLesson(lessonId: string): Promise<CourseProgress> {
+    const row = await data.completeLesson(lessonId);
+    putCourseProgress(row);
+    return row;
+  },
+
+  /** Dev only — no screen calls this. */
+  async uncompleteLesson(lessonId: string): Promise<void> {
+    await data.uncompleteLesson(lessonId);
+    dropCourseProgress(lessonId);
+  },
+
   async signOut(): Promise<void> {
     await data.signOut();
     clearCache();
@@ -185,6 +228,7 @@ export const store = {
 export interface AppData {
   profile: Profile | null;
   missions: Mission[] | null;
+  courseProgress: CourseProgress[] | null;
   /** True only until the first successful load — never during a revalidate. */
   loading: boolean;
   error: Error | null;
@@ -205,7 +249,11 @@ export function useAppData(): AppData {
   return {
     profile: snapshot.profile,
     missions: snapshot.missions,
-    loading: snapshot.profile === null || snapshot.missions === null,
+    courseProgress: snapshot.courseProgress,
+    loading:
+      snapshot.profile === null ||
+      snapshot.missions === null ||
+      snapshot.courseProgress === null,
     error: snapshot.error,
     refresh: refreshAppData,
   };

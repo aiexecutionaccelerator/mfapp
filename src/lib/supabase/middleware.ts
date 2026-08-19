@@ -4,6 +4,7 @@ import { SUPABASE_ANON_KEY, SUPABASE_URL, isDemo } from "@/lib/env";
 
 const PROTECTED = [
   "/home",
+  "/course",
   "/log",
   "/progress",
   "/settings",

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { BookOpen, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -80,7 +80,7 @@ export default function HomePage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const { profile, missions, error, refresh } = useAppData();
+  const { profile, missions, courseProgress, error, refresh } = useAppData();
 
   useEffect(() => {
     if (!error) return;
@@ -109,7 +109,7 @@ export default function HomePage() {
   const mode = profile ? getMode(profile) : "challenge";
   const day = profile ? challengeDay(profile) : 1;
   const phase = getPhase(day);
-  const stats = computeStats(missions ?? []);
+  const stats = computeStats(missions ?? [], courseProgress ?? []);
 
   return (
     <main className="pt-4">
@@ -155,6 +155,21 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+
+          {/* The course is the way in. It disappears the moment he starts. */}
+          {stats.lessonsCompleted === 0 && (
+            <Link href="/course" className="mt-6 block">
+              <GlassCard className="border-[rgba(201,166,72,.35)] p-4">
+                <div className="flex items-center gap-3">
+                  <BookOpen aria-hidden className="shrink-0 text-gold-300" size={20} />
+                  <p className="eyebrow flex-1 text-gold-300">
+                    NEW? START WITH THE COURSE
+                  </p>
+                  <ChevronRight aria-hidden className="text-ink-2" size={20} />
+                </div>
+              </GlassCard>
+            </Link>
+          )}
 
           <div className="mt-8">
             <RepCounts reps={stats.reps} />

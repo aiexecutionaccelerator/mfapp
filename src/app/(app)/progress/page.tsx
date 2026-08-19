@@ -16,6 +16,7 @@ import {
   getPhase,
   rawChallengeDay,
 } from "@/lib/challenge";
+import { LESSON_COUNT } from "@/content/course";
 import { useAppData } from "@/lib/data/store";
 import { computeStats } from "@/lib/stats";
 
@@ -32,14 +33,14 @@ export default function ProgressPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const { profile, missions, error, refresh } = useAppData();
+  const { profile, missions, courseProgress, error, refresh } = useAppData();
 
   useEffect(() => {
     if (!error) return;
     showToast("Couldn't load your progress.", { retry: () => void refresh() });
   }, [error, refresh, showToast]);
 
-  if (!profile || !missions) {
+  if (!profile || !missions || !courseProgress) {
     return (
       <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
@@ -47,7 +48,7 @@ export default function ProgressPage() {
     );
   }
 
-  const stats = computeStats(missions);
+  const stats = computeStats(missions, courseProgress);
   const mode = getMode(profile);
   const day = challengeDay(profile);
   const phase = getPhase(day);
@@ -60,8 +61,13 @@ export default function ProgressPage() {
           <Stat label="Honor Reps" value={stats.reps.honor} />
           <Stat label="Courage Reps" value={stats.reps.courage} />
           <Stat label="Commitment Reps" value={stats.reps.commitment} />
+          <Stat label="Course Reps" value={stats.reps.course} />
           <Stat label="Missions Completed" value={stats.completed} />
           <Stat label="Completed · last 30 days" value={stats.last30DaysCompleted} />
+          <Stat
+            label="Lessons completed"
+            value={`${stats.lessonsCompleted}/${LESSON_COUNT}`}
+          />
         </div>
       </main>
     );
@@ -89,8 +95,13 @@ export default function ProgressPage() {
         <Stat label="Honor Reps" value={stats.reps.honor} />
         <Stat label="Courage Reps" value={stats.reps.courage} />
         <Stat label="Commitment Reps" value={stats.reps.commitment} />
+        <Stat label="Course Reps" value={stats.reps.course} />
         <Stat label="Missions Started" value={stats.started} />
         <Stat label="Missions Completed" value={stats.completed} />
+        <Stat
+          label="Lessons completed"
+          value={`${stats.lessonsCompleted}/${LESSON_COUNT}`}
+        />
         {stats.followThroughRate !== null && (
           <Stat
             label="Follow-Through Rate"
@@ -98,6 +109,12 @@ export default function ProgressPage() {
           />
         )}
       </div>
+
+      {stats.followThroughRate !== null && (
+        <p className="mt-3 text-[13px] text-ink-2">
+          Follow-Through Rate = completed ÷ (completed + ended).
+        </p>
+      )}
 
       {canComplete && (
         <div className="mt-8">

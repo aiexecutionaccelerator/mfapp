@@ -1,4 +1,5 @@
 import type {
+  CourseProgress,
   DataBackend,
   Mission,
   Profile,
@@ -9,6 +10,7 @@ import type {
 
 const PROFILE_KEY = "mission.profile";
 const MISSIONS_KEY = "mission.missions";
+const COURSE_KEY = "mission.course";
 const DEMO_USER_ID = "demo-user";
 const DEMO_EMAIL = "demo@mission.local";
 
@@ -47,6 +49,13 @@ function readMissions(): Mission[] {
   return read<Mission[]>(MISSIONS_KEY, []);
 }
 
+function readCourse(): CourseProgress[] {
+  return [...read<CourseProgress[]>(COURSE_KEY, [])].sort(
+    (a, b) =>
+      new Date(a.completed_at).getTime() - new Date(b.completed_at).getTime(),
+  );
+}
+
 function sorted(missions: Mission[]): Mission[] {
   return [...missions].sort(
     (a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime(),
@@ -67,7 +76,11 @@ function requireMission(id: string): Mission {
 
 export const localBackend: DataBackend = {
   async loadAll() {
-    return { profile: readProfile(), missions: sorted(readMissions()) };
+    return {
+      profile: readProfile(),
+      missions: sorted(readMissions()),
+      courseProgress: readCourse(),
+    };
   },
 
   async getProfile() {
@@ -135,6 +148,29 @@ export const localBackend: DataBackend = {
     return saveMission({ ...requireMission(id), action_text });
   },
 
+  async listCourseProgress() {
+    return readCourse();
+  },
+
+  async completeLesson(lessonId) {
+    const current = readCourse();
+    const existing = current.find((row) => row.lesson_id === lessonId);
+    if (existing) return existing;
+    const row: CourseProgress = {
+      lesson_id: lessonId,
+      completed_at: new Date().toISOString(),
+    };
+    write(COURSE_KEY, [...current, row]);
+    return row;
+  },
+
+  async uncompleteLesson(lessonId) {
+    write(
+      COURSE_KEY,
+      readCourse().filter((row) => row.lesson_id !== lessonId),
+    );
+  },
+
   // Demo mode has no server to push from — the localStorage reminder written
   // by the Mission Active screen still drives the Home banner.
   async scheduleReminder() {},
@@ -145,6 +181,7 @@ export const localBackend: DataBackend = {
     if (typeof window === "undefined") return;
     window.localStorage.removeItem(PROFILE_KEY);
     window.localStorage.removeItem(MISSIONS_KEY);
+    window.localStorage.removeItem(COURSE_KEY);
     window.localStorage.removeItem("mission.reminder");
     window.localStorage.removeItem("mission.devDayOverride");
     window.sessionStorage.clear();
