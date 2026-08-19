@@ -27,10 +27,12 @@ function LessonRow({ lesson, done }: { lesson: Lesson; done: boolean }) {
           <span className="block text-[17px] leading-snug text-ink-0">
             {lesson.title}
           </span>
-          <span className="mt-1.5 flex items-center gap-2 text-[13px] text-ink-2">
-            {lesson.trigger && <AccentDot trigger={lesson.trigger} />}
-            <span>{lesson.points} pts</span>
-          </span>
+          {lesson.trigger && (
+            <span className="mt-1.5 flex items-center gap-2 text-[13px] text-ink-2">
+              <AccentDot trigger={lesson.trigger} />
+              <span>{lesson.trigger.toUpperCase()}</span>
+            </span>
+          )}
         </span>
         {done && (
           <Check
