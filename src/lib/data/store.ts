@@ -4,6 +4,7 @@ import { useEffect, useSyncExternalStore } from "react";
 import { data } from "@/lib/data";
 import type {
   CourseProgress,
+  LessonResponse,
   Mission,
   Profile,
   Trigger,
@@ -27,6 +28,7 @@ interface Cache {
   profile: Profile | null;
   missions: Mission[] | null;
   courseProgress: CourseProgress[] | null;
+  lessonResponses: LessonResponse[] | null;
   error: Error | null;
 }
 
@@ -34,6 +36,7 @@ const EMPTY: Cache = {
   profile: null,
   missions: null,
   courseProgress: null,
+  lessonResponses: null,
   error: null,
 };
 
@@ -66,9 +69,15 @@ function load(): Promise<void> {
   if (inFlight) return inFlight;
   inFlight = data
     .loadAll()
-    .then(({ profile, missions, courseProgress }) => {
+    .then(({ profile, missions, courseProgress, lessonResponses }) => {
       loadedAt = Date.now();
-      publish({ profile, missions, courseProgress, error: null });
+      publish({
+        profile,
+        missions,
+        courseProgress,
+        lessonResponses,
+        error: null,
+      });
     })
     .catch((cause: unknown) => {
       publish({
@@ -91,7 +100,8 @@ function ensureLoaded(): void {
   if (
     cache.profile === null ||
     cache.missions === null ||
-    cache.courseProgress === null
+    cache.courseProgress === null ||
+    cache.lessonResponses === null
   ) {
     void load();
     return;
@@ -131,6 +141,19 @@ function dropCourseProgress(lessonId: string): void {
     ...cache,
     courseProgress: current.filter((item) => item.lesson_id !== lessonId),
   });
+}
+
+function putLessonResponse(
+  lessonId: string,
+  promptId: string,
+  row: LessonResponse | null,
+): void {
+  const current = cache.lessonResponses;
+  if (!current) return;
+  const rest = current.filter(
+    (item) => !(item.lesson_id === lessonId && item.prompt_id === promptId),
+  );
+  publish({ ...cache, lessonResponses: row ? [...rest, row] : rest });
 }
 
 function clearCache(): void {
@@ -206,6 +229,20 @@ export const store = {
     return row;
   },
 
+  /**
+   * Autosaved from the lesson screen. A blank answer clears it. Never log the
+   * answer — this is the private half of the course.
+   */
+  async saveLessonResponse(
+    lessonId: string,
+    promptId: string,
+    answer: string,
+  ): Promise<LessonResponse | null> {
+    const row = await data.saveLessonResponse(lessonId, promptId, answer);
+    putLessonResponse(lessonId, promptId, row);
+    return row;
+  },
+
   /** Dev only — no screen calls this. */
   async uncompleteLesson(lessonId: string): Promise<void> {
     await data.uncompleteLesson(lessonId);
@@ -229,6 +266,7 @@ export interface AppData {
   profile: Profile | null;
   missions: Mission[] | null;
   courseProgress: CourseProgress[] | null;
+  lessonResponses: LessonResponse[] | null;
   /** True only until the first successful load — never during a revalidate. */
   loading: boolean;
   error: Error | null;
@@ -250,10 +288,12 @@ export function useAppData(): AppData {
     profile: snapshot.profile,
     missions: snapshot.missions,
     courseProgress: snapshot.courseProgress,
+    lessonResponses: snapshot.lessonResponses,
     loading:
       snapshot.profile === null ||
       snapshot.missions === null ||
-      snapshot.courseProgress === null,
+      snapshot.courseProgress === null ||
+      snapshot.lessonResponses === null,
     error: snapshot.error,
     refresh: refreshAppData,
   };

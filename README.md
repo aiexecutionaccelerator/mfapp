@@ -1,7 +1,7 @@
 # Mission — V1 web app
 
 Mobile-first PWA for Mission Fragrances. It turns HONOR, COURAGE and COMMITMENT
-into a behavior trigger system: **SELECT → TRIGGER → ACT → REINFORCE**. A Rep is
+into a behavior trigger system: **Declare → Trigger → Act → Record**. A Rep is
 only counted when a Mission's status becomes `completed` — never for spraying,
 starting or reading.
 
@@ -46,7 +46,9 @@ If `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_ANON_KEY` is missing or
 empty, the app runs entirely on the device:
 
 - a fake `demo-user` is used — no sign-in screen gating; Welcome shows **ENTER DEMO**
-- profile and Missions persist in `localStorage` (`mission.profile`, `mission.missions`)
+- profile, Missions, course progress and lesson responses persist in
+  `localStorage` (`mission.profile`, `mission.missions`, `mission.course`,
+  `mission.lessonResponses`)
 - a thin gold pill at the top of every screen reads `DEMO MODE — data stored on this device`
 - Delete Account clears `localStorage`
 - Demo mode never activates when the Supabase env vars are present
@@ -62,7 +64,8 @@ the CTA is disabled with the note "Checkout not configured".
 See `supabase/README.md` for the full walkthrough:
 
 1. Create a project → copy URL + anon key into `.env.local`.
-2. Run `supabase/migrations/0001_init.sql` in the SQL editor, or `supabase db push`.
+2. Run the migrations in `supabase/migrations/` in order (`0001` … `0005`) in the
+   SQL editor, or `supabase db push`.
 3. Authentication → Email Templates → **Magic Link** → include `{{ .Token }}` so a
    sign-in code (6–10 digits, per your Auth settings) is emailed instead of a link.
 4. Put the service-role key in the server-side environment only (Vercel project
@@ -262,4 +265,10 @@ and hero panel.
   `certificate_requested`; nothing is emailed automatically.
 - **Demo mode is device-local.** Clearing site data erases everything, and demo
   data never syncs anywhere.
+- **The Vivid Vision has no generated image.** The app compiles, edits, prints
+  and shares the written Vivid Vision; the AI visualization the classroom used to
+  email stays a team deliverable and is not produced here.
+- **Lesson videos are unlisted YouTube embeds.** A lesson page loads a poster and
+  only fetches the player when the video is tapped, but playback needs a network
+  and youtube-nocookie.com reachable.
 - The service worker handles push only — there is no offline support or caching.

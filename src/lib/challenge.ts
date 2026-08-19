@@ -1,5 +1,8 @@
 import { differenceInCalendarDays, parseISO } from "date-fns";
-import { CHALLENGE_LESSONS, type ChallengeLesson } from "@/content/challengeLessons";
+import {
+  CHALLENGE_MODULES,
+  type ChallengeModule,
+} from "@/content/challengeLessons";
 import { DEV_TOOLS } from "@/lib/env";
 import type { Profile } from "@/lib/data/types";
 
@@ -45,10 +48,11 @@ export function getMode(profile: Profile, now: Date = new Date()): Mode {
     : "challenge";
 }
 
-export function getPhase(day: number): ChallengeLesson {
+/** The course module the given day falls in. */
+export function getModule(day: number): ChallengeModule {
   return (
-    CHALLENGE_LESSONS.find(
-      (lesson) => day >= lesson.dayMin && day <= lesson.dayMax,
-    ) ?? CHALLENGE_LESSONS[CHALLENGE_LESSONS.length - 1]
+    CHALLENGE_MODULES.find(
+      (entry) => day >= entry.dayMin && day <= entry.dayMax,
+    ) ?? CHALLENGE_MODULES[CHALLENGE_MODULES.length - 1]
   );
 }

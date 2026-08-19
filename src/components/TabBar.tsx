@@ -23,7 +23,7 @@ export default function TabBar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 flex justify-center">
+    <nav className="print-hide fixed inset-x-0 bottom-0 z-30 flex justify-center">
       <div className="glass w-full max-w-[430px] rounded-t-[20px] pb-[env(safe-area-inset-bottom)]">
         <ul className="flex">
           {TABS.map(({ href, label, Icon }) => {

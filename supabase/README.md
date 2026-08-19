@@ -11,10 +11,10 @@
 
 As soon as the URL and anon key are set, the app leaves demo mode.
 
-## 2. Apply the migration
+## 2. Apply the migrations
 
 **Option A — SQL editor (fastest):** open the SQL editor in the Supabase
-dashboard, paste the contents of `migrations/0001_init.sql`, and run it.
+dashboard and run every file in `migrations/` in order (`0001` … `0005`).
 
 **Option B — Supabase CLI:**
 
@@ -23,9 +23,13 @@ supabase link --project-ref <your-project-ref>
 supabase db push
 ```
 
-The migration creates `profiles` and `missions`, the `updated_at` triggers, the
+`0001` creates `profiles` and `missions`, the `updated_at` triggers, the
 `handle_new_user` signup trigger, and row-level-security policies that restrict
-every row to `auth.uid()`.
+every row to `auth.uid()`. `0002` adds the single-round-trip `get_app_data()`
+function, `0003` the push `reminders`, `0004` `course_progress`, and `0005`
+`lesson_responses` — the private answers a man writes inside a lesson, which the
+Vivid Vision page compiles. `0002`, `0004` and `0005` each replace
+`get_app_data()`, so run them in order.
 
 ## 3. Configure the OTP code email
 

@@ -13,7 +13,7 @@ import {
   CHALLENGE_LENGTH,
   challengeDay,
   getMode,
-  getPhase,
+  getModule,
   rawChallengeDay,
 } from "@/lib/challenge";
 import { LESSON_COUNT } from "@/content/course";
@@ -51,7 +51,7 @@ export default function ProgressPage() {
   const stats = computeStats(missions, courseProgress);
   const mode = getMode(profile);
   const day = challengeDay(profile);
-  const phase = getPhase(day);
+  const courseModule = getModule(day);
 
   if (mode === "log") {
     return (
@@ -86,9 +86,9 @@ export default function ProgressPage() {
 
       <GlassCard className="mt-8">
         <Eyebrow tone="gold">
-          PHASE {phase.phase} · {phase.title}
+          MODULE {courseModule.module} · {courseModule.title}
         </Eyebrow>
-        <p className="mt-3 text-[15px] text-ink-1">{phase.body}</p>
+        <p className="mt-3 text-[15px] text-ink-1">{courseModule.body}</p>
       </GlassCard>
 
       <div className="mt-6 grid grid-cols-2 gap-3">

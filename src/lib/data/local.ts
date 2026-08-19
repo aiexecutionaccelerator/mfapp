@@ -1,16 +1,19 @@
 import type {
   CourseProgress,
   DataBackend,
+  LessonResponse,
   Mission,
   Profile,
   Trigger,
 } from "@/lib/data/types";
+import { LESSON_ANSWER_MAX } from "@/lib/data/types";
 
 /** Demo backend — everything lives in localStorage on this device. */
 
 const PROFILE_KEY = "mission.profile";
 const MISSIONS_KEY = "mission.missions";
 const COURSE_KEY = "mission.course";
+const RESPONSES_KEY = "mission.lessonResponses";
 const DEMO_USER_ID = "demo-user";
 const DEMO_EMAIL = "demo@mission.local";
 
@@ -56,6 +59,13 @@ function readCourse(): CourseProgress[] {
   );
 }
 
+function readResponses(): LessonResponse[] {
+  return [...read<LessonResponse[]>(RESPONSES_KEY, [])].sort(
+    (a, b) =>
+      new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime(),
+  );
+}
+
 function sorted(missions: Mission[]): Mission[] {
   return [...missions].sort(
     (a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime(),
@@ -80,6 +90,7 @@ export const localBackend: DataBackend = {
       profile: readProfile(),
       missions: sorted(readMissions()),
       courseProgress: readCourse(),
+      lessonResponses: readResponses(),
     };
   },
 
@@ -171,6 +182,29 @@ export const localBackend: DataBackend = {
     );
   },
 
+  async listLessonResponses() {
+    return readResponses();
+  },
+
+  async saveLessonResponse(lessonId, promptId, answer) {
+    const trimmed = answer.trim().slice(0, LESSON_ANSWER_MAX);
+    const rest = readResponses().filter(
+      (row) => !(row.lesson_id === lessonId && row.prompt_id === promptId),
+    );
+    if (!trimmed) {
+      write(RESPONSES_KEY, rest);
+      return null;
+    }
+    const row: LessonResponse = {
+      lesson_id: lessonId,
+      prompt_id: promptId,
+      answer: trimmed,
+      updated_at: new Date().toISOString(),
+    };
+    write(RESPONSES_KEY, [...rest, row]);
+    return row;
+  },
+
   // Demo mode has no server to push from — the localStorage reminder written
   // by the Mission Active screen still drives the Home banner.
   async scheduleReminder() {},
@@ -182,6 +216,7 @@ export const localBackend: DataBackend = {
     window.localStorage.removeItem(PROFILE_KEY);
     window.localStorage.removeItem(MISSIONS_KEY);
     window.localStorage.removeItem(COURSE_KEY);
+    window.localStorage.removeItem(RESPONSES_KEY);
     window.localStorage.removeItem("mission.reminder");
     window.localStorage.removeItem("mission.devDayOverride");
     window.sessionStorage.clear();

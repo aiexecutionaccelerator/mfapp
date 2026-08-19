@@ -38,10 +38,24 @@ export interface CourseProgress {
   completed_at: string;
 }
 
+/**
+ * One answered lesson prompt. Private, like a Mission reflection — it is never
+ * shown to anyone else and never logged.
+ */
+export interface LessonResponse {
+  lesson_id: string;
+  prompt_id: string;
+  answer: string;
+  updated_at: string;
+}
+
+export const LESSON_ANSWER_MAX = 4000;
+
 export interface AppSnapshot {
   profile: Profile;
   missions: Mission[];
   courseProgress: CourseProgress[];
+  lessonResponses: LessonResponse[];
 }
 
 export interface DataBackend {
@@ -69,6 +83,14 @@ export interface DataBackend {
   completeLesson(lessonId: string): Promise<CourseProgress>;
   /** Not exposed in the UI — kept for dev and for undoing a mistap later. */
   uncompleteLesson(lessonId: string): Promise<void>;
+  /** oldest first */
+  listLessonResponses(): Promise<LessonResponse[]>;
+  /** Upsert — one answer per (lesson, prompt). Blank answers are deleted. */
+  saveLessonResponse(
+    lessonId: string,
+    promptId: string,
+    answer: string,
+  ): Promise<LessonResponse | null>;
   /** Replaces any pending push reminder for this Mission. No-op in demo. */
   scheduleReminder(missionId: string, sendAt: Date): Promise<void>;
   cancelReminders(missionId: string): Promise<void>;

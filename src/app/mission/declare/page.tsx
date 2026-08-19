@@ -10,11 +10,17 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
 import { suggestionsFor } from "@/content/actionSuggestions";
+import { lessonForDay } from "@/content/course";
 import { TRIGGERS } from "@/content/triggers";
 import type { Trigger } from "@/lib/data/types";
 import { cn, readDraft, writeDraft } from "@/lib/utils";
 
 const CUSTOM = "custom";
+/** Prefix for the ideas Antonio lists inside today's lesson (see §3.3). */
+const LESSON = "lesson";
+
+/** Antonio's ten ideas, trimmed to what fits on one screen. */
+const LESSON_SUGGESTION_LIMIT = 6;
 
 function isTrigger(value: string | null): value is Trigger {
   return value === "honor" || value === "courage" || value === "commitment";
@@ -24,6 +30,12 @@ function DeclareInner() {
   const router = useRouter();
   const params = useSearchParams();
   const trigger = params.get("trigger");
+  const day = Number(params.get("day"));
+  const lesson = Number.isFinite(day) ? lessonForDay(day) : undefined;
+  const fromLesson = (lesson?.missionSuggestions ?? []).slice(
+    0,
+    LESSON_SUGGESTION_LIMIT,
+  );
 
   const [selected, setSelected] = useState<string | null>(null);
   const [customText, setCustomText] = useState("");
@@ -39,16 +51,22 @@ function DeclareInner() {
     const match = suggestionsFor(trigger).find(
       (suggestion) => suggestion.text === draft.action_text,
     );
+    const fromLessonIndex = fromLesson.indexOf(draft.action_text);
     // Reading the saved draft out of sessionStorage on mount is exactly the
     // "sync with an external system" case; there is nothing to await first.
     /* eslint-disable react-hooks/set-state-in-effect */
     if (match) {
       setSelected(match.id);
+    } else if (fromLessonIndex !== -1) {
+      setSelected(`${LESSON}-${fromLessonIndex}`);
     } else {
       setSelected(CUSTOM);
       setCustomText(draft.action_text);
     }
     /* eslint-enable react-hooks/set-state-in-effect */
+    // `fromLesson` is derived from the URL, which cannot change under this
+    // screen — restoring the draft once on mount is the whole job.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger, router]);
 
   if (!isTrigger(trigger)) return null;
@@ -66,13 +84,20 @@ function DeclareInner() {
   }
 
   function onContinue() {
-    if (!isTrigger(trigger) || !ready) return;
+    if (!isTrigger(trigger) || !ready || selected === null) return;
     const suggestion = suggestions.find((item) => item.id === selected);
-    writeDraft({
-      trigger,
-      action_text: suggestion ? suggestion.text : trimmedCustom,
-      action_category: suggestion ? suggestion.id : CUSTOM,
-    });
+
+    let action_text = trimmedCustom;
+    let action_category = CUSTOM;
+    if (suggestion) {
+      action_text = suggestion.text;
+      action_category = suggestion.id;
+    } else if (selected.startsWith(`${LESSON}-`)) {
+      action_text = fromLesson[Number(selected.slice(LESSON.length + 1))];
+      action_category = `${LESSON}:${lesson?.day}`;
+    }
+
+    writeDraft({ trigger, action_text, action_category });
     router.push("/mission/trigger");
   }
 
@@ -129,6 +154,36 @@ function DeclareInner() {
               aria-label="Your action"
             />
           </div>
+        )}
+
+        {fromLesson.length > 0 && (
+          <>
+            <Eyebrow tone="gold" className="mt-7">
+              FROM TODAY&apos;S LESSON
+            </Eyebrow>
+            <div className="mt-3 space-y-3">
+              {fromLesson.map((text, index) => {
+                const id = `${LESSON}-${index}`;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected === id}
+                    onClick={() => chooseSuggestion(id)}
+                    className={cn(
+                      "glass block w-full rounded-[14px] px-4 py-4 text-left text-[17px] leading-snug transition-colors",
+                      selected === id
+                        ? "border-[var(--gold-500)] text-ink-0"
+                        : "text-ink-1",
+                    )}
+                  >
+                    {text}
+                  </button>
+                );
+              })}
+            </div>
+          </>
         )}
 
         <Eyebrow className="mt-7">OR CHOOSE ONE</Eyebrow>

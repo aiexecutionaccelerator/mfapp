@@ -25,11 +25,18 @@ const GOALS = [
 
 const STEP_COUNT = 5;
 
-const LOOP = [
-  { letter: "S", text: "SELECT — Choose how you need to show up." },
-  { letter: "T", text: "TRIGGER — Apply the fragrance." },
-  { letter: "A", text: "ACT — Take the action." },
-  { letter: "R", text: "REINFORCE — Come back and record what you did." },
+/** The ritual, straight from the S.T.A.R. System lesson (Day 3). */
+const STAR = [
+  {
+    letter: "S",
+    text: "Select: the value you want to embody. Honor, Courage, or Commitment.",
+  },
+  { letter: "T", text: "Take Action: apply the Scent Trigger." },
+  {
+    letter: "A",
+    text: "Anchor: close your eyes, recall a moment you lived that value. 5–15 seconds.",
+  },
+  { letter: "R", text: "Repeat: daily, for at least two months." },
 ];
 
 export default function OnboardingPage() {
@@ -171,10 +178,10 @@ export default function OnboardingPage() {
 
       {step === 3 && (
         <div className="mt-6 flex flex-1 flex-col">
-          <Eyebrow>HOW IT WORKS</Eyebrow>
-          <Headline className="mt-2">THE LOOP</Headline>
+          <Eyebrow>THE RITUAL</Eyebrow>
+          <Headline className="mt-2">S.T.A.R.</Headline>
           <div className="mt-6 space-y-4">
-            {LOOP.map(({ letter, text }) => (
+            {STAR.map(({ letter, text }) => (
               <div key={letter} className="flex items-center gap-4">
                 <span className="font-display w-10 shrink-0 text-[40px] leading-none text-gold-gradient">
                   {letter}

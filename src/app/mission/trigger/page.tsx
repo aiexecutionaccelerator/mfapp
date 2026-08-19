@@ -48,6 +48,13 @@ function TriggerScreen({ missions }: { missions: Mission[] }) {
 
   const meta = TRIGGERS[draft.trigger];
   const tone = TRIGGER_ACCENTS[draft.trigger];
+  // Came from a lesson? Go back to the same Declare screen, suggestions and all.
+  const lessonDay = draft.action_category?.startsWith("lesson:")
+    ? draft.action_category.slice("lesson:".length)
+    : null;
+  const backHref = `/mission/declare?trigger=${draft.trigger}${
+    lessonDay ? `&day=${lessonDay}` : ""
+  }`;
 
   async function start() {
     if (starting.current || !draft) return;
@@ -73,10 +80,7 @@ function TriggerScreen({ missions }: { missions: Mission[] }) {
 
   return (
     <main className="relative flex flex-1 flex-col pt-2">
-      <NavAction
-        kind="back"
-        href={`/mission/declare?trigger=${draft.trigger}`}
-      />
+      <NavAction kind="back" href={backHref} />
 
       <div className="relative mt-6 flex flex-col items-center overflow-hidden py-6">
         <span
@@ -102,7 +106,12 @@ function TriggerScreen({ missions }: { missions: Mission[] }) {
 
       {briefing && <p className="mt-6 text-[17px] text-ink-0">{briefing}</p>}
 
-      <p className="eyebrow mt-8 text-[15px] text-gold-300 uppercase">
+      {/* The Anchor step of S.T.A.R., where a man actually does it. */}
+      <p className="eyebrow mt-8 text-gold-300">
+        ANCHOR: CLOSE YOUR EYES. RECALL A MOMENT YOU WERE {meta.anchorWord}.
+        5–15 SECONDS.
+      </p>
+      <p className="eyebrow mt-4 text-[15px] text-gold-300 uppercase">
         {meta.applyLine}
       </p>
 

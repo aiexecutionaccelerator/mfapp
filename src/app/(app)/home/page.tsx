@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,7 +16,8 @@ import { useToast } from "@/components/ui/Toast";
 import { PRODUCT } from "@/content/product";
 import { ART, artUrl } from "@/lib/art";
 import { TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
-import { challengeDay, getMode, getPhase } from "@/lib/challenge";
+import { lessonForDay } from "@/content/course";
+import { challengeDay, getMode } from "@/lib/challenge";
 import { store, useAppData } from "@/lib/data/store";
 import type { Mission } from "@/lib/data/types";
 import { isDemo } from "@/lib/env";
@@ -108,7 +109,7 @@ export default function HomePage() {
 
   const mode = profile ? getMode(profile) : "challenge";
   const day = profile ? challengeDay(profile) : 1;
-  const phase = getPhase(day);
+  const todaysLesson = mode === "challenge" ? lessonForDay(day) : undefined;
   const stats = computeStats(missions ?? [], courseProgress ?? []);
 
   return (
@@ -118,13 +119,23 @@ export default function HomePage() {
         {profile && <DayBadge mode={mode} day={day} />}
       </div>
 
-      {profile && mode !== "log" && (
-        <div className="mt-6">
-          <Eyebrow tone="gold">
-            PHASE {phase.phase} · {phase.title}
-          </Eyebrow>
-          <p className="mt-2 text-[15px] text-ink-1">{phase.body}</p>
-        </div>
+      {/* Today's lesson, one tap from the top of the screen. */}
+      {profile && todaysLesson && (
+        <Link href={`/course/${todaysLesson.id}`} className="mt-5 block">
+          <GlassCard className="border-[rgba(201,166,72,.35)] p-4">
+            <div className="flex items-center gap-3">
+              <span className="min-w-0 flex-1">
+                <span className="eyebrow block text-gold-300">
+                  DAY {todaysLesson.day}
+                </span>
+                <span className="mt-1.5 block truncate text-[17px] text-ink-0">
+                  {todaysLesson.title}
+                </span>
+              </span>
+              <ChevronRight aria-hidden className="shrink-0 text-ink-2" size={20} />
+            </div>
+          </GlassCard>
+        </Link>
       )}
 
       <Headline className="mt-6">WHAT DO YOU NEED TODAY?</Headline>
@@ -142,34 +153,13 @@ export default function HomePage() {
 
           <div className="mt-6 space-y-3">
             {TRIGGER_ORDER.map((trigger) => (
-              <div key={trigger}>
-                {mode !== "log" && phase.featuredTrigger === trigger && (
-                  <Eyebrow tone="gold" className="mb-2">
-                    FEATURED THIS PHASE
-                  </Eyebrow>
-                )}
-                <TriggerCard
-                  trigger={trigger}
-                  href={`/mission/declare?trigger=${trigger}`}
-                />
-              </div>
+              <TriggerCard
+                key={trigger}
+                trigger={trigger}
+                href={`/mission/declare?trigger=${trigger}`}
+              />
             ))}
           </div>
-
-          {/* The course is the way in. It disappears the moment he starts. */}
-          {stats.lessonsCompleted === 0 && (
-            <Link href="/course" className="mt-6 block">
-              <GlassCard className="border-[rgba(201,166,72,.35)] p-4">
-                <div className="flex items-center gap-3">
-                  <BookOpen aria-hidden className="shrink-0 text-gold-300" size={20} />
-                  <p className="eyebrow flex-1 text-gold-300">
-                    NEW? START WITH THE COURSE
-                  </p>
-                  <ChevronRight aria-hidden className="text-ink-2" size={20} />
-                </div>
-              </GlassCard>
-            </Link>
-          )}
 
           <div className="mt-8">
             <RepCounts reps={stats.reps} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import ReminderExplainer, {
@@ -14,7 +14,6 @@ import Sheet from "@/components/ui/Sheet";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import pkg from "../../../../package.json";
-import { ACADEMY_URL } from "@/content/course";
 import { readDevDayOverride, setDevDayOverride } from "@/lib/challenge";
 import { store, useAppData } from "@/lib/data/store";
 import {
@@ -294,17 +293,6 @@ export default function SettingsPage() {
           <span className="text-[17px] text-ink-0">Get Mission Fragrances</span>
           <ChevronRight aria-hidden size={20} className="text-ink-2" />
         </button>
-        <a
-          href={ACADEMY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex min-h-12 items-center justify-between gap-3"
-        >
-          <span className="text-[17px] text-ink-0">
-            Mission Fragrances Academy
-          </span>
-          <ArrowUpRight aria-hidden size={20} className="text-ink-2" />
-        </a>
       </Group>
 
       <Group title="Legal & support">

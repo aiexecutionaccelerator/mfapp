@@ -3,14 +3,18 @@ import type {
   AppSnapshot,
   CourseProgress,
   DataBackend,
+  LessonResponse,
   Mission,
   Profile,
 } from "@/lib/data/types";
+import { LESSON_ANSWER_MAX } from "@/lib/data/types";
 
 /** Supabase backend — used whenever Supabase env vars are configured. */
 
 const MISSION_COLUMNS =
   "id,user_id,trigger,action_text,action_category,status,started_at,completed_at,ended_at,reflection";
+
+const RESPONSE_COLUMNS = "lesson_id,prompt_id,answer,updated_at";
 
 const PROFILE_COLUMNS =
   "id,email,display_name,primary_goal,onboarding_completed,challenge_start_date,challenge_completed_at,notifications_enabled,certificate_requested";
@@ -39,26 +43,32 @@ export const supabaseBackend: DataBackend = {
         profile: Profile | null;
         missions: Mission[] | null;
         course_progress?: CourseProgress[] | null;
+        lesson_responses?: LessonResponse[] | null;
       };
       if (payload.profile) {
         return {
           profile: payload.profile,
           missions: payload.missions ?? [],
-          // Still the 0002 function? Ask for the progress separately rather
-          // than reporting an empty course.
+          // Still an older function? Ask for the rest separately rather than
+          // reporting an empty course.
           courseProgress:
             payload.course_progress ??
             (await supabaseBackend.listCourseProgress().catch(() => [])),
+          lessonResponses:
+            payload.lesson_responses ??
+            (await supabaseBackend.listLessonResponses().catch(() => [])),
         };
       }
     }
 
-    const [profile, missions, courseProgress] = await Promise.all([
-      supabaseBackend.getProfile(),
-      supabaseBackend.listMissions(),
-      supabaseBackend.listCourseProgress().catch(() => []),
-    ]);
-    return { profile, missions, courseProgress };
+    const [profile, missions, courseProgress, lessonResponses] =
+      await Promise.all([
+        supabaseBackend.getProfile(),
+        supabaseBackend.listMissions(),
+        supabaseBackend.listCourseProgress().catch(() => []),
+        supabaseBackend.listLessonResponses().catch(() => []),
+      ]);
+    return { profile, missions, courseProgress, lessonResponses };
   },
 
   async getProfile(): Promise<Profile> {
@@ -246,6 +256,55 @@ export const supabaseBackend: DataBackend = {
       .eq("user_id", user.id)
       .eq("lesson_id", lessonId);
     if (error) throw error;
+  },
+
+  async listLessonResponses(): Promise<LessonResponse[]> {
+    const { supabase, user } = await requireUser();
+    const { data, error } = await supabase
+      .from("lesson_responses")
+      .select(RESPONSE_COLUMNS)
+      .eq("user_id", user.id)
+      .order("updated_at", { ascending: true });
+    if (error) throw error;
+    return (data ?? []) as unknown as LessonResponse[];
+  },
+
+  async saveLessonResponse(
+    lessonId,
+    promptId,
+    answer,
+  ): Promise<LessonResponse | null> {
+    const { supabase, user } = await requireUser();
+    const trimmed = answer.trim().slice(0, LESSON_ANSWER_MAX);
+
+    // Clearing an answer removes it; an empty row is not a record of anything.
+    if (!trimmed) {
+      const { error } = await supabase
+        .from("lesson_responses")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("lesson_id", lessonId)
+        .eq("prompt_id", promptId);
+      if (error) throw error;
+      return null;
+    }
+
+    const { data, error } = await supabase
+      .from("lesson_responses")
+      .upsert(
+        {
+          user_id: user.id,
+          lesson_id: lessonId,
+          prompt_id: promptId,
+          answer: trimmed,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id,lesson_id,prompt_id" },
+      )
+      .select(RESPONSE_COLUMNS)
+      .single();
+    if (error) throw error;
+    return data as unknown as LessonResponse;
   },
 
   async scheduleReminder(missionId, sendAt): Promise<void> {

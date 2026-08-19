@@ -217,3 +217,33 @@ select option {
   background: var(--bg-2);
   color: var(--ink-0);
 }
+
+/* ---------- Print ---------- */
+/* The Vivid Vision page is meant to leave the phone: on paper it is a plain
+   black-on-white document with the wordmark and the date, nothing else. */
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    background-image: none !important;
+    color: #000 !important;
+  }
+
+  .print-hide {
+    display: none !important;
+  }
+
+  .print-page,
+  .print-page * {
+    color: #000 !important;
+  }
+
+  .print-page .glass {
+    background: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border-color: #ccc !important;
+  }
+}
