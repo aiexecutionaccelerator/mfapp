@@ -6,7 +6,6 @@ const PROTECTED = [
   "/home",
   "/course",
   "/log",
-  "/progress",
   "/settings",
   "/shop",
   "/mission",

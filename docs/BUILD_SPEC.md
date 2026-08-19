@@ -69,7 +69,6 @@ src/
       home/page.tsx            # 6.3
       log/page.tsx             # 6.9
       log/[id]/page.tsx        # 6.9 detail
-      progress/page.tsx        # 6.10
       settings/page.tsx        # 6.12
       shop/page.tsx            # 6.13
     mission/                   # focused flow, NO tab bar, has back/close
@@ -161,10 +160,10 @@ Near-black navy/charcoal backgrounds with soft radial glow, warm gold gradient t
 - `Wordmark` — text "MISSION" in Bebas with a small inline crest placeholder (simple SVG shield+sword outline in gold); swap for `/images/logo.svg` later via same onError pattern.
 - `DayBadge` — pill "DAY 7 OF 30" gold-300 text on glass; after challenge: "YOUR MISSION CONTINUES".
 - `RepCounts` — one compact glass row, four columns (HONOR / COURAGE / COMMITMENT / COURSE): 22px numeral + 12px label, each with its accent dot (never color alone).
-- `TabBar` — glass, fixed bottom, 4 items: Home, Log, Progress, Settings; active = gold; icons + 11px labels (exception to 13px rule is NOT allowed — use 12px min).
+- `TabBar` — glass, fixed bottom, 4 items: Start (`/home`), Course, Log, Settings; active = gold; icons + 12px labels (exception to 13px rule is NOT allowed — use 12px min).
 - `Field` — label + input/textarea, glass fill, cream text, gold focus border, char counter when `maxLength` provided.
 - `Toast` — bottom toast for errors with optional "Retry" action.
-- `ProgressRing` — SVG ring, gold stroke, used for Day X of 30 on Progress.
+- `ProgressRing` — SVG ring, gold stroke, used for Day X of 30 in the Log summary; labels scale with `size`.
 
 ## 5. Data model & security
 
@@ -343,7 +342,7 @@ Global: back/close affordance on every non-tab screen (top-left "‹" or top-rig
 - Three `TriggerCard`s stacked (order: honor, courage, commitment). No phase copy, no featured eyebrow.
 - Below cards: `RepCounts` as one compact glass row. Nothing else — no Missions-completed line, no commerce card (Settings has "Get Mission Fragrances"; the Day 2 lesson ends with a `/shop` link).
 - Home must load fast: fetch profile + missions in parallel; render skeleton cards meanwhile.
-- If mode is `completion-pending`, on mount route to `/challenge-complete` (once per session — use sessionStorage flag `mission.completionShown` so the user can navigate away and back without a loop; the card is reachable again from Progress).
+- If mode is `completion-pending`, on mount route to `/challenge-complete` (once per session — use sessionStorage flag `mission.completionShown` so the user can navigate away and back without a loop; the card is reachable again from Log).
 
 ### 10.5 `/mission/declare?trigger=x` (invalid/missing trigger → redirect `/home`)
 - Top: close ×. Eyebrow `{TRIGGER}` with accent dot. H1 = `TRIGGERS[trigger].declareHeadline`.
@@ -378,21 +377,16 @@ Global: back/close affordance on every non-tab screen (top-left "‹" or top-rig
 - H1: `{TRIGGER} REP #{n} COMPLETE`
 - Block: eyebrow `YOU SAID YOU WOULD:` action text (display 26px) then `AND YOU DID.` (display, gold gradient).
 - Completion line from `completionLines`.
-- Buttons: `DONE` → `/home`; secondary `VIEW MY PROGRESS` → `/progress`.
+- Buttons: `DONE` → `/home`; secondary `VIEW MY LOG` → `/log`.
 
 ### 10.10 `/log`
-- H1 `MISSION LOG`. Filter chips `ALL / HONOR / COURAGE / COMMITMENT` (glass pills, active gold). List newest first of `MissionRow`: date (`MMM d` + `h:mm a`), accent dot + trigger label, action text (2-line clamp), status pill (`COMPLETED` success-tinted / `ACTIVE` gold / `ENDED` ink-2), small quote icon or `Reflection` marker if reflection exists.
+- H1 `MISSION LOG`, then the **Progress summary** — one glass block, no stats grid. Challenge mode: `ProgressRing` (`DAY {d}` / `of 30`) on the left, the four reps (HONOR/COURAGE/COMMITMENT/COURSE) on the right, then `Missions started {n} · Completed {n}` (plus `· Follow-through {pct}%` only when completed + ended ≥ 3) and a small `MODULE {n} · {title}` line. Log mode: eyebrow `BUILD THE EVIDENCE`, the four all-time reps, `Total completed {n} · Last 30 days {n}`. If rawDay ≥ 30 and the challenge is not completed, a `COMPLETE THE 30-DAY MISSION` button → `/challenge-complete` sits under the block.
+- Filter chips `ALL / HONOR / COURAGE / COMMITMENT` (glass pills, active gold). List newest first of `MissionRow`: date (`MMM d` + `h:mm a`), accent dot + trigger label, action text (2-line clamp), status pill (`COMPLETED` success-tinted / `ACTIVE` gold / `ENDED` ink-2), small quote icon or `Reflection` marker if reflection exists.
 - Empty: `No Missions yet.` `Start with one action today.` button `START A MISSION` → `/home`.
 - Row → `/log/{id}`: trigger, action, status, started, completed/ended time, reflection (glass quote block). No editing, no delete. If status active → button `OPEN MISSION`.
 
-### 10.11 `/progress`
-Challenge mode:
-- H1 `YOUR 30-DAY MISSION`; `ProgressRing` with `DAY X` inside and `of 30` under; phase title + lesson body in a GlassCard.
-- Stats grid (2 cols): Honor Reps / Courage Reps / Commitment Reps / Missions Started / Missions Completed / Follow-Through Rate (only if denominator ≥ 3, as `%`).
-- If day ≥ 30 and not completed: button `COMPLETE THE 30-DAY MISSION` → `/challenge-complete`.
-Log mode:
-- H1 `BUILD THE EVIDENCE`; stats: All-time Honor / Courage / Commitment Reps, Total completed Missions, Completed in last 30 days.
-No charts.
+### 10.11 `/progress` — removed
+Merged into the Log tab (§10.10). The route is gone; `next.config.ts` redirects `/progress` → `/log` permanently. No charts.
 
 ### 10.12 `/challenge-complete` (only reachable when rawDay ≥ 30 or already completed; else `/home`)
 - H1 `30-DAY MISSION COMPLETE`. Stats: Missions Started, Missions Completed, Honor / Courage / Commitment Reps.
@@ -425,7 +419,7 @@ No charts.
 
 ## 11. Root router `/` and middleware
 - `/`: server component; real mode: read session → no user → `/welcome`; user → load profile → `onboarding_completed ? /home : /onboarding`. Demo mode: client-side same decision from localStorage.
-- Middleware (real mode only) protects `/home /log /progress /settings /shop /mission/* /onboarding /challenge-complete` and refreshes tokens per `@supabase/ssr` docs.
+- Middleware (real mode only) protects `/home /course /log /settings /shop /mission/* /onboarding /challenge-complete` and refreshes tokens per `@supabase/ssr` docs. `/progress` is a permanent `next.config.ts` redirect to `/log`.
 
 ## 12. PWA / metadata
 - `manifest.webmanifest`: name `Mission`, short_name `Mission`, `display: standalone`, `background_color: #07090D`, `theme_color: #07090D`, `start_url: /`, icons 192/512 (generate simple placeholder PNGs: dark square with gold "M" — a tiny node script using no external deps is fine, or commit generated PNGs).
@@ -436,7 +430,7 @@ Local setup; env vars; demo mode; Supabase setup (create project → run migrati
 
 ## 14. Verification the agent MUST perform before reporting done
 1. `npm run lint` and `npm run build` pass with zero errors/warnings that matter.
-2. `npm run dev` in demo mode; walk in the browser (mobile viewport 390×844): welcome → onboarding (4 steps) → home shows Day 1 of 30 → Courage → "Make the call" → trigger shows a Courage briefing → Start → active → close × → home shows Active banner and hides commerce card → Check in → Not yet → Try again → Check in → Yes + reflection → complete screen says `COURAGE REP #1 COMPLETE` → home shows Courage 1 rep → Log shows entry → detail shows reflection → Progress shows 1/1 → Settings dev select Day 30 → Progress shows Complete button → challenge-complete → Continue → home shows `YOUR MISSION CONTINUES` → Progress shows `BUILD THE EVIDENCE` → Shop renders with $597 and disabled CTA note → Settings → Delete → back at welcome with deleted notice.
+2. `npm run dev` in demo mode; walk in the browser (mobile viewport 390×844): welcome → onboarding (4 steps) → home shows Day 1 of 30 → Courage → "Make the call" → trigger shows a Courage briefing → Start → active → close × → home shows Active banner and hides commerce card → Check in → Not yet → Try again → Check in → Yes + reflection → complete screen says `COURAGE REP #1 COMPLETE` → home shows Courage 1 rep → Log shows the summary (1 started / 1 completed) and the entry → detail shows reflection → Settings dev select Day 30 → Log shows Complete button → challenge-complete → Continue → home shows `YOUR MISSION CONTINUES` → Log shows `BUILD THE EVIDENCE` → Shop renders with $597 and disabled CTA note → Settings → Delete → back at welcome with deleted notice.
 3. Reload mid-Mission: active Mission persists (localStorage in demo).
 4. Double-tap Start / Complete does not create duplicates.
 5. Check desktop viewport: column centered, dark bleed, nothing broken.

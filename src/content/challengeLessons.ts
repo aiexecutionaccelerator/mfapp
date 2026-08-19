@@ -3,7 +3,7 @@ import type { Trigger } from "@/lib/data/types";
 /**
  * The five modules of the course, mapped onto the 30 days of the challenge.
  * There is one system here, not two: the day you are on is the lesson you are
- * on, and this is how Home and Progress name the stretch you are in.
+ * on, and this is how Home and the Log summary name the stretch you are in.
  * Day ranges mirror `content/course.ts`.
  */
 export interface ChallengeModule {

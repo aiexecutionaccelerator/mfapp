@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  BookOpen,
-  ScrollText,
-  Settings,
-  Target,
-  TrendingUp,
-} from "lucide-react";
+import { BookOpen, ScrollText, Settings, Target } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -15,7 +9,6 @@ const TABS = [
   { href: "/home", label: "Start", Icon: Target },
   { href: "/course", label: "Course", Icon: BookOpen },
   { href: "/log", label: "Log", Icon: ScrollText },
-  { href: "/progress", label: "Progress", Icon: TrendingUp },
   { href: "/settings", label: "Settings", Icon: Settings },
 ];
 
@@ -39,7 +32,7 @@ export default function TabBar() {
                   )}
                 >
                   <Icon size={20} aria-hidden />
-                  {/* Five items at 375px: 12px is the floor, so the tracking
+                  {/* Four items at 375px: 12px is the floor, so the tracking
                       gives way before the type size does. */}
                   <span className="text-[12px] tracking-[0.04em] whitespace-nowrap uppercase">
                     {label}

@@ -231,11 +231,11 @@ Run in demo mode (no env vars) at a 390×844 viewport.
 - **E.** Close × → Home shows the Active Mission banner and hides the commerce card.
 - **F.** Check in → `NOT YET` → `TRY AGAIN` → check in → `YES — MISSION COMPLETE`
   + reflection → `COURAGE REP #1 COMPLETE`.
-- **G.** Home shows 1 Courage rep; Log lists the entry; the detail shows the
-  reflection; Progress shows 1 started / 1 completed.
-- **H.** Settings → Developer → Day 30 → Progress shows
+- **G.** Home shows 1 Courage rep; Log's summary shows 1 started / 1 completed
+  and lists the entry; the detail shows the reflection.
+- **H.** Settings → Developer → Day 30 → Log shows
   `COMPLETE THE 30-DAY MISSION` → `CONTINUE THE MISSION` → Home shows
-  `YOUR MISSION CONTINUES`, Progress shows `BUILD THE EVIDENCE`.
+  `YOUR MISSION CONTINUES`, Log shows `BUILD THE EVIDENCE`.
 - **I.** Shop renders `$597` with a disabled CTA and "Checkout not configured";
   Settings → Delete Account → Welcome with "Your account has been deleted."
 
