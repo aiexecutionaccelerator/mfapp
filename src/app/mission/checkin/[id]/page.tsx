@@ -14,7 +14,7 @@ import { TRIGGERS } from "@/content/triggers";
 import { useAppData, store } from "@/lib/data/store";
 import { clearReminderFor } from "@/lib/utils";
 
-type View = "ask" | "yes" | "not-yet" | "edit";
+type View = "ask" | "yes" | "not-yet";
 
 export default function CheckinPage({
   params,
@@ -31,11 +31,9 @@ export default function CheckinPage({
 
   const [view, setView] = useState<View>("ask");
   const [reflection, setReflection] = useState("");
-  const [actionText, setActionText] = useState("");
   const [pending, setPending] = useState(false);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const submitting = useRef(false);
-  const seeded = useRef(false);
 
   useEffect(() => {
     if (error) {
@@ -52,13 +50,6 @@ export default function CheckinPage({
     }
   }, [error, missions, found, router]);
 
-  // Seed the edit field once, so a background revalidate cannot clobber typing.
-  useEffect(() => {
-    if (!mission || seeded.current) return;
-    seeded.current = true;
-    setActionText(mission.action_text);
-  }, [mission]);
-
   if (!mission) return null;
 
   async function complete() {
@@ -74,22 +65,6 @@ export default function CheckinPage({
       setPending(false);
       showToast("Couldn't save that. Please try again.", {
         retry: () => void complete(),
-      });
-    }
-  }
-
-  async function save() {
-    if (!mission) return;
-    const trimmed = actionText.trim();
-    if (!trimmed) return;
-    setPending(true);
-    try {
-      await store.updateMissionAction(mission.id, trimmed);
-      router.replace(`/mission/active/${mission.id}`);
-    } catch {
-      setPending(false);
-      showToast("Couldn't save that. Please try again.", {
-        retry: () => void save(),
       });
     }
   }
@@ -122,24 +97,10 @@ export default function CheckinPage({
           {TRIGGERS[mission.trigger].name}
         </Eyebrow>
 
-        {view === "not-yet" || view === "edit" ? (
-          <>
-            <h1 className="mt-4 text-[22px] leading-snug text-ink-0">
-              That&apos;s okay. The Mission isn&apos;t over.
-            </h1>
-
-            {view === "edit" && (
-              <div className="mt-8">
-                <Field
-                  label="Your action"
-                  value={actionText}
-                  onChange={setActionText}
-                  maxLength={140}
-                  autoFocus
-                />
-              </div>
-            )}
-          </>
+        {view === "not-yet" ? (
+          <h1 className="mt-4 text-[22px] leading-snug text-ink-0">
+            That&apos;s okay. The Mission isn&apos;t over.
+          </h1>
         ) : (
           <>
             <Headline className="mt-3">DID YOU DO IT?</Headline>
@@ -164,21 +125,10 @@ export default function CheckinPage({
       </div>
 
       <BottomActions className="pt-8">
-        {view === "edit" ? (
-          <Button
-            loading={pending}
-            disabled={!actionText.trim()}
-            onClick={save}
-          >
-            SAVE
-          </Button>
-        ) : view === "not-yet" ? (
+        {view === "not-yet" ? (
           <>
             <Button onClick={() => router.push(`/mission/active/${mission.id}`)}>
               TRY AGAIN
-            </Button>
-            <Button variant="secondary" onClick={() => setView("edit")}>
-              EDIT MISSION
             </Button>
             <Button variant="danger" onClick={() => setConfirmEnd(true)}>
               END MISSION

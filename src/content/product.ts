@@ -20,8 +20,6 @@ export const PRODUCT = {
   ctaNote:
     "Secure checkout by Shopify. Shipping and taxes calculated at checkout.",
   notConfigured: "Checkout not configured",
-  homeCardEyebrow: "DON'T OWN MISSION FRAGRANCES YET?",
-  homeCardText: "Get the complete set — $597",
   /** Filename under public/images — see lib/art.ts. */
   heroImage: "mfset.png",
 } as const;

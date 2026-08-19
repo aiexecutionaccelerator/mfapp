@@ -49,7 +49,7 @@ Back ‹. Eyebrow `DAY {day} · MODULE {module}`. H1 title. **Video**: 16:9 glas
 `/mission/declare?trigger=x&day=N`: if lesson N has `missionSuggestions`, show them under an eyebrow `FROM TODAY'S LESSON` **above** the default suggestions (custom still first). Cap at 6 shown. Store `action_category = 'lesson:{day}'` when chosen.
 
 ### 3.4 Home
-Replace the phase/lesson line with a **Today** row under the Day badge: `DAY {d} · {lesson title}` → `/course/{id}` (challenge mode only). Keep trigger cards, RepCounts (4 cols), active banner, commerce card. Remove the "NEW? START WITH THE COURSE" row (Today row replaces it).
+Replace the phase/lesson line with a **Today** row under the Day badge (and under the active banner): `DAY {d}` + lesson title → `/course/{id}` (challenge mode only). Keep trigger cards, RepCounts (now one compact 4-column row), active banner. Remove the "NEW? START WITH THE COURSE" row (Today row replaces it) and the commerce card (see SIMPLIFY_SPEC §3).
 
 ### 3.5 S.T.A.R. and the loop rename
 - `content/challengeLessons.ts`: replace the 5 invented phases with the 5 course modules (day ranges above) — title + one-line purpose from the module; `featuredTrigger` null except Module 2 (show all three). Home/Progress use these.

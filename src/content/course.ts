@@ -187,7 +187,9 @@ Notes of Vanilla, Tonka, and Oud give Commitment a luxurious and unforgettable s
 1. Remove the cap of your Scent Trigger and pop off the nozzle.
 2. Align the open end of the Portable Scent Trigger Dispenser with the nozzle of the Scent Trigger.
 3. Gently press the dispenser down onto the Scent Trigger's nozzle, creating a secure connection.
-4. Once the dispenser is properly attached, give it a few quick pumps or squeezes to fill it with fragrance. After filling the dispenser, remove it from the Scent Trigger and replace the nozzle.`,
+4. Once the dispenser is properly attached, give it a few quick pumps or squeezes to fill it with fragrance. After filling the dispenser, remove it from the Scent Trigger and replace the nozzle.
+
+[Don't own the set yet? Get Mission Fragrances — $597](/shop)`,
   },
   {
     day: 3,

@@ -13,8 +13,6 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
 import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
-import { PRODUCT } from "@/content/product";
-import { ART, artUrl } from "@/lib/art";
 import { TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
 import { lessonForDay } from "@/content/course";
 import { challengeDay, getMode } from "@/lib/challenge";
@@ -77,7 +75,6 @@ function ActiveMissionBanner({ mission }: { mission: Mission }) {
 }
 
 export default function HomePage() {
-  const setArt = artUrl(ART.set);
   const router = useRouter();
   const { showToast } = useToast();
 
@@ -119,6 +116,10 @@ export default function HomePage() {
         {profile && <DayBadge mode={mode} day={day} />}
       </div>
 
+      {missions && activeMission && (
+        <ActiveMissionBanner key={activeMission.id} mission={activeMission} />
+      )}
+
       {/* Today's lesson, one tap from the top of the screen. */}
       {profile && todaysLesson && (
         <Link href={`/course/${todaysLesson.id}`} className="mt-5 block">
@@ -144,13 +145,6 @@ export default function HomePage() {
         <Skeleton />
       ) : (
         <>
-          {activeMission && (
-            <ActiveMissionBanner
-              key={activeMission.id}
-              mission={activeMission}
-            />
-          )}
-
           <div className="mt-6 space-y-3">
             {TRIGGER_ORDER.map((trigger) => (
               <TriggerCard
@@ -163,37 +157,7 @@ export default function HomePage() {
 
           <div className="mt-8">
             <RepCounts reps={stats.reps} />
-            {stats.completed > 0 && (
-              <p className="mt-4 text-center text-[15px] text-ink-1">
-                {stats.completed} Missions completed
-              </p>
-            )}
           </div>
-
-          {!activeMission && (
-            <Link href="/shop" className="mt-8 block">
-              <GlassCard className="border-[rgba(201,166,72,.35)]">
-                <div className="flex items-center gap-3">
-                  {setArt && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={setArt}
-                      alt=""
-                      className="h-16 w-16 shrink-0 object-contain"
-                      style={{ filter: "drop-shadow(0 6px 10px rgba(0,0,0,.45))" }}
-                    />
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <Eyebrow tone="gold">{PRODUCT.homeCardEyebrow}</Eyebrow>
-                    <p className="mt-2 text-[17px] text-ink-0">
-                      {PRODUCT.homeCardText}
-                    </p>
-                  </div>
-                  <ChevronRight aria-hidden className="text-ink-2" size={22} />
-                </div>
-              </GlassCard>
-            </Link>
-          )}
         </>
       )}
     </main>

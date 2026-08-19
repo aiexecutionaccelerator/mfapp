@@ -160,7 +160,7 @@ Near-black navy/charcoal backgrounds with soft radial glow, warm gold gradient t
 - `BottleVisual` — placeholder rounded-rect "bottle" silhouette with the trigger finish (silver/gold/black gradient) and a tiny gold cap; renders `<img>` from `/images/bottle-{trigger}.png` if that file exists (feature-detect via onError fallback). This is where the real bottle art drops in later.
 - `Wordmark` — text "MISSION" in Bebas with a small inline crest placeholder (simple SVG shield+sword outline in gold); swap for `/images/logo.svg` later via same onError pattern.
 - `DayBadge` — pill "DAY 7 OF 30" gold-300 text on glass; after challenge: "YOUR MISSION CONTINUES".
-- `RepCounts` — three columns: big numeral + label (HONOR / COURAGE / COMMITMENT), each with its accent dot + label (never color alone).
+- `RepCounts` — one compact glass row, four columns (HONOR / COURAGE / COMMITMENT / COURSE): 22px numeral + 12px label, each with its accent dot (never color alone).
 - `TabBar` — glass, fixed bottom, 4 items: Home, Log, Progress, Settings; active = gold; icons + 11px labels (exception to 13px rule is NOT allowed — use 12px min).
 - `Field` — label + input/textarea, glass fill, cream text, gold focus border, char counter when `maxLength` provided.
 - `Toast` — bottom toast for errors with optional "Retry" action.
@@ -330,27 +330,24 @@ Global: back/close affordance on every non-tab screen (top-left "‹" or top-rig
 - Errors: wrong/expired code → `That code didn't work. Check it and try again, or resend.`
 - On success → `/` (router decides onboarding vs home).
 
-### 10.3 `/onboarding` (one client component, 4 steps, progress dots, back arrow from step 2+)
-- A: H1 `WHAT ARE YOU WORKING TOWARD RIGHT NOW?` Options as selectable glass rows: Confidence / Career / Business / Social / Relationships / Health / Fitness / Discipline / Follow-Through / Custom (Custom reveals a text field, max 60). Store `primary_goal`. Button `CONTINUE` disabled until chosen (and custom text non-empty).
-  - NOTE: options exactly: `Confidence`, `Career / Business`, `Social / Relationships`, `Health / Fitness`, `Discipline / Follow-Through`, `Custom`.
-- B: H1 `MEET YOUR THREE SCENT TRIGGERS` then three `TriggerCard`-style static cards (non-tappable) with name + tagline. Button `CONTINUE`.
-- C: H1 `THE LOOP` (eyebrow `HOW IT WORKS`), four rows with big gold letters S / T / A / R: `SELECT — Choose how you need to show up.` `TRIGGER — Apply the fragrance.` `ACT — Take the action.` `REINFORCE — Come back and record what you did.` Button `CONTINUE`.
-- D: H1 `YOUR 30-DAY MISSION STARTS NOW.` Body `For the next 30 days, don't just wear the fragrances. Give them a job.` Button `START MY MISSION` → `updateProfile({ primary_goal, onboarding_completed: true, challenge_start_date: today (yyyy-MM-dd local) })` → `/home`. Error → toast + retry, stay on step.
+### 10.3 `/onboarding` (one client component, 2 steps, progress dots, back arrow from step 2+)
+- A: eyebrow `LET'S SET YOU UP`, H1 `WELCOME TO YOUR MISSION`. `First name` field (stored as `display_name`), then eyebrow `WHAT ARE YOU WORKING TOWARD?` over selectable glass rows — exactly `Confidence`, `Career / Business`, `Social / Relationships`, `Health / Fitness`, `Discipline / Follow-Through`, `Custom` (Custom reveals a text field, max 60). Store `primary_goal`. Button `CONTINUE` disabled until name + goal.
+- B: H1 `YOUR 30-DAY MISSION STARTS NOW.` Body `For the next 30 days, don't just wear the fragrances. Give them a job. One short lesson and one real-world Mission a day.` Button `START MY MISSION` → `updateProfile({ display_name, primary_goal, onboarding_completed: true, challenge_start_date: today (yyyy-MM-dd local) })` → `/home`. Error → toast + retry, stay on step.
+- The Scent Triggers and S.T.A.R. screens are gone — the Day 2 and Day 3 lessons teach them.
 
 ### 10.4 `/home`
 - Top row: `Wordmark` (small, left) + `DayBadge` (right).
-- Eyebrow (challenge mode only): current phase title e.g. `PHASE 2 · COURAGE`; below it the phase lesson body in one line (13–15px ink-1). In log mode: nothing here.
+- **Active Mission banner** (if one exists): glass card directly under the top row, accent by trigger: eyebrow `MISSION ACTIVE · {TRIGGER}` (`REMINDER · {TRIGGER}` once a stored reminder is due), action text (display 22px), button `CHECK IN NOW` → `/mission/checkin/{id}`, ghost `Open Mission` → `/mission/active/{id}`. Trigger cards remain usable (starting a new Mission while one is active is allowed; do not block).
+- Today card (challenge mode only): eyebrow `DAY {d}` + today's lesson title + chevron → `/course/{id}`. In log mode: omit.
 - H1: `WHAT DO YOU NEED TODAY?`
-- Three `TriggerCard`s stacked (order: honor, courage, commitment; during a phase with `featuredTrigger`, that one gets a tiny gold `FEATURED THIS PHASE` eyebrow above it — order does NOT change).
-- **Active Mission banner** (if `getActiveMission()` exists): glass card ABOVE the trigger cards, accent by trigger: eyebrow `MISSION ACTIVE · {TRIGGER}`, action text (display 22px), button `CHECK IN NOW` → `/mission/checkin/{id}`, ghost `Open Mission` → `/mission/active/{id}`. Trigger cards remain usable (starting a new Mission while one is active is allowed; do not block).
-- Below cards: `RepCounts` and small line `{n} Missions completed` (hide when 0).
-- Commerce card (secondary, LAST on the page, glass with thin gold border): eyebrow `DON'T OWN THE MISSION SYSTEM?` text `Get the complete system — $597` chevron → `/shop`. HIDE this card entirely while an active Mission exists (never interrupt an active Mission with a sales prompt).
+- Three `TriggerCard`s stacked (order: honor, courage, commitment). No phase copy, no featured eyebrow.
+- Below cards: `RepCounts` as one compact glass row. Nothing else — no Missions-completed line, no commerce card (Settings has "Get Mission Fragrances"; the Day 2 lesson ends with a `/shop` link).
 - Home must load fast: fetch profile + missions in parallel; render skeleton cards meanwhile.
 - If mode is `completion-pending`, on mount route to `/challenge-complete` (once per session — use sessionStorage flag `mission.completionShown` so the user can navigate away and back without a loop; the card is reachable again from Progress).
 
 ### 10.5 `/mission/declare?trigger=x` (invalid/missing trigger → redirect `/home`)
 - Top: close ×. Eyebrow `{TRIGGER}` with accent dot. H1 = `TRIGGERS[trigger].declareHeadline`.
-- Suggestions: 5 glass rows (radio behavior) + `Custom` row that reveals a `Field` (placeholder `One action. Short. Specific.`, `maxLength=140`, autofocus, counter).
+- Suggestions: `WRITE YOUR OWN` row first (reveals a `Field` — placeholder `One action. Short. Specific.`, `maxLength=140`, autofocus, counter), then up to 3 rows from today's lesson under `FROM TODAY'S LESSON`, then the 3 default rows under `OR CHOOSE ONE` (radio behavior throughout).
 - Button `CONTINUE` disabled until a suggestion selected or custom text trimmed length ≥ 1. On continue: store draft `{ trigger, action_text, action_category }` in `sessionStorage['mission.draft']` → `/mission/trigger`.
 - Whitespace-only custom = blank; trim before save.
 
@@ -373,7 +370,7 @@ Global: back/close affordance on every non-tab screen (top-left "‹" or top-rig
 ### 10.8 `/mission/checkin/[id]`
 - H1 `DID YOU DO IT?` Action text below.
 - Primary `YES — MISSION COMPLETE` → reveals `Field` textarea `What happened? (optional)` maxLength 500 + button `COMPLETE MISSION` (loading/disabled while pending; idempotent). Success → `/mission/complete/{id}`. Failure → toast + retry; the typed reflection must not be lost.
-- Secondary `NOT YET` → replaces content with: `That's okay. The Mission isn't over.` and three buttons: `TRY AGAIN` (→ back to `/mission/active/{id}`), `EDIT MISSION` (inline `Field` prefilled with action_text, `SAVE` → `updateMissionAction`, then back to active), `END MISSION` (confirm sheet: `End this Mission? It will be recorded as ended, not completed.` `END MISSION` / `Keep going` → `endMission` → `/home` with toast `Mission ended. No penalty. Start again anytime.`).
+- Secondary `NOT YET` → replaces content with: `That's okay. The Mission isn't over.` and two buttons: `TRY AGAIN` (→ back to `/mission/active/{id}`) and `END MISSION` (confirm sheet: `End this Mission? It will be recorded as ended, not completed.` `END MISSION` / `Keep going` → `endMission` → `/home` with toast `Mission ended. No penalty. Start again anytime.`).
 - Also clear any localStorage reminder for this mission on complete/end.
 
 ### 10.9 `/mission/complete/[id]` (must be completed, else redirect)
@@ -386,7 +383,7 @@ Global: back/close affordance on every non-tab screen (top-left "‹" or top-rig
 ### 10.10 `/log`
 - H1 `MISSION LOG`. Filter chips `ALL / HONOR / COURAGE / COMMITMENT` (glass pills, active gold). List newest first of `MissionRow`: date (`MMM d` + `h:mm a`), accent dot + trigger label, action text (2-line clamp), status pill (`COMPLETED` success-tinted / `ACTIVE` gold / `ENDED` ink-2), small quote icon or `Reflection` marker if reflection exists.
 - Empty: `No Missions yet.` `Start with one action today.` button `START A MISSION` → `/home`.
-- Row → `/log/{id}`: trigger, action, status, started, completed/ended time, reflection (glass quote block). No editing. If status active → button `OPEN MISSION`. Optional delete: button `DELETE ENTRY` (danger, bottom) with confirm sheet `Delete this entry permanently?`.
+- Row → `/log/{id}`: trigger, action, status, started, completed/ended time, reflection (glass quote block). No editing, no delete. If status active → button `OPEN MISSION`.
 
 ### 10.11 `/progress`
 Challenge mode:

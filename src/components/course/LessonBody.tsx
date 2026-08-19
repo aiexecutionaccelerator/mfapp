@@ -33,12 +33,14 @@ function inline(text: string, key: string): ReactNode[] {
         </strong>,
       );
     } else {
+      // In-app links (/shop) stay in the app; outside links open in a new tab.
+      const external = !match[3].startsWith("/");
       nodes.push(
         <a
           key={`${key}-a${index}`}
           href={match[3]}
-          target="_blank"
-          rel="noopener noreferrer"
+          target={external ? "_blank" : undefined}
+          rel={external ? "noopener noreferrer" : undefined}
           className="text-gold-300 underline underline-offset-4"
         >
           {match[2]}

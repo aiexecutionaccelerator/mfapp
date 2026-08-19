@@ -24,7 +24,6 @@ export const ART = {
   crest: "logo.png",
   wordmark: "mflogo.png",
   hero: "mainpage.png",
-  set: "mfset.png",
 } as const;
 
 export function bottleArt(trigger: Trigger): string | null {

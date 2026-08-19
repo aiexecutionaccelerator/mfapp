@@ -20,7 +20,7 @@ const CUSTOM = "custom";
 const LESSON = "lesson";
 
 /** Antonio's ten ideas, trimmed to what fits on one screen. */
-const LESSON_SUGGESTION_LIMIT = 6;
+const LESSON_SUGGESTION_LIMIT = 3;
 
 function isTrigger(value: string | null): value is Trigger {
   return value === "honor" || value === "courage" || value === "commitment";

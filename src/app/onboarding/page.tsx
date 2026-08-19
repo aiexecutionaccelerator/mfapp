@@ -3,14 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import NavAction from "@/components/NavAction";
-import TriggerCard from "@/components/TriggerCard";
 import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
-import { TRIGGER_ORDER } from "@/content/triggers";
 import { store } from "@/lib/data/store";
 import { cn, todayLocal } from "@/lib/utils";
 
@@ -23,21 +21,7 @@ const GOALS = [
   "Custom",
 ];
 
-const STEP_COUNT = 5;
-
-/** The ritual, straight from the S.T.A.R. System lesson (Day 3). */
-const STAR = [
-  {
-    letter: "S",
-    text: "Select: the value you want to embody. Honor, Courage, or Commitment.",
-  },
-  { letter: "T", text: "Take Action: apply the Scent Trigger." },
-  {
-    letter: "A",
-    text: "Anchor: close your eyes, recall a moment you lived that value. 5–15 seconds.",
-  },
-  { letter: "R", text: "Repeat: daily, for at least two months." },
-];
+const STEP_COUNT = 2;
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -93,38 +77,21 @@ export default function OnboardingPage() {
 
       {step === 0 && (
         <div className="mt-6 flex flex-1 flex-col">
-          <Headline>WHAT SHOULD WE CALL YOU?</Headline>
-          <p className="mt-3 text-[17px] text-ink-1">
-            Your first name is enough.
-          </p>
-          <form
-            className="mt-6"
-            onSubmit={(event) => {
-              event.preventDefault();
-              if (nameReady) setStep(1);
-            }}
-          >
+          <Eyebrow>LET&apos;S SET YOU UP</Eyebrow>
+          <Headline className="mt-2">WELCOME TO YOUR MISSION</Headline>
+
+          <div className="mt-6">
             <Field
               label="First name"
               value={name}
               onChange={setName}
               maxLength={40}
               autoComplete="given-name"
-              autoFocus
             />
-            <BottomActions className="mt-8">
-              <Button type="submit" disabled={!nameReady}>
-                CONTINUE
-              </Button>
-            </BottomActions>
-          </form>
-        </div>
-      )}
+          </div>
 
-      {step === 1 && (
-        <div className="mt-6 flex flex-1 flex-col">
-          <Headline>WHAT ARE YOU WORKING TOWARD RIGHT NOW?</Headline>
-          <div role="radiogroup" className="mt-6 space-y-3">
+          <Eyebrow className="mt-8">WHAT ARE YOU WORKING TOWARD?</Eyebrow>
+          <div role="radiogroup" className="mt-3 space-y-3">
             {GOALS.map((option) => (
               <button
                 key={option}
@@ -154,54 +121,24 @@ export default function OnboardingPage() {
               />
             </div>
           )}
+
           <BottomActions className="mt-8">
-            <Button disabled={!goalReady} onClick={() => setStep(2)}>
+            <Button
+              disabled={!nameReady || !goalReady}
+              onClick={() => setStep(1)}
+            >
               CONTINUE
             </Button>
           </BottomActions>
         </div>
       )}
 
-      {step === 2 && (
-        <div className="mt-6 flex flex-1 flex-col">
-          <Headline>MEET YOUR THREE SCENT TRIGGERS</Headline>
-          <div className="mt-6 space-y-3">
-            {TRIGGER_ORDER.map((trigger) => (
-              <TriggerCard key={trigger} trigger={trigger} />
-            ))}
-          </div>
-          <BottomActions className="mt-8">
-            <Button onClick={() => setStep(3)}>CONTINUE</Button>
-          </BottomActions>
-        </div>
-      )}
-
-      {step === 3 && (
-        <div className="mt-6 flex flex-1 flex-col">
-          <Eyebrow>THE RITUAL</Eyebrow>
-          <Headline className="mt-2">S.T.A.R.</Headline>
-          <div className="mt-6 space-y-4">
-            {STAR.map(({ letter, text }) => (
-              <div key={letter} className="flex items-center gap-4">
-                <span className="font-display w-10 shrink-0 text-[40px] leading-none text-gold-gradient">
-                  {letter}
-                </span>
-                <p className="text-[15px] text-ink-1">{text}</p>
-              </div>
-            ))}
-          </div>
-          <BottomActions className="mt-8">
-            <Button onClick={() => setStep(4)}>CONTINUE</Button>
-          </BottomActions>
-        </div>
-      )}
-
-      {step === 4 && (
+      {step === 1 && (
         <div className="mt-6 flex flex-1 flex-col">
           <Headline>YOUR 30-DAY MISSION STARTS NOW.</Headline>
           <p className="mt-4 text-[17px] text-ink-1">
             For the next 30 days, don&apos;t just wear the fragrances. Give them
-            a job.
+            a job. One short lesson and one real-world Mission a day.
           </p>
           <BottomActions className="mt-8">
             <Button loading={pending} onClick={finish}>

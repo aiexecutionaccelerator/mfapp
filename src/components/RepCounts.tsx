@@ -11,11 +11,10 @@ function labelFor(key: RepKey): string {
   return key === "course" ? "COURSE" : TRIGGERS[key].name;
 }
 
+/** One glass row, four small columns: the whole scoreboard in a single line. */
 export default function RepCounts({ reps }: { reps: Record<RepKey, number> }) {
   return (
-    /* Four equal columns can't hold COMMITMENT at a legible size on a 375px
-       screen, so the columns take their own width and spread instead. */
-    <div className="flex items-start justify-between gap-2">
+    <div className="glass flex items-start justify-between gap-2 rounded-[14px] px-4 py-3">
       {REP_ORDER.map((key) => {
         const accent = accentFor(key);
         return (
@@ -29,13 +28,13 @@ export default function RepCounts({ reps }: { reps: Record<RepKey, number> }) {
                   boxShadow: accent.edge ? `0 0 0 1px ${accent.edge}` : undefined,
                 }}
               />
-              <p className="font-display text-[38px] leading-none text-ink-0">
+              <p className="font-display text-[22px] leading-none text-ink-0">
                 {reps[key]}
               </p>
             </div>
             {/* 12px so COMMITMENT fits four-up at 375px — the same floor the
                 tab bar uses. */}
-            <p className="mt-2 text-[12px] leading-none tracking-[0.02em] whitespace-nowrap text-ink-2 uppercase">
+            <p className="mt-1.5 text-[12px] leading-none tracking-[0.02em] whitespace-nowrap text-ink-2 uppercase">
               {labelFor(key)}
             </p>
           </div>

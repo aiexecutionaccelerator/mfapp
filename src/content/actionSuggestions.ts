@@ -27,14 +27,6 @@ const RAW: Record<Trigger, Array<{ text: string; definition: string }>> = {
       text: "Take responsibility for a mistake",
       definition: "Own it, say it plainly, and start making it right.",
     },
-    {
-      text: "Stand up for what I believe in",
-      definition: "Voice your position even when it's unpopular or uncomfortable.",
-    },
-    {
-      text: "Lead by example",
-      definition: "Act the way you want the people around you to act.",
-    },
   ],
   // From the course lesson "The Importance of Courage".
   courage: [
@@ -48,16 +40,8 @@ const RAW: Record<Trigger, Array<{ text: string; definition: string }>> = {
         "Decline it plainly. No long excuse. You won't win a medal — you'll win the fear.",
     },
     {
-      text: "Stick to the plan when it could go wrong",
-      definition: "Hold course when the doubt shows up.",
-    },
-    {
       text: "Make the tough decision under pressure",
       definition: "Decide what's right and act on it, stress and all.",
-    },
-    {
-      text: "Lead by example in a hard moment",
-      definition: "Be the one who moves first when nobody else will.",
     },
   ],
   // From the course lesson "The Importance of Commitment".
@@ -74,15 +58,6 @@ const RAW: Record<Trigger, Array<{ text: string; definition: string }>> = {
     {
       text: "Keep a promise I made",
       definition: "To someone else or to yourself. Fulfill the obligation.",
-    },
-    {
-      text: "Hold my daily discipline",
-      definition:
-        "The morning routine, the practice, the habit — done, no renegotiating.",
-    },
-    {
-      text: "See plans with others through to the end",
-      definition: "You said you'd be there. Be there, and stay.",
     },
   ],
 };
