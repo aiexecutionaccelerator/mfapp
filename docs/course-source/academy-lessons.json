@@ -1,0 +1,873 @@
+[
+ {
+  "module": 1,
+  "moduleTitle": "Module 1 - Quick Start",
+  "order": 1,
+  "id": 500105,
+  "slug": "welcome",
+  "title": "Welcome & Get Started",
+  "description": "The one simple trick to remove the blocks to action.",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/trainings/500105/1685023387565.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1714993516957__transcode",
+  "notesText": "",
+  "notesImages": [],
+  "resources": [
+   {
+    "id": 173310,
+    "type": ".pdf",
+    "order": 69605,
+    "title": "Lesson Roadmap",
+    "link": "https://cdn-prod.xperiencify.com/users/20/resources/Example_PDF.pdf",
+    "file_name": "Example_PDF",
+    "entity": 500105
+   },
+   {
+    "id": 173311,
+    "type": ".mp3",
+    "order": 69606,
+    "title": "Lesson Audio",
+    "link": "https://cdn-prod.xperiencify.com/users/20/resources/training.mp3",
+    "file_name": "training",
+    "entity": 500105
+   }
+  ],
+  "tasks": []
+ },
+ {
+  "module": 1,
+  "moduleTitle": "Module 1 - Quick Start",
+  "order": 2,
+  "id": 500108,
+  "slug": "mf-set",
+  "title": "Mission Fragrances Set Overview",
+  "description": "What's inside your set?",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/trainings/500108/1685015948213.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1742209991662__transcode",
+  "notesText": "Your Mission Fragrances set contains three 50ml EDP (1.7 oz) Scent Triggers – Honor, Courage, and Commitment.\n\nIn this lesson, we'll dive into the details of each Scent Trigger, including when and where to wear them and a breakdown of their unique notes.\n\n## Honor\n\n##\n\nI carefully crafted this scent to be fresh and clean, blending aromatic and oriental notes that fall into the 'Fougere' fragrance category.\n\nHonor is versatile enough to wear every day, no matter the occasion. You won't have to worry about standing out or feeling out of place.\n\nPersonally, I think Honor is perfect for a morning pick-me-up as you head into work. It's light and airy, with a balanced mix of citrus, floral, and woody notes that'll remind you of a refreshing spring morning.\n\n## Honor is specifically formulated with:\n- Bergamot – stimulates your body's release of serotonin and dopamine – both essential for improving your mood.\n- Lemon and Petitgrain Citrus – stimulates serotonin and raises levels of norepinephrine – a brain chemical linked to easier decision-making and upped motivation.\n- Pepper Spice – boosts circulation, improves blood flow, and normalizes blood pressure.\n- Herbal Cypress and Shinus Moile – relaxes the mind and promotes creativity by reducing oxy-Hb concentration in the right prefrontal cortex and increasing parasympathetic nervous activity.\n- Neroli Floral – natural mood enhancer, shown to aid in releasing serotonin while reducing the stress hormone cortisol.\n- Nutmeg Spice – contains adaptogen properties; a natural brain stimulator that improves alertness and elevates your mood.\n- Musk – activates the motor nerve endings both in the conscious and subconscious mind, increasing the concentration power.\n\n## Courage\n\n##\nCourage boasts a bold blend of light top notes and deeper base notes that make it noticeable without being overpowering. It's the perfect companion for sitting in the office.\n\nTechnically speaking, Courage falls into the 'citrus aromatic' fragrance category, with a mix of citrus, floral, and green notes. While still a light fragrance, the floral heart notes add depth and give it a bit more of a kick when compared to Honor.\n\nThe bold mix of light top notes and deeper base notes give this fragrance the power to be noticed without seeming too intense – the perfect companion for sitting in the office.\n\nCourage isn't as light as Honor but isn't as deep as Commitment – it sits somewhere between the two. This makes it an excellent fragrance for the 9-5 worker, as its lifespan should get you through most of your working day.\n\n## Courage is specifically formulated with:\n- Galbanum – eases nervous tension and helps keep you focused.\n- Lemongrass – keeps you alert, energized and enables you to think clearly.\n- Grapefruit – the citrus found within grapefruit is a powerful mood balancer and stress reliever.\n- Petitgrain Mandarin Citrus – combats stress and anxiety, helping you keep focused.\n- Lavender – gives you the energy you need to beat the afternoon slump.\n- Neroli – stimulates the release of serotonin, the important mood-enhancing neurotransmitter.\n- Orange Blossom – contains monoterpenes like limonene and pinene (which act as stimulants to help you combat mid-day fatigue).\n\n## Commitment\n\n##\nCommitment is my seductive and mysterious 'Amber Woody' fragrance that exudes sophistication.\n\nWhile this fragrance might not be suitable for the everyday office environment, it's perfect if you're looking to make a lasting impression on a special night.\n\nNotes of Vanilla, Tonka, and Oud give Commitment a luxurious and unforgettable scent that will impress in the right setting.\n\n## Commitment is specifically formulated with:\n- Veviter – shown to improve alertness and brain function. It decreases mental fatigue and helps you feel more awake if you struggle to focus.\n- Myrtle – soothes your mind; relieves anxiety, moodiness, and irritability.\n- Cedarwood – promotes vitality while reducing anxiety.\n- Sweet Amber – improves cognitive performance, helping you keep productive and on-task right through to the end of your day.\n- Pine Resin – invigorates the mind.\n\n## How To Use Your Portable Scent Trigger Dispensers\n  \n- Remove the cap of your Scent Trigger and pop off the nozzle.\n- Align the open end of the Portable Scent Trigger Dispenser with the nozzle of the Scent Trigger.\n- Gently press the dispenser down onto the Scent Trigger's nozzle, creating a secure connection.\n- Once the dispenser is properly attached, give it a few quick pumps or squeezes to fill it with fragrance. After filling the dispenser, remove it from the Scent Trigger and replace the nozzle.",
+  "notesImages": [
+   "https://s3.us-west-1.wasabisys.com/cdn-prod.xperiencify.com/users/411269/media/honor-notes-wide1684857357940.jpg",
+   "https://s3.us-west-1.wasabisys.com/cdn-prod.xperiencify.com/users/411269/media/COURAGE-notes-wide-21684857375411.jpg",
+   "https://s3.us-west-1.wasabisys.com/cdn-prod.xperiencify.com/users/411269/media/commitment-notes-wide-21684857391364.jpg",
+   "https://s3.us-west-1.wasabisys.com/cdn-prod.xperiencify.com/users/411269/media/how-to-use-atomizer1686559723554.jpeg"
+  ],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Based on the descriptions provided, which of the three Scent Triggers - Honor, Courage, or Commitment - do you feel most drawn to, and why?",
+    "value": 10
+   }
+  ]
+ },
+ {
+  "module": 1,
+  "moduleTitle": "Module 1 - Quick Start",
+  "order": 3,
+  "id": 500200,
+  "slug": "star-system-in-detail",
+  "title": "S.T.A.R. System",
+  "description": "More detail on the S.T.A.R. System",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/trainings/500200/1685015973143.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/trainings/500200/1695815497926__transcode",
+  "notesText": "Get ready to dive into the S.T.A.R. System—select, Take Action, Anchor, and Repeat. As a lifetime member of my exclusive Academy, you'll have access to a remarkable neuroscience-based framework designed just for you.\n\nThis four-step strategy helps you harness the power of your Performance Enhancing Colognes, unlocking peak performance at the right moments.\n\nWant to know how to leverage your Scent Triggers correctly? Let's dive in!\n\n \n                                                           \n\n## 1. Select\n\nFirst, Select what value you want to embody.\n\nHonor, Courage, or Commitment?\n \nThere is no right or wrong choice here; your selection depends entirely on the value you want to personify for the next few hours.\n\n         \n\n## 2. Take Action\n\nNow let’s Take Action. \n\nPick up your chosen Scent Trigger, hold it in your hand, and feel the weight. Next, pop off the top, and enjoy the satisfying click as it unlocks the fragrance’s full potential.\n\nHolding the Scent Trigger upright, spray into the cap. Bring the cap up to your nose and smell the fragrance.\n\nNext, spray the scent onto your body or clothing (if you're going to spray one to two times, I recommend the chest area. If you're going to be applying the fragrance for the entire day, I recommend you spray three times in the chest area and once on each forearm/wrist area). \n\nIf you really want the fragrance to project, then consider going through this process a second time in 10-15 minutes, spraying twice on the back of the neck and two more times in the chest area, on top of any clothing you're wearing.\n\n   \n\n## 3. Anchor\n\nIt’s time to Anchor your chosen value with the Scent Trigger.\n \nClose your eyes and recall a moment when you felt Honorable, Courageous, or Committed (your choice here depends on the Scent Trigger you selected). \n\nRevisit that memory for 5-15 seconds. Open your eyes, take a deep breath, and know that you are an Honorable, Courageous, and Committed man because you have shown you are this person in the past. \n\nIf visualization is difficult at first, don’t worry; it's common for many of us guys. Like any other skill, it becomes easier with practice.\n\n   \n\n## 4. Repeat\n\nAt this point, you're finished - although if you only sprayed two or three times, you can go through this process again in 15 minutes (using the same Scent Trigger - don't try to mix them). \n\nRemember that Honor lasts approximately 4-6 hours, Courage lasts 5-7 hours, and Commitment lasts 7-9 hours. That's how long other people will be able to smell these fragrances on your body. \n\nHowever, most people will stop smelling a fragrance on their own bodies within 10 minutes. This is normal, it's called Olfactory Fatigue.\n\nThat being said, you can reapply the same Scent Trigger multiple times a day, and it will speed up the process of you conditioning yourself to this scent and the value associated with it. \n\nBe careful of applying too much (of course, this depends on your situation, but I would say 2-3 sprays every 5 hours is going to be the max for most guys). \n\nYou do want to repeat this process daily for at least two months.",
+  "notesImages": [
+   "https://cdn.shopify.com/s/files/1/0603/5118/5141/files/star_-01.svg?v=1714569284",
+   "https://cdn.shopify.com/s/files/1/0603/5118/5141/files/star_-02.svg?v=1714569284",
+   "https://cdn.shopify.com/s/files/1/0603/5118/5141/files/star_-03.svg?v=1714569284",
+   "https://cdn.shopify.com/s/files/1/0603/5118/5141/files/star_-04.svg?v=1714569284"
+  ],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "If you have your Mission Fragrances Set, go through the S.T.A.R. System process for the first time. Once you've gone through this process, acknowledge that you will use these Scent Triggers correctly (you can wear the Mission Fragrances Set as regular colognes. but I really want them to be so much more for you).",
+    "value": 10
+   }
+  ]
+ },
+ {
+  "module": 1,
+  "moduleTitle": "Module 1 - Quick Start",
+  "order": 4,
+  "id": 511502,
+  "slug": "30-day-mission-fragrance-challenge",
+  "title": "30 Day Mission Fragrance Challenge",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/trainings/511502/1685015995720.jpg",
+  "video_url": "",
+  "notesText": "Each lesson in this course contains \"action tasks\", which are your stepping stones towards achieving 1000 mission frargance points. Every task you complete earns you anywhere from 5 to 100 points.\n\nIf you collect all 1000 points in the next 30 days, you'll be recognized with a special gift from the founder of Mission Fragrances, Antonio Centeno.  And even if you manage to only collect 200 mission fragrance points, know that this course is designed for you to still get big value from your set.  So it's a win-win situation here!\n\n## The Importance of Consistency\nConsistency is the key to maximizing the benefits of your Scent Triggers. These aren't just regular fragrances; they're your partners in personal growth.\n\nAs with any transformation journey, regularly using your Scent Triggers can help condition your brain to associate each scent with the quality it represents - Honor, Courage, and Commitment.\n\nAs you repeat this ritual daily, you'll start noticing the influence these scents have on your mood, demeanor, and overall self-perception. They're tools to enhance your character and boost your confidence, so use them consistently.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Do you commit to using your Scent Triggers daily over the next 30 days?",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 1,
+  "moduleTitle": "Module 1 - Quick Start",
+  "order": 5,
+  "id": 500107,
+  "slug": "mindset-to-succeed",
+  "title": "Mindset To Succeed",
+  "description": "To get the most out of this course, you need to commit to 3 things. Be coachable, take action and be patient.",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/trainings/500107/1685016030200.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/trainings/500107/1696858928465__transcode",
+  "notesText": "Bravo! You've made it to the final lesson of Module 1.\n\nIn this pivotal session, we'll focus on three critical commitments you need to make to maximize your gains from this course.\n\n## 1. Be Coachable\n\nBeing able to take advice and improve according to other people’s feedback is a skill every man should develop throughout his lifetime. This is what it means to be ‘coachable.’\n\nUltimately, it’s your coachability that will determine your success here. You need to adopt a ‘growth mindset’ – a willingness to learn and to improve.\n\nYou must be open to change, comfortable with self-improvement, and willing to get out of your comfort zone to make the changes you need to succeed.\n\nI’m not saying you need to change your whole personality and life values – quite the opposite. However, it is important to be open to the new ideas we explore in this program without losing your positive mindset and without losing motivation.    \n  \n\n## 2. Take Action\n\nRemember those long, boring lessons at school? The ones where you just sat back and listened to a teacher talk for hours on end, wishing you were somewhere else entirely? Yeah – me too.\n\nSo let’s be honest here – you probably forgot everything you were taught when you left the classroom. Am I right?\n\nThe reason for that is simple – the decision to sit back passively, listen, and hope the information will just sink in simply doesn’t work.\n\nFor real change, you need to become an active learner by ensuring you listen, absorb, and take action on the information that has been presented to you.\n\nActing upon the lessons you have been taught helps you to reinforce what you’ve learned. There’s a very good reason I’m telling you this, gents.\n\nRemember - as you progress through this course, I will provide you with small, quick Action Tasks that require your commitment and completion. It is crucial for you to actively participate in these tasks to maximize your learning experience.\n\n## 3. Be Patient\n\nI like to consider this Academy as similar to attending the gym.\n\nEven though you work out every day - you probably don’t see noticeable results after the first week of lifting weights and running cardio. In fact, you probably won’t see much change after the first month!\n\nI’ve been there, guys, and I know it’s frustrating - even disheartening.\n\nHowever, it’s only when you break through those first few weeks of potential disappointment and work through your self-doubt that one day you see yourself in the mirror and realize, ‘Wow! I’ve lost a ton of weight!’\n\nThe same principle applies here:\n\nYou might not see results straight away.\n\nThe reality is that it can take up to 60 days to form a habit. You might not see results after the first week or even the first couple of months, but I guarantee you this:\n\nIf you commit to this course, act consistently, and overcome the doubts you might have in those first few weeks - chances are you will see an explosion of growth and be rewarded.\n\n## Cultivate a Growth Mindset\nNow, gentlemen, while these three commitments are crucial, there's an underlying mindset that fuels all of them - the Growth Mindset.\n\nI want you to cultivate this mindset.\n\nBelieve in your ability to improve and grow. Embrace challenges, persist in the face of setbacks, see effort as the path to mastery, and understand that criticism can lead to learning.\n\nWith a growth mindset, you understand that you can develop your abilities and intelligence, which are not fixed but can be developed with dedication and hard work.\n\nThis mindset fosters a love for learning, resilience, and, ultimately, great accomplishment.\n\n👉 In Module 2, we dive deep into the essence of who you are and what you stand for. We’re building your legacy through introspections and actions that embody honor, courage, and commitment.\n\nEach lesson in this module is a step towards constructing a shrine to your self-improvement. It’s about cementing the values that will define your enduring legacy.\n\nBe prepared to explore your inner strengths and how they resonate in your everyday interactions.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "I commit to being Coachable, Taking Action, and being Patient.",
+    "value": 10
+   }
+  ]
+ },
+ {
+  "module": 2,
+  "moduleTitle": "Module 2  - Legacy & Core Values",
+  "order": 1,
+  "id": 500106,
+  "slug": "legacy",
+  "title": "Your Legacy",
+  "description": "Take a step back, look at your life.",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/trainings/500106/1685016056748.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1714666217033__transcode",
+  "notesText": "Picture this - you walk into a dark room filled with people. You know some of them - a colleague, an old friend, your cousin you once played football with. There are many familiar faces in this room – relationships both past and present.\n\nAll of a sudden, you turn, and you see a casket...\n\nIt's your funeral.\n\nI know this might be hard, but I want you to take a couple of minutes and think: \"If today were my funeral, what would people say about me?\"\n\nWill they talk about your favorite movie? Your favorite song? How much you could bench press? Unless you based your personality on those things – it's highly unlikely!\n\nChances are they'll talk about how you made them feel, the nice things you've done, the things you've done to keep your relationships healthy - \"soft skills\" as we know them. They'll talk about how much you loved your friends and family… why?\n\nYour actions as a husband, father, and friend showed them that you loved them.\n\nToday, I want you to take a step back, look at your life, and write down what you would like people to say about you.\n\nWhat will your parents, wife (or girlfriend), kids, and loved ones have to say once you're gone?\n\nIf you know the virtues and the values that you'd like to be remembered by, it will be that much easier for you to live that life so that people remember you how you want to be remembered.\n\nThis may be an emotional subject, and you may not want to do it – but I encourage you to take a few minutes and send your eulogy to me. It will help you with the steps we take going forward.",
+  "notesImages": [],
+  "resources": [
+   {
+    "id": 173312,
+    "type": ".pdf",
+    "order": 69607,
+    "title": "Lesson Roadmap",
+    "link": "https://cdn-prod.xperiencify.com/users/20/resources/Example_PDF_2.pdf",
+    "file_name": "Example_PDF_2",
+    "entity": 500106
+   },
+   {
+    "id": 173313,
+    "type": ".mp3",
+    "order": 69608,
+    "title": "Lesson Audio",
+    "link": "https://cdn-prod.xperiencify.com/users/20/resources/training-1.mp3",
+    "file_name": "training-1",
+    "entity": 500106
+   }
+  ],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Reflect on your life journey and write your own eulogy. Think about what you want to be remembered for, the impact you made, and the legacy you left behind.",
+    "value": 25
+   }
+  ]
+ },
+ {
+  "module": 2,
+  "moduleTitle": "Module 2  - Legacy & Core Values",
+  "order": 2,
+  "id": 511503,
+  "slug": "the-importance-of-honor",
+  "title": "The Importance Of Honor",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/trainings/511503/1685016123672.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/trainings/511503/1696863717460__transcode",
+  "notesText": "When I was creating the concept behind Mission Fragrance, I decided to name each of the Mission Fragrance Scent Triggers after my three Core Values: Honor, Courage, and Commitment.\n\nAs you guys know, I base a lot of my advice on my military heritage, so it only seemed right that my core values be inspired by the values of the United States Marine Corps.\n\nIn this lesson, I'll be breaking out each of these values.\n\n## Honor\nHonor is an ancient and profound concept that has been held in high regard by countless cultures, societies, and individuals throughout history.\n\nIts meaning, while often difficult to define, embodies virtues such as integrity, courage, respect, and duty.\n\nHonor is a deeply personal commitment to these virtues, a commitment that transcends external recognition and becomes a defining aspect of one's character.\n\nThe movie 'Rob Roy' encapsulates this definition beautifully, suggesting that honor is not something that can be bestowed upon a person by another.\n\nIt must be cultivated from within, as it is a gift to oneself.\n\nThis suggests that honor is not an attribute to be passively received but actively developed.\n\nHonor is intrinsic, and its measure lies not in external accolades or recognition but in the quiet satisfaction of acting in alignment with one's principles.\n\n## Why is Honor Important?\n\nHonor serves as our moral compass, guiding us to act ethically and responsibly.\n\nHaving honor means being true to our word, standing up for what we believe in, and treating others with respect.\n\nIn short, it's about being the best person we can be for our sake and for the sake of those around us. The cultivation of honor builds trust, fosters strong relationships, and improves our overall quality of life.\n\n## Cultivating Honor in Everyday Life\n\nSo how can you cultivate this sense of honor in your everyday life?\n\nHere are some actionable steps you can take:\n\n- Define your values: Take some time to identify what you value most. Your values serve as the guiding principles that shape your behavior and decisions.\n- Align your actions with your values: Once you've identified your values, strive to align your actions with them. This means living out your values in all aspects of your life, even when it's challenging.\n- Stand up for what you believe in: Having honor means standing up for what you believe in, even when it's unpopular or difficult. It means being courageous enough to voice your opinion and stand your ground.\n- Take responsibility for your actions: Honor requires us to take responsibility for our actions, even when we've made a mistake. It's about owning up to our actions and striving to rectify our mistakes.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Give three specific examples of times you have been honorable (and you can go back as far as you want).",
+    "value": 15
+   }
+  ]
+ },
+ {
+  "module": 2,
+  "moduleTitle": "Module 2  - Legacy & Core Values",
+  "order": 3,
+  "id": 511504,
+  "slug": "the-need-for-courage",
+  "title": "The Need For Courage",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/trainings/511504/1685016146871.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1714666412028__transcode",
+  "notesText": "What is courage? Is it about becoming a hero in a moment of crisis? Perhaps. But in reality, courage is much more than that...\n\nIt's about the decisions we make daily and the attitude we carry throughout life.\n\n## Where Does Courage Come From?\n\nCourage isn't something that just happens. It's not a switch you flip when you're in danger.\n\nA man's courage comes from the mental, moral, and physical strength ingrained within him through hard work and the practice of mastering his fear.\n\nIt should aim to do what is right, adhere to a higher standard of personal conduct, and lead by example - sometimes making tough decisions under stress and pressure.\n\n## Understanding Courage\nIt's easy to imagine running out into the battlefield to save their buddies or single-handedly taking out an enemy position when guys think of courage.\n\nThese things happen – but quite frankly, it's unlikely to happen to you as you go about your day-to-day life.\n\nNot all acts of courage need to be huge and audacious to be defined as brave. Sticking to a plan when you know things could go wrong – that's brave.\n\nFacing your fear of heights and climbing a ladder to fix a gutter pipe – that's also brave.\n\nThese may seem like small steps, but they require an inner strength that is truly admirable.\n\n## Daily Acts of Courage\nGetting down to the basics – courage could be something as simple as saying \"no\" to an event you don't want to attend.\n\nLet's be clear – you won't win any medals for this, but the principle is the same. You've overcome a fear that was holding you back, and that, gentlemen, is what I call a courageous success.\n\nEvery act of courage contributes to building a courageous personality, no matter how small it seems. It's about facing your fears and overcoming them one day at a time.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Give me three specific examples of times you have been courageous (and you can go back as far as you want).",
+    "value": 15
+   }
+  ]
+ },
+ {
+  "module": 2,
+  "moduleTitle": "Module 2  - Legacy & Core Values",
+  "order": 4,
+  "id": 511505,
+  "slug": "the-power-of-commitment",
+  "title": "The Power Of Commitment",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/trainings/511505/1685016169394.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/trainings/511505/1696924896974__transcode",
+  "notesText": "I can guarantee that every man has shown at least some commitment during his adult life. In short, commitment is the spirit of determination and dedication that leads to the mastery of self.\n\nIts purpose is to promote the highest order of discipline and is the ingredient that instills dedication to our life's purpose.\n\n## What is Commitment?\nCommitment is more than just a promise or a vow. It's a conscious decision to stick to a goal or a task, even in the face of adversity.\n\nIt's about pushing through, despite obstacles and setbacks, to fulfill an obligation we've made to ourselves or others.\n\n## Where Does Commitment Come From?\nCommitment doesn't spring up from anywhere. It doesn't come and go with our moods. It's born from a mental and emotional determination, fortified through discipline, self-control, and the mastery of our doubts and fears.\n\nIt's about standing by our principles and values and sometimes making challenging decisions under stress and pressure.\n\n## Understanding Commitment\nI hear you, gents. Not every man wants the commitment of getting married, settling down, and having a few kids. I did it, and I think it's great – but I know it's not for everyone, and each man has to forge his own path.\n\nSo, don't worry, I'm not suggesting you get down on one knee and ask your girl to marry you tomorrow.\n\nCommitment might seem daunting when considering significant life commitments, such as relationships, careers, or personal development goals.\n\nHowever, commitment starts small. It's about making daily decisions that align with our objectives, like choosing to hit the gym instead of sleeping in or opting for a healthier meal over fast food.\n\nThese might seem like insignificant choices, but they reinforce our commitment and build our capacity to stay dedicated to larger, more challenging goals.\n\n## Daily Acts of Commitment\nCommitment is interwoven into the fabric of our daily lives. It could be as simple as sticking to your plan to meditate every morning or making plans with your buddies and seeing them through to the end.\n\nNo matter how small, each act of commitment contributes to building a resilient and determined character.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Give me three specific examples of times you have been committed (and you can go back as far as you want).&nbsp;",
+    "value": 15
+   }
+  ]
+ },
+ {
+  "module": 2,
+  "moduleTitle": "Module 2  - Legacy & Core Values",
+  "order": 5,
+  "id": 505077,
+  "slug": "self-improvement-shrine",
+  "title": "Shrine To Self-Improvement",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/trainings/505077/1685019109903.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/trainings/505077/1696005646446__transcode",
+  "notesText": "We've all collected various mementos throughout our lives as we accomplished significant milestones. Be it that trophy from high school sports days or the degree that marks our academic success - these tokens are a testament to our past achievements.\n\nBut I want you to think broader and more profound.\n\nWhat if you could build a shrine to your self-improvement journey? An everyday reminder of your commitment to growth and betterment.\n\nAnd a surprising tool to kickstart this process could be something as simple yet profound as your Mission Fragrance Set.\n\nA shrine doesn't need to hold religious or spiritual connotations. In this context, it's a personalized, sacred corner dedicated to your development.\n\nThe Mission Fragrance Set on your dresser can become a visual cue that stimulates thoughts about the routines and systems you're implementing in your life.\n\nCreating this shrine involves a few purposeful steps:\n\n## 1. Choose A Space\n\nFind a quiet corner that can be your touchstone for reflection.\n\nGather meaningful items: in addition to the Mission Fragrance set, assemble items that resonate with your journey - books that inspire you, quotes that energize you, photographs that remind you of your cherished memories or inspirations.\n\n## 2. Arrange Your Items\n\nThis step is all about personalizing your space. Arrange your items in a way that speaks to your heart. \n\nThere's no right or wrong here - it's your space.\n\n## 3. Use Your New Shrine\n\nSpend time in front of your shrine each day, reflecting on your goals and the significance of each item you've placed there.\n\nThis shrine, this personal monument to your journey, is a powerful motivator. It not only constantly reminds you of your goals but also fuels your desire to attain them.\n\nRemember, the most important part about this shrine is that it needs to reflect you and your journey.\n\n👉 As we wrap up Module 2, you've built a strong foundation in personal virtues and values essential for growth.\n\nIn Module 3, we'll introduce specific frameworks that leverage these foundations to create actionable strategies for achieving your goals.\n\nEach step is crucial as it guides you closer to crafting your Vivid Vision. Get ready to turn these insights into a clear, actionable future.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Set up your shrine, take a photo of your Mission Fragrances Set in place, and click here to email it to me at antonio@missionfragrances.com.",
+    "value": 15
+   }
+  ]
+ },
+ {
+  "module": 3,
+  "moduleTitle": "Defining The Man You Know Yourself To Be",
+  "order": 1,
+  "id": 798436,
+  "slug": "why-you-need-a-vision",
+  "title": "Why You Need A Vision",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716209776699.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716018686510__transcode",
+  "notesText": "Congrats on completing the first two modules! You've learned about the Scent Triggers and the S.T.A.R. System and reflected on your legacy and core values.\n\nNow - let's focus on defining the man you know yourself to be by creating your Vivid Vision. A clear Vivid Vision acts as your compass, guiding your actions and keeping you motivated.\n\nStart by imagining where you want to be in three years. Be specific about your personal, professional, and financial goals.\n\nTo get started, let's set you up for success: order a frame and dry-erase markers. At the end of this course, you’ll create a visual representation of your vision, email it to us, and we’ll make an image for you to print, frame, and sign daily.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "I have taken one courageous action today to honor my commitment to being my best self.",
+    "value": 15
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Order your frame and dry-erase markers. You can use these links - click here for the dry-erase marker and click here for the A4 frame.",
+    "value": 15
+   }
+  ]
+ },
+ {
+  "module": 3,
+  "moduleTitle": "Defining The Man You Know Yourself To Be",
+  "order": 2,
+  "id": 798437,
+  "slug": "your-reputation",
+  "title": "Your Reputation",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716209812088.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716017117207__transcode",
+  "notesText": "Let's discuss the importance of reputation. While it may not matter to strangers, it’s crucial for those you care about and who depend on you.\n\nYour reputation is a reflection of character.\n\nThink about what you want your reputation to be in three years. Not as it is now, but the reputation you aspire to have with your loved ones, friends, and colleagues.\n\nSociety often rewards achievements like wealth and power, but virtues like love, dedication, and wisdom truly matter to those who count on us.\n\nThese virtues may not always be rewarded, but they are essential for meaningful relationships and personal fulfillment.\n\nTo build the reputation you desire, start with one small courageous action you can take today to honor your commitment to being your best self.\n\nLooking for inspiration? Here's a list to get you started:\n\n- Send a text message to your partner expressing gratitude, such as “I’m so thankful to have you in my life.”\n- Compliment your child on a recent achievement, like saying, “I’m so proud of your hard work on your dance recital.”\n- Drink a glass of water first thing in the morning to start your day hydrated.\n- Go for a 10-minute walk around your neighborhood to clear your mind.\n- Download and start listening to an inspiring audiobook, such as a motivational biography.\n- Call a friend or family member you haven’t spoken to in a while just to check in and see how they are doing.\n- Write a thank-you note to a coworker who helped you with a project recently.\n- Spend five minutes doing a guided meditation to relax and refocus.\n- Organize your desk or workspace to create a more productive environment.\n- Set a short-term goal, like reading a chapter of a book each day, and start today by reading the first chapter.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "How do you want people to perceive you three years from now?",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "List the specific steps to build your desired reputation. These could include being more present with family, offering support to friends, or volunteering.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Write down the biggest obstacles holding you back from achieving your vision.&nbsp;",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Identify one small courageous action you can take today to honor your commitment to being your best self.",
+    "value": 10
+   },
+   {
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "What Scent Trigger did you use today?",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 3,
+  "moduleTitle": "Defining The Man You Know Yourself To Be",
+  "order": 3,
+  "id": 798438,
+  "slug": "relationships",
+  "title": "Relationships",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716209932827.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716015537181__transcode",
+  "notesText": "Alright, let's dive into one of the most important aspects of life—relationships. As men, we sometimes get so caught up in providing and protecting that we forget to nurture our connections with loved ones.\n\nThink about how you want your relationships to look in three years. Visualize the bond you want with your kids, partner, family, and friends. Be detailed and vivid.\n\nNow, consider the steps you need to take to achieve these relationship goals. Identify obstacles, whether it’s being too guarded or not making enough time. Acknowledge these and find ways to overcome them.\n\nFinally, think of one small, courageous action you can take today to improve your relationships. Even a simple text or call can make a huge difference.\n\nHere's some inspiration:\n\n- Text your partner something you appreciate about them.\n- Leave a note for your child telling them how proud you are of them.\n- Call the brother you haven’t spoken to in a while just to check in.\n- Set a date night with your partner or a fun activity with your kids.\n- Reach out to a friend or relative you’ve had a disagreement with and apologize.\n- Send an old photo to a friend or family member with a message about why it’s special.\n- Offer to help a friend or family member with a task or project.\n- Spend 30 minutes with your family without any distractions (no phones or TV).\n- Give an unexpected compliment to a coworker or friend.\n- Reach out to an old friend and suggest catching up over coffee or a phone call.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Describe how you want your relationships to look in three years. Be detailed and include specifics about your interactions and the quality of your connections.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "List the specific steps you need to take to improve your relationships.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Write down the biggest obstacles currently holding you back from improving your relationships.&nbsp;",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Identify one small courageous action you can take today to honor your commitment to being your best self.",
+    "value": 10
+   },
+   {
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "What Scent Trigger did you use today?",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 3,
+  "moduleTitle": "Defining The Man You Know Yourself To Be",
+  "order": 4,
+  "id": 798439,
+  "slug": "career-business",
+  "title": "Career & Business",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716209964581.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716016023630__transcode",
+  "notesText": "Many of us guys are business-focused and already have detailed plans in place, but it's important to distill these plans into a clear, concise vision.\n\nThink about where you want to be in your job or your career in three years. This could mean realizing you're in a dead-end job and need a change or finding ways to break free from stagnation in your current role.\n\nA Vivid Vision will help you see the steps needed to achieve your career goals.\n\nBreak down your vision into smaller, actionable steps. For example, you could update your resume, reach out to old customers, or find new opportunities for growth. Smaller steps are easier to tackle and lead to significant progress.\n\nIdentify the biggest obstacles holding you back. For many, it could be fear of failure or rejection. Recognize these barriers and commit to overcoming them with honesty and determination.\n\nNow, let's move on to the action tasks that will help you put these principles into practice.\n\nIdentify one small courageous action you can take today to honor your commitment to being your best self. Here are 10 specific examples:\n\n- Update your resume.\n- Send a follow-up email to a potential client.\n- Research industry trends for 15 minutes.\n- Reach out to a former colleague for a catch-up call.\n- Set a new short-term career goal and write it down.\n- Add a new skill to your LinkedIn profile.\n- Draft a cover letter for a job you're interested in.\n- Share a relevant article on LinkedIn.\n- Organize your work desk to boost productivity.\n- Schedule a quick informational interview with someone in your field.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Describe where you want to be in your career or business in three years. Include specifics about your role, achievements, and workplace culture.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "List the specific steps you need to take to reach your three-year career vision. These could include updating your resume, gaining new skills, or seeking new job opportunities.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "What's holding you back from advancing in your career or business?",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Identify one small courageous action you can take today to honor your commitment to being your best self.",
+    "value": 10
+   },
+   {
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "What Scent Trigger did you use today?",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 3,
+  "moduleTitle": "Defining The Man You Know Yourself To Be",
+  "order": 5,
+  "id": 798440,
+  "slug": "health",
+  "title": "Health",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716210717095.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716012245841__transcode",
+  "notesText": "Where do you want to be in three years in terms of fitness, diet, and overall well-being? The more specific and vivid your vision, the better.\n\nConsider your weight, body fat percentage, and physical activities you'd like to achieve. For instance, could you get back into shape to pass a fitness test? Set realistic yet ambitious goals to help you stay motivated and focused.\n\nIdentify 3-7 concrete steps to achieve your health vision. This could include hiring a fitness coach, learning about nutrition, or setting up a consistent exercise routine. The more detailed you are, the easier it will be to follow through.\n\nNext, think about the biggest obstacles holding you back. For many, it's a lack of time or feeling selfish about taking time for themselves. Recognize these barriers and find ways to overcome them. Accountability partners or fitness coaches can be incredibly helpful.\n\nBy defining your health goals, breaking them into actionable steps, and addressing obstacles, you'll be on your way to achieving the health and fitness levels you desire. Let's move on to the action tasks that will help you put these principles into practice.\n\nIdentify one small courageous action you can take today to honor your commitment to being your best self.\n\nHere are 10 examples to help you:\n\n- Do 10 push-ups.\n- Drink an extra glass of water.\n- Take a 10-minute walk.\n- Prep a healthy meal for tomorrow.\n- Stretch for 5 minutes.\n- Replace a sugary snack with a piece of fruit.\n- Try a new workout video online.\n- Meditate for 5 minutes.\n- Write down your health goals in a journal.\n- Stand up and move around for a few minutes if you've been sitting for a while.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Describe where you want your health, fitness, and diet to be in three years. Be specific about your weight, body fat percentage, and physical activities.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "List the concrete steps or actions needed to achieve your three-year health vision. Be clear and specific about each step.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Write down the biggest obstacles currently holding you back from improving your health.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Identify one small courageous action you can take today to honor your commitment to being your best self.",
+    "value": 10
+   },
+   {
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "What Scent Trigger did you use today?",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 3,
+  "moduleTitle": "Defining The Man You Know Yourself To Be",
+  "order": 6,
+  "id": 798441,
+  "slug": "wealth",
+  "title": "Wealth",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716209846298.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716013983097__transcode",
+  "notesText": "Wealth encompasses more than just money—it's about your earnings, savings, assets, and overall financial health.\n\nVisualize where you want to be in three years regarding wealth. Do you want to have an emergency fund, a passive income stream, or be debt-free? Paint a vivid vision of your financial goals, being both realistic and ambitious.\n\nNext, outline the steps needed to achieve this vision. This might involve seeking a new job, getting a raise, or starting a new income stream. Don’t let fear hold you back. Identifying your financial goals and the necessary steps is crucial.\n\nThink about the biggest obstacles that might hinder your progress. For many, it’s fear of failure or change. By acknowledging these barriers, you can start to overcome them.\n\nBy defining your wealth goals, breaking them into actionable steps, and addressing obstacles, you'll be on your way to achieving financial stability and growth. Let's move on to the action tasks that will help you put these principles into practice.\n\nIdentify one small courageous action you can take today to honor your commitment to being your best self. Here are 10 specific examples:\n\n- Open a savings account.\n- Transfer $10 to your emergency fund.\n- Review your monthly budget.\n- Cancel a subscription you don't use.\n- Set up a meeting with a financial advisor.\n- Track your expenses for the day.\n- Read an article about passive income.\n- Pay an extra $20 towards your debt.\n- Sell an item you no longer need.\n- Automate a small monthly transfer to your savings.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Describe where you want to be financially in three years. Include specifics like savings goals, income streams, and debt management.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "List the specific steps you need to take to reach your three-year wealth vision.&nbsp;",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Write down the biggest obstacles currently holding you back from achieving your wealth vision.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Identify one small courageous action you can take today to honor your commitment to being your best self.",
+    "value": 10
+   },
+   {
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "What Scent Trigger did you use today?",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 3,
+  "moduleTitle": "Defining The Man You Know Yourself To Be",
+  "order": 7,
+  "id": 798442,
+  "slug": "lifestyle",
+  "title": "Lifestyle",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716210718657.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716011875229__transcode",
+  "notesText": "Now let's get to the fun part!\n\nVisualizing your ideal lifestyle in three years can be incredibly motivating.\n\nThink about where you want to live, how you want to live, and what changes you’d like to see. Perhaps you envision building your dream home, traveling the world, or living in a new city. Be as specific as possible in describing your lifestyle vision.\n\nConsider what steps are necessary to achieve this lifestyle. Outline the actions you need to take, whether it’s moving to a new location, changing jobs, or saving money for travel.\n\nNext, identify the obstacles that might hinder your progress. For many, these could be financial constraints, family commitments, or the fear of change. By recognizing these challenges, you can start to find ways to overcome them.\n\nNow, let's move on to the action tasks that will help you put these principles into practice.\n\nIdentify one small courageous action you can take today to honor your commitment to being your best self. Here are 10 specific examples:\n\n- Research a new city you want to live in.\n- Save $20 towards your travel fund.\n- Look up job opportunities in your dream location.\n- Spend 10 minutes decluttering a room in your house.\n- Plan a small trip or weekend getaway.\n- Explore online communities in your desired location.\n- Create a Pinterest board for your dream home.\n- Set a daily reminder to visualize your ideal lifestyle.\n- Talk to a friend or family member about your goals.\n- Write down one thing you love about your current lifestyle to build a positive mindset.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Describe your ideal lifestyle three years from now. Be specific about where and how you want to live.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "List the specific steps you need to take to reach your three-year vision.&nbsp;",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Write down the biggest obstacles currently holding you back from achieving your lifestyle vision.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Identify one small courageous action you can take today to honor your commitment to being your best self.",
+    "value": 10
+   },
+   {
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "What Scent Trigger did you use today?",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 3,
+  "moduleTitle": "Defining The Man You Know Yourself To Be",
+  "order": 8,
+  "id": 798443,
+  "slug": "social-impact-legacy-",
+  "title": "Social Impact & Your Legacy",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716210700511.jpg",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716011214917__transcode",
+  "notesText": "Finally, let's focus on your legacy and impact. Think about the legacy you want to leave and the impact you want to have in three years. Your legacy extends beyond your immediate circle, influencing the broader community.\n\nConsider how you’d like to be remembered and the contributions you want to make. This could be through charitable work, community involvement, or being a positive role model. Be as vivid and specific as possible in describing your legacy vision.\n\nNext, outline the steps needed to achieve this vision. Whether it's volunteering more, donating to charities, or starting a community project, identify the actions you need to take.\n\nThink about the obstacles that might hinder your progress. Common barriers include time constraints, financial limitations, or fear of judgment. Recognizing these challenges allows you to address them effectively.\n\nNow, let's move on to the action tasks that will help you put these principles into practice.\n\nIdentify one small courageous action you can take today to honor your commitment to being your best self. Here are 10 specific examples:\n\n- Research a local charity to volunteer with.\n- Donate $10 to a cause you care about.\n- Write a letter of appreciation to a community leader.\n- Plant a tree in your neighborhood.\n- Spend an hour cleaning up a local park.\n- Organize a small fundraiser for a charity.\n- Share an inspiring story on social media.\n- Mentor a young person in your community.\n- Attend a community meeting or event.\n- Reach out to a local organization to offer your skills.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Describe the legacy you want to have in three years. Include specifics about your community involvement and the impact you want to make.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "List the specific steps you need to take to reach your three-year legacy vision. These could include volunteering, donating to charities, or starting a community project.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Write down the biggest obstacles currently holding you back from achieving your legacy vision.",
+    "value": 10
+   },
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Identify one small courageous action you can take today to honor your commitment to being your best self.",
+    "value": 10
+   },
+   {
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "What Scent Trigger did you use today?",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 4,
+  "moduleTitle": "Laws Of M.W.G.S.D (Men Who Get Sh*T Done!)",
+  "order": 1,
+  "id": 798445,
+  "slug": "mindset",
+  "title": "Mindset for Achieving Your Vivid Vision",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716808238904.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716280822143__transcode",
+  "notesText": "Great job getting through Module 3! In this module, we’re equipping you with tools and frameworks to overcome those obstacles.\n\nMost challenges fall into categories like money, time, resources, effort, and lack of progress. Recognizing these common barriers is the first step in overcoming them.\n\nLet’s talk about your mindset. Everything starts in the mind. If you feel defeated before you begin, you won’t get far. But if you see obstacles as challenges that make life interesting, you’re already on the right track. Think about your favorite movie heroes—they always face challenges and grow from them. Resilience is key. When you fall, get back up and keep going.\n\nNext is growth. No matter your age, you can grow and learn. Don’t be afraid to change your mind when presented with new facts. Stubbornly sticking to outdated beliefs can hold you back. Embrace growth and be willing to adapt.\n\nFinally, adopt an abundance mindset. Don’t view the world as a pie with limited slices. Wealth and opportunities are constantly being created. Focus on building value and creating more wealth, not just for yourself but also for others.\n\nWith these mindsets—resilience, growth, and abundance—you’ll be well-equipped to build your Vivid Vision.\n\nNow, let’s move on to the action tasks that will help you put these principles into practice.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "I commit to having a growth, abundance, and resilient mindset.",
+    "value": 5
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 4,
+  "moduleTitle": "Laws Of M.W.G.S.D (Men Who Get Sh*T Done!)",
+  "order": 2,
+  "id": 798453,
+  "slug": "pareto-principle",
+  "title": "Pareto Principle",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716808240157.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716281106174__transcode",
+  "notesText": "Welcome to a life-changing concept: the 80/20 principle. Introduced by Italian economist Vilfredo Pareto, this idea states that 80% of results come from 20% of efforts.\n\nFor example - in business, 20% of customers often account for 80% of sales.\n\nRecognizing this key principle can help you focus on what truly matters and achieve more with less effort.\n\nApply this principle to your life by identifying key areas where a small effort can yield significant results. Be specific and think about where you can make the most impact.\n\nAs always, wear your Scent Trigger and take one small courageous action today to honor your commitment to being your best self. \n\nThis could be sending a text, drinking a glass of water, or setting up an investment. These small actions, over time, will make a huge difference.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Identify at least one area in your life where you could apply the Pareto Principle. Be specific!",
+    "value": 10
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 4,
+  "moduleTitle": "Laws Of M.W.G.S.D (Men Who Get Sh*T Done!)",
+  "order": 3,
+  "id": 798454,
+  "slug": "essentialism",
+  "title": "Essentialism",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716808242360.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716810883495__transcode",
+  "notesText": "Essentialism is about zeroing in on the vital few things that truly matter, giving you more freedom and joy.\n\nSteve Jobs, upon his return to Apple, noticed the company was spread thin with too many products. His solution? Streamline!\n\nBy eliminating the non-essential, Apple was able to focus on what truly mattered, leading to its remarkable success.\n\nThis is the heart of Essentialism—cutting through the noise to focus on what's most important.\n\nIncorporate essentialism into your life by using tools like the Eisenhower Matrix to prioritize tasks. This matrix helps you focus on important but non-urgent tasks that often get buried under urgent but less important activities.\n\nImagine the peace and productivity that come from concentrating on what truly drives your goals!\n\nHow to get started? Declutter! \n\nMarie Kondo, a decluttering guru, suggests only keeping items that spark joy. Apply this principle to your schedule and commitments as well.\n\nBy saying \"no\" to good things, you create space to say \"yes\" to great things, enriching your life.\n\nEmbrace the power of Essentialism to protect your time and focus on what truly matters. It’s not just about less; it’s about better. Free up time for meaningful activities, like enjoying a serene walk with your partner or having a reflective moment with yourself.\n\nWhat small step can you take in the next 24 hours to embrace this powerful mindset? \n\nAs you take action, don’t forget to use your Scent Trigger and recite the mantra: \"Today, I'll take one small courageous action to honor my commitment to being my best self.\"",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "What small step can you take in the next 24 hours to embrace Essentialism?&nbsp;",
+    "value": 10
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 4,
+  "moduleTitle": "Laws Of M.W.G.S.D (Men Who Get Sh*T Done!)",
+  "order": 4,
+  "id": 798455,
+  "slug": "1-percent-better-daily",
+  "title": "1% Better Daily",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716808229293.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716291169326__transcode",
+  "notesText": "Let's dive into the concept of getting 1% better every day. This powerful approach was popularized by Toyota in the 1980s.\n\nThe idea is simple yet incredibly effective: focus on small, incremental improvements each day. James Clear further expanded on this by highlighting how these tiny gains compound over time.\n\nImagine this: improving by just 1% daily can make you 37 times better by the end of the year!\n\nSo, how can you apply this in your life?\n\nStart by identifying areas where you can make small improvements. It could be learning a new skill, enhancing your efficiency, or improving a relationship. These minor adjustments may seem insignificant, but over time, they create exponential growth.\n\nTo make this process even more effective, use your Scent Triggers to reinforce the habit of taking one small courageous action each day. This will keep you focused and motivated on your journey to becoming your best self.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Where can you get 1% better today?",
+    "value": 10
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 5
+   },
+   {
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "What Scent Trigger did you use today?",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 4,
+  "moduleTitle": "Laws Of M.W.G.S.D (Men Who Get Sh*T Done!)",
+  "order": 5,
+  "id": 798456,
+  "slug": "doing-nothing-vs-doing-one-thing",
+  "title": "Doing Nothing vs. Doing One Thing",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716808232148.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716289301445__transcode",
+  "notesText": "Let’s talk about the power of doing one thing versus doing nothing at all.\n\nI get it—life can be overwhelming. Take fitness as an example; you might think that if you can’t fit in a 30-minute run, it’s not worth doing anything.\n\nBut even a small action, like doing a few air squats or one pull-up, can make a difference.\n\nThe key here is to break the barrier of inaction. Often, we’re paralyzed by the thought of needing to do a lot, so we end up doing nothing. It's better to do something small than nothing at all.\n\nThe hardest part is often just starting.\n\nThere’s a great book by Mel Robbins called \"The 5-Second Rule.\" In it, she talks about counting down from five and then taking action. This can help you overcome the hesitation that holds you back. I use this trick to get out of bed in the morning and to step into the gym.\n\nMy rule is simple: I just have to step into the gym, and once I’m there, I usually end up working out.\n\nSetting the bar low and just getting started can lead to doing more than you initially planned. Even if you only accomplish that one small task, you’re still ahead of the person who did nothing.\n\nSo, think about it: What’s one thing you can do today that will have a significant impact? Don’t overthink it, just start.\n\nAnd don’t forget to recite your mantra: \"Today, I'll take one small courageous action to honor my commitment to being my best self.\"",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "What's the one thing you're going to get done today that will make a difference?",
+    "value": 10
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 4,
+  "moduleTitle": "Laws Of M.W.G.S.D (Men Who Get Sh*T Done!)",
+  "order": 6,
+  "id": 798457,
+  "slug": "latent-potential",
+  "title": "Latent Potential",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716808234274.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716811071926__transcode",
+  "notesText": "Imagine putting a piece of paper in an oven. At 100°, 200°, 300°, 400°, and even 450°, nothing happens.\n\nBut at 451°, it ignites.\n\nThe energy was building up all along, and it finally hit the ignition point.\n\nThis is similar to our efforts in life. You might feel like you're hitting brick walls when you're trying to improve your fitness, grow your business, or make investments.\n\nProgress often seems slow, but all that effort is building up. Eventually, you'll reach a tipping point where everything clicks, and you achieve your goals.\n\nConsider real estate in 2020 and 2021. Many saw sudden, significant gains after years of slow progress. \n\nThis principle applies to personal goals too, like fitness. You might not see immediate results, but one day, you'll notice the change.\n\nTake John Grisham, for example. He was a lawyer who knew he was a writer at heart. He wrote \"A Time to Kill,\" which initially flopped, but he kept going. His next book, \"The Firm,\" exploded in popularity.\n\nHis latent potential as a writer was always there; it just needed time to ignite.\n\nSo, where in your life is there latent potential? What’s heating up and just waiting to ignite?",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Where in your life is there latent potential? What’s heating up and just waiting to ignite?",
+    "value": 10
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 4,
+  "moduleTitle": "Laws Of M.W.G.S.D (Men Who Get Sh*T Done!)",
+  "order": 7,
+  "id": 798458,
+  "slug": "identity-based-decision-making",
+  "title": "Identity-Based Decision Making",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716808236608.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716288823234__transcode",
+  "notesText": "Identity-based decision-making is an incredibly powerful concept because it goes beyond specific goals and taps into who you fundamentally are.\n\nConsider the swimmer Michael Phelps. Sure, he aimed for gold medals, but his core identity is being a swimmer. He’s in the pool every day because that’s who he is.\n\nSimilarly, if you see yourself as a healthy person, you’ll naturally adopt healthy habits.\n\nLet's talk about your three-year vision. Guess what? You’re already that person you aspire to be inside. \n\nYou just need to align your actions with your identity.\n\nIf you see yourself as a healthy person, you'll avoid unhealthy foods not just to lose weight but because it's part of who you are.\n\nWrite down how you identify yourself.\n\nAre you a healthy person? A successful person? A dedicated family man?\n\nBe generous and think about how your future self would describe you.\n\nLastly, don't forget your Scent Trigger and recite the mantra: \"Today, I'll take one small courageous action to honor my commitment to being my best self.\"",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "How do you see yourself? What type of identity do you have?",
+    "value": 10
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 4,
+  "moduleTitle": "Laws Of M.W.G.S.D (Men Who Get Sh*T Done!)",
+  "order": 8,
+  "id": 798459,
+  "slug": "smart-goals",
+  "title": "SMART Goals",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1716808227364.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1716288784794__transcode",
+  "notesText": "Finally, let’s talk about S.M.A.R.T. goals.\n\nThe acronym stands for Specific, Measurable, Attainable, Relevant, and Time-bound. It originated from a 1981 paper by George T. Doran and has become a popular framework for setting effective goals.\n\n- Specific: Define your goal clearly. Instead of saying, “I want to jump higher,” say, “I want to add five inches to my vertical jump.”\n- Measurable: Ensure you can track your progress. For example, “I want to add five inches.”\n- Attainable: Make sure your goal is realistic. If others have achieved similar results, you likely can too.\n- Relevant: Align your goal with your broader objectives. Improving your vertical jump is relevant if you want to get better at basketball or volleyball.\n- Time-bound: Set a deadline. Decide if you’ll achieve your goal in six months, a year, or another timeframe.\n\nUsing S.M.A.R.T. goals helps you stay accountable and ensures your efforts are focused and effective. Whether your vision involves wealth, health, or personal growth, S.M.A.R.T. goals can guide you toward success.\n\nWrite a S.M.A.R.T. goal aligned with your three-year Vivid Vision. \n\nAnd don't forget to use your Scent Trigger today and recite, \"Today, I'm taking one small courageous action to honor my commitment to being my best self.\"",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "Write a S.M.A.R.T. Goal that's aligned to your three-year Vivid Vision.",
+    "value": 10
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 5
+   },
+   {
+    "type": "MULTIPLE_CHOICE",
+    "prompt": "What Scent Trigger did you use today?",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 5,
+  "moduleTitle": "Forge Your Vivid Vision",
+  "order": 1,
+  "id": 798461,
+  "slug": "review",
+  "title": "Review",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1717068023294.png",
+  "video_url": "https://cdn-prod.xperiencify.com/users/411269/video/1717152513698__transcode",
+  "notesText": "Congratulations! You've made it through the hardest part of the course.\n\nNow, I've got a surprise for you!\n\nWe’ve taken all your hard work so far and compiled it into a comprehensive Vivid Vision statement just for you.\n\nThis document encapsulates your aspirations for your reputation, relationships, career, health, wealth, lifestyle, and social impact over the next three years.\n\nPlease take a moment to review your Vivid Vision below. It is a powerful snapshot of your desired state, designed to inspire and guide you toward achieving your dreams.\n\nAs you review your Vivid Vision, consider the following:\n\n- Does this accurately reflect my goals and aspirations?\n- Are there any changes in my priorities or circumstances that need to be addressed?\n\nTo refine your vision, apply the Pareto Principle and Essentialism:\n\n- Pareto Principle: Identify the 20% of goals and actions that will yield 80% of the results. Focus on these critical aspects.\n- Essentialism: Remove the non-essential elements and concentrate on what truly matters to create a streamlined and impactful vision.\n\nOnce you’re happy with the refinements, paste your updated Vivid Vision in the space provided as your action task. This refined version will serve as a powerful guiding force, helping you stay aligned with your values and goals.\n \n\n## {First Name}'s Vivid Vision:\n{VIVID_VISION}",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "ESSAY_RESPONSE",
+    "prompt": "I confirm that the goals I set for Your Reputation, Relationships, Career/Business, Health, Wealth, Lifestyle (home, travel, hobbies), and Social Impact/Legacy are accurate or I have updated them as appropriate. Please paste your new Vivid Vision below:",
+    "value": 15
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 5,
+  "moduleTitle": "Forge Your Vivid Vision",
+  "order": 2,
+  "id": 809338,
+  "slug": "share-copy",
+  "title": "Frame",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1717068028533.png",
+  "video_url": "",
+  "notesText": "Surprise again! We've taken your refined Vivid Vision and brought it to life with a beautiful visualization created just for you using AI. This image, along with your final Vivid Vision statement, serves as a powerful and inspiring representation of your future.\n\nCheck your email: You will find your Vivid Vision visualization and statement waiting for you. This visual representation captures the essence of your aspirations and goals, making your vision even more tangible and motivating.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "I have printed and framed my Vivid Vision",
+    "value": 15
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "module": 5,
+  "moduleTitle": "Forge Your Vivid Vision",
+  "order": 3,
+  "id": 798465,
+  "slug": "share",
+  "title": "Broadcast",
+  "description": "",
+  "thumbnail": "https://cdn-prod.xperiencify.com/users/411269/image/1717069992587.png",
+  "video_url": "",
+  "notesText": "Now that you’ve framed your Vivid Vision, it’s time to take the next important step: sharing it with others. Sharing your Vivid Vision with a trusted circle or group is a powerful way to gain feedback, support, and accountability.\n\nThe Importance of Sharing:\n\n- Accountability: Sharing your vision with others makes you more accountable. When people know your goals, you’re more likely to stay committed and follow through.\n- Feedback: Trusted friends, family, or colleagues can provide valuable insights and perspectives that you might not have considered. Their feedback can help you refine and improve your vision further.\n- Support: Sharing your vision allows others to support you on your journey. They can offer encouragement, resources, and even connections that can help you achieve your goals.",
+  "notesImages": [],
+  "resources": [],
+  "tasks": [
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Schedule a date three years from now to revisit your Vivid Vision. This will help you stay focused on your long-term goals and measure your progress over time.",
+    "value": 5
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Take a photo of your framed Vivid Vision. This visual reminder will be useful for sharing and reflecting on your goals.",
+    "value": 10
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Share your Vivid Vision with me! Send a photo of your framed vision along with a brief description of how you feel about it and what it means to you.",
+    "value": 15
+   },
+   {
+    "type": "SIMPLE_CHECKBOX",
+    "prompt": "Today, I'll take one small courageous action to honor my commitment to being my best self.",
+    "value": 25
+   }
+  ]
+ }
+]
