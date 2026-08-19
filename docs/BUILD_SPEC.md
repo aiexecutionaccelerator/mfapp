@@ -69,6 +69,7 @@ src/
       home/page.tsx            # 6.3
       log/page.tsx             # 6.9
       log/[id]/page.tsx        # 6.9 detail
+      progress/page.tsx        # 10.11
       settings/page.tsx        # 6.12
       shop/page.tsx            # 6.13
     mission/                   # focused flow, NO tab bar, has back/close
@@ -160,10 +161,10 @@ Near-black navy/charcoal backgrounds with soft radial glow, warm gold gradient t
 - `Wordmark` — text "MISSION" in Bebas with a small inline crest placeholder (simple SVG shield+sword outline in gold); swap for `/images/logo.svg` later via same onError pattern.
 - `DayBadge` — pill "DAY 7 OF 30" gold-300 text on glass; after challenge: "YOUR MISSION CONTINUES".
 - `RepCounts` — one compact glass row, four columns (HONOR / COURAGE / COMMITMENT / COURSE): 22px numeral + 12px label, each with its accent dot (never color alone).
-- `TabBar` — glass, fixed bottom, 4 items: Start (`/home`), Course, Log, Settings; active = gold; icons + 12px labels (exception to 13px rule is NOT allowed — use 12px min).
+- `TabBar` — glass, fixed bottom, 5 items: Start (`/home`), Course, Log, Progress, Settings; active = gold; icons + 12px labels (exception to 13px rule is NOT allowed — use 12px min).
 - `Field` — label + input/textarea, glass fill, cream text, gold focus border, char counter when `maxLength` provided.
 - `Toast` — bottom toast for errors with optional "Retry" action.
-- `ProgressRing` — SVG ring, gold stroke, used for Day X of 30 in the Log summary; labels scale with `size`.
+- `ProgressRing` — SVG ring, gold stroke, used for Day X of 30 on the Progress tab; labels scale with `size`.
 
 ## 5. Data model & security
 
@@ -337,7 +338,7 @@ Global: back/close affordance on every non-tab screen (top-left "‹" or top-rig
 ### 10.4 `/home`
 - Top row: `Wordmark` (small, left) + `DayBadge` (right).
 - **Active Mission banner** (if one exists): glass card directly under the top row, accent by trigger: eyebrow `MISSION ACTIVE · {TRIGGER}` (`REMINDER · {TRIGGER}` once a stored reminder is due), action text (display 22px), button `CHECK IN NOW` → `/mission/checkin/{id}`, ghost `Open Mission` → `/mission/active/{id}`. Trigger cards remain usable (starting a new Mission while one is active is allowed; do not block).
-- Today card (challenge mode only): eyebrow `DAY {d}` + today's lesson title + chevron → `/course/{id}`. In log mode: omit.
+- Next-up card (challenge mode only): eyebrow `NEXT UP · DAY {d}` + the title of the first incomplete lesson + chevron → `/course/{id}`. In log mode: omit.
 - H1: `WHAT DO YOU NEED TODAY?`
 - Three `TriggerCard`s stacked (order: honor, courage, commitment). No phase copy, no featured eyebrow.
 - Below cards: `RepCounts` as one compact glass row. Nothing else — no Missions-completed line, no commerce card (Settings has "Get Mission Fragrances"; the Day 2 lesson ends with a `/shop` link).
@@ -377,16 +378,16 @@ Global: back/close affordance on every non-tab screen (top-left "‹" or top-rig
 - H1: `{TRIGGER} REP #{n} COMPLETE`
 - Block: eyebrow `YOU SAID YOU WOULD:` action text (display 26px) then `AND YOU DID.` (display, gold gradient).
 - Completion line from `completionLines`.
-- Buttons: `DONE` → `/home`; secondary `VIEW MY LOG` → `/log`.
+- Buttons: `DONE` → `/home`; secondary `VIEW MY PROGRESS` → `/progress`.
 
 ### 10.10 `/log`
-- H1 `MISSION LOG`, then the **Progress summary** — one glass block, no stats grid. Challenge mode: `ProgressRing` (`DAY {d}` / `of 30`) on the left, the four reps (HONOR/COURAGE/COMMITMENT/COURSE) on the right, then `Missions started {n} · Completed {n}` (plus `· Follow-through {pct}%` only when completed + ended ≥ 3) and a small `MODULE {n} · {title}` line. Log mode: eyebrow `BUILD THE EVIDENCE`, the four all-time reps, `Total completed {n} · Last 30 days {n}`. If rawDay ≥ 30 and the challenge is not completed, a `COMPLETE THE 30-DAY MISSION` button → `/challenge-complete` sits under the block.
+- H1 `MISSION LOG`, then the filters and the list — no summary block; the scoreboard lives on `/progress` (§10.11).
 - Filter chips `ALL / HONOR / COURAGE / COMMITMENT` (glass pills, active gold). List newest first of `MissionRow`: date (`MMM d` + `h:mm a`), accent dot + trigger label, action text (2-line clamp), status pill (`COMPLETED` success-tinted / `ACTIVE` gold / `ENDED` ink-2), small quote icon or `Reflection` marker if reflection exists.
 - Empty: `No Missions yet.` `Start with one action today.` button `START A MISSION` → `/home`.
 - Row → `/log/{id}`: trigger, action, status, started, completed/ended time, reflection (glass quote block). No editing, no delete. If status active → button `OPEN MISSION`.
 
-### 10.11 `/progress` — removed
-Merged into the Log tab (§10.10). The route is gone; `next.config.ts` redirects `/progress` → `/log` permanently. No charts.
+### 10.11 `/progress`
+Own tab. Challenge mode: H1 `YOUR 30-DAY MISSION`, `ProgressRing` (`DAY {d}` / `of 30`), a `MODULE {n} · {title}` glass card, then a 2-col stat grid (four reps, Missions Started/Completed, Lessons completed, Follow-Through Rate when completed + ended ≥ 3) and, at rawDay ≥ 30 before completion, `COMPLETE THE 30-DAY MISSION` → `/challenge-complete`. Log mode: H1 `BUILD THE EVIDENCE` with the all-time stat grid. No charts.
 
 ### 10.12 `/challenge-complete` (only reachable when rawDay ≥ 30 or already completed; else `/home`)
 - H1 `30-DAY MISSION COMPLETE`. Stats: Missions Started, Missions Completed, Honor / Courage / Commitment Reps.
@@ -419,7 +420,7 @@ Merged into the Log tab (§10.10). The route is gone; `next.config.ts` redirects
 
 ## 11. Root router `/` and middleware
 - `/`: server component; real mode: read session → no user → `/welcome`; user → load profile → `onboarding_completed ? /home : /onboarding`. Demo mode: client-side same decision from localStorage.
-- Middleware (real mode only) protects `/home /course /log /settings /shop /mission/* /onboarding /challenge-complete` and refreshes tokens per `@supabase/ssr` docs. `/progress` is a permanent `next.config.ts` redirect to `/log`.
+- Middleware (real mode only) protects `/home /course /log /progress /settings /shop /mission/* /onboarding /challenge-complete` and refreshes tokens per `@supabase/ssr` docs.
 
 ## 12. PWA / metadata
 - `manifest.webmanifest`: name `Mission`, short_name `Mission`, `display: standalone`, `background_color: #07090D`, `theme_color: #07090D`, `start_url: /`, icons 192/512 (generate simple placeholder PNGs: dark square with gold "M" — a tiny node script using no external deps is fine, or commit generated PNGs).

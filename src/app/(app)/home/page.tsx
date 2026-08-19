@@ -14,7 +14,7 @@ import GlassCard from "@/components/ui/GlassCard";
 import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
 import { TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
-import { lessonForDay } from "@/content/course";
+import { firstIncompleteLesson } from "@/content/course";
 import { challengeDay, getMode } from "@/lib/challenge";
 import { store, useAppData } from "@/lib/data/store";
 import type { Mission } from "@/lib/data/types";
@@ -106,7 +106,11 @@ export default function HomePage() {
 
   const mode = profile ? getMode(profile) : "challenge";
   const day = profile ? challengeDay(profile) : 1;
-  const todaysLesson = mode === "challenge" ? lessonForDay(day) : undefined;
+  // Next up follows the work done, not the calendar.
+  const nextLesson =
+    mode === "challenge" && courseProgress
+      ? firstIncompleteLesson(new Set(courseProgress.map((r) => r.lesson_id)))
+      : undefined;
   const stats = computeStats(missions ?? [], courseProgress ?? []);
 
   return (
@@ -120,17 +124,17 @@ export default function HomePage() {
         <ActiveMissionBanner key={activeMission.id} mission={activeMission} />
       )}
 
-      {/* Today's lesson, one tap from the top of the screen. */}
-      {profile && todaysLesson && (
-        <Link href={`/course/${todaysLesson.id}`} className="mt-5 block">
+      {/* The lesson you're up to, one tap from the top of the screen. */}
+      {profile && nextLesson && (
+        <Link href={`/course/${nextLesson.id}`} className="mt-5 block">
           <GlassCard className="border-[rgba(201,166,72,.35)] p-4">
             <div className="flex items-center gap-3">
               <span className="min-w-0 flex-1">
                 <span className="eyebrow block text-gold-300">
-                  DAY {todaysLesson.day}
+                  NEXT UP · DAY {nextLesson.day}
                 </span>
                 <span className="mt-1.5 block truncate text-[17px] text-ink-0">
-                  {todaysLesson.title}
+                  {nextLesson.title}
                 </span>
               </span>
               <ChevronRight aria-hidden className="shrink-0 text-ink-2" size={20} />

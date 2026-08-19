@@ -102,8 +102,8 @@ export default function CompletePage({
 
       <BottomActions className="pt-10">
         <Button onClick={() => router.push("/home")}>DONE</Button>
-        <Button variant="secondary" onClick={() => router.push("/log")}>
-          VIEW MY LOG
+        <Button variant="secondary" onClick={() => router.push("/progress")}>
+          VIEW MY PROGRESS
         </Button>
       </BottomActions>
     </main>

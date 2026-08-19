@@ -24,8 +24,9 @@ const RAW: Record<Trigger, Array<{ text: string; definition: string }>> = {
         "Do exactly what you said you would do, when you said you would do it.",
     },
     {
-      text: "Take responsibility for a mistake",
-      definition: "Own it, say it plainly, and start making it right.",
+      text: "Take responsibility for my actions",
+      definition:
+        "Own it — the outcome, the mistake, the choice — and make it right.",
     },
   ],
   // From the course lesson "The Importance of Courage".

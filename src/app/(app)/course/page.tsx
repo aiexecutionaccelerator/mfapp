@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 import Button from "@/components/ui/Button";
@@ -9,36 +9,72 @@ import GlassCard from "@/components/ui/GlassCard";
 import Headline from "@/components/ui/Headline";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
-import { LESSONS, LESSON_COUNT, MODULES, lessonForDay } from "@/content/course";
+import {
+  LESSONS,
+  LESSON_COUNT,
+  MODULES,
+  firstIncompleteLesson,
+  isLessonUnlocked,
+} from "@/content/course";
 import type { Lesson } from "@/content/course";
-import { challengeDay, getMode } from "@/lib/challenge";
 import { useAppData } from "@/lib/data/store";
 import { cn } from "@/lib/utils";
 
-function LessonRow({ lesson, done }: { lesson: Lesson; done: boolean }) {
+function RowBody({ lesson, locked }: { lesson: Lesson; locked: boolean }) {
   return (
-    <Link href={`/course/${lesson.id}`} className="block">
-      <div
+    <span className="min-w-0 flex-1">
+      <span className="eyebrow block text-gold-300">DAY {lesson.day}</span>
+      <span
         className={cn(
-          "glass flex items-center gap-3 rounded-[14px] px-4 py-4",
-          done && "border-[rgba(201,166,72,.35)]",
+          "mt-1.5 block text-[17px] leading-snug",
+          locked ? "text-ink-2" : "text-ink-0",
         )}
       >
-        <span className="min-w-0 flex-1">
-          <span className="eyebrow block text-gold-300">DAY {lesson.day}</span>
-          <span className="mt-1.5 block text-[17px] leading-snug text-ink-0">
-            {lesson.title}
+        {lesson.title}
+      </span>
+      <span className="mt-1.5 flex items-center gap-3 text-[13px] text-ink-2">
+        {lesson.minutes !== null && <span>{lesson.minutes} min</span>}
+        {lesson.trigger && (
+          <span className="flex items-center gap-2">
+            <AccentDot trigger={lesson.trigger} />
+            <span>{lesson.trigger.toUpperCase()}</span>
           </span>
-          <span className="mt-1.5 flex items-center gap-3 text-[13px] text-ink-2">
-            {lesson.minutes !== null && <span>{lesson.minutes} min</span>}
-            {lesson.trigger && (
-              <span className="flex items-center gap-2">
-                <AccentDot trigger={lesson.trigger} />
-                <span>{lesson.trigger.toUpperCase()}</span>
-              </span>
-            )}
-          </span>
-        </span>
+        )}
+      </span>
+    </span>
+  );
+}
+
+const ROW_CLASS = "glass flex items-center gap-3 rounded-[14px] px-4 py-4";
+
+function LessonRow({
+  lesson,
+  done,
+  locked,
+}: {
+  lesson: Lesson;
+  done: boolean;
+  locked: boolean;
+}) {
+  const { showToast } = useToast();
+
+  if (locked) {
+    return (
+      <button
+        type="button"
+        className={cn(ROW_CLASS, "w-full text-left")}
+        onClick={() => showToast("Complete the previous lesson first.")}
+      >
+        <RowBody lesson={lesson} locked />
+        <Lock aria-label="Locked" size={18} className="shrink-0 text-ink-2" />
+      </button>
+    );
+  }
+
+  return (
+    <Link href={`/course/${lesson.id}`} className="block">
+      <div className={cn(ROW_CLASS, done && "border-[rgba(201,166,72,.35)]")}>
+        <RowBody lesson={lesson} locked={false} />
         {done && (
           <Check
             aria-label="Completed"
@@ -53,14 +89,14 @@ function LessonRow({ lesson, done }: { lesson: Lesson; done: boolean }) {
 
 export default function CoursePage() {
   const { showToast } = useToast();
-  const { profile, courseProgress, error, refresh } = useAppData();
+  const { courseProgress, error, refresh } = useAppData();
 
   useEffect(() => {
     if (!error) return;
     showToast("Couldn't load the course.", { retry: () => void refresh() });
   }, [error, refresh, showToast]);
 
-  if (!profile || !courseProgress) {
+  if (!courseProgress) {
     return (
       <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
@@ -69,10 +105,8 @@ export default function CoursePage() {
   }
 
   const done = new Set(courseProgress.map((row) => row.lesson_id));
-  const day = challengeDay(profile);
-  // Only while the 30 days are running; after that every lesson is equal.
-  const today =
-    getMode(profile) === "challenge" ? lessonForDay(day) : undefined;
+  // Next up follows the work done, not the calendar.
+  const next = firstIncompleteLesson(done);
 
   return (
     <main className="pt-4">
@@ -86,25 +120,28 @@ export default function CoursePage() {
       </p>
 
       <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
-        {today ? (
+        {next ? (
           <>
-            <Eyebrow tone="gold">
-              DAY {today.day} · {today.title}
-            </Eyebrow>
-            {today.minutes !== null && (
-              <p className="mt-2 text-[13px] text-ink-2">{today.minutes} min</p>
+            <Eyebrow tone="gold">NEXT UP</Eyebrow>
+            <p className="mt-2 text-[17px] leading-snug text-ink-0">
+              DAY {next.day} · {next.title}
+            </p>
+            {next.minutes !== null && (
+              <p className="mt-2 text-[13px] text-ink-2">{next.minutes} min</p>
             )}
-            <Link href={`/course/${today.id}`} className="mt-5 block">
-              <Button>OPEN TODAY&apos;S LESSON</Button>
+            <Link href={`/course/${next.id}`} className="mt-5 block">
+              <Button>OPEN LESSON</Button>
             </Link>
           </>
         ) : (
           <>
-            <Eyebrow tone="gold">PICK ANY LESSON</Eyebrow>
-            <p className="mt-2 text-[15px] leading-relaxed text-ink-1">
-              The 30 days are behind you. Every lesson stays open — come back to
-              any of them, any time.
+            <Eyebrow tone="gold">COURSE COMPLETE</Eyebrow>
+            <p className="mt-2 text-[17px] leading-relaxed text-ink-1">
+              All 30 lessons done.
             </p>
+            <Link href="/course/vivid-vision" className="mt-5 block">
+              <Button>OPEN MY VIVID VISION</Button>
+            </Link>
           </>
         )}
       </GlassCard>
@@ -122,6 +159,7 @@ export default function CoursePage() {
                   key={lesson.id}
                   lesson={lesson}
                   done={done.has(lesson.id)}
+                  locked={!isLessonUnlocked(lesson.id, done)}
                 />
               ),
             )}

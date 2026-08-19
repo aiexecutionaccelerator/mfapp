@@ -10,15 +10,11 @@ import LessonVideo from "@/components/course/LessonVideo";
 import PromptField from "@/components/course/PromptField";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
-import GlassCard from "@/components/ui/GlassCard";
 import Headline from "@/components/ui/Headline";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
-import { getLesson, nextLesson } from "@/content/course";
+import { getLesson, isLessonUnlocked, nextLesson } from "@/content/course";
 import { store, useAppData } from "@/lib/data/store";
-
-const TODAYS_MISSION =
-  "Wear your Scent Trigger and take one small courageous action to honor your commitment to being your best self.";
 
 export default function LessonPage({
   params,
@@ -36,6 +32,21 @@ export default function LessonPage({
   useEffect(() => {
     if (!lesson) router.replace("/course");
   }, [lesson, router]);
+
+  // The course runs in order — a lesson you haven't earned sends you back.
+  const locked =
+    lesson !== undefined &&
+    courseProgress !== null &&
+    !isLessonUnlocked(
+      lesson.id,
+      new Set(courseProgress.map((row) => row.lesson_id)),
+    );
+
+  useEffect(() => {
+    if (!locked) return;
+    showToast("Complete the previous lesson first.");
+    router.replace("/course");
+  }, [locked, router, showToast]);
 
   useEffect(() => {
     if (!error) return;
@@ -57,7 +68,7 @@ export default function LessonPage({
     }
   }
 
-  if (!lesson || !courseProgress || !lessonResponses) {
+  if (!lesson || !courseProgress || !lessonResponses || locked) {
     return (
       <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
@@ -73,22 +84,13 @@ export default function LessonPage({
       .map((row) => [row.prompt_id, row.answer]),
   );
 
-  const missionHref = lesson.trigger
-    ? `/mission/declare?trigger=${lesson.trigger}&day=${lesson.day}`
-    : "/home";
-
   return (
     <main className="pt-2">
       <NavAction kind="back" href="/course" />
 
-      <div className="mt-6">
-        <Eyebrow>
-          DAY {lesson.day} · MODULE {lesson.module}
-        </Eyebrow>
-        <Headline level={2} className="mt-3">
-          {lesson.title}
-        </Headline>
-      </div>
+      <Headline level={2} className="mt-6">
+        {lesson.title}
+      </Headline>
 
       {lesson.youtubeId && (
         <LessonVideo youtubeId={lesson.youtubeId} title={lesson.title} />
@@ -125,19 +127,7 @@ export default function LessonPage({
         </Link>
       )}
 
-      <GlassCard className="mt-10">
-        <Eyebrow tone="gold">TODAY&apos;S MISSION</Eyebrow>
-        <p className="mt-3 text-[17px] leading-relaxed text-ink-0">
-          {TODAYS_MISSION}
-        </p>
-        <div className="mt-5">
-          <Link href={missionHref} className="block">
-            <Button variant="secondary">START A MISSION</Button>
-          </Link>
-        </div>
-      </GlassCard>
-
-      <div className="mt-8 space-y-3">
+      <div className="mt-10 space-y-3">
         {lesson.module === 5 && (
           <Link href="/course/vivid-vision" className="block">
             <Button variant="secondary">
@@ -157,14 +147,22 @@ export default function LessonPage({
           </Button>
         )}
 
-        {next && (
-          <Link
-            href={`/course/${next.id}`}
-            className="flex min-h-12 w-full items-center justify-center text-[15px] font-semibold tracking-[0.08em] text-ink-1"
-          >
-            Next lesson →
-          </Link>
-        )}
+        {/* The next lesson only opens once this one is done. */}
+        {next &&
+          (done ? (
+            <Link href={`/course/${next.id}`} className="block">
+              <Button variant="secondary">NEXT LESSON →</Button>
+            </Link>
+          ) : (
+            <>
+              <Button variant="secondary" disabled>
+                NEXT LESSON →
+              </Button>
+              <p className="text-center text-[13px] text-ink-2">
+                Mark this lesson complete to continue
+              </p>
+            </>
+          ))}
       </div>
 
       <p className="mt-6 text-center text-[13px] text-ink-2">

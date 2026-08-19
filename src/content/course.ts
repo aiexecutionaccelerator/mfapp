@@ -7,7 +7,7 @@ import type { Trigger } from "@/lib/data/types";
  * classroom and cleaned of everything that pointed somewhere else: no points,
  * no community posts, no "email it to me". What the lessons used to ask a man
  * to post, he now writes here (`prompts`, stored privately as lesson
- * responses) or does (the Today's Mission hand-off on every lesson screen).
+ * responses).
  *
  * `body` is markdown: `##` / `###` headings, `**bold**`, `- ` bullets,
  * `1. ` numbered lists, `![alt](src)`, `[text](url)`.
@@ -120,7 +120,12 @@ The travel atomizer fills straight from the bottle: pop the nozzle off, press th
     minutes: 4,
     trigger: null,
     prompts: [],
-    body: `S.T.A.R. is how you use a Scent Trigger on purpose. **Select** the value you want to embody right now — Honor, Courage, or Commitment. **Take Action** — spray into the cap, breathe it in, then apply it (two or three sprays on the chest is plenty; add the wrists if you want it to last the day). **Anchor** — close your eyes and recall a moment you actually lived that value; hold it for 5–15 seconds, then open your eyes knowing you are that man because you've already been him. **Repeat** daily.
+    body: `S.T.A.R. is how you use a Scent Trigger on purpose.
+
+- **Select** — the value you want to embody right now: Honor, Courage, or Commitment.
+- **Take Action** — spray into the cap, breathe it in, then apply it (two or three sprays on the chest is plenty; add the wrists if you want it to last the day).
+- **Anchor** — close your eyes and recall a moment you actually lived that value; hold it for 5–15 seconds, then open your eyes knowing you are that man because you've already been him.
+- **Repeat** — daily.
 
 You'll stop smelling it on yourself within minutes — that's normal olfactory fatigue. Others won't. Reapply the same trigger later if you like, but keep it to two or three sprays every five hours or so, and give this at least two months of daily practice.`,
   },
@@ -917,4 +922,28 @@ export function nextLesson(id: string): Lesson | undefined {
   const index = LESSONS.findIndex((lesson) => lesson.id === id);
   if (index === -1) return undefined;
   return LESSONS[index + 1];
+}
+
+/** The lesson before this one in course order. Undefined for Day 1. */
+export function previousLesson(id: string): Lesson | undefined {
+  const index = LESSONS.findIndex((lesson) => lesson.id === id);
+  if (index <= 0) return undefined;
+  return LESSONS[index - 1];
+}
+
+/**
+ * The course runs in order: a lesson opens once the one before it is done.
+ * Day 1 is always open, and a finished lesson stays open.
+ */
+export function isLessonUnlocked(id: string, completed: Set<string>): boolean {
+  if (completed.has(id)) return true;
+  const previous = previousLesson(id);
+  return !previous || completed.has(previous.id);
+}
+
+/** Where "next up" points: the first lesson not yet complete. */
+export function firstIncompleteLesson(
+  completed: Set<string>,
+): Lesson | undefined {
+  return LESSONS.find((lesson) => !completed.has(lesson.id));
 }
