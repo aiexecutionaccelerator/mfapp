@@ -189,5 +189,5 @@ branded dark template.
 The committed migration carries a `<NOTIFY_SECRET>` placeholder — apply it with
 the real value substituted; the same value must be set as the function secret.
 Function secrets: `NOTIFY_SECRET`, `NOTIFY_FROM` (verified Brevo sender), and
-`BREVO_API_KEY` (Brevo → SMTP & API → API Keys — the v3 API key, not the SMTP
-key). Deploy with `supabase functions deploy notify-admin --no-verify-jwt`.
+`RESEND_API_KEY` (Resend → API Keys). `NOTIFY_FROM` must be an address on a
+domain verified in Resend. Deploy with `supabase functions deploy notify-admin --no-verify-jwt`.

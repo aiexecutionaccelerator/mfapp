@@ -1,7 +1,7 @@
 // Admin notifications: emails antonio@missionfragrances.com when a user
 // completes onboarding ("signup") or finishes all 30 lessons ("course_complete").
 // Called by database triggers (see migrations/0006_admin_notifications.sql)
-// with `Authorization: Bearer NOTIFY_SECRET`. Sends via the Brevo API.
+// with `Authorization: Bearer NOTIFY_SECRET`. Sends via the Resend API.
 
 const ADMIN_EMAIL = "antonio@missionfragrances.com";
 
@@ -79,28 +79,29 @@ Deno.serve(async (req) => {
     return new Response("unknown type", { status: 400 });
   }
 
-  const apiKey = Deno.env.get("BREVO_API_KEY");
+  const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) {
-    console.error("notify-admin: BREVO_API_KEY not set");
+    console.error("notify-admin: RESEND_API_KEY not set");
     return new Response("sender not configured", { status: 500 });
   }
 
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+  const from = Deno.env.get("NOTIFY_FROM") ?? ADMIN_EMAIL;
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: { "api-key": apiKey, "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({
-      sender: {
-        name: "Mission Fragrances App",
-        email: Deno.env.get("NOTIFY_FROM") ?? ADMIN_EMAIL,
-      },
-      to: [{ email: ADMIN_EMAIL }],
+      from: `Mission Fragrances App <${from}>`,
+      to: [ADMIN_EMAIL],
       subject,
-      htmlContent: html,
+      html,
     }),
   });
 
   if (!res.ok) {
-    console.error("notify-admin: Brevo send failed", res.status, await res.text());
+    console.error("notify-admin: Resend send failed", res.status, await res.text());
     return new Response("send failed", { status: 502 });
   }
   return new Response("ok", { status: 200 });
