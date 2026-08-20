@@ -23,7 +23,7 @@ export default function PrivacyPage() {
         <ul className="list-disc space-y-1 pl-5">
           <li>
             <strong className="text-ink-0">Account:</strong> your email address
-            (used to sign you in with a one-time code) and the first name you
+            (used to sign you in with a one-time code) and the name you
             give us.
           </li>
           <li>

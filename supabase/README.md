@@ -177,3 +177,17 @@ service-role client to delete the user's `missions`, their `profiles` row, and
 finally `auth.admin.deleteUser`. If `SUPABASE_SERVICE_ROLE_KEY` is missing the
 route returns 500 and the app shows an error with a retry — it never pretends
 the deletion succeeded.
+
+## 7. Admin notifications
+
+Migration `0006_admin_notifications.sql` adds two triggers that call the
+`notify-admin` Edge Function: one when a user completes onboarding ("signup"),
+one when their 30th lesson row is inserted ("course complete"). Both emails go
+to antonio@missionfragrances.com with the user's name in the subject, using the
+branded dark template.
+
+The committed migration carries a `<NOTIFY_SECRET>` placeholder — apply it with
+the real value substituted; the same value must be set as the function secret.
+Function secrets: `NOTIFY_SECRET`, `NOTIFY_FROM` (verified Brevo sender), and
+`BREVO_API_KEY` (Brevo → SMTP & API → API Keys — the v3 API key, not the SMTP
+key). Deploy with `supabase functions deploy notify-admin --no-verify-jwt`.

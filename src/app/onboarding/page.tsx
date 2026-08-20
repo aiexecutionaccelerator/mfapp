@@ -82,11 +82,11 @@ export default function OnboardingPage() {
 
           <div className="mt-6">
             <Field
-              label="First name"
+              label="Name"
               value={name}
               onChange={setName}
               maxLength={40}
-              autoComplete="given-name"
+              autoComplete="name"
             />
           </div>
 
