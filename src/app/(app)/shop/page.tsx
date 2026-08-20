@@ -1,17 +1,13 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { useEffect, useState } from "react";
 import BottleVisual from "@/components/BottleVisual";
 import NavAction from "@/components/NavAction";
-import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
-import { useToast } from "@/components/ui/Toast";
 import { PRODUCT } from "@/content/product";
 import { TRIGGER_ORDER } from "@/content/triggers";
 import { artUrl } from "@/lib/art";
-import { hasShopify } from "@/lib/env";
 
 function Hero() {
   const hero = artUrl(PRODUCT.heroImage);
@@ -43,39 +39,6 @@ function Hero() {
 }
 
 export default function ShopPage() {
-  const { showToast } = useToast();
-  const configured = hasShopify();
-
-  const [price, setPrice] = useState<string>(PRODUCT.price);
-  const [pending, setPending] = useState(false);
-
-  useEffect(() => {
-    if (!configured) return;
-    fetch("/api/shopify/checkout")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((info: { price?: string | null } | null) => {
-        if (info?.price) setPrice(info.price);
-      })
-      .catch(() => {
-        // Static price stays. Never block render on Shopify.
-      });
-  }, [configured]);
-
-  async function checkout() {
-    setPending(true);
-    try {
-      const response = await fetch("/api/shopify/checkout", { method: "POST" });
-      if (!response.ok) throw new Error("checkout failed");
-      const { checkoutUrl } = (await response.json()) as {
-        checkoutUrl: string;
-      };
-      window.location.assign(checkoutUrl);
-    } catch {
-      setPending(false);
-      showToast("Couldn't open checkout. Please try again.");
-    }
-  }
-
   return (
     // Bottom padding clears the fixed CTA bar so no copy is ever unreachable.
     <main className="pt-2 pb-[148px]">
@@ -88,7 +51,7 @@ export default function ShopPage() {
 
       <div className="mt-6">
         <p className="font-display text-[64px] leading-none text-gold-gradient">
-          {price}
+          {PRODUCT.price}
         </p>
         <p className="mt-1 text-[15px] text-ink-1">{PRODUCT.edition}</p>
       </div>
@@ -118,14 +81,15 @@ export default function ShopPage() {
               "linear-gradient(180deg, rgba(7,9,13,0) 0%, rgba(7,9,13,.94) 16px, var(--bg-0) 100%)",
           }}
         >
-          <Button loading={pending} disabled={!configured} onClick={checkout}>
+          {/* Straight to the live product page — no client-side cart to break. */}
+          <a
+            href={PRODUCT.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-gold-gradient inline-flex min-h-14 w-full items-center justify-center rounded-[14px] px-5 text-center text-[15px] font-semibold tracking-[0.08em] text-[#07090D] shadow-[inset_0_1px_0_rgba(255,255,255,.35),0_8px_24px_rgba(201,166,72,.18)]"
+          >
             {PRODUCT.cta}
-          </Button>
-          {!configured && (
-            <p className="mt-2 text-center text-[13px] text-ink-2">
-              {PRODUCT.notConfigured}
-            </p>
-          )}
+          </a>
           <p className="mt-2 text-center text-[13px] text-ink-2">
             {PRODUCT.ctaNote}
           </p>

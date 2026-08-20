@@ -1,3 +1,4 @@
+// Unused by the app today (the Shop CTA links straight to the product page) — kept for a future Storefront-API integration.
 import { NextResponse } from "next/server";
 import { hasShopify } from "@/lib/env";
 import { createCheckout, getProductInfo } from "@/lib/shopify";

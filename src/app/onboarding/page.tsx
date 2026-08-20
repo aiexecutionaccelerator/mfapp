@@ -137,8 +137,8 @@ export default function OnboardingPage() {
         <div className="mt-6 flex flex-1 flex-col">
           <Headline>YOUR 30-DAY MISSION STARTS NOW.</Headline>
           <p className="mt-4 text-[17px] text-ink-1">
-            For the next 30 days, don&apos;t just wear the fragrances. Give them
-            a job. One short lesson and one real-world Mission a day.
+            For the next 30 days, wear your fragrance with intent. One short
+            lesson and one real-world Mission a day.
           </p>
           <BottomActions className="mt-8">
             <Button loading={pending} onClick={finish}>

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import BuyRow from "@/components/BuyRow";
 import MissionRow from "@/components/MissionRow";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
@@ -9,6 +10,7 @@ import Headline from "@/components/ui/Headline";
 import Pill from "@/components/ui/Pill";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
+import { LESSON_COUNT } from "@/content/course";
 import { TRIGGER_ORDER } from "@/content/triggers";
 import { useAppData } from "@/lib/data/store";
 import type { Trigger } from "@/lib/data/types";
@@ -21,7 +23,7 @@ export default function LogPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const { missions, error, refresh } = useAppData();
+  const { missions, courseProgress, error, refresh } = useAppData();
   const [filter, setFilter] = useState<Filter>("all");
 
   useEffect(() => {
@@ -33,10 +35,18 @@ export default function LogPage() {
 
   const visible =
     missions?.filter((m) => filter === "all" || m.trigger === filter) ?? [];
+  const activeMission = missions?.find((m) => m.status === "active") ?? null;
 
   return (
     <main className="pt-4">
       <Headline>MISSION LOG</Headline>
+
+      {courseProgress && (
+        <p className="mt-3 text-[13px] text-ink-2">
+          {courseProgress.length} of {LESSON_COUNT} lessons complete ·{" "}
+          {courseProgress.length} Course Reps
+        </p>
+      )}
 
       <div className="mt-5 flex flex-wrap gap-2">
         {FILTERS.map((value) => (
@@ -75,6 +85,8 @@ export default function LogPage() {
           ))}
         </div>
       )}
+
+      {missions && !activeMission && <BuyRow />}
     </main>
   );
 }

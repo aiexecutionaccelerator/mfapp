@@ -408,7 +408,7 @@ Own tab. Challenge mode: H1 `YOUR 30-DAY MISSION`, `ProgressRing` (`DAY {d}` / `
 ### 10.14 `/shop`
 - Back ‹. Eyebrow `MISSION FRAGRANCES`. H1 `THE MISSION SCENT TRIGGER SYSTEM`.
 - Hero: placeholder product visual (glass panel with three `BottleVisual`s in a row + gold coin circle) — swap-in target `/images/system-black-edition.png` via same onError pattern.
-- Price line: `$597` big gold numerals, sub `Black Edition`.
+- Price line: `$595` big gold numerals, sub `Black Edition`. The CTA links out to the live product page; the Storefront-API checkout below is kept but unused.
 - Included (checkmark list): `Honor Eau de Parfum · 50ml`, `Courage Eau de Parfum · 50ml`, `Commitment Eau de Parfum · 50ml`, `Premium presentation case`, `3 travel atomizers`, `Mission challenge coin`, `The Mission app + 30-Day Mission`, `30-Day Wear-It Guarantee`.
 - Positioning line: `Three Scent Triggers. One system. Give your fragrance a job.` (placeholder)
 - Primary sticky-bottom `GET THE MISSION SYSTEM — $597`. On tap: `POST /api/shopify/checkout` → `{ checkoutUrl }` → `window.location.assign(checkoutUrl)`. Loading state on button. Error → toast `Couldn't open checkout. Please try again.` Shopify not configured → button disabled + note `Checkout not configured`.

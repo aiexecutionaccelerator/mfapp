@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import BuyRow from "@/components/BuyRow";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
@@ -49,6 +50,7 @@ export default function ProgressPage() {
   }
 
   const stats = computeStats(missions, courseProgress);
+  const activeMission = missions.find((m) => m.status === "active") ?? null;
   const mode = getMode(profile);
   const day = challengeDay(profile);
   const courseModule = getModule(day);
@@ -69,6 +71,8 @@ export default function ProgressPage() {
             value={`${stats.lessonsCompleted}/${LESSON_COUNT}`}
           />
         </div>
+
+        {!activeMission && <BuyRow />}
       </main>
     );
   }
@@ -123,6 +127,8 @@ export default function ProgressPage() {
           </Button>
         </div>
       )}
+
+      {!activeMission && <BuyRow />}
     </main>
   );
 }

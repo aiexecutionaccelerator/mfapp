@@ -3,6 +3,7 @@
 import { Check, Lock } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
+import BuyRow from "@/components/BuyRow";
 import Button from "@/components/ui/Button";
 import Eyebrow, { AccentDot } from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
@@ -89,7 +90,7 @@ function LessonRow({
 
 export default function CoursePage() {
   const { showToast } = useToast();
-  const { courseProgress, error, refresh } = useAppData();
+  const { missions, courseProgress, error, refresh } = useAppData();
 
   useEffect(() => {
     if (!error) return;
@@ -107,6 +108,7 @@ export default function CoursePage() {
   const done = new Set(courseProgress.map((row) => row.lesson_id));
   // Next up follows the work done, not the calendar.
   const next = firstIncompleteLesson(done);
+  const activeMission = missions?.find((m) => m.status === "active") ?? null;
 
   return (
     <main className="pt-4">
@@ -166,6 +168,8 @@ export default function CoursePage() {
           </div>
         </section>
       ))}
+
+      {missions && !activeMission && <BuyRow />}
     </main>
   );
 }

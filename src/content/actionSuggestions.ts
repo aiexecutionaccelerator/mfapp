@@ -48,9 +48,9 @@ const RAW: Record<Trigger, Array<{ text: string; definition: string }>> = {
   // From the course lesson "The Importance of Commitment".
   commitment: [
     {
-      text: "Do what I planned instead of what I feel like",
+      text: "Stick to my plan, not my mood",
       definition:
-        "The gym over sleeping in. The healthy meal over fast food. Today's decision, not today's mood.",
+        "The gym over sleeping in. The healthy meal over fast food. Today's plan wins.",
     },
     {
       text: "Finish what I started",

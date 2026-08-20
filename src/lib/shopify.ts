@@ -1,3 +1,4 @@
+// Unused by the app today (the Shop CTA links straight to the product page) — kept for a future Storefront-API integration.
 import {
   SHOPIFY_MISSION_VARIANT_ID,
   SHOPIFY_STORE_DOMAIN,

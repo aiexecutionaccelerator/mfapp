@@ -8,7 +8,6 @@ import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
-import Sheet from "@/components/ui/Sheet";
 import { useToast } from "@/components/ui/Toast";
 import { TRIGGERS } from "@/content/triggers";
 import { useAppData, store } from "@/lib/data/store";
@@ -32,7 +31,6 @@ export default function CheckinPage({
   const [view, setView] = useState<View>("ask");
   const [reflection, setReflection] = useState("");
   const [pending, setPending] = useState(false);
-  const [confirmEnd, setConfirmEnd] = useState(false);
   const submitting = useRef(false);
 
   useEffect(() => {
@@ -65,23 +63,6 @@ export default function CheckinPage({
       setPending(false);
       showToast("Couldn't save that. Please try again.", {
         retry: () => void complete(),
-      });
-    }
-  }
-
-  async function end() {
-    if (!mission) return;
-    setPending(true);
-    try {
-      await store.endMission(mission.id);
-      clearReminderFor(mission.id);
-      setConfirmEnd(false);
-      showToast("Mission ended. No penalty. Start again anytime.");
-      router.replace("/home");
-    } catch {
-      setPending(false);
-      showToast("Couldn't save that. Please try again.", {
-        retry: () => void end(),
       });
     }
   }
@@ -126,14 +107,9 @@ export default function CheckinPage({
 
       <BottomActions className="pt-8">
         {view === "not-yet" ? (
-          <>
-            <Button onClick={() => router.push(`/mission/active/${mission.id}`)}>
-              TRY AGAIN
-            </Button>
-            <Button variant="danger" onClick={() => setConfirmEnd(true)}>
-              END MISSION
-            </Button>
-          </>
+          <Button onClick={() => router.push(`/mission/active/${mission.id}`)}>
+            TRY AGAIN
+          </Button>
         ) : view === "yes" ? (
           <Button loading={pending} onClick={complete}>
             COMPLETE MISSION
@@ -149,20 +125,6 @@ export default function CheckinPage({
           </>
         )}
       </BottomActions>
-
-      <Sheet
-        open={confirmEnd}
-        title="End this Mission?"
-        note="It will be recorded as ended, not completed."
-        onClose={() => setConfirmEnd(false)}
-      >
-        <Button variant="danger" loading={pending} onClick={end}>
-          END MISSION
-        </Button>
-        <Button variant="ghost" onClick={() => setConfirmEnd(false)}>
-          Keep going
-        </Button>
-      </Sheet>
     </main>
   );
 }

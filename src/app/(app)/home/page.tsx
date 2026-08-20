@@ -111,6 +111,9 @@ export default function HomePage() {
     mode === "challenge" && courseProgress
       ? firstIncompleteLesson(new Set(courseProgress.map((r) => r.lesson_id)))
       : undefined;
+  // All 30 done: acknowledge it here instead of leaving the slot empty.
+  const courseComplete =
+    mode === "challenge" && Boolean(courseProgress) && !nextLesson;
   const stats = computeStats(missions ?? [], courseProgress ?? []);
 
   return (
@@ -140,6 +143,17 @@ export default function HomePage() {
               <ChevronRight aria-hidden className="shrink-0 text-ink-2" size={20} />
             </div>
           </GlassCard>
+        </Link>
+      )}
+
+      {profile && courseComplete && (
+        <Link href="/course/vivid-vision" className="mt-5 block">
+          <div className="glass flex items-center gap-3 rounded-[14px] px-4 py-3">
+            <span className="min-w-0 flex-1 text-[13px] text-ink-2">
+              COURSE COMPLETE · View your Vivid Vision
+            </span>
+            <ChevronRight aria-hidden className="shrink-0 text-ink-2" size={18} />
+          </div>
         </Link>
       )}
 

@@ -104,7 +104,7 @@ Watch the video, mark the lesson complete, then take today's Mission. That's the
     ],
     body: `Your set holds three 50ml Scent Triggers. **Honor** is fresh and clean — a fougère built on bergamot, citrus, neroli, and musk. Light enough for every day; I reach for it as a morning pick-me-up heading into work. **Courage** is a citrus aromatic with galbanum, lemongrass, grapefruit, and lavender — noticeable without being loud, and it lasts most of a working day. **Commitment** is my amber-woody: vetiver, cedarwood, sweet amber, vanilla, tonka, and oud. Deeper, for the evening and the lasting impression.
 
-The travel atomizer fills straight from the bottle: pop the nozzle off, press the atomizer onto it, pump a few times, replace the nozzle. [Don't own the set yet? Get Mission Fragrances — $597](/shop)
+The travel atomizer fills straight from the bottle: pop the nozzle off, press the atomizer onto it, pump a few times, replace the nozzle. [Don't own the set yet? Get Mission Fragrances — $595](/shop)
 
 ![Honor scent notes](/images/course/honor-notes.jpg)
 ![Courage scent notes](/images/course/courage-notes.jpg)
