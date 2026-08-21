@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import NavAction from "@/components/NavAction";
+import StoicQuoteBlock from "@/components/StoicQuoteBlock";
 import ReminderExplainer, {
   REMINDER_EXPLAINER_TITLE,
 } from "@/components/ReminderExplainer";
@@ -12,6 +13,7 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
 import Sheet from "@/components/ui/Sheet";
 import { useToast } from "@/components/ui/Toast";
+import { quoteForMission } from "@/content/stoicQuotes";
 import { TRIGGERS } from "@/content/triggers";
 import { store, useAppData } from "@/lib/data/store";
 import { getPermission, subscribeToPush, usePushSupport } from "@/lib/push";
@@ -175,6 +177,7 @@ export default function ActiveMissionPage({
         <p className="mt-2 text-[13px] text-ink-2">
           Started {relativeTime(mission.started_at)}
         </p>
+        <StoicQuoteBlock quote={quoteForMission(mission.trigger, mission.id)} />
       </div>
 
       <BottomActions className="pt-10">
