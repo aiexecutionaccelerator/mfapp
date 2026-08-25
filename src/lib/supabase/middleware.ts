@@ -5,13 +5,16 @@ import { SUPABASE_ANON_KEY, SUPABASE_URL, isDemo } from "@/lib/env";
 const PROTECTED = [
   "/home",
   "/course",
+  "/missions",
   "/log",
   "/progress",
   "/settings",
   "/shop",
   "/mission",
   "/onboarding",
-  "/challenge-complete",
+  "/personal-code",
+  "/how-it-works",
+  "/using-your-set",
 ];
 
 function isProtected(pathname: string): boolean {

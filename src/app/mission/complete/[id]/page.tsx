@@ -10,7 +10,7 @@ import { pickCompletionLine } from "@/content/completionLines";
 import { TRIGGERS } from "@/content/triggers";
 import { ART, artUrl } from "@/lib/art";
 import { useAppData } from "@/lib/data/store";
-import { computeStats, repNumberFor } from "@/lib/stats";
+import { computeStats, proofNumberFor } from "@/lib/stats";
 
 function GoldCoin() {
   const crest = artUrl(ART.crest);
@@ -73,8 +73,8 @@ export default function CompletePage({
 
   if (!mission || !missions) return null;
 
-  const repNumber = repNumberFor(missions, mission);
-  const totalCompleted = computeStats(missions).completed;
+  const proofNumber = proofNumberFor(missions, mission);
+  const totalCompleted = computeStats(missions).totalProofs;
 
   return (
     <main className="fade-in flex flex-1 flex-col pt-10">
@@ -83,7 +83,7 @@ export default function CompletePage({
       </div>
 
       <Headline className="mt-8 text-center">
-        {TRIGGERS[mission.trigger].name} REP #{repNumber} COMPLETE
+        {TRIGGERS[mission.trigger].name} PROOF #{proofNumber} LOGGED
       </Headline>
 
       <div className="glass mt-8 rounded-[20px] p-5">

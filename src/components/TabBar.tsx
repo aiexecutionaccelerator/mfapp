@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 const TABS = [
   { href: "/home", label: "Start", Icon: Target },
   { href: "/log", label: "Log", Icon: ScrollText },
-  { href: "/course", label: "Course", Icon: BookOpen },
+  { href: "/missions", label: "Mission", Icon: BookOpen },
   { href: "/progress", label: "Progress", Icon: TrendingUp },
   { href: "/settings", label: "Settings", Icon: Settings },
 ];

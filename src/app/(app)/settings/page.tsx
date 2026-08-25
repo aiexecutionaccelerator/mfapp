@@ -14,7 +14,8 @@ import Sheet from "@/components/ui/Sheet";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import pkg from "../../../../package.json";
-import { readDevDayOverride, setDevDayOverride } from "@/lib/challenge";
+import { getMissionDef } from "@/content/missions";
+import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
 import {
   DEV_TOOLS,
@@ -37,18 +38,6 @@ function formatVersion(v: string): string {
   return m ? `Beta ${m[1]}.${m[2]}` : `v${v}`;
 }
 
-const DEV_OPTIONS = [
-  { value: "new", label: "New user" },
-  { value: "1", label: "Day 1" },
-  { value: "5", label: "Day 5" },
-  { value: "10", label: "Day 10" },
-  { value: "15", label: "Day 15" },
-  { value: "20", label: "Day 20" },
-  { value: "25", label: "Day 25" },
-  { value: "30", label: "Day 30" },
-  { value: "post", label: "Post-challenge" },
-];
-
 function Group({
   title,
   children,
@@ -64,18 +53,32 @@ function Group({
   );
 }
 
+function LinkRow({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex min-h-12 w-full items-center justify-between gap-3 text-left"
+    >
+      <span className="text-[17px] text-ink-0">{label}</span>
+      <ChevronRight aria-hidden size={20} className="text-ink-2" />
+    </button>
+  );
+}
+
 export default function SettingsPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const { profile, error, refresh } = useAppData();
+  const { profile, missions, error, refresh } = useAppData();
   const [name, setName] = useState("");
-  const [devValue, setDevValue] = useState("");
+  const [identity, setIdentity] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [pushOn, setPushOn] = useState(false);
   const [explainerOpen, setExplainerOpen] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
+  const [seeding, setSeeding] = useState(false);
   const support = usePushSupport();
   // Seed the editable fields once; a background revalidate must not clobber typing.
   const seeded = useRef(false);
@@ -93,14 +96,7 @@ export default function SettingsPage() {
     if (!profile || seeded.current) return;
     seeded.current = true;
     setName(profile.display_name ?? "");
-    const override = readDevDayOverride();
-    setDevValue(
-      profile.challenge_completed_at
-        ? "post"
-        : override !== null
-          ? String(override)
-          : "",
-    );
+    setIdentity(profile.identity_statement ?? "");
   }, [profile]);
 
   if (!profile) {
@@ -120,6 +116,19 @@ export default function SettingsPage() {
     } catch {
       showToast("Couldn't save your name. Please try again.", {
         retry: () => void saveName(),
+      });
+    }
+  }
+
+  async function saveIdentity() {
+    if (!profile) return;
+    const trimmed = identity.trim();
+    if (trimmed === (profile.identity_statement ?? "")) return;
+    try {
+      await store.updateProfile({ identity_statement: trimmed || null });
+    } catch {
+      showToast("Couldn't save that. Please try again.", {
+        retry: () => void saveIdentity(),
       });
     }
   }
@@ -174,33 +183,54 @@ export default function SettingsPage() {
     await saveNotifications(true);
   }
 
-  async function applyDevState(value: string) {
-    setDevValue(value);
-    window.sessionStorage.removeItem("mission.completionShown");
+  async function toggleSetStatus() {
+    if (!profile) return;
+    const next = profile.set_status === "arrived" ? "ordered" : "arrived";
     try {
-      if (value === "new") {
-        setDevDayOverride(null);
-        await store.updateProfile({
-          primary_goal: null,
-          onboarding_completed: false,
-          challenge_start_date: null,
-          challenge_completed_at: null,
-          certificate_requested: false,
-        });
-        router.replace("/onboarding");
-        return;
-      }
-      if (value === "post") {
-        setDevDayOverride(null);
-        await store.updateProfile({
-          challenge_completed_at: new Date().toISOString(),
-        });
-        return;
-      }
-      setDevDayOverride(Number(value));
-      await store.updateProfile({ challenge_completed_at: null });
+      await store.updateProfile({ set_status: next });
+      if (next === "arrived") track("set_marked_arrived");
+      track("set_status_selected", { setStatus: next });
     } catch {
-      showToast("Couldn't change the challenge state.");
+      showToast("Couldn't save that. Please try again.");
+    }
+  }
+
+  async function resetToNewUser() {
+    try {
+      await store.deleteAccount();
+      router.replace("/welcome");
+    } catch {
+      showToast("Couldn't reset the app state.");
+    }
+  }
+
+  /** Dev QA helper: land one declared+completed Proof on Missions 1–29. */
+  async function seed29() {
+    if (seeding) return;
+    setSeeding(true);
+    try {
+      for (let n = 1; n <= 29; n += 1) {
+        const def = getMissionDef(n);
+        if (!def) continue;
+        const exists = missions?.some(
+          (m) => m.mission_number === n && m.status === "completed",
+        );
+        if (exists) continue;
+        const row = await store.createMission({
+          trigger: def.recommendedTrigger ?? "honor",
+          action_text: `Seeded action for Mission ${n}`,
+          action_category: "dev-seed",
+          mission_number: n,
+        });
+        await store.completeMission(row.id, {
+          reflection: `Seeded proof for Mission ${n}`,
+        });
+      }
+      showToast("Missions 1–29 completed.");
+    } catch {
+      showToast("Seeding stopped early — check the log.");
+    } finally {
+      setSeeding(false);
     }
   }
 
@@ -248,6 +278,15 @@ export default function SettingsPage() {
           onBlur={saveName}
           maxLength={60}
         />
+        <Field
+          label="The man I am becoming"
+          value={identity}
+          onChange={setIdentity}
+          onBlur={saveIdentity}
+          maxLength={280}
+          multiline
+          rows={2}
+        />
         <div>
           <p className="eyebrow mb-2 text-ink-2">Email</p>
           <p className="text-[17px] text-ink-1">{profile.email ?? "—"}</p>
@@ -257,7 +296,10 @@ export default function SettingsPage() {
       <Group title="Notifications">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-[17px] text-ink-0">Reminders</p>
+            <p className="text-[17px] text-ink-0">Daily Mission Reminder</p>
+            <p className="mt-1 text-[13px] text-ink-2">
+              A simple reminder to choose one value and take one action.
+            </p>
             <p className="mt-1 text-[13px] text-ink-2">{reminderHelper}</p>
           </div>
           {/* 48px hit area around a 32px track. */}
@@ -265,7 +307,7 @@ export default function SettingsPage() {
             type="button"
             role="switch"
             aria-checked={profile.notifications_enabled}
-            aria-label="Reminders"
+            aria-label="Daily Mission Reminder"
             onClick={toggleNotifications}
             className="flex h-12 w-14 shrink-0 items-center justify-center"
           >
@@ -291,14 +333,38 @@ export default function SettingsPage() {
       </Group>
 
       <Group title="Mission Fragrances">
-        <button
-          type="button"
-          onClick={() => router.push("/shop")}
-          className="flex min-h-12 w-full items-center justify-between gap-3 text-left"
-        >
-          <span className="text-[17px] text-ink-0">Get Mission Fragrances</span>
-          <ChevronRight aria-hidden size={20} className="text-ink-2" />
-        </button>
+        <LinkRow
+          label="How It Works"
+          onClick={() => router.push("/how-it-works")}
+        />
+        <LinkRow
+          label="Using Your Set"
+          onClick={() => router.push("/using-your-set")}
+        />
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[17px] text-ink-0">My Set Status</p>
+            <p className="mt-1 text-[13px] text-ink-2">
+              {profile.set_status === "arrived"
+                ? "My set is here"
+                : "On the way"}
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            full={false}
+            className="min-h-12 px-4 text-[13px]"
+            onClick={() => void toggleSetStatus()}
+          >
+            {profile.set_status === "arrived" ? "MARK ORDERED" : "IT ARRIVED"}
+          </Button>
+        </div>
+        {!profile.owns_set && (
+          <LinkRow
+            label="Get Mission Fragrances"
+            onClick={() => router.push("/shop")}
+          />
+        )}
       </Group>
 
       <Group title="Legal & support">
@@ -324,22 +390,16 @@ export default function SettingsPage() {
 
       {DEV_TOOLS && (
         <Group title="Developer">
-          <label htmlFor="dev-state" className="eyebrow block text-ink-2">
-            Challenge state
-          </label>
-          <select
-            id="dev-state"
-            value={devValue}
-            onChange={(event) => void applyDevState(event.target.value)}
-            className="min-h-12 w-full rounded-[14px] border border-[var(--line)] bg-[rgba(18,23,34,.6)] px-4 text-[17px] text-ink-0"
+          <Button variant="secondary" onClick={() => void resetToNewUser()}>
+            Reset to new user
+          </Button>
+          <Button
+            variant="secondary"
+            loading={seeding}
+            onClick={() => void seed29()}
           >
-            <option value="">Real date</option>
-            {DEV_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            Seed Missions 1–29 complete
+          </Button>
         </Group>
       )}
 

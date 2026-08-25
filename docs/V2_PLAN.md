@@ -1,5 +1,8 @@
 # V2 Implementation Plan — "Your 30-Day Mission" rebuild
 
+> **Status: implemented** (all phases; see `docs/HANDOFF.md` for the as-built
+> summary). Remaining ops step: apply migration `0007` to the live DB.
+
 Source spec: `Mission_Fragrances_Web_App_V2.md` (Antonio/Kai, 2026-08). This plan
 maps every spec requirement onto the existing codebase. It is an incremental
 rebuild — auth, visual system, free-form Mission flow, log, and data layer are

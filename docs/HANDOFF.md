@@ -1,90 +1,109 @@
-# HANDOFF — Mission Fragrances app (state as of 2026-08-21)
+# HANDOFF — Mission Fragrances app (state as of 2026-08-25, V2)
 
 Context summary for any new session (cloud or local) picking up this project.
 
 ## What this is
 
 Mobile-first web app (PWA) for Mission Fragrances — turns the Honor / Courage /
-Commitment fragrances into a behavior system. Core loop: pick a Scent Trigger →
-declare one real-world action (a **Mission**) → apply the fragrance (S.T.A.R.
-ritual: Select · Take Action · Anchor · Repeat) → do it → record it. Completed
-action = 1 Rep per trigger. A 30-day in-app course (one lesson/day, sequential)
-runs alongside; completing a lesson = 1 Course Rep. After Day 30 the app becomes
-a permanent Mission Log. No streaks, no points, no failure states.
+Commitment fragrances into a behavior system. V2 ("Your 30-Day Mission", spec
+in `docs/V2_PLAN.md`) replaced the day-locked course: **thirty always-unlocked
+Missions**, opened in any order, where reading completes nothing — a Mission is
+complete only when a real-world action is logged as a **Proof** (S.T.A.R.:
+Select · Trigger · Act · Record). Free-form actions from the Start tab log
+Proofs too but never inflate the 30/30 count. No streaks, no locks, no failure
+states. The Vivid Vision is archived; its replacement is the compiled, printable
+**Personal Code** (`/personal-code`).
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
 - Version: Beta 0.5 (`0.5.0-beta`)
 
-## Stack & infrastructure
+## Architecture facts that matter
 
-- Next.js 16 (App Router, Turbopack) + TypeScript strict + Tailwind v4.
-  `npm run dev` / `npm run lint` / `npm run build`. `src/middleware.ts` handles
-  auth redirects (Next deprecation notice about `proxy` is known/harmless).
-- **Supabase** project `vrhjzqaxksdthkeiwxrk` (us-east-2): email-OTP auth
-  (6–10 digit code; custom SMTP via Brevo-configured Supabase settings),
-  Postgres with RLS, Edge Functions. Migrations `supabase/migrations/0001–0006`
-  are ALL applied to the live DB (profiles, missions, get_app_data RPC, push
-  tables, course_progress, lesson_responses, admin-notification triggers).
-- **Edge Functions deployed**: `send-reminders` (Web Push, fired by pg_cron
-  every minute) and `notify-admin` (emails antonio@missionfragrances.com on
-  onboarding completion and on 30/30 lessons, via Resend from
-  noreply@realmenrealstyle.com). Secrets set: VAPID keys, CRON_SECRET,
-  NOTIFY_SECRET, NOTIFY_FROM, RESEND_API_KEY.
-- **Demo mode**: with empty `NEXT_PUBLIC_SUPABASE_URL`/`ANON_KEY` the app runs
-  fully client-side in localStorage (used for all automated verification).
-- Deploy: Netlify (env vars documented in README; `NEXT_PUBLIC_DEV_TOOLS=false`
-  in prod; `netlify.toml` skips secrets-scan on the Next build cache). A
-  Cloudflare/OpenNext config + Supabase keep-alive Worker also exist
-  (`wrangler.jsonc`, `workers/keepalive/`).
-- Commerce: Shop page links to the live Shopify product page
-  https://www.missionfragrances.com/products/mission-fragrances-set at **$595**
-  (no Storefront API in use; `api/shopify/checkout` kept but unused).
+- **The `missions` table is the unified Proof log.** A structured Mission's
+  state IS its row: `mission_number` 1–30 set, `status` active = in progress,
+  completed = proof logged; no row = not started. A DB partial unique index
+  (`user_id, mission_number`) makes double-declare/complete impossible. All
+  stats are computed from rows (`src/lib/stats.ts`) — no stored counters.
+- **Mission content** lives in `src/content/missions.ts` (all 30, verbatim from
+  the V2 spec; old videos mapped where they fit). Old course content is
+  archived at `src/content/archive/` and in `archive_*` DB tables.
+- **Question answers** reuse the `lesson_responses` table with ids
+  `lesson_id='m<number>'`, `prompt_id='q'`. The Personal Code compiles live
+  from m8/m9/m10/m11/m12/m30 + the profile's `identity_statement` — never
+  stored as its own record (`src/lib/personalCode.ts`).
+- **Proof photos** are on-device-downscaled data URLs stored on the mission row
+  (RLS-private, demo-identical, no Storage bucket). Cap 500k chars.
+- **Profile** gained `identity_statement`, `owns_set` (default true),
+  `set_status` ('ordered'|'arrived'). Day fields (`challenge_start_date` etc.)
+  are deprecated in place.
+- **Analytics**: `src/lib/analytics.ts` → insert-only `analytics_events`
+  table; all spec §12 events wired; no-op in demo.
+- Migration `0007_v2_missions.sql` does all of the above + archives + rewrites
+  the admin 30/30 notify trigger. It has a `<NOTIFY_SECRET>` placeholder —
+  substitute at apply time. **NOT yet applied to the live DB** (apply 0007 when
+  deploying V2).
 
-## App structure (5 tabs: Start · Log · Course · Progress · Settings)
+## Stack & infrastructure (unchanged from V1 where not noted)
 
-- Onboarding: 2 screens (name + goal, then start). Full name collected (feeds
-  admin-email subjects).
-- Home: Day badge, active-Mission banner, NEXT UP lesson row, "What do you need
-  today?" 3 trigger cards, compact 4-rep row.
-- Mission flow: Declare (WRITE YOUR OWN first + 3 suggestions per trigger, plus
-  up to 3 from that day's lesson) → Trigger screen (briefing + Anchor line) →
-  Active (**"Phone down. Go do it." + a Stoic quote** — 150-quote library in
-  `src/content/stoicQuotes.ts`, deterministic per Mission, cinematic fade-in) →
-  Check-in ("Not yet" → TRY AGAIN only; no End Mission) → Completion (Rep #n).
-- Course: 30 lessons in `src/content/course.ts` (full text in Antonio's voice,
-  1–2 paragraphs each, unlisted-YouTube embeds, reflection prompts autosaved to
-  `lesson_responses`). Sequential unlock; NEXT LESSON disabled until complete.
-  Days 12–18 + 26 answers compile into the printable **Vivid Vision** page
-  (`/course/vivid-vision`) with print/mailto/.ics/share.
-- Buy rows at the bottom of Course/Log/Progress (hidden during active Mission).
-- Web Push reminders (Android + installed-PWA iOS; in-app banner fallback).
-- Legal pages `/privacy` `/terms`; account deletion via service-role API route.
+- Next.js 16 (App Router) + TypeScript strict + Tailwind v4.
+  `npm run dev` / `npm run lint` / `npm run build`.
+- **Supabase** project `vrhjzqaxksdthkeiwxrk` (us-east-2): email-OTP auth,
+  Postgres with RLS, Edge Functions `send-reminders` and `notify-admin`
+  (unchanged; 0007 re-points the 30/30 trigger at missions).
+- **Demo mode**: empty Supabase env ⇒ fully client-side localStorage.
+- Deploy: Netlify (+ Cloudflare/OpenNext config). Custom domain
+  app.missionfragrances.com pending DNS.
+- Commerce: Shop page → live Shopify product at $595, linked ONLY from
+  Settings when `owns_set = false` (purchase banners removed everywhere).
 
-## Key docs (in `docs/`)
+## App structure (tabs: Start · Log · Mission · Progress · Settings)
 
-BUILD_SPEC.md (design system + screens, updated), COURSE_V2_SPEC.md,
-COURSE_QC.md (lesson-by-lesson audit + Skool source decisions), SIMPLIFY_SPEC.md,
-PUSH_SPEC.md, COURSE_EXPORT.md (full course text for GPT review; also a Google
-Doc shared with Antonio), course-source/*.json (raw Skool/Academy pulls),
-screenshots/ (verification captures per pass).
+- `/onboarding`: profile setup (name + "I am becoming a man who…") then four
+  How It Works screens ending in "Is your set with you now?". Replay at
+  `/how-it-works` (Settings).
+- `/missions` list (all 30, statuses, Continue card, set-on-the-way banner) and
+  `/missions/[number]` — ONE reusable detail template: idea → optional
+  collapsed video → trigger pills → one autosaved question →
+  Quick/Standard/Bold/write-my-own → DECLARE → S.T.A.R. sheet → in-progress →
+  RECORD THE EVIDENCE (+ optional photo) → confirmation. `?done=1` jumps to
+  the proof form (used by Start's I DID IT).
+- `/home` Start: dynamic status card (A set-on-the-way / B next Mission /
+  C action in progress / D 30/30), three fragrance cards → free-form flow
+  (`/mission/declare|trigger|active|checkin|complete`, Stoic quote kept),
+  Proof counts strip.
+- `/log`: merged Proof log (MISSION N · TITLE vs PERSONAL MISSION), filters,
+  edit, delete (structured delete reverts the Mission to in progress).
+- `/progress`: N/30 ring, six stat cards, Mission-12 promise card, 30/30
+  completion state; `/personal-code` printable + editable in place.
+- `/course*` redirects to `/missions`. `/challenge-complete` is gone.
+
+## Verification
+
+Every pass: lint + tsc + `next build` clean, then
+`scripts/walkthrough.mjs` (Playwright, demo mode, 390×844 + desktop) —
+31 screenshots in `docs/screenshots/v2-rebuild/`. Keep that bar.
+Dev tools (`NEXT_PUBLIC_DEV_TOOLS=true`): reset-to-new-user and
+seed-Missions-1–29 helpers in Settings.
 
 ## Open items
 
-- Antonio's GPT-based course-content review may produce copy edits → apply to
-  `src/content/course.ts` (single source of truth for lesson copy).
-- Shopify product page shows "Sold out" — inventory is the store's issue.
-- Vivid Vision AI image + user summary emails: discussed, not built (needs spec).
-- Certificate on Day-30 completion: manual fulfillment (flag in profiles).
-- Verify Netlify deploy has NEXT_PUBLIC_VAPID_PUBLIC_KEY set and CRON_SECRET
-  removed; custom domain app.missionfragrances.com pending DNS.
-- Secrets/credentials live outside the repo (.env.local, Supabase function
-  secrets, password manager). DB password is NOT in the repo.
+- **Apply migration 0007 to the live Supabase DB** (with NOTIFY_SECRET
+  substituted) before deploying V2. All accounts are internal beta; 0007
+  archives old data in-place, nothing is dropped.
+- Reminder **time selector** (spec allows deferral) — the toggle is renamed
+  "Daily Mission Reminder"; a chosen-time daily reminder needs a small
+  `send-reminders` extension.
+- Old per-Mission "Remind me later" push flow still exists on the free-form
+  active screen only.
+- Certificate on 30/30: manual fulfillment (admin email fires at the 30th
+  structured Proof).
+- Verify Netlify env (`NEXT_PUBLIC_VAPID_PUBLIC_KEY` set, `CRON_SECRET`
+  removed); custom domain pending DNS.
+- Secrets live outside the repo (.env.local, Supabase function secrets).
 
 ## Working conventions
 
 - All user-facing copy lives in `src/content/*` — edit there, not in screens.
-- Every pass so far: lint + tsc + `next build` clean, then a scripted
-  demo-mode walkthrough in headless Chromium (Playwright) with screenshots
-  committed under `docs/screenshots/`. Keep that bar.
+- Never add a per-Mission component — `missions.ts` drives the one template.
 - Commit style: short imperative subject; Co-Authored-By Claude trailer.

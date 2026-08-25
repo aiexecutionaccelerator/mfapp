@@ -1,7 +1,7 @@
 export const COMPLETION_LINES = [
   "Confidence is evidence. Keep building it.",
   "You said you would. You did.",
-  "One rep doesn't change your life. Repetition can change how you see yourself.",
+  "One proof doesn't change your life. Repetition can change how you see yourself.",
   "Record the win. Then move on.",
   "Build the evidence.",
 ] as const;

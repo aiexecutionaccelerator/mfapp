@@ -1,11 +1,13 @@
-# Mission — V1 web app
+# Mission — V2 web app · "Your 30-Day Mission"
 
 Mobile-first PWA for Mission Fragrances. It turns HONOR, COURAGE and COMMITMENT
-into a behavior trigger system: **Declare → Trigger → Act → Record**. A Rep is
-only counted when a Mission's status becomes `completed` — never for spraying,
-starting or reading.
+into a behavior system: **Select → Trigger → Act → Record** (S.T.A.R.). Thirty
+always-unlocked Missions plus free-form actions from Start; a Proof is only
+counted when a Mission's status becomes `completed` — never for spraying,
+opening or reading. No streaks, no locks, no failure states.
 
-The full product spec is `docs/BUILD_SPEC.md`.
+The V2 spec is `docs/V2_PLAN.md` (implementation) — the original visual system
+spec is `docs/BUILD_SPEC.md`.
 
 ## Stack
 
@@ -46,9 +48,8 @@ If `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_ANON_KEY` is missing or
 empty, the app runs entirely on the device:
 
 - a fake `demo-user` is used — no sign-in screen gating; Welcome shows **ENTER DEMO**
-- profile, Missions, course progress and lesson responses persist in
-  `localStorage` (`mission.profile`, `mission.missions`, `mission.course`,
-  `mission.lessonResponses`)
+- profile, Missions/Proofs and Mission answers persist in `localStorage`
+  (`mission.profile`, `mission.missions`, `mission.lessonResponses`)
 - a thin gold pill at the top of every screen reads `DEMO MODE — data stored on this device`
 - Delete Account clears `localStorage`
 - Demo mode never activates when the Supabase env vars are present
@@ -64,8 +65,9 @@ the CTA is disabled with the note "Checkout not configured".
 See `supabase/README.md` for the full walkthrough:
 
 1. Create a project → copy URL + anon key into `.env.local`.
-2. Run the migrations in `supabase/migrations/` in order (`0001` … `0005`) in the
-   SQL editor, or `supabase db push`.
+2. Run the migrations in `supabase/migrations/` in order (`0001` … `0007`) in the
+   SQL editor, or `supabase db push`. `0006`/`0007` contain a `<NOTIFY_SECRET>`
+   placeholder — substitute the real secret at apply time; never commit it.
 3. Authentication → Email Templates → **Magic Link** → include `{{ .Token }}` so a
    sign-in code (6–10 digits, per your Auth settings) is emailed instead of a link.
 4. Put the service-role key in the server-side environment only (Vercel project
@@ -202,13 +204,12 @@ separately and is not part of this package.
 
 ## Dev tools flag
 
-With `NEXT_PUBLIC_DEV_TOOLS=true`, Settings shows a **Developer** section with a
-challenge-state select: New user / Day 1 / 5 / 10 / 15 / 20 / 25 / 30 /
-Post-challenge. Day values write `mission.devDayOverride` to `localStorage`;
-"New user" resets onboarding and challenge fields; "Post-challenge" sets
-`challenge_completed_at`. The section does not render at all when the flag is
-anything other than `"true"`. Safe to set `true` on a Vercel **preview**
-environment; keep it `false` in production.
+With `NEXT_PUBLIC_DEV_TOOLS=true`, Settings shows a **Developer** section with
+two QA helpers: **Reset to new user** (clears all local state) and **Seed
+Missions 1–29 complete** (lands a declared + completed Proof on each, for
+testing the 30/30 moment). The section does not render at all when the flag is
+anything other than `"true"`. Safe to set `true` on a preview environment; keep
+it `false` in production.
 
 ## Two-user RLS test
 
@@ -224,20 +225,26 @@ environment; keep it `false` in production.
 Run in demo mode (no env vars) at a 390×844 viewport.
 
 - **A.** `/` → Welcome renders wordmark, ghost words, `ENTER DEMO`.
-- **B.** Onboarding: goal → three triggers → THE LOOP → `START MY MISSION`.
-- **C.** Home shows `DAY 1 OF 30`, phase 1 lesson, three trigger cards, commerce card.
-- **D.** Courage → "Make the call" → trigger screen shows a Courage briefing →
-  `START MISSION` → Mission active.
-- **E.** Close × → Home shows the Active Mission banner and hides the commerce card.
-- **F.** Check in → `NOT YET` → `TRY AGAIN` → check in → `YES — MISSION COMPLETE`
-  + reflection → `COURAGE REP #1 COMPLETE`.
-- **G.** Home shows 1 Courage rep; Log's summary shows 1 started / 1 completed
-  and lists the entry; the detail shows the reflection.
-- **H.** Settings → Developer → Day 30 → Log shows
-  `COMPLETE THE 30-DAY MISSION` → `CONTINUE THE MISSION` → Home shows
-  `YOUR MISSION CONTINUES`, Log shows `BUILD THE EVIDENCE`.
-- **I.** Shop renders `$597` with a disabled CTA and "Checkout not configured";
-  Settings → Delete Account → Welcome with "Your account has been deleted."
+- **B.** Profile setup: name + "I am becoming a man who…" (tap-to-use examples)
+  → four onboarding screens → `NOT YET — LET ME EXPLORE` lands on the Mission
+  list with the set-on-the-way banner.
+- **C.** All 30 Missions are visible, none locked; Mission 10 opens before
+  Mission 1; reading completes nothing.
+- **D.** Mission 2: answer the question → pick STANDARD → `DECLARE MY ACTION` →
+  S.T.A.R. sheet → `I'M GOING TO DO IT` → in progress; survives a reload.
+- **E.** Start shows `ACTION IN PROGRESS` with `I DID IT` → `RECORD THE
+  EVIDENCE` (required) → `LOG THE PROOF` → "Proof logged. You acted with
+  Courage."
+- **F.** Free-form: Start → Courage card → declare → trigger screen →
+  check-in → proof → `COURAGE PROOF #2 LOGGED`; Log shows both entries
+  (MISSION 2 and PERSONAL MISSION), filters work, edit and delete work —
+  deleting the structured Proof reverts Mission 2 to in progress.
+- **G.** Progress shows the `N/30` ring, Proof counts, the Mission 12 promise
+  card, and links to the printable Personal Code.
+- **H.** Settings: identity statement editable, How It Works replays
+  onboarding, Using Your Set opens, set status toggles.
+- **I.** Shop renders with a disabled CTA when not configured; Settings →
+  Delete Account → Welcome with "Your account has been deleted."
 
 Screenshots of the walkthrough live in `docs/screenshots/`.
 
@@ -253,7 +260,7 @@ change:
 Until those files exist the app renders its own placeholder silhouettes, crest
 and hero panel.
 
-## Known V1 limitations
+## Known limitations
 
 - **Push reminders need setup.** Without `NEXT_PUBLIC_VAPID_PUBLIC_KEY` and the
   deployed `send-reminders` function, "Remind me later" falls back to the
@@ -265,10 +272,10 @@ and hero panel.
   `certificate_requested`; nothing is emailed automatically.
 - **Demo mode is device-local.** Clearing site data erases everything, and demo
   data never syncs anywhere.
-- **The Vivid Vision has no generated image.** The app compiles, edits, prints
-  and shares the written Vivid Vision; the AI visualization the classroom used to
-  email stays a team deliverable and is not produced here.
-- **Lesson videos are unlisted YouTube embeds.** A lesson page loads a poster and
-  only fetches the player when the video is tapped, but playback needs a network
-  and youtube-nocookie.com reachable.
+- **Proof photos live in the database.** They are downscaled on-device to a
+  size-capped data URL on the mission row (private via RLS, identical in demo).
+  If photos get heavy, move them to Supabase Storage later.
+- **Mission videos are unlisted YouTube embeds.** Collapsed by default; a page
+  loads a poster and only fetches the player when tapped. Playback needs a
+  network and youtube-nocookie.com reachable.
 - The service worker handles push only — there is no offline support or caching.

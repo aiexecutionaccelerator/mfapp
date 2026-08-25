@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/client";
 import type {
   AppSnapshot,
-  CourseProgress,
   DataBackend,
   LessonResponse,
   Mission,
@@ -12,12 +11,12 @@ import { LESSON_ANSWER_MAX } from "@/lib/data/types";
 /** Supabase backend — used whenever Supabase env vars are configured. */
 
 const MISSION_COLUMNS =
-  "id,user_id,trigger,action_text,action_category,status,started_at,completed_at,ended_at,reflection";
+  "id,user_id,trigger,action_text,action_category,status,started_at,completed_at,ended_at,reflection,mission_number,question_answer,photo_url";
 
 const RESPONSE_COLUMNS = "lesson_id,prompt_id,answer,updated_at";
 
 const PROFILE_COLUMNS =
-  "id,email,display_name,primary_goal,onboarding_completed,challenge_start_date,challenge_completed_at,notifications_enabled,certificate_requested";
+  "id,email,display_name,primary_goal,onboarding_completed,challenge_start_date,challenge_completed_at,notifications_enabled,certificate_requested,identity_statement,owns_set,set_status";
 
 async function requireUser() {
   const supabase = createClient();
@@ -31,9 +30,9 @@ async function requireUser() {
 
 export const supabaseBackend: DataBackend = {
   /**
-   * One RPC instead of getUser + two selects. The function is security invoker,
+   * One RPC instead of getUser + selects. The function is security invoker,
    * so RLS still applies. Falls back to the plain selects when the RPC is not
-   * deployed yet (migration 0002) or fails for any other reason.
+   * updated yet (migration 0007) or fails for any other reason.
    */
   async loadAll(): Promise<AppSnapshot> {
     const supabase = createClient();
@@ -42,18 +41,12 @@ export const supabaseBackend: DataBackend = {
       const payload = data as {
         profile: Profile | null;
         missions: Mission[] | null;
-        course_progress?: CourseProgress[] | null;
         lesson_responses?: LessonResponse[] | null;
       };
-      if (payload.profile) {
+      if (payload.profile && "owns_set" in payload.profile) {
         return {
           profile: payload.profile,
           missions: payload.missions ?? [],
-          // Still an older function? Ask for the rest separately rather than
-          // reporting an empty course.
-          courseProgress:
-            payload.course_progress ??
-            (await supabaseBackend.listCourseProgress().catch(() => [])),
           lessonResponses:
             payload.lesson_responses ??
             (await supabaseBackend.listLessonResponses().catch(() => [])),
@@ -61,14 +54,12 @@ export const supabaseBackend: DataBackend = {
       }
     }
 
-    const [profile, missions, courseProgress, lessonResponses] =
-      await Promise.all([
-        supabaseBackend.getProfile(),
-        supabaseBackend.listMissions(),
-        supabaseBackend.listCourseProgress().catch(() => []),
-        supabaseBackend.listLessonResponses().catch(() => []),
-      ]);
-    return { profile, missions, courseProgress, lessonResponses };
+    const [profile, missions, lessonResponses] = await Promise.all([
+      supabaseBackend.getProfile(),
+      supabaseBackend.listMissions(),
+      supabaseBackend.listLessonResponses().catch(() => []),
+    ]);
+    return { profile, missions, lessonResponses };
   },
 
   async getProfile(): Promise<Profile> {
@@ -148,24 +139,41 @@ export const supabaseBackend: DataBackend = {
         trigger: input.trigger,
         action_text: input.action_text,
         action_category: input.action_category ?? null,
+        mission_number: input.mission_number ?? null,
+        question_answer: input.question_answer ?? null,
         status: "active",
       })
       .select(MISSION_COLUMNS)
       .single();
-    if (error) throw error;
+
+    if (error) {
+      // Unique-index race on a structured Mission (double tap, two tabs):
+      // the existing state row is the answer, not an error.
+      if (input.mission_number != null && error.code === "23505") {
+        const { data: existing, error: readError } = await supabase
+          .from("missions")
+          .select(MISSION_COLUMNS)
+          .eq("user_id", user.id)
+          .eq("mission_number", input.mission_number)
+          .maybeSingle();
+        if (readError) throw readError;
+        if (existing) return existing as unknown as Mission;
+      }
+      throw error;
+    }
     return data as unknown as Mission;
   },
 
-  async completeMission(id, reflection): Promise<Mission> {
+  async completeMission(id, input): Promise<Mission> {
     const { supabase } = await requireUser();
-    const trimmed = reflection?.trim() ? reflection.trim() : null;
 
     const { data, error } = await supabase
       .from("missions")
       .update({
         status: "completed",
         completed_at: new Date().toISOString(),
-        reflection: trimmed,
+        reflection: input.reflection.trim() || null,
+        photo_url: input.photo_url ?? null,
       })
       .eq("id", id)
       .eq("status", "active")
@@ -181,13 +189,18 @@ export const supabaseBackend: DataBackend = {
     return current;
   },
 
-  async endMission(id): Promise<Mission> {
+  async uncompleteMission(id): Promise<Mission> {
     const { supabase } = await requireUser();
     const { data, error } = await supabase
       .from("missions")
-      .update({ status: "ended", ended_at: new Date().toISOString() })
+      .update({
+        status: "active",
+        completed_at: null,
+        reflection: null,
+        photo_url: null,
+      })
       .eq("id", id)
-      .eq("status", "active")
+      .eq("status", "completed")
       .select(MISSION_COLUMNS);
     if (error) throw error;
 
@@ -199,63 +212,22 @@ export const supabaseBackend: DataBackend = {
     return current;
   },
 
-  async updateMissionAction(id, action_text): Promise<Mission> {
+  async deleteMission(id): Promise<void> {
+    const { supabase } = await requireUser();
+    const { error } = await supabase.from("missions").delete().eq("id", id);
+    if (error) throw error;
+  },
+
+  async updateMission(id, patch): Promise<Mission> {
     const { supabase } = await requireUser();
     const { data, error } = await supabase
       .from("missions")
-      .update({ action_text })
+      .update(patch)
       .eq("id", id)
       .select(MISSION_COLUMNS)
       .single();
     if (error) throw error;
     return data as unknown as Mission;
-  },
-
-  async listCourseProgress(): Promise<CourseProgress[]> {
-    const { supabase, user } = await requireUser();
-    const { data, error } = await supabase
-      .from("course_progress")
-      .select("lesson_id,completed_at")
-      .eq("user_id", user.id)
-      .order("completed_at", { ascending: true });
-    if (error) throw error;
-    return (data ?? []) as unknown as CourseProgress[];
-  },
-
-  async completeLesson(lessonId): Promise<CourseProgress> {
-    const { supabase, user } = await requireUser();
-    const { data, error } = await supabase
-      .from("course_progress")
-      .upsert(
-        { user_id: user.id, lesson_id: lessonId },
-        { onConflict: "user_id,lesson_id", ignoreDuplicates: true },
-      )
-      .select("lesson_id,completed_at");
-    if (error) throw error;
-
-    const inserted = (data ?? [])[0] as unknown as CourseProgress | undefined;
-    if (inserted) return inserted;
-
-    // Already complete — the first completion is the one that counts.
-    const { data: existing, error: readError } = await supabase
-      .from("course_progress")
-      .select("lesson_id,completed_at")
-      .eq("user_id", user.id)
-      .eq("lesson_id", lessonId)
-      .maybeSingle();
-    if (readError) throw readError;
-    if (!existing) throw new Error("Could not save your progress");
-    return existing as unknown as CourseProgress;
-  },
-
-  async uncompleteLesson(lessonId): Promise<void> {
-    const { supabase, user } = await requireUser();
-    const { error } = await supabase
-      .from("course_progress")
-      .delete()
-      .eq("user_id", user.id)
-      .eq("lesson_id", lessonId);
-    if (error) throw error;
   },
 
   async listLessonResponses(): Promise<LessonResponse[]> {
@@ -305,6 +277,20 @@ export const supabaseBackend: DataBackend = {
       .single();
     if (error) throw error;
     return data as unknown as LessonResponse;
+  },
+
+  async trackEvent(name, props): Promise<void> {
+    // Best-effort by contract — an analytics failure must never surface.
+    try {
+      const { supabase, user } = await requireUser();
+      await supabase.from("analytics_events").insert({
+        user_id: user.id,
+        name,
+        props: props ?? {},
+      });
+    } catch {
+      /* never block on analytics */
+    }
   },
 
   async scheduleReminder(missionId, sendAt): Promise<void> {

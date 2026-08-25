@@ -14,7 +14,7 @@ As soon as the URL and anon key are set, the app leaves demo mode.
 ## 2. Apply the migrations
 
 **Option A — SQL editor (fastest):** open the SQL editor in the Supabase
-dashboard and run every file in `migrations/` in order (`0001` … `0005`).
+dashboard and run every file in `migrations/` in order (`0001` … `0007`).
 
 **Option B — Supabase CLI:**
 
@@ -26,9 +26,16 @@ supabase db push
 `0001` creates `profiles` and `missions`, the `updated_at` triggers, the
 `handle_new_user` signup trigger, and row-level-security policies that restrict
 every row to `auth.uid()`. `0002` adds the single-round-trip `get_app_data()`
-function, `0003` the push `reminders`, `0004` `course_progress`, and `0005`
-`lesson_responses` — the private answers a man writes inside a lesson, which the
-Vivid Vision page compiles. `0002`, `0004` and `0005` each replace
+function, `0003` the push `reminders`, `0004` `course_progress` (retired in V2,
+archived by `0007`), and `0005` `lesson_responses` — the private answers a man
+writes, which V2 reuses for Mission question answers (`lesson_id` = `m<number>`)
+and the Personal Code compiles. `0007` is the V2 rebuild: archive tables, the
+profile's `identity_statement`/`owns_set`/`set_status`, the missions table's
+`mission_number`/`question_answer`/`photo_url` plus the one-row-per-structured-
+Mission unique index, the insert-only `analytics_events` table, and the rewritten
+admin-notify trigger (fires on the 30th Mission proof, not the 30th lesson).
+Like `0006`, `0007` contains a `<NOTIFY_SECRET>` placeholder to substitute at
+apply time. `0002`, `0004`, `0005` and `0007` each replace
 `get_app_data()`, so run them in order.
 
 ## 3. Configure the OTP code email
@@ -182,7 +189,8 @@ the deletion succeeded.
 
 Migration `0006_admin_notifications.sql` adds two triggers that call the
 `notify-admin` Edge Function: one when a user completes onboarding ("signup"),
-one when their 30th lesson row is inserted ("course complete"). Both emails go
+one at 30 of 30 ("course complete" — since `0007` this fires on the 30th
+completed structured Mission). Both emails go
 to antonio@missionfragrances.com with the user's name in the subject, using the
 branded dark template.
 

@@ -1,10 +1,12 @@
 export default function ProgressRing({
   value,
   max,
+  label = "MISSIONS COMPLETE",
   size = 180,
 }: {
   value: number;
   max: number;
+  label?: string;
   size?: number;
 }) {
   const stroke = 8;
@@ -17,7 +19,7 @@ export default function ProgressRing({
       className="relative"
       style={{ width: size, height: size }}
       role="img"
-      aria-label={`Day ${value} of ${max}`}
+      aria-label={`${value} of ${max} ${label.toLowerCase()}`}
     >
       <svg width={size} height={size} className="-rotate-90">
         <defs>
@@ -48,20 +50,18 @@ export default function ProgressRing({
           strokeDashoffset={circumference * (1 - progress)}
         />
       </svg>
-      {/* Labels scale with the ring so the same component works at the 180px
-          hero size and at the compact size the Log summary uses. */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span
           className="font-display leading-none text-ink-0"
-          style={{ fontSize: (size * 64) / 180 }}
+          style={{ fontSize: (size * 52) / 180 }}
         >
-          DAY {value}
+          {value}/{max}
         </span>
         <span
-          className="mt-1 text-ink-1"
-          style={{ fontSize: (size * 15) / 180 }}
+          className="eyebrow mt-2 text-center text-ink-1"
+          style={{ fontSize: (size * 11) / 180 }}
         >
-          of {max}
+          {label}
         </span>
       </div>
     </div>

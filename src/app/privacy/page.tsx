@@ -61,7 +61,7 @@ export default function PrivacyPage() {
       <Section title="How we use it">
         <ul className="list-disc space-y-1 pl-5">
           <li>To sign you in and keep your Mission Log tied to your account.</li>
-          <li>To show your Reps, progress, and history back to you.</li>
+          <li>To show your Proofs, progress, and history back to you.</li>
           <li>To send the sign-in code you request by email.</li>
           <li>To operate, secure, debug, and improve the App.</li>
         </ul>

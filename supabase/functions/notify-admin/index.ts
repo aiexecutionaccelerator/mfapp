@@ -1,5 +1,6 @@
 // Admin notifications: emails antonio@missionfragrances.com when a user
-// completes onboarding ("signup") or finishes all 30 lessons ("course_complete").
+// completes onboarding ("signup") or logs the 30th Mission proof
+// ("course_complete" — the payload type predates V2 and is kept for compatibility).
 // Called by database triggers (see migrations/0006_admin_notifications.sql)
 // with `Authorization: Bearer NOTIFY_SECRET`. Sends via the Resend API.
 
@@ -68,12 +69,12 @@ Deno.serve(async (req) => {
       ["When", when],
     ]);
   } else if (payload.type === "course_complete") {
-    subject = `${name} finished the 30-Day Course — Mission Fragrances App`;
-    html = template("Course complete", [
+    subject = `${name} completed the 30-Day Mission — Mission Fragrances App`;
+    html = template("30-Day Mission complete", [
       ["Name", name],
       ["Email", email],
       ["Finished", when],
-      ["Lessons", "30 of 30"],
+      ["Missions", "30 of 30"],
     ]);
   } else {
     return new Response("unknown type", { status: 400 });

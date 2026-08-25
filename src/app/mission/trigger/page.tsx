@@ -10,6 +10,7 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import { useToast } from "@/components/ui/Toast";
 import { pickBriefing } from "@/content/missionBriefings";
 import { TRIGGERS, TRIGGER_ACCENTS } from "@/content/triggers";
+import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
 import type { Mission } from "@/lib/data/types";
 import { clearDraft, readDraft } from "@/lib/utils";
@@ -48,13 +49,7 @@ function TriggerScreen({ missions }: { missions: Mission[] }) {
 
   const meta = TRIGGERS[draft.trigger];
   const tone = TRIGGER_ACCENTS[draft.trigger];
-  // Came from a lesson? Go back to the same Declare screen, suggestions and all.
-  const lessonDay = draft.action_category?.startsWith("lesson:")
-    ? draft.action_category.slice("lesson:".length)
-    : null;
-  const backHref = `/mission/declare?trigger=${draft.trigger}${
-    lessonDay ? `&day=${lessonDay}` : ""
-  }`;
+  const backHref = `/mission/declare?trigger=${draft.trigger}`;
 
   async function start() {
     if (starting.current || !draft) return;
@@ -66,6 +61,7 @@ function TriggerScreen({ missions }: { missions: Mission[] }) {
         action_text: draft.action_text,
         action_category: draft.action_category,
       });
+      track("freeform_mission_started", { selectedTrigger: draft.trigger });
       clearDraft();
       router.replace(`/mission/active/${mission.id}`);
     } catch {
@@ -106,9 +102,9 @@ function TriggerScreen({ missions }: { missions: Mission[] }) {
 
       {briefing && <p className="mt-6 text-[17px] text-ink-0">{briefing}</p>}
 
-      {/* The Anchor step of S.T.A.R., where a man actually does it. */}
+      {/* The Trigger step of S.T.A.R., where a man actually does it. */}
       <p className="eyebrow mt-8 text-gold-300">
-        ANCHOR: CLOSE YOUR EYES. RECALL A MOMENT YOU WERE {meta.anchorWord}.
+        SPRAY THE FRAGRANCE. RECALL A MOMENT YOU WERE {meta.anchorWord}.
         5–15 SECONDS.
       </p>
       <p className="eyebrow mt-4 text-[15px] text-gold-300 uppercase">

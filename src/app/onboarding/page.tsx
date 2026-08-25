@@ -1,81 +1,90 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import NavAction from "@/components/NavAction";
+import { useEffect, useState } from "react";
+import OnboardingScreens from "@/components/onboarding/OnboardingScreens";
 import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
+import { track } from "@/lib/analytics";
 import { store } from "@/lib/data/store";
-import { cn, todayLocal } from "@/lib/utils";
+import type { SetStatus } from "@/lib/data/types";
+import { cn } from "@/lib/utils";
 
-const GOALS = [
-  "Confidence",
-  "Career / Business",
-  "Social / Relationships",
-  "Health / Fitness",
-  "Discipline / Follow-Through",
-  "Custom",
+const IDENTITY_EXAMPLES = [
+  "Keeps the promises he makes to himself.",
+  "Speaks honestly instead of avoiding hard conversations.",
+  "Shows his family how much they matter.",
+  "Takes better care of his body.",
+  "Finishes the work he knows he needs to do.",
 ];
 
-const STEP_COUNT = 2;
+const IDENTITY_MAX = 280;
 
+/**
+ * Setup (name + identity statement), then the four How It Works screens,
+ * ending on the set-arrival question. Completed once; replayable read-only
+ * from Settings → How It Works.
+ */
 export default function OnboardingPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [step, setStep] = useState(0);
+  // -1 = profile setup; 0–3 = the four onboarding screens.
+  const [step, setStep] = useState(-1);
   const [name, setName] = useState("");
-  const [goal, setGoal] = useState<string | null>(null);
-  const [customGoal, setCustomGoal] = useState("");
+  const [identity, setIdentity] = useState("");
   const [pending, setPending] = useState(false);
 
-  const nameReady = name.trim().length > 0;
-  const goalReady =
-    goal !== null && (goal !== "Custom" || customGoal.trim().length > 0);
+  useEffect(() => {
+    track("onboarding_started");
+  }, []);
 
-  async function finish() {
+  const nameReady = name.trim().length > 0;
+  const identityReady = identity.trim().length > 0;
+
+  async function saveSetup() {
     setPending(true);
     try {
       await store.updateProfile({
         display_name: name.trim(),
-        primary_goal: goal === "Custom" ? customGoal.trim() : goal,
-        onboarding_completed: true,
-        challenge_start_date: todayLocal(),
+        identity_statement: identity.trim(),
       });
-      router.replace("/home");
+      track("profile_setup_completed");
+      setStep(0);
     } catch {
+      showToast("Couldn't save that. Please try again.", {
+        retry: () => void saveSetup(),
+      });
+    } finally {
       setPending(false);
-      showToast("Couldn't save that. Please try again.", { retry: finish });
     }
   }
 
-  return (
-    <main className="flex flex-1 flex-col pt-2">
-      <div className="flex items-center justify-between">
-        {step > 0 ? (
-          <NavAction kind="back" onClick={() => setStep(step - 1)} />
-        ) : (
-          <span className="h-12 w-12" />
-        )}
-        <div className="flex gap-2" aria-label={`Step ${step + 1} of ${STEP_COUNT}`}>
-          {Array.from({ length: STEP_COUNT }, (_, index) => (
-            <span
-              key={index}
-              className={cn(
-                "h-1.5 w-1.5 rounded-full",
-                index === step ? "bg-[var(--gold-500)]" : "bg-[var(--line-strong)]",
-              )}
-            />
-          ))}
-        </div>
-        <span className="h-12 w-12" />
-      </div>
+  async function finish(setStatus: SetStatus) {
+    setPending(true);
+    try {
+      await store.updateProfile({
+        set_status: setStatus,
+        onboarding_completed: true,
+      });
+      track("onboarding_completed");
+      track("set_status_selected", { setStatus });
+      router.replace(setStatus === "arrived" ? "/missions/1" : "/missions");
+    } catch {
+      setPending(false);
+      showToast("Couldn't save that. Please try again.", {
+        retry: () => void finish(setStatus),
+      });
+    }
+  }
 
-      {step === 0 && (
+  if (step === -1) {
+    return (
+      <main className="flex flex-1 flex-col pt-2">
         <div className="mt-6 flex flex-1 flex-col">
           <Eyebrow>LET&apos;S SET YOU UP</Eyebrow>
           <Headline className="mt-2">WELCOME TO YOUR MISSION</Headline>
@@ -90,63 +99,63 @@ export default function OnboardingPage() {
             />
           </div>
 
-          <Eyebrow className="mt-8">WHAT ARE YOU WORKING TOWARD?</Eyebrow>
-          <div role="radiogroup" className="mt-3 space-y-3">
-            {GOALS.map((option) => (
+          <div className="mt-6">
+            <Field
+              label="Over the next 30 days, I am becoming a man who…"
+              value={identity}
+              onChange={setIdentity}
+              maxLength={IDENTITY_MAX}
+              multiline
+              rows={3}
+              placeholder="keeps his word, acts despite fear, and follows through"
+            />
+          </div>
+
+          <p className="mt-1 text-[13px] text-ink-2">
+            One sentence is enough. Tap an example to start from it:
+          </p>
+          <div className="mt-3 space-y-2">
+            {IDENTITY_EXAMPLES.map((example) => (
               <button
-                key={option}
+                key={example}
                 type="button"
-                role="radio"
-                aria-checked={goal === option}
-                onClick={() => setGoal(option)}
+                onClick={() => setIdentity(example)}
                 className={cn(
-                  "glass flex min-h-[56px] w-full items-center rounded-[14px] px-4 text-left text-[17px]",
-                  goal === option
+                  "glass block w-full rounded-[14px] px-4 py-3 text-left text-[15px] leading-snug",
+                  identity === example
                     ? "border-[var(--gold-500)] text-ink-0"
                     : "text-ink-1",
                 )}
               >
-                {option}
+                {example}
               </button>
             ))}
           </div>
-          {goal === "Custom" && (
-            <div className="mt-4">
-              <Field
-                label="Your goal"
-                value={customGoal}
-                onChange={setCustomGoal}
-                maxLength={60}
-                autoFocus
-              />
-            </div>
-          )}
 
           <BottomActions className="mt-8">
             <Button
-              disabled={!nameReady || !goalReady}
-              onClick={() => setStep(1)}
+              loading={pending}
+              disabled={!nameReady || !identityReady}
+              onClick={() => void saveSetup()}
             >
               CONTINUE
             </Button>
           </BottomActions>
         </div>
-      )}
+      </main>
+    );
+  }
 
-      {step === 1 && (
-        <div className="mt-6 flex flex-1 flex-col">
-          <Headline>YOUR 30-DAY MISSION STARTS NOW.</Headline>
-          <p className="mt-4 text-[17px] text-ink-1">
-            For the next 30 days, wear your fragrance with intent. One short
-            lesson and one real-world Mission a day.
-          </p>
-          <BottomActions className="mt-8">
-            <Button loading={pending} onClick={finish}>
-              START MY MISSION
-            </Button>
-          </BottomActions>
-        </div>
-      )}
+  return (
+    <main className="flex flex-1 flex-col pt-2">
+      <OnboardingScreens
+        screen={step}
+        pending={pending}
+        onBack={() => setStep(step === 0 ? -1 : step - 1)}
+        onNext={() => setStep(step + 1)}
+        onSetHere={() => void finish("arrived")}
+        onSetOnTheWay={() => void finish("ordered")}
+      />
     </main>
   );
 }

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { use, useEffect, useRef, useState } from "react";
 import NavAction from "@/components/NavAction";
+import PhotoInput from "@/components/PhotoInput";
 import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
@@ -10,7 +11,9 @@ import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
 import { TRIGGERS } from "@/content/triggers";
+import { track } from "@/lib/analytics";
 import { useAppData, store } from "@/lib/data/store";
+import { PROOF_TEXT_MAX } from "@/lib/data/types";
 import { clearReminderFor } from "@/lib/utils";
 
 type View = "ask" | "yes" | "not-yet";
@@ -29,7 +32,8 @@ export default function CheckinPage({
   const mission = found?.status === "active" ? found : null;
 
   const [view, setView] = useState<View>("ask");
-  const [reflection, setReflection] = useState("");
+  const [proofText, setProofText] = useState("");
+  const [photo, setPhoto] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const submitting = useRef(false);
 
@@ -51,11 +55,18 @@ export default function CheckinPage({
   if (!mission) return null;
 
   async function complete() {
-    if (submitting.current || !mission) return;
+    if (submitting.current || !mission || !proofText.trim()) return;
     submitting.current = true;
     setPending(true);
     try {
-      const completed = await store.completeMission(mission.id, reflection);
+      const completed = await store.completeMission(mission.id, {
+        reflection: proofText,
+        photo_url: photo,
+      });
+      track("freeform_mission_completed", {
+        selectedTrigger: completed.trigger,
+      });
+      if (photo) track("proof_photo_added", { missionNumber: null });
       clearReminderFor(completed.id);
       router.replace(`/mission/complete/${completed.id}`);
     } catch {
@@ -82,25 +93,33 @@ export default function CheckinPage({
           <h1 className="mt-4 text-[22px] leading-snug text-ink-0">
             That&apos;s okay. The Mission isn&apos;t over.
           </h1>
+        ) : view === "yes" ? (
+          <>
+            <Headline className="mt-3">RECORD THE EVIDENCE</Headline>
+            <p className="font-display mt-5 text-[22px] leading-tight text-ink-0">
+              {mission.action_text}
+            </p>
+            <div className="mt-7">
+              <Field
+                label="What did you do?"
+                value={proofText}
+                onChange={setProofText}
+                maxLength={PROOF_TEXT_MAX}
+                multiline
+                autoFocus
+                placeholder="I sent the email and asked for the conversation."
+              />
+            </div>
+            <div className="mt-4">
+              <PhotoInput value={photo} onChange={setPhoto} />
+            </div>
+          </>
         ) : (
           <>
             <Headline className="mt-3">DID YOU DO IT?</Headline>
             <p className="font-display mt-6 text-[26px] leading-tight text-ink-0">
               {mission.action_text}
             </p>
-
-            {view === "yes" && (
-              <div className="mt-8">
-                <Field
-                  label="What happened? (optional)"
-                  value={reflection}
-                  onChange={setReflection}
-                  maxLength={500}
-                  multiline
-                  autoFocus
-                />
-              </div>
-            )}
           </>
         )}
       </div>
@@ -111,13 +130,17 @@ export default function CheckinPage({
             TRY AGAIN
           </Button>
         ) : view === "yes" ? (
-          <Button loading={pending} onClick={complete}>
-            COMPLETE MISSION
+          <Button
+            loading={pending}
+            disabled={!proofText.trim()}
+            onClick={complete}
+          >
+            LOG THE PROOF
           </Button>
         ) : (
           <>
             <Button onClick={() => setView("yes")}>
-              YES — MISSION COMPLETE
+              YES — I DID IT
             </Button>
             <Button variant="secondary" onClick={() => setView("not-yet")}>
               NOT YET

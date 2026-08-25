@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import BuyRow from "@/components/BuyRow";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
@@ -10,16 +9,9 @@ import Headline from "@/components/ui/Headline";
 import ProgressRing from "@/components/ui/ProgressRing";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
-import {
-  CHALLENGE_LENGTH,
-  challengeDay,
-  getMode,
-  getModule,
-  rawChallengeDay,
-} from "@/lib/challenge";
-import { LESSON_COUNT } from "@/content/course";
 import { useAppData } from "@/lib/data/store";
-import { computeStats } from "@/lib/stats";
+import { currentPromise } from "@/lib/personalCode";
+import { MISSION_COUNT, computeStats } from "@/lib/stats";
 
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
@@ -34,14 +26,14 @@ export default function ProgressPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const { profile, missions, courseProgress, error, refresh } = useAppData();
+  const { missions, lessonResponses, error, refresh } = useAppData();
 
   useEffect(() => {
     if (!error) return;
     showToast("Couldn't load your progress.", { retry: () => void refresh() });
   }, [error, refresh, showToast]);
 
-  if (!profile || !missions || !courseProgress) {
+  if (!missions || !lessonResponses) {
     return (
       <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
@@ -49,86 +41,97 @@ export default function ProgressPage() {
     );
   }
 
-  const stats = computeStats(missions, courseProgress);
-  const activeMission = missions.find((m) => m.status === "active") ?? null;
-  const mode = getMode(profile);
-  const day = challengeDay(profile);
-  const courseModule = getModule(day);
-
-  if (mode === "log") {
-    return (
-      <main className="pt-4">
-        <Headline>BUILD THE EVIDENCE</Headline>
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          <Stat label="Honor Reps" value={stats.reps.honor} />
-          <Stat label="Courage Reps" value={stats.reps.courage} />
-          <Stat label="Commitment Reps" value={stats.reps.commitment} />
-          <Stat label="Course Reps" value={stats.reps.course} />
-          <Stat label="Missions Completed" value={stats.completed} />
-          <Stat label="Completed · last 30 days" value={stats.last30DaysCompleted} />
-          <Stat
-            label="Lessons completed"
-            value={`${stats.lessonsCompleted}/${LESSON_COUNT}`}
-          />
-        </div>
-
-        {!activeMission && <BuyRow />}
-      </main>
-    );
-  }
-
-  const canComplete =
-    rawChallengeDay(profile) >= CHALLENGE_LENGTH && !profile.challenge_completed_at;
+  const stats = computeStats(missions);
+  const complete = stats.missionsCompleted >= MISSION_COUNT;
+  const promise = currentPromise(lessonResponses);
 
   return (
-    <main className="pt-4">
-      <Headline>YOUR 30-DAY MISSION</Headline>
+    <main className="pt-4 pb-8">
+      <Headline>YOUR PROGRESS</Headline>
 
       <div className="mt-8 flex justify-center">
-        <ProgressRing value={day} max={CHALLENGE_LENGTH} />
+        <ProgressRing
+          value={stats.missionsCompleted}
+          max={MISSION_COUNT}
+          label="MISSIONS COMPLETE"
+        />
       </div>
 
-      <GlassCard className="mt-8">
-        <Eyebrow tone="gold">
-          MODULE {courseModule.module} · {courseModule.title}
-        </Eyebrow>
-        <p className="mt-3 text-[15px] text-ink-1">{courseModule.body}</p>
-      </GlassCard>
+      <p className="mt-6 text-center text-[15px] text-ink-1">
+        Every completed action is evidence of the man you are becoming.
+      </p>
+
+      {complete && (
+        <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
+          <Eyebrow tone="gold">30-DAY MISSION COMPLETE</Eyebrow>
+          <p className="mt-3 text-[15px] leading-relaxed text-ink-1">
+            You completed thirty actions and created thirty pieces of evidence.
+            The Mission Log remains open. Keep using Honor, Courage, and
+            Commitment whenever you need them.
+          </p>
+          <div className="mt-5 space-y-2">
+            <Button onClick={() => router.push("/home")}>
+              LOG A NEW ACTION
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => router.push("/personal-code")}
+            >
+              VIEW MY PERSONAL CODE
+            </Button>
+          </div>
+        </GlassCard>
+      )}
 
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <Stat label="Honor Reps" value={stats.reps.honor} />
-        <Stat label="Courage Reps" value={stats.reps.courage} />
-        <Stat label="Commitment Reps" value={stats.reps.commitment} />
-        <Stat label="Course Reps" value={stats.reps.course} />
-        <Stat label="Missions Started" value={stats.started} />
-        <Stat label="Missions Completed" value={stats.completed} />
+        <Stat label="Honor Proofs" value={stats.proofs.honor} />
+        <Stat label="Courage Proofs" value={stats.proofs.courage} />
+        <Stat label="Commitment Proofs" value={stats.proofs.commitment} />
+        <Stat label="Total Proofs" value={stats.totalProofs} />
         <Stat
-          label="Lessons completed"
-          value={`${stats.lessonsCompleted}/${LESSON_COUNT}`}
+          label="Missions Completed"
+          value={`${stats.missionsCompleted}/${MISSION_COUNT}`}
         />
-        {stats.followThroughRate !== null && (
-          <Stat
-            label="Follow-Through Rate"
-            value={`${Math.round(stats.followThroughRate * 100)}%`}
-          />
-        )}
+        <Stat label="Actions In Progress" value={stats.actionsInProgress} />
       </div>
 
-      {stats.followThroughRate !== null && (
-        <p className="mt-3 text-[13px] text-ink-2">
-          Follow-Through Rate = completed ÷ (completed + ended).
-        </p>
-      )}
-
-      {canComplete && (
-        <div className="mt-8">
-          <Button onClick={() => router.push("/challenge-complete")}>
-            COMPLETE THE 30-DAY MISSION
-          </Button>
+      <GlassCard className="mt-6">
+        <Eyebrow tone="gold">THE PROMISE I AM KEEPING</Eyebrow>
+        {promise ? (
+          <p className="mt-3 text-[17px] leading-snug text-ink-0">{promise}</p>
+        ) : (
+          <p className="mt-3 text-[15px] text-ink-1">
+            Define the promise that matters most in Mission 12.
+          </p>
+        )}
+        <div className="mt-5">
+          {promise ? (
+            <Button
+              variant="secondary"
+              onClick={() => router.push("/personal-code")}
+            >
+              VIEW MY PERSONAL CODE
+            </Button>
+          ) : (
+            <Button
+              variant="secondary"
+              onClick={() => router.push("/missions/12")}
+            >
+              OPEN MISSION 12
+            </Button>
+          )}
         </div>
-      )}
+      </GlassCard>
 
-      {!activeMission && <BuyRow />}
+      {!complete && (
+        <button
+          type="button"
+          onClick={() => router.push("/personal-code")}
+          className="mt-4 flex min-h-12 w-full items-center justify-center text-[15px] text-gold-300"
+        >
+          View my Personal Code
+        </button>
+      )}
     </main>
   );
 }

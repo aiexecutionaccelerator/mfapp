@@ -1,5 +1,4 @@
 import type {
-  CourseProgress,
   DataBackend,
   LessonResponse,
   Mission,
@@ -12,7 +11,6 @@ import { LESSON_ANSWER_MAX } from "@/lib/data/types";
 
 const PROFILE_KEY = "mission.profile";
 const MISSIONS_KEY = "mission.missions";
-const COURSE_KEY = "mission.course";
 const RESPONSES_KEY = "mission.lessonResponses";
 const DEMO_USER_ID = "demo-user";
 const DEMO_EMAIL = "demo@mission.local";
@@ -22,6 +20,9 @@ const EMPTY_PROFILE: Profile = {
   email: DEMO_EMAIL,
   display_name: null,
   primary_goal: null,
+  identity_statement: null,
+  owns_set: true,
+  set_status: "arrived",
   onboarding_completed: false,
   challenge_start_date: null,
   challenge_completed_at: null,
@@ -48,15 +49,14 @@ function readProfile(): Profile {
   return { ...EMPTY_PROFILE, ...read<Partial<Profile>>(PROFILE_KEY, {}) };
 }
 
+/** Pre-V2 rows have no mission_number/question_answer/photo_url — backfill. */
 function readMissions(): Mission[] {
-  return read<Mission[]>(MISSIONS_KEY, []);
-}
-
-function readCourse(): CourseProgress[] {
-  return [...read<CourseProgress[]>(COURSE_KEY, [])].sort(
-    (a, b) =>
-      new Date(a.completed_at).getTime() - new Date(b.completed_at).getTime(),
-  );
+  return read<Partial<Mission>[]>(MISSIONS_KEY, []).map((m) => ({
+    mission_number: null,
+    question_answer: null,
+    photo_url: null,
+    ...m,
+  })) as Mission[];
 }
 
 function readResponses(): LessonResponse[] {
@@ -89,7 +89,6 @@ export const localBackend: DataBackend = {
     return {
       profile: readProfile(),
       missions: sorted(readMissions()),
-      courseProgress: readCourse(),
       lessonResponses: readResponses(),
     };
   },
@@ -117,6 +116,15 @@ export const localBackend: DataBackend = {
   },
 
   async createMission(input) {
+    const missions = readMissions();
+    // Same guarantee as the DB partial unique index: one state row per
+    // structured Mission.
+    if (input.mission_number != null) {
+      const existing = missions.find(
+        (m) => m.mission_number === input.mission_number,
+      );
+      if (existing) return existing;
+    }
     const now = new Date().toISOString();
     const mission: Mission = {
       id: crypto.randomUUID(),
@@ -129,57 +137,47 @@ export const localBackend: DataBackend = {
       completed_at: null,
       ended_at: null,
       reflection: null,
+      mission_number: input.mission_number ?? null,
+      question_answer: input.question_answer ?? null,
+      photo_url: null,
     };
-    write(MISSIONS_KEY, [mission, ...readMissions()]);
+    write(MISSIONS_KEY, [mission, ...missions]);
     return mission;
   },
 
-  async completeMission(id, reflection) {
+  async completeMission(id, input) {
     const mission = requireMission(id);
     if (mission.status !== "active") return mission;
     return saveMission({
       ...mission,
       status: "completed",
       completed_at: new Date().toISOString(),
-      reflection: reflection?.trim() ? reflection.trim() : null,
+      reflection: input.reflection.trim() || null,
+      photo_url: input.photo_url ?? null,
     });
   },
 
-  async endMission(id) {
+  async uncompleteMission(id) {
     const mission = requireMission(id);
-    if (mission.status !== "active") return mission;
+    if (mission.status !== "completed") return mission;
     return saveMission({
       ...mission,
-      status: "ended",
-      ended_at: new Date().toISOString(),
+      status: "active",
+      completed_at: null,
+      reflection: null,
+      photo_url: null,
     });
   },
 
-  async updateMissionAction(id, action_text) {
-    return saveMission({ ...requireMission(id), action_text });
-  },
-
-  async listCourseProgress() {
-    return readCourse();
-  },
-
-  async completeLesson(lessonId) {
-    const current = readCourse();
-    const existing = current.find((row) => row.lesson_id === lessonId);
-    if (existing) return existing;
-    const row: CourseProgress = {
-      lesson_id: lessonId,
-      completed_at: new Date().toISOString(),
-    };
-    write(COURSE_KEY, [...current, row]);
-    return row;
-  },
-
-  async uncompleteLesson(lessonId) {
+  async deleteMission(id) {
     write(
-      COURSE_KEY,
-      readCourse().filter((row) => row.lesson_id !== lessonId),
+      MISSIONS_KEY,
+      readMissions().filter((m) => m.id !== id),
     );
+  },
+
+  async updateMission(id, patch) {
+    return saveMission({ ...requireMission(id), ...patch });
   },
 
   async listLessonResponses() {
@@ -205,6 +203,9 @@ export const localBackend: DataBackend = {
     return row;
   },
 
+  // Demo mode keeps no analytics — nothing leaves the device.
+  async trackEvent() {},
+
   // Demo mode has no server to push from — the localStorage reminder written
   // by the Mission Active screen still drives the Home banner.
   async scheduleReminder() {},
@@ -215,8 +216,8 @@ export const localBackend: DataBackend = {
     if (typeof window === "undefined") return;
     window.localStorage.removeItem(PROFILE_KEY);
     window.localStorage.removeItem(MISSIONS_KEY);
-    window.localStorage.removeItem(COURSE_KEY);
     window.localStorage.removeItem(RESPONSES_KEY);
+    window.localStorage.removeItem("mission.course");
     window.localStorage.removeItem("mission.reminder");
     window.localStorage.removeItem("mission.devDayOverride");
     window.sessionStorage.clear();

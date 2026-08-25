@@ -3,7 +3,6 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { data } from "@/lib/data";
 import type {
-  CourseProgress,
   LessonResponse,
   Mission,
   Profile,
@@ -27,7 +26,6 @@ const STALE_MS = 30_000;
 interface Cache {
   profile: Profile | null;
   missions: Mission[] | null;
-  courseProgress: CourseProgress[] | null;
   lessonResponses: LessonResponse[] | null;
   error: Error | null;
 }
@@ -35,7 +33,6 @@ interface Cache {
 const EMPTY: Cache = {
   profile: null,
   missions: null,
-  courseProgress: null,
   lessonResponses: null,
   error: null,
 };
@@ -69,15 +66,9 @@ function load(): Promise<void> {
   if (inFlight) return inFlight;
   inFlight = data
     .loadAll()
-    .then(({ profile, missions, courseProgress, lessonResponses }) => {
+    .then(({ profile, missions, lessonResponses }) => {
       loadedAt = Date.now();
-      publish({
-        profile,
-        missions,
-        courseProgress,
-        lessonResponses,
-        error: null,
-      });
+      publish({ profile, missions, lessonResponses, error: null });
     })
     .catch((cause: unknown) => {
       publish({
@@ -100,7 +91,6 @@ function ensureLoaded(): void {
   if (
     cache.profile === null ||
     cache.missions === null ||
-    cache.courseProgress === null ||
     cache.lessonResponses === null
   ) {
     void load();
@@ -127,20 +117,10 @@ function putMission(mission: Mission): void {
   publish({ ...cache, missions: next });
 }
 
-function putCourseProgress(row: CourseProgress): void {
-  const current = cache.courseProgress;
+function dropMission(id: string): void {
+  const current = cache.missions;
   if (!current) return;
-  if (current.some((item) => item.lesson_id === row.lesson_id)) return;
-  publish({ ...cache, courseProgress: [...current, row] });
-}
-
-function dropCourseProgress(lessonId: string): void {
-  const current = cache.courseProgress;
-  if (!current) return;
-  publish({
-    ...cache,
-    courseProgress: current.filter((item) => item.lesson_id !== lessonId),
-  });
+  publish({ ...cache, missions: current.filter((m) => m.id !== id) });
 }
 
 function putLessonResponse(
@@ -186,6 +166,8 @@ export const store = {
     trigger: Trigger;
     action_text: string;
     action_category?: string | null;
+    mission_number?: number | null;
+    question_answer?: string | null;
   }): Promise<Mission> {
     const mission = await data.createMission(input);
     putMission(mission);
@@ -194,18 +176,39 @@ export const store = {
 
   async completeMission(
     id: string,
-    reflection?: string | null,
+    input: { reflection: string; photo_url?: string | null },
   ): Promise<Mission> {
-    const mission = await data.completeMission(id, reflection);
+    const mission = await data.completeMission(id, input);
     putMission(mission);
     await dropReminders(id);
     return mission;
   },
 
-  async endMission(id: string): Promise<Mission> {
-    const mission = await data.endMission(id);
+  /** Deletes the proof, keeps the declared action — back to in progress. */
+  async uncompleteMission(id: string): Promise<Mission> {
+    const mission = await data.uncompleteMission(id);
     putMission(mission);
+    return mission;
+  },
+
+  /** Removes the row entirely — free-form delete, or structured abandon. */
+  async deleteMission(id: string): Promise<void> {
+    await data.deleteMission(id);
+    dropMission(id);
     await dropReminders(id);
+  },
+
+  async updateMission(
+    id: string,
+    patch: Partial<
+      Pick<
+        Mission,
+        "action_text" | "reflection" | "question_answer" | "photo_url" | "trigger"
+      >
+    >,
+  ): Promise<Mission> {
+    const mission = await data.updateMission(id, patch);
+    putMission(mission);
     return mission;
   },
 
@@ -217,21 +220,9 @@ export const store = {
     return data.cancelReminders(missionId);
   },
 
-  async updateMissionAction(id: string, action_text: string): Promise<Mission> {
-    const mission = await data.updateMissionAction(id, action_text);
-    putMission(mission);
-    return mission;
-  },
-
-  async completeLesson(lessonId: string): Promise<CourseProgress> {
-    const row = await data.completeLesson(lessonId);
-    putCourseProgress(row);
-    return row;
-  },
-
   /**
-   * Autosaved from the lesson screen. A blank answer clears it. Never log the
-   * answer — this is the private half of the course.
+   * Autosaved from the Mission question. A blank answer clears it. Never log
+   * the answer — this is the private half of the experience.
    */
   async saveLessonResponse(
     lessonId: string,
@@ -241,12 +232,6 @@ export const store = {
     const row = await data.saveLessonResponse(lessonId, promptId, answer);
     putLessonResponse(lessonId, promptId, row);
     return row;
-  },
-
-  /** Dev only — no screen calls this. */
-  async uncompleteLesson(lessonId: string): Promise<void> {
-    await data.uncompleteLesson(lessonId);
-    dropCourseProgress(lessonId);
   },
 
   async signOut(): Promise<void> {
@@ -265,7 +250,6 @@ export const store = {
 export interface AppData {
   profile: Profile | null;
   missions: Mission[] | null;
-  courseProgress: CourseProgress[] | null;
   lessonResponses: LessonResponse[] | null;
   /** True only until the first successful load — never during a revalidate. */
   loading: boolean;
@@ -287,12 +271,10 @@ export function useAppData(): AppData {
   return {
     profile: snapshot.profile,
     missions: snapshot.missions,
-    courseProgress: snapshot.courseProgress,
     lessonResponses: snapshot.lessonResponses,
     loading:
       snapshot.profile === null ||
       snapshot.missions === null ||
-      snapshot.courseProgress === null ||
       snapshot.lessonResponses === null,
     error: snapshot.error,
     refresh: refreshAppData,

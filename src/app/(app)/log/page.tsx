@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import BuyRow from "@/components/BuyRow";
 import MissionRow from "@/components/MissionRow";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
@@ -10,9 +9,9 @@ import Headline from "@/components/ui/Headline";
 import Pill from "@/components/ui/Pill";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
-import { LESSON_COUNT } from "@/content/course";
 import { TRIGGER_ORDER } from "@/content/triggers";
 import { useAppData } from "@/lib/data/store";
+import { computeStats } from "@/lib/stats";
 import type { Trigger } from "@/lib/data/types";
 
 type Filter = "all" | Trigger;
@@ -23,7 +22,7 @@ export default function LogPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const { missions, courseProgress, error, refresh } = useAppData();
+  const { missions, error, refresh } = useAppData();
   const [filter, setFilter] = useState<Filter>("all");
 
   useEffect(() => {
@@ -35,31 +34,37 @@ export default function LogPage() {
 
   const visible =
     missions?.filter((m) => filter === "all" || m.trigger === filter) ?? [];
-  const activeMission = missions?.find((m) => m.status === "active") ?? null;
+  const stats = computeStats(missions ?? []);
 
   return (
     <main className="pt-4">
       <Headline>MISSION LOG</Headline>
 
-      {courseProgress && (
-        <p className="mt-3 text-[13px] text-ink-2">
-          {courseProgress.length} of {LESSON_COUNT} lessons complete ·{" "}
-          {courseProgress.length} Course Reps
+      <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
+        Every action you log is evidence of the man you are becoming.
+      </p>
+      {missions && (
+        <p className="mt-2 text-[13px] text-ink-2">
+          {stats.totalProofs} {stats.totalProofs === 1 ? "proof" : "proofs"}{" "}
+          logged
         </p>
       )}
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        {FILTERS.map((value) => (
-          <button
-            key={value}
-            type="button"
-            aria-pressed={filter === value}
-            onClick={() => setFilter(value)}
-            className="flex min-h-12 items-center"
-          >
-            <Pill active={filter === value}>{value.toUpperCase()}</Pill>
-          </button>
-        ))}
+      {/* One scrollable row — the filters never wrap on narrow screens. */}
+      <div className="-mx-5 mt-4 overflow-x-auto px-5">
+        <div className="flex w-max gap-2">
+          {FILTERS.map((value) => (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={filter === value}
+              onClick={() => setFilter(value)}
+              className="flex min-h-12 items-center"
+            >
+              <Pill active={filter === value}>{value.toUpperCase()}</Pill>
+            </button>
+          ))}
+        </div>
       </div>
 
       {!missions ? (
@@ -69,8 +74,8 @@ export default function LogPage() {
       ) : visible.length === 0 ? (
         <div className="mt-6">
           <EmptyState
-            title="No Missions yet."
-            body="Start with one action today."
+            title="No proof yet."
+            body="Take one small action today."
             action={
               <Button onClick={() => router.push("/home")}>
                 START A MISSION
@@ -85,8 +90,6 @@ export default function LogPage() {
           ))}
         </div>
       )}
-
-      {missions && !activeMission && <BuyRow />}
     </main>
   );
 }
