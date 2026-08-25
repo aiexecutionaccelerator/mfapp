@@ -32,9 +32,23 @@ profile/mission columns on every load, so the order is fixed:
 
 - Dashboard access to project `vrhjzqaxksdthkeiwxrk` (SQL Editor is enough).
 - The **NOTIFY_SECRET** value — the same bearer secret used when applying
-  0006 (it is set as the `notify-admin` function secret; the value lives in
-  the password manager, not the repo). The migration file contains one
-  `<NOTIFY_SECRET>` placeholder to substitute.
+  0006 (it is set as the `notify-admin` function secret). The migration file
+  contains one `<NOTIFY_SECRET>` placeholder to substitute.
+
+  **Don't have the value?** It is recoverable from the live DB itself,
+  because 0006 was applied with it baked into the signup trigger. In the SQL
+  Editor run:
+
+  ```sql
+  select prosrc from pg_proc where proname = 'notify_admin_signup';
+  ```
+
+  The returned function source contains `'Authorization', 'Bearer <value>'` —
+  that value is the secret. Save it in the password manager. If that ever
+  comes back empty, rotate instead: generate a new random string, set it as
+  the `notify-admin` function's `NOTIFY_SECRET` secret in the dashboard, and
+  use it both in 0007 and in a re-run of 0006's `notify_admin_signup`
+  function so signup emails keep working.
 
 ## Steps
 
