@@ -23,6 +23,15 @@ const IDENTITY_EXAMPLES = [
 ];
 
 const IDENTITY_MAX = 280;
+const STEP_KEY = "mission.onboardingStep";
+
+/** Survives the side trip to Using Your Set (and an accidental refresh). */
+function readStep(): number {
+  if (typeof window === "undefined") return -1;
+  const raw = window.sessionStorage.getItem(STEP_KEY);
+  const step = raw === null ? NaN : Number(raw);
+  return Number.isInteger(step) && step >= -1 && step <= 3 ? step : -1;
+}
 
 /**
  * Setup (name + identity statement), then the four How It Works screens,
@@ -34,7 +43,19 @@ export default function OnboardingPage() {
   const { showToast } = useToast();
 
   // -1 = profile setup; 0–3 = the four onboarding screens.
-  const [step, setStep] = useState(-1);
+  const [step, setStepState] = useState(-1);
+
+  // Restoring the saved step out of sessionStorage on mount is the
+  // "sync with an external system" case — same as the Declare draft.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStepState(readStep());
+  }, []);
+
+  function setStep(next: number) {
+    window.sessionStorage.setItem(STEP_KEY, String(next));
+    setStepState(next);
+  }
   const [name, setName] = useState("");
   const [identity, setIdentity] = useState("");
   const [pending, setPending] = useState(false);
@@ -71,6 +92,7 @@ export default function OnboardingPage() {
         set_status: setStatus,
         onboarding_completed: true,
       });
+      window.sessionStorage.removeItem(STEP_KEY);
       track("onboarding_completed");
       track("set_status_selected", { setStatus });
       router.replace(setStatus === "arrived" ? "/missions/1" : "/missions");

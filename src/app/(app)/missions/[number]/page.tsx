@@ -76,6 +76,8 @@ function MissionDetailInner({
   const [editText, setEditText] = useState("");
   const [pending, setPending] = useState(false);
   const submitting = useRef(false);
+  // For the timeSinceMissionOpened analytics property (spec §12).
+  const openedAt = useRef(Date.now());
 
   useEffect(() => {
     if (!def) router.replace("/missions");
@@ -160,6 +162,7 @@ function MissionDetailInner({
         missionNumber: def.number,
         selectedTrigger: trigger,
         suggestionType: selected,
+        timeSinceMissionOpened: Date.now() - openedAt.current,
       });
       setStarOpen(false);
       setView("auto");
@@ -185,6 +188,7 @@ function MissionDetailInner({
       track("mission_action_completed", {
         missionNumber: def?.number,
         selectedTrigger: completed.trigger,
+        timeSinceMissionOpened: Date.now() - openedAt.current,
       });
       if (photo) track("proof_photo_added", { missionNumber: def?.number });
       const after = computeStats(

@@ -57,6 +57,16 @@ alter table public.analytics_events enable row level security;
 create policy "analytics insert own" on public.analytics_events
   for insert to authenticated with check (user_id = auth.uid());
 
+-- 4b) account_created (spec §12) is a server-side moment — record it from the
+-- signup trigger alongside the profile row.
+create or replace function public.handle_new_user() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  insert into public.profiles (id, email) values (new.id, new.email) on conflict (id) do nothing;
+  insert into public.analytics_events (user_id, name) values (new.id, 'account_created');
+  return new;
+end $$;
+
 -- 5) Initial-load RPC: new profile + mission columns; course_progress is out.
 create or replace function public.get_app_data()
 returns json

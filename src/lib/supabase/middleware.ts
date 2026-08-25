@@ -61,7 +61,9 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (pathname !== "/onboarding") {
+  // Using Your Set is reachable from onboarding screen 2 ("Learn about the
+  // fragrances"), so it must not bounce back to /onboarding like other pages.
+  if (pathname !== "/onboarding" && pathname !== "/using-your-set") {
     const { data: profile } = await supabase
       .from("profiles")
       .select("onboarding_completed")

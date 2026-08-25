@@ -88,9 +88,9 @@ seed-Missions-1–29 helpers in Settings.
 
 ## Open items
 
-- **Apply migration 0007 to the live Supabase DB** (with NOTIFY_SECRET
-  substituted) before deploying V2. All accounts are internal beta; 0007
-  archives old data in-place, nothing is dropped.
+- **Apply migration 0007 to the live Supabase DB** before deploying V2 —
+  exact steps in `docs/MIGRATION_0007_RUNBOOK.md`. All accounts are internal
+  beta; 0007 archives old data in-place, nothing is dropped.
 - Reminder **time selector** (spec allows deferral) — the toggle is renamed
   "Daily Mission Reminder"; a chosen-time daily reminder needs a small
   `send-reminders` extension.

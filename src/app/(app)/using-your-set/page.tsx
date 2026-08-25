@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import NavAction from "@/components/NavAction";
 import BottleVisual from "@/components/BottleVisual";
 import MissionVideo from "@/components/MissionVideo";
@@ -58,9 +59,17 @@ const GUIDE = [
 ];
 
 export default function UsingYourSetPage() {
+  const router = useRouter();
   return (
     <main className="pt-2 pb-10">
-      <NavAction kind="back" href="/settings" />
+      {/* Reached from Settings AND from onboarding screen 2 — go back to
+          wherever the reader came from, falling back to Settings. */}
+      <NavAction
+        kind="back"
+        onClick={() =>
+          window.history.length > 1 ? router.back() : router.push("/settings")
+        }
+      />
 
       <Headline className="mt-6">USING YOUR SET</Headline>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">

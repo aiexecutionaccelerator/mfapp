@@ -70,7 +70,7 @@ export default function PersonalCodePage() {
   }
 
   return (
-    <main className="pt-2 pb-10">
+    <main className="print-page pt-2 pb-10">
       <div className="print-hide flex items-center justify-between">
         <NavAction kind="back" href="/progress" />
         <button
