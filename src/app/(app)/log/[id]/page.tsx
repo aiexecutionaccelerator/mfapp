@@ -32,7 +32,7 @@ export default function LogDetailPage({
   const { id } = use(params);
   const router = useRouter();
   const { showToast } = useToast();
-  const { missions, error } = useAppData();
+  const { missions, lessonResponses, error } = useAppData();
   const mission = missions?.find((m) => m.id === id) ?? null;
 
   const [editing, setEditing] = useState(false);
@@ -176,6 +176,27 @@ export default function LogDetailPage({
         </div>
       ) : (
         <>
+          {def &&
+            (() => {
+              // Prefer the live answer (still editable on the Mission) over
+              // the snapshot taken at declare time.
+              const answer =
+                lessonResponses?.find(
+                  (r) => r.lesson_id === def.slug && r.prompt_id === "q",
+                )?.answer ?? mission.question_answer;
+              if (!answer) return null;
+              return (
+                <div className="glass mt-4 rounded-[20px] p-5">
+                  <Eyebrow>YOUR ANSWER</Eyebrow>
+                  <p className="mt-2 text-[13px] leading-snug text-ink-2">
+                    {def.question}
+                  </p>
+                  <p className="mt-3 text-[17px] leading-relaxed whitespace-pre-wrap text-ink-0">
+                    {answer}
+                  </p>
+                </div>
+              );
+            })()}
           {mission.reflection && (
             <div className="glass mt-4 rounded-[20px] p-5">
               <Eyebrow>WHAT YOU DID</Eyebrow>

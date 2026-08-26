@@ -323,10 +323,23 @@ function MissionDetailInner({
   /* ---------- completed ---------- */
 
   if (status === "completed" && row) {
+    const answer = savedAnswer ?? row.question_answer;
     return (
       <main className="pt-2 pb-8">
         {header}
         <p className="mt-4 text-[15px] leading-relaxed text-ink-1">{def.idea}</p>
+
+        {answer && (
+          <GlassCard className="mt-6">
+            <Eyebrow tone="gold">YOUR ANSWER</Eyebrow>
+            <p className="mt-2 text-[13px] leading-snug text-ink-2">
+              {def.question}
+            </p>
+            <p className="mt-3 text-[17px] leading-relaxed whitespace-pre-wrap text-ink-0">
+              {answer}
+            </p>
+          </GlassCard>
+        )}
 
         <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
           <div className="flex items-center gap-2">
@@ -471,6 +484,21 @@ function MissionDetailInner({
             </Button>
           </div>
         )}
+
+        {/* The full answer stays reviewable (and editable) mid-Mission. */}
+        <section className="mt-8">
+          <Eyebrow tone="gold">YOUR ANSWER</Eyebrow>
+          <p className="mt-2 text-[13px] text-ink-2">
+            Private. Only you ever see this.
+          </p>
+          <div className="mt-4">
+            <QuestionField
+              slug={def.slug}
+              label={def.question}
+              saved={savedAnswer}
+            />
+          </div>
+        </section>
 
         <Sheet
           open={confirmAbandon}

@@ -39,6 +39,7 @@ export default function QuestionField({
   const [status, setStatus] = useState<"idle" | "saving" | "saved">("idle");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSaved = useRef(saved ?? "");
+  const textarea = useRef<HTMLTextAreaElement>(null);
   // Lets the failure toast retry the same save without `save` referencing itself.
   const saveRef = useRef<((next: string) => Promise<void>) | null>(null);
 
@@ -48,6 +49,15 @@ export default function QuestionField({
     },
     [],
   );
+
+  // The box grows with the answer — a man reviewing what he wrote should
+  // never be squinting through a three-line window.
+  useEffect(() => {
+    const el = textarea.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [value]);
 
   const save = useCallback(
     async (next: string) => {
@@ -93,6 +103,7 @@ export default function QuestionField({
         {label}
       </label>
       <textarea
+        ref={textarea}
         id={`question-${slug}`}
         value={value}
         rows={rows}
@@ -100,7 +111,7 @@ export default function QuestionField({
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
         onBlur={onBlur}
-        className="mt-3 min-h-28 w-full resize-none rounded-[14px] border border-[var(--line)] bg-[rgba(18,23,34,.6)] px-4 py-3 text-[17px] leading-relaxed text-ink-0 outline-none transition-colors placeholder:text-ink-2 focus:border-[var(--gold-500)]"
+        className="mt-3 min-h-28 w-full resize-none overflow-hidden rounded-[14px] border border-[var(--line)] bg-[rgba(18,23,34,.6)] px-4 py-3 text-[17px] leading-relaxed text-ink-0 outline-none transition-colors placeholder:text-ink-2 focus:border-[var(--gold-500)]"
       />
       <p className="mt-1 text-right text-[13px] text-ink-2" aria-live="polite">
         {status === "saved" ? "Saved" : status === "saving" ? "Saving…" : " "}
