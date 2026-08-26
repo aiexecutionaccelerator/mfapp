@@ -227,6 +227,22 @@ body {
   }
 }
 
+/* Recording-light pulse for an action in progress. The reduced-motion block
+   below caps it at one iteration, leaving the dot solid. */
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.live-dot {
+  animation: live-pulse 1.2s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

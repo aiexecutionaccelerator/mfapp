@@ -46,9 +46,13 @@ function StatusCard({
         : `/mission/checkin/${active.id}`;
     return (
       <GlassCard accent={active.trigger} className="mt-6">
-        <Eyebrow accent={active.trigger} tone="gold">
-          ACTION IN PROGRESS · {TRIGGERS[active.trigger].name}
-        </Eyebrow>
+        <p className="eyebrow flex items-center gap-2 text-gold-300">
+          <span
+            aria-hidden
+            className="live-dot inline-block h-2 w-2 shrink-0 rounded-full bg-[#e5484d]"
+          />
+          <span>ACTION IN PROGRESS · {TRIGGERS[active.trigger].name}</span>
+        </p>
         <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
           {active.action_text}
         </p>
