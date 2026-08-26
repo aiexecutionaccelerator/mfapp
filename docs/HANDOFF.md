@@ -16,7 +16,7 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: Beta 0.5 (`0.5.0-beta`)
+- Version: 1.0.0 (out of beta)
 
 ## Architecture facts that matter
 
