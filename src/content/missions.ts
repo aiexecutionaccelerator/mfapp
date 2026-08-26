@@ -55,7 +55,7 @@ export const MISSIONS: MissionDef[] = [
   {
     number: 1,
     slug: "m1",
-    title: "Your First Proof",
+    title: "Your First Step",
     idea: "You do not become a better man by thinking about it. You become him by acting. Choose the value you need today, use the scent, take one small action, and record your first piece of evidence.",
     recommendedTrigger: null,
     question:

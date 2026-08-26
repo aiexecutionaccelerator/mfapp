@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import BuyRow from "@/components/BuyRow";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
@@ -10,7 +11,6 @@ import ProgressRing from "@/components/ui/ProgressRing";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import { useAppData } from "@/lib/data/store";
-import { currentPromise } from "@/lib/personalCode";
 import { MISSION_COUNT, computeStats } from "@/lib/stats";
 
 function Stat({ label, value }: { label: string; value: string | number }) {
@@ -26,14 +26,14 @@ export default function ProgressPage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const { missions, lessonResponses, error, refresh } = useAppData();
+  const { missions, error, refresh } = useAppData();
 
   useEffect(() => {
     if (!error) return;
     showToast("Couldn't load your progress.", { retry: () => void refresh() });
   }, [error, refresh, showToast]);
 
-  if (!missions || !lessonResponses) {
+  if (!missions) {
     return (
       <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
@@ -43,16 +43,16 @@ export default function ProgressPage() {
 
   const stats = computeStats(missions);
   const complete = stats.missionsCompleted >= MISSION_COUNT;
-  const promise = currentPromise(lessonResponses);
 
   return (
     <main className="pt-4 pb-8">
       <Headline>YOUR PROGRESS</Headline>
 
-      {/* One number that only ever goes up: structured + free-form together. */}
+      {/* One number that only ever goes up: free-form actions + completed
+          Missions, every deed counted once. The cards below always sum to it. */}
       <div className="mt-8 flex justify-center">
         <ProgressRing
-          value={stats.totalProofs}
+          value={stats.totalDeeds}
           max={MISSION_COUNT}
           label="ACTION PROOFS"
           display="count"
@@ -72,64 +72,35 @@ export default function ProgressPage() {
             The Mission Log remains open. Keep using Honor, Courage, and
             Commitment whenever you need them.
           </p>
-          <div className="mt-5 space-y-2">
+          <div className="mt-5">
             <Button onClick={() => router.push("/home")}>
               LOG A NEW ACTION
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => router.push("/personal-code")}
-            >
-              VIEW MY PERSONAL CODE
             </Button>
           </div>
         </GlassCard>
       )}
 
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <Stat label="Honor" value={stats.proofs.honor} />
-        <Stat label="Courage" value={stats.proofs.courage} />
-        <Stat label="Commitment" value={stats.proofs.commitment} />
-        <Stat label="Total" value={stats.totalProofs} />
-        <Stat
-          label="Missions Completed"
-          value={`${stats.missionsCompleted}/${MISSION_COUNT}`}
-        />
+        <Stat label="Honor" value={stats.freeform.honor} />
+        <Stat label="Courage" value={stats.freeform.courage} />
+        <Stat label="Commitment" value={stats.freeform.commitment} />
         <Stat label="Actions In Progress" value={stats.actionsInProgress} />
+        <div className="col-span-2">
+          <Stat
+            label="Missions Completed"
+            value={`${stats.missionsCompleted}/${MISSION_COUNT}`}
+          />
+        </div>
       </div>
 
-      {/* No call-to-action until the promise exists — Progress must never
-          steer a man off his actual next Mission (he'll reach 12 in order). */}
-      <GlassCard className="mt-6">
-        <Eyebrow tone="gold">THE PROMISE I AM KEEPING</Eyebrow>
-        {promise ? (
-          <>
-            <p className="mt-3 text-[17px] leading-snug text-ink-0">{promise}</p>
-            <div className="mt-5">
-              <Button
-                variant="secondary"
-                onClick={() => router.push("/personal-code")}
-              >
-                VIEW MY PERSONAL CODE
-              </Button>
-            </div>
-          </>
-        ) : (
-          <p className="mt-3 text-[15px] text-ink-1">
-            You&apos;ll define the promise that matters most in Mission 12.
-          </p>
-        )}
-      </GlassCard>
+      <Button
+        className="btn-shine mt-6 min-h-16 text-[17px]"
+        onClick={() => router.push("/personal-code")}
+      >
+        VIEW MY PERSONAL CODE
+      </Button>
 
-      {!complete && (
-        <button
-          type="button"
-          onClick={() => router.push("/personal-code")}
-          className="mt-4 flex min-h-12 w-full items-center justify-center text-[15px] text-gold-300"
-        >
-          View my Personal Code
-        </button>
-      )}
+      <BuyRow />
     </main>
   );
 }

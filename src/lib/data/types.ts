@@ -6,7 +6,8 @@ export type Trigger = "honor" | "courage" | "commitment";
  */
 export type MissionStatus = "active" | "completed" | "ended";
 
-export type SetStatus = "ordered" | "arrived";
+/** none → MARK ORDERED → ordered ("on the way") → MARK RECEIVED → arrived. */
+export type SetStatus = "none" | "ordered" | "arrived";
 
 export interface Profile {
   id: string;

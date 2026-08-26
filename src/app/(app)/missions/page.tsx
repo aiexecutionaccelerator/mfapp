@@ -3,6 +3,7 @@
 import { Check, ChevronRight, Play } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
+import BuyRow from "@/components/BuyRow";
 import Button from "@/components/ui/Button";
 import Eyebrow, { AccentDot } from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
@@ -180,6 +181,24 @@ export default function MissionListPage() {
       </GlassCard>
 
       <div className="mt-6 space-y-3">
+        {/* Mission 0 — the guide. Read it any time; it never needs completing. */}
+        <Link href="/using-your-set" className="block">
+          <div className="glass flex items-center gap-3 rounded-[14px] px-4 py-4">
+            <span className="min-w-0 flex-1">
+              <span className="eyebrow block text-gold-300">
+                MISSION 0 · THE GUIDE
+              </span>
+              <span className="mt-1.5 block text-[17px] leading-snug text-ink-0">
+                Using Your Mission Fragrances Set
+              </span>
+              <span className="mt-1.5 block text-[13px] text-ink-2">
+                How to wear it, spray it, and care for it
+              </span>
+            </span>
+            <ChevronRight aria-hidden className="shrink-0 text-ink-2" size={20} />
+          </div>
+        </Link>
+
         {MISSIONS.map((mission) => (
           <MissionCard
             key={mission.number}
@@ -188,6 +207,8 @@ export default function MissionListPage() {
           />
         ))}
       </div>
+
+      <BuyRow />
     </main>
   );
 }

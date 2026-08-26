@@ -183,9 +183,10 @@ export default function SettingsPage() {
     await saveNotifications(true);
   }
 
-  async function toggleSetStatus() {
-    if (!profile) return;
-    const next = profile.set_status === "arrived" ? "ordered" : "arrived";
+  /** none → MARK ORDERED → ordered → MARK RECEIVED → arrived. */
+  async function advanceSetStatus() {
+    if (!profile || profile.set_status === "arrived") return;
+    const next = profile.set_status === "none" ? "ordered" : "arrived";
     try {
       await store.updateProfile({ set_status: next });
       if (next === "arrived") track("set_marked_arrived");
@@ -332,7 +333,7 @@ export default function SettingsPage() {
         </div>
       </Group>
 
-      <Group title="Mission Fragrances">
+      <Group title="Mission Fragrances Guide">
         <LinkRow
           label="How It Works"
           onClick={() => router.push("/how-it-works")}
@@ -346,18 +347,22 @@ export default function SettingsPage() {
             <p className="text-[17px] text-ink-0">My Set Status</p>
             <p className="mt-1 text-[13px] text-ink-2">
               {profile.set_status === "arrived"
-                ? "My set is here"
-                : "On the way"}
+                ? "Enjoy your Mission Fragrances set."
+                : profile.set_status === "ordered"
+                  ? "Your order is on the way."
+                  : "Ordered your set? Mark it here."}
             </p>
           </div>
-          <Button
-            variant="secondary"
-            full={false}
-            className="min-h-12 px-4 text-[13px]"
-            onClick={() => void toggleSetStatus()}
-          >
-            {profile.set_status === "arrived" ? "MARK ORDERED" : "IT ARRIVED"}
-          </Button>
+          {profile.set_status !== "arrived" && (
+            <Button
+              variant="secondary"
+              full={false}
+              className="min-h-12 px-4 text-[13px] whitespace-nowrap"
+              onClick={() => void advanceSetStatus()}
+            >
+              {profile.set_status === "none" ? "MARK ORDERED" : "MARK RECEIVED"}
+            </Button>
+          )}
         </div>
         {!profile.owns_set && (
           <LinkRow

@@ -1,8 +1,10 @@
 "use client";
 
+import { BookOpen, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import BuyRow from "@/components/BuyRow";
 import ProofCounts from "@/components/ProofCounts";
 import TriggerCard from "@/components/TriggerCard";
 import Wordmark from "@/components/Wordmark";
@@ -136,6 +138,48 @@ function StatusCard({
   );
 }
 
+/**
+ * How It Works, one tap from Start. Prominent below the status card until the
+ * man has been through it once, then greyed out and moved to the bottom —
+ * always still openable.
+ */
+function GuideCard({ done }: { done: boolean }) {
+  return (
+    <Link href="/how-it-works" className={done ? "mt-6 block" : "mt-4 block"}>
+      <div
+        className={
+          done
+            ? "glass flex items-center gap-3 rounded-[14px] px-4 py-3 opacity-60"
+            : "glass flex items-center gap-3 rounded-[14px] border-[rgba(201,166,72,.35)] px-4 py-4"
+        }
+      >
+        <BookOpen
+          aria-hidden
+          size={done ? 18 : 22}
+          className={done ? "shrink-0 text-ink-2" : "shrink-0 text-gold-300"}
+        />
+        <span className="min-w-0 flex-1">
+          <span
+            className={
+              done
+                ? "block text-[13px] text-ink-2"
+                : "eyebrow block text-gold-300"
+            }
+          >
+            {done ? "HOW IT WORKS · Review any time" : "START HERE"}
+          </span>
+          {!done && (
+            <span className="mt-1.5 block text-[17px] leading-snug text-ink-0">
+              How Mission Fragrances works
+            </span>
+          )}
+        </span>
+        <ChevronRight aria-hidden size={done ? 18 : 20} className="shrink-0 text-ink-2" />
+      </div>
+    </Link>
+  );
+}
+
 function Skeleton() {
   return (
     <div className="mt-6 space-y-3" aria-hidden>
@@ -149,7 +193,7 @@ function Skeleton() {
 
 export default function HomePage() {
   const { showToast } = useToast();
-  const { profile, missions, error, refresh } = useAppData();
+  const { profile, missions, lessonResponses, error, refresh } = useAppData();
 
   useEffect(() => {
     if (!error) return;
@@ -157,6 +201,10 @@ export default function HomePage() {
   }, [error, refresh, showToast]);
 
   const stats = computeStats(missions ?? []);
+  const guideDone =
+    lessonResponses?.some(
+      (r) => r.lesson_id === "guide" && r.prompt_id === "q" && r.answer === "done",
+    ) ?? false;
 
   return (
     <main className="pt-4">
@@ -172,6 +220,8 @@ export default function HomePage() {
       {profile && missions && (
         <StatusCard profile={profile} missions={missions} />
       )}
+
+      {missions && lessonResponses && !guideDone && <GuideCard done={false} />}
 
       <Headline className="mt-6">WHAT DO YOU NEED TODAY?</Headline>
 
@@ -192,6 +242,10 @@ export default function HomePage() {
           <div className="mt-8">
             <ProofCounts stats={stats} />
           </div>
+
+          {guideDone && <GuideCard done />}
+
+          <BuyRow />
         </>
       )}
     </main>

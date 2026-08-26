@@ -243,6 +243,37 @@ body {
   animation: live-pulse 1.2s ease-in-out infinite;
 }
 
+/* Periodic light sweep for the one button that must draw the eye. */
+@keyframes shine-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  55%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 68%
+  );
+  transform: translateX(-120%);
+  animation: shine-sweep 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

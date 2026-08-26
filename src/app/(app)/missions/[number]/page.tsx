@@ -689,7 +689,7 @@ function MissionDetailInner({
       >
         <dl className="space-y-4">
           <div>
-            <dt className="eyebrow text-gold-300">SELECT</dt>
+            <dt className="eyebrow text-gold-300">SELECT YOUR FRAGRANCE</dt>
             <dd className="mt-1 text-[17px] text-ink-0">
               {TRIGGERS[trigger].provedWith}
             </dd>
@@ -707,12 +707,12 @@ function MissionDetailInner({
           <div>
             <dt className="eyebrow text-gold-300">RECORD</dt>
             <dd className="mt-1 text-[15px] leading-snug text-ink-1">
-              Return when it is done.
+              Document the action as proof.
             </dd>
           </div>
         </dl>
         <Button loading={pending} onClick={() => void declare()}>
-          I&apos;M GOING TO DO IT
+          TAKE ACTION NOW
         </Button>
       </Sheet>
     </main>

@@ -1,27 +1,33 @@
 import { TRIGGERS, TRIGGER_ACCENTS, TRIGGER_ORDER } from "@/content/triggers";
 import type { Stats } from "@/lib/stats";
+import { MISSION_COUNT } from "@/lib/stats";
 import type { Trigger } from "@/lib/data/types";
 
-type ProofKey = Trigger | "total";
+/**
+ * The scoreboard counts every deed exactly once: the three trigger columns
+ * are free-form actions, MISSIONS is the structured x/30 — together they sum
+ * to the Action Proofs total on the Progress ring.
+ */
+type ProofKey = Trigger | "missions";
 
-const ORDER: ProofKey[] = [...TRIGGER_ORDER, "total"];
+const ORDER: ProofKey[] = [...TRIGGER_ORDER, "missions"];
 
 function accentFor(key: ProofKey): { color: string; edge: string | null } {
-  if (key === "total") return { color: "var(--gold-500)", edge: null };
+  if (key === "missions") return { color: "var(--gold-500)", edge: null };
   return TRIGGER_ACCENTS[key];
 }
 
 function labelFor(key: ProofKey): string {
-  return key === "total" ? "TOTAL" : TRIGGERS[key].name;
+  return key === "missions" ? "MISSIONS" : TRIGGERS[key].name;
 }
 
-/** One proof column: dot + numeral over its label. Reused by the Log summary. */
+/** One column: dot + numeral over its label. */
 export function ProofStat({
   proofKey,
   value,
 }: {
   proofKey: ProofKey;
-  value: number;
+  value: string | number;
 }) {
   const accent = accentFor(proofKey);
   return (
@@ -48,7 +54,7 @@ export function ProofStat({
   );
 }
 
-/** One glass row, four small columns: Honor · Courage · Commitment · Total. */
+/** One glass row: Honor · Courage · Commitment (free-form) · Missions x/30. */
 export default function ProofCounts({ stats }: { stats: Stats }) {
   return (
     <div className="glass flex items-start justify-between gap-2 rounded-[14px] px-4 py-3">
@@ -56,7 +62,11 @@ export default function ProofCounts({ stats }: { stats: Stats }) {
         <ProofStat
           key={key}
           proofKey={key}
-          value={key === "total" ? stats.totalProofs : stats.proofs[key]}
+          value={
+            key === "missions"
+              ? `${stats.missionsCompleted}/${MISSION_COUNT}`
+              : stats.freeform[key]
+          }
         />
       ))}
     </div>

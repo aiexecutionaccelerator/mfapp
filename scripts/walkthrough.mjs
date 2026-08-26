@@ -90,9 +90,9 @@ await page
 await page.getByText("Send the email or message you have been postponing.").click();
 await shot("mission-2-brief");
 await page.getByRole("button", { name: "DECLARE MY ACTION" }).click();
-await page.getByText("I'M GOING TO DO IT").waitFor();
+await page.getByText("TAKE ACTION NOW").waitFor();
 await shot("mission-2-star-sheet");
-await page.getByRole("button", { name: "I'M GOING TO DO IT" }).click();
+await page.getByRole("button", { name: "TAKE ACTION NOW" }).click();
 await page.getByText("YOUR ACTION").waitFor();
 await shot("mission-2-in-progress");
 
@@ -183,7 +183,7 @@ await page.goto(`${BASE}/settings`);
 await page.getByText("The man I am becoming").waitFor();
 await shot("settings");
 await page.getByText("How It Works").click();
-await page.getByText("THIS IS MORE THAN FRAGRANCE").waitFor();
+await page.getByText("THIS IS MORE THAN FRAGRANCE").first().waitFor();
 await shot("how-it-works");
 await page.goto(`${BASE}/using-your-set`);
 await page.getByText("USING YOUR SET").waitFor();
@@ -222,7 +222,7 @@ await page
   .fill("Walk twenty minutes, four times a week — anchored to Commitment.");
 await page.getByText("Write the next commitment.").click();
 await page.getByRole("button", { name: "DECLARE MY ACTION" }).click();
-await page.getByRole("button", { name: "I'M GOING TO DO IT" }).click();
+await page.getByRole("button", { name: "TAKE ACTION NOW" }).click();
 await page.getByText("YOUR ACTION").waitFor();
 await page.getByRole("button", { name: "I DID IT" }).click();
 await page.getByLabel("What did you do?").fill("Wrote it down and scheduled week one.");

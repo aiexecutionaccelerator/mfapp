@@ -22,7 +22,7 @@ const EMPTY_PROFILE: Profile = {
   primary_goal: null,
   identity_statement: null,
   owns_set: true,
-  set_status: "arrived",
+  set_status: "none",
   onboarding_completed: false,
   challenge_start_date: null,
   challenge_completed_at: null,

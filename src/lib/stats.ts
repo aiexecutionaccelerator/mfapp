@@ -8,29 +8,44 @@ export const MISSION_COUNT = 30;
  * is one carrying a mission_number (1–30).
  */
 export interface Stats {
+  /** Every completed entry by trigger — structured and free-form together. */
   proofs: Record<Trigger, number>;
   totalProofs: number;
+  /** Free-form actions only — the display buckets next to Missions x/30. */
+  freeform: Record<Trigger, number>;
+  freeformTotal: number;
   /** Distinct structured Missions completed — the 30/30 count. */
   missionsCompleted: number;
+  /**
+   * Every deed counted once: free-form actions + completed Missions.
+   * Honor + Courage + Commitment (free-form) + x/30 always adds up to this.
+   */
+  totalDeeds: number;
   actionsInProgress: number;
 }
 
 export function computeStats(missions: Mission[]): Stats {
   const completed = missions.filter((m) => m.status === "completed");
+  const freeform = completed.filter((m) => m.mission_number === null);
   const structured = new Set(
     completed
       .filter((m) => m.mission_number !== null)
       .map((m) => m.mission_number as number),
   );
 
+  const byTrigger = (rows: Mission[]): Record<Trigger, number> => ({
+    honor: rows.filter((m) => m.trigger === "honor").length,
+    courage: rows.filter((m) => m.trigger === "courage").length,
+    commitment: rows.filter((m) => m.trigger === "commitment").length,
+  });
+
   return {
-    proofs: {
-      honor: completed.filter((m) => m.trigger === "honor").length,
-      courage: completed.filter((m) => m.trigger === "courage").length,
-      commitment: completed.filter((m) => m.trigger === "commitment").length,
-    },
+    proofs: byTrigger(completed),
     totalProofs: completed.length,
+    freeform: byTrigger(freeform),
+    freeformTotal: freeform.length,
     missionsCompleted: structured.size,
+    totalDeeds: freeform.length + structured.size,
     actionsInProgress: missions.filter((m) => m.status === "active").length,
   };
 }
