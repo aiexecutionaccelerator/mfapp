@@ -25,8 +25,13 @@ export default function TabBar() {
   return (
     <nav className="print-hide fixed inset-x-0 bottom-0 z-30 flex justify-center">
       {/* Solid, not glass: content scrolling underneath must never show
-          through the navigation. */}
-      <div className="w-full max-w-[430px] rounded-t-[20px] border border-[var(--line)] bg-[var(--bg-1)] pb-[env(safe-area-inset-bottom)]">
+          through the navigation, and it fades out before reaching the bar. */}
+      <div className="relative w-full max-w-[430px]">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 -top-12 h-12 bg-[linear-gradient(180deg,transparent,var(--bg-0))]"
+        />
+        <div className="rounded-t-[20px] border border-[var(--line)] bg-[var(--bg-1)] pb-[env(safe-area-inset-bottom)]">
         <ul className="flex">
           {TABS.map(({ href, label, Icon }) => {
             const active = pathname === href || pathname.startsWith(`${href}/`);
@@ -51,6 +56,7 @@ export default function TabBar() {
             );
           })}
         </ul>
+        </div>
       </div>
     </nav>
   );
