@@ -183,10 +183,15 @@ export default function SettingsPage() {
     await saveNotifications(true);
   }
 
-  /** none → MARK ORDERED → ordered → MARK RECEIVED → arrived. */
+  /** none → MARK ORDERED → ordered → MARK RECEIVED → arrived → (reset). */
   async function advanceSetStatus() {
-    if (!profile || profile.set_status === "arrived") return;
-    const next = profile.set_status === "none" ? "ordered" : "arrived";
+    if (!profile) return;
+    const next =
+      profile.set_status === "none"
+        ? "ordered"
+        : profile.set_status === "ordered"
+          ? "arrived"
+          : "none";
     try {
       await store.updateProfile({ set_status: next });
       if (next === "arrived") track("set_marked_arrived");
@@ -353,16 +358,18 @@ export default function SettingsPage() {
                   : "Ordered your set? Mark it here."}
             </p>
           </div>
-          {profile.set_status !== "arrived" && (
-            <Button
-              variant="secondary"
-              full={false}
-              className="min-h-12 px-4 text-[13px] whitespace-nowrap"
-              onClick={() => void advanceSetStatus()}
-            >
-              {profile.set_status === "none" ? "MARK ORDERED" : "MARK RECEIVED"}
-            </Button>
-          )}
+          <Button
+            variant={profile.set_status === "arrived" ? "ghost" : "secondary"}
+            full={false}
+            className="min-h-12 px-4 text-[13px] whitespace-nowrap"
+            onClick={() => void advanceSetStatus()}
+          >
+            {profile.set_status === "none"
+              ? "MARK ORDERED"
+              : profile.set_status === "ordered"
+                ? "MARK RECEIVED"
+                : "Change"}
+          </Button>
         </div>
         {!profile.owns_set && (
           <LinkRow
