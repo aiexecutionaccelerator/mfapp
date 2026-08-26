@@ -17,6 +17,13 @@ const PROTECTED = [
   "/using-your-set",
 ];
 
+/**
+ * Once onboarding is complete it never un-completes in production, so the
+ * verdict is cached in a cookie keyed by user id — the per-navigation
+ * profiles query happens once per device, not once per page.
+ */
+const ONBOARDED_COOKIE = "mf-onboarded";
+
 function isProtected(pathname: string): boolean {
   return PROTECTED.some(
     (path) => pathname === path || pathname.startsWith(`${path}/`),
@@ -26,6 +33,13 @@ function isProtected(pathname: string): boolean {
 export async function updateSession(request: NextRequest) {
   // Demo mode has no server session; everything is decided on the device.
   if (isDemo()) return NextResponse.next({ request });
+
+  const { pathname } = request.nextUrl;
+
+  // Public pages (welcome, verify, legal, root) skip Supabase entirely —
+  // no auth round-trip on the routes people hit before signing in. Token
+  // refresh still happens on the very next protected navigation.
+  if (!isProtected(pathname)) return NextResponse.next({ request });
 
   let response = NextResponse.next({ request });
 
@@ -50,10 +64,6 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
-
-  if (!isProtected(pathname)) return response;
-
   if (!user) {
     const url = request.nextUrl.clone();
     url.pathname = "/welcome";
@@ -64,17 +74,27 @@ export async function updateSession(request: NextRequest) {
   // Using Your Set is reachable from onboarding screen 2 ("Learn about the
   // fragrances"), so it must not bounce back to /onboarding like other pages.
   if (pathname !== "/onboarding" && pathname !== "/using-your-set") {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("onboarding_completed")
-      .eq("id", user.id)
-      .maybeSingle();
+    const cached = request.cookies.get(ONBOARDED_COOKIE)?.value === user.id;
+    if (!cached) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("id", user.id)
+        .maybeSingle();
 
-    if (!profile?.onboarding_completed) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/onboarding";
-      url.search = "";
-      return NextResponse.redirect(url);
+      if (!profile?.onboarding_completed) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/onboarding";
+        url.search = "";
+        return NextResponse.redirect(url);
+      }
+
+      response.cookies.set(ONBOARDED_COOKIE, user.id, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+        httpOnly: true,
+        sameSite: "lax",
+      });
     }
   }
 

@@ -2,11 +2,15 @@ export default function ProgressRing({
   value,
   max,
   label = "MISSIONS COMPLETE",
+  display = "fraction",
   size = 180,
 }: {
   value: number;
+  /** Caps the ring fill; in "count" mode the number itself has no ceiling. */
   max: number;
   label?: string;
+  /** "fraction" shows value/max; "count" shows just the number. */
+  display?: "fraction" | "count";
   size?: number;
 }) {
   const stroke = 8;
@@ -19,7 +23,11 @@ export default function ProgressRing({
       className="relative"
       style={{ width: size, height: size }}
       role="img"
-      aria-label={`${value} of ${max} ${label.toLowerCase()}`}
+      aria-label={
+        display === "count"
+          ? `${value} ${label.toLowerCase()}`
+          : `${value} of ${max} ${label.toLowerCase()}`
+      }
     >
       <svg width={size} height={size} className="-rotate-90">
         <defs>
@@ -53,9 +61,9 @@ export default function ProgressRing({
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span
           className="font-display leading-none text-ink-0"
-          style={{ fontSize: (size * 52) / 180 }}
+          style={{ fontSize: (size * (display === "count" ? 64 : 52)) / 180 }}
         >
-          {value}/{max}
+          {display === "count" ? value : `${value}/${max}`}
         </span>
         <span
           className="eyebrow mt-2 text-center text-ink-1"

@@ -49,16 +49,19 @@ export default function ProgressPage() {
     <main className="pt-4 pb-8">
       <Headline>YOUR PROGRESS</Headline>
 
+      {/* One number that only ever goes up: structured + free-form together. */}
       <div className="mt-8 flex justify-center">
         <ProgressRing
-          value={stats.missionsCompleted}
+          value={stats.totalProofs}
           max={MISSION_COUNT}
-          label="MISSIONS COMPLETE"
+          label="ACTION PROOFS"
+          display="count"
         />
       </div>
 
       <p className="mt-6 text-center text-[15px] text-ink-1">
-        Every completed action is evidence of the man you are becoming.
+        Every completed action is proof that you&apos;re taking steps toward
+        the man you know you&apos;re becoming.
       </p>
 
       {complete && (
@@ -84,10 +87,10 @@ export default function ProgressPage() {
       )}
 
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <Stat label="Honor Proofs" value={stats.proofs.honor} />
-        <Stat label="Courage Proofs" value={stats.proofs.courage} />
-        <Stat label="Commitment Proofs" value={stats.proofs.commitment} />
-        <Stat label="Total Proofs" value={stats.totalProofs} />
+        <Stat label="Honor" value={stats.proofs.honor} />
+        <Stat label="Courage" value={stats.proofs.courage} />
+        <Stat label="Commitment" value={stats.proofs.commitment} />
+        <Stat label="Total" value={stats.totalProofs} />
         <Stat
           label="Missions Completed"
           value={`${stats.missionsCompleted}/${MISSION_COUNT}`}
@@ -95,32 +98,27 @@ export default function ProgressPage() {
         <Stat label="Actions In Progress" value={stats.actionsInProgress} />
       </div>
 
+      {/* No call-to-action until the promise exists — Progress must never
+          steer a man off his actual next Mission (he'll reach 12 in order). */}
       <GlassCard className="mt-6">
         <Eyebrow tone="gold">THE PROMISE I AM KEEPING</Eyebrow>
         {promise ? (
-          <p className="mt-3 text-[17px] leading-snug text-ink-0">{promise}</p>
+          <>
+            <p className="mt-3 text-[17px] leading-snug text-ink-0">{promise}</p>
+            <div className="mt-5">
+              <Button
+                variant="secondary"
+                onClick={() => router.push("/personal-code")}
+              >
+                VIEW MY PERSONAL CODE
+              </Button>
+            </div>
+          </>
         ) : (
           <p className="mt-3 text-[15px] text-ink-1">
-            Define the promise that matters most in Mission 12.
+            You&apos;ll define the promise that matters most in Mission 12.
           </p>
         )}
-        <div className="mt-5">
-          {promise ? (
-            <Button
-              variant="secondary"
-              onClick={() => router.push("/personal-code")}
-            >
-              VIEW MY PERSONAL CODE
-            </Button>
-          ) : (
-            <Button
-              variant="secondary"
-              onClick={() => router.push("/missions/12")}
-            >
-              OPEN MISSION 12
-            </Button>
-          )}
-        </div>
       </GlassCard>
 
       {!complete && (

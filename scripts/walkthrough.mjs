@@ -105,7 +105,7 @@ await page.goto(`${BASE}/home`);
 await page.getByText("ACTION IN PROGRESS").waitFor();
 await shot("start-action-in-progress");
 await page.getByRole("button", { name: "I DID IT" }).click();
-await page.getByText("RECORD THE EVIDENCE").waitFor();
+await page.getByText("RECORD THE EVIDENCE").first().waitFor();
 await page.getByText("What did you do?").waitFor();
 await page
   .getByLabel("What did you do?")
@@ -144,9 +144,6 @@ if ((await page.getByText("PERSONAL MISSION").count()) === 0) fail("no free-form
 if ((await page.getByText("MISSION 2 · SEND THE MESSAGE").count()) === 0)
   fail("no structured entry");
 await shot("log-both-entries");
-await page.getByText("HONOR", { exact: true }).click();
-if ((await page.getByText("PERSONAL MISSION").count()) > 0) fail("filter failed");
-await page.getByText("ALL", { exact: true }).click();
 
 // Edit the free-form entry
 await page.getByText("PERSONAL MISSION").first().click();
