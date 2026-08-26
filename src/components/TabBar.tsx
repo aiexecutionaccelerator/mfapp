@@ -24,7 +24,9 @@ export default function TabBar() {
 
   return (
     <nav className="print-hide fixed inset-x-0 bottom-0 z-30 flex justify-center">
-      <div className="glass w-full max-w-[430px] rounded-t-[20px] pb-[env(safe-area-inset-bottom)]">
+      {/* Solid, not glass: content scrolling underneath must never show
+          through the navigation. */}
+      <div className="w-full max-w-[430px] rounded-t-[20px] border border-[var(--line)] bg-[var(--bg-1)] pb-[env(safe-area-inset-bottom)]">
         <ul className="flex">
           {TABS.map(({ href, label, Icon }) => {
             const active = pathname === href || pathname.startsWith(`${href}/`);
