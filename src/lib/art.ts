@@ -15,6 +15,13 @@ const AVAILABLE = new Set<string>([
   "mfset.png", // open presentation box with all three bottles
 ]);
 
+/**
+ * Antonio's three-bottle composite for the Welcome hero. Welcome tries it and
+ * falls back to composing the trio from the individual cutouts if the file
+ * isn't in public/images/ yet.
+ */
+export const HERO_COMPOSITE_URL = "/images/3bottleswhite.png";
+
 /** `/images/{file}` when that file exists, otherwise null. */
 export function artUrl(file: string): string | null {
   return AVAILABLE.has(file) ? `/images/${file}` : null;

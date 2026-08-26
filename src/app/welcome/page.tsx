@@ -6,7 +6,7 @@ import BottleVisual from "@/components/BottleVisual";
 import Wordmark from "@/components/Wordmark";
 import Button from "@/components/ui/Button";
 import Field from "@/components/ui/Field";
-import { ART, artUrl } from "@/lib/art";
+import { ART, HERO_COMPOSITE_URL, artUrl } from "@/lib/art";
 import { data } from "@/lib/data";
 import { LEGAL_PRIVACY_URL, LEGAL_TERMS_URL, isDemo } from "@/lib/env";
 import { createClient } from "@/lib/supabase/client";
@@ -44,6 +44,8 @@ export default function WelcomePage() {
   const [email, setEmail] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Prefer Antonio's composite; fall back to composing the trio ourselves.
+  const [compositeMissing, setCompositeMissing] = useState(false);
 
   async function enterDemo() {
     setPending(true);
@@ -96,21 +98,37 @@ export default function WelcomePage() {
             className="pointer-events-none absolute top-1/2 left-1/2 w-[240px] -translate-x-1/2 -translate-y-[58%] opacity-[0.07]"
           />
         )}
-        {/* Upright on one ground plane: the side bottles stand a step behind
-            (their floor line sits a touch higher), Courage a step in front.
-            Each base gets a contact shadow so they read as ON the floor. */}
-        <div className="relative -mr-3 mb-2">
-          <BottleVisual trigger="honor" size={92} />
-          <GroundShadow width={78} />
-        </div>
-        <div className="relative z-10">
-          <BottleVisual trigger="courage" size={122} />
-          <GroundShadow width={106} />
-        </div>
-        <div className="relative -ml-3 mb-2">
-          <BottleVisual trigger="commitment" size={92} />
-          <GroundShadow width={78} />
-        </div>
+        {compositeMissing ? (
+          <>
+            {/* Upright on one ground plane: the side bottles stand a step
+                behind (their floor line sits a touch higher), Courage a step
+                in front. Contact shadows pin the bases to the floor. */}
+            <div className="relative -mr-3 mb-2">
+              <BottleVisual trigger="honor" size={92} />
+              <GroundShadow width={78} />
+            </div>
+            <div className="relative z-10">
+              <BottleVisual trigger="courage" size={122} />
+              <GroundShadow width={106} />
+            </div>
+            <div className="relative -ml-3 mb-2">
+              <BottleVisual trigger="commitment" size={92} />
+              <GroundShadow width={78} />
+            </div>
+          </>
+        ) : (
+          <div className="relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={HERO_COMPOSITE_URL}
+              alt=""
+              onError={() => setCompositeMissing(true)}
+              className="relative w-[320px] max-w-[85vw]"
+              style={{ filter: "drop-shadow(0 14px 22px rgba(0,0,0,.5))" }}
+            />
+            <GroundShadow width={280} />
+          </div>
+        )}
         {/* …and the light falling on the floor beneath their bases. */}
         <div
           className="pointer-events-none absolute -bottom-1 left-1/2 h-[48px] w-[330px] -translate-x-1/2"
@@ -125,13 +143,13 @@ export default function WelcomePage() {
         MORE THAN FRAGRANCE
       </p>
 
-      <h1 className="font-display mt-4 text-[56px] leading-[0.95] text-ink-0 uppercase">
+      <h1 className="font-display mt-4 text-center text-[56px] leading-[0.95] text-ink-0 uppercase">
         Turn scent
         <br />
         into action.
       </h1>
 
-      <p className="mt-5 text-[17px] leading-relaxed text-ink-1">
+      <p className="mt-5 text-center text-[17px] leading-relaxed text-ink-1">
         Three fragrances. Three values. Thirty small missions that build proof
         of the man you&apos;re becoming.
       </p>
