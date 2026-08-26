@@ -11,6 +11,22 @@ import { data } from "@/lib/data";
 import { LEGAL_PRIVACY_URL, LEGAL_TERMS_URL, isDemo } from "@/lib/env";
 import { createClient } from "@/lib/supabase/client";
 
+/** Soft contact shadow that pins a bottle's base to the floor. */
+function GroundShadow({ width }: { width: number }) {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute -bottom-[7px] left-1/2 h-[12px] -translate-x-1/2"
+      style={{
+        width,
+        background:
+          "radial-gradient(ellipse at center, rgba(0,0,0,.6) 0%, rgba(0,0,0,.25) 45%, transparent 72%)",
+        filter: "blur(2px)",
+      }}
+    />
+  );
+}
+
 function DeletedNotice() {
   const params = useSearchParams();
   if (params.get("deleted") !== "1") return null;
@@ -80,27 +96,27 @@ export default function WelcomePage() {
             className="pointer-events-none absolute top-1/2 left-1/2 w-[240px] -translate-x-1/2 -translate-y-[58%] opacity-[0.07]"
           />
         )}
-        <BottleVisual
-          trigger="honor"
-          size={92}
-          className="relative -mr-3 -rotate-1"
-        />
-        <BottleVisual
-          trigger="courage"
-          size={122}
-          className="relative z-10"
-        />
-        <BottleVisual
-          trigger="commitment"
-          size={92}
-          className="relative -ml-3 rotate-1"
-        />
+        {/* Upright on one ground plane: the side bottles stand a step behind
+            (their floor line sits a touch higher), Courage a step in front.
+            Each base gets a contact shadow so they read as ON the floor. */}
+        <div className="relative -mr-3 mb-2">
+          <BottleVisual trigger="honor" size={92} />
+          <GroundShadow width={78} />
+        </div>
+        <div className="relative z-10">
+          <BottleVisual trigger="courage" size={122} />
+          <GroundShadow width={106} />
+        </div>
+        <div className="relative -ml-3 mb-2">
+          <BottleVisual trigger="commitment" size={92} />
+          <GroundShadow width={78} />
+        </div>
         {/* …and the light falling on the floor beneath their bases. */}
         <div
-          className="pointer-events-none absolute bottom-0 left-1/2 h-[44px] w-[320px] -translate-x-1/2"
+          className="pointer-events-none absolute -bottom-1 left-1/2 h-[48px] w-[330px] -translate-x-1/2"
           style={{
             background:
-              "radial-gradient(ellipse 55% 100% at center top, rgba(212,175,55,.14) 0%, rgba(212,175,55,.04) 55%, transparent 78%)",
+              "radial-gradient(ellipse 55% 100% at center top, rgba(212,175,55,.15) 0%, rgba(212,175,55,.04) 55%, transparent 78%)",
           }}
         />
       </div>
