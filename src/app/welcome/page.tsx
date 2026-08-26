@@ -2,10 +2,10 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState, type FormEvent } from "react";
+import BottleVisual from "@/components/BottleVisual";
 import Wordmark from "@/components/Wordmark";
 import Button from "@/components/ui/Button";
 import Field from "@/components/ui/Field";
-import Headline from "@/components/ui/Headline";
 import { ART, artUrl } from "@/lib/art";
 import { data } from "@/lib/data";
 import { LEGAL_PRIVACY_URL, LEGAL_TERMS_URL, isDemo } from "@/lib/env";
@@ -24,7 +24,7 @@ function DeletedNotice() {
 export default function WelcomePage() {
   const router = useRouter();
   const demo = isDemo();
-  const hero = artUrl(ART.hero);
+  const crest = artUrl(ART.crest);
   const [email, setEmail] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,62 +61,93 @@ export default function WelcomePage() {
         <Wordmark size="lg" />
       </div>
 
-      {/* Hero lives in the empty space only — never behind readable text. */}
-      <div
-        aria-hidden
-        className="pointer-events-none relative min-h-16 flex-1 overflow-hidden"
-      >
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 space-y-1">
-          <p className="ghost-word relative text-[64px]">HONOR</p>
-          <p className="ghost-word relative text-[64px]">COURAGE</p>
-          <p className="ghost-word relative text-[64px]">COMMITMENT</p>
-        </div>
-        {hero && (
+      {/* The three Scent Triggers, Courage front and center, the crest as a
+          watermark and a warm light behind them pooling on the floor. */}
+      <div aria-hidden className="relative mt-8 flex items-end justify-center pb-6">
+        {/* Backlight behind the bottles… */}
+        <div
+          className="pointer-events-none absolute top-1/2 left-1/2 h-[240px] w-[300px] -translate-x-1/2 -translate-y-[62%]"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(212,175,55,.16) 0%, rgba(212,175,55,.05) 45%, transparent 70%)",
+          }}
+        />
+        {crest && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={hero}
+            src={crest}
             alt=""
-            className="absolute inset-0 m-auto h-[92%] max-h-[420px] w-auto object-contain"
-            style={{ filter: "drop-shadow(0 24px 40px rgba(0,0,0,.55))" }}
+            className="pointer-events-none absolute top-1/2 left-1/2 w-[240px] -translate-x-1/2 -translate-y-[58%] opacity-[0.07]"
           />
         )}
+        <BottleVisual
+          trigger="honor"
+          size={92}
+          className="relative -mr-3 -rotate-1"
+        />
+        <BottleVisual
+          trigger="courage"
+          size={122}
+          className="relative z-10"
+        />
+        <BottleVisual
+          trigger="commitment"
+          size={92}
+          className="relative -ml-3 rotate-1"
+        />
+        {/* …and the light falling on the floor beneath their bases. */}
+        <div
+          className="pointer-events-none absolute bottom-0 left-1/2 h-[44px] w-[320px] -translate-x-1/2"
+          style={{
+            background:
+              "radial-gradient(ellipse 55% 100% at center top, rgba(212,175,55,.14) 0%, rgba(212,175,55,.04) 55%, transparent 78%)",
+          }}
+        />
       </div>
 
-      <div className="pt-10">
+      <p className="eyebrow mt-8 text-center text-[13px] tracking-[0.3em] text-gold-300">
+        MORE THAN FRAGRANCE
+      </p>
+
+      <h1 className="font-display mt-4 text-[56px] leading-[0.95] text-ink-0 uppercase">
+        Turn scent
+        <br />
+        into action.
+      </h1>
+
+      <p className="mt-5 text-[17px] leading-relaxed text-ink-1">
+        Three fragrances. Three values. Thirty small missions that build proof
+        of the man you&apos;re becoming.
+      </p>
+
+      <div className="mt-8">
         <Suspense fallback={null}>
           <DeletedNotice />
         </Suspense>
 
-        <Headline>WELCOME TO YOUR MISSION</Headline>
-        <p className="mt-4 text-[17px] text-ink-1">
-          Honor. Courage. Commitment. Put them into action.
-        </p>
-
-        <div className="mt-8">
-          {demo ? (
-            <Button loading={pending} onClick={enterDemo}>
-              ENTER DEMO
+        {demo ? (
+          <Button loading={pending} onClick={enterDemo}>
+            ENTER DEMO
+          </Button>
+        ) : (
+          <form className="space-y-4" onSubmit={continueWithEmail}>
+            <Field
+              label="Email"
+              value={email}
+              onChange={setEmail}
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+            />
+            {error && (
+              <p className="text-[15px] text-[var(--danger)]">{error}</p>
+            )}
+            <Button type="submit" loading={pending} disabled={!email.trim()}>
+              CONTINUE WITH EMAIL
             </Button>
-          ) : (
-            <form className="space-y-4" onSubmit={continueWithEmail}>
-              <Field
-                label="Email"
-                value={email}
-                onChange={setEmail}
-                type="email"
-                inputMode="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-              />
-              {error && (
-                <p className="text-[15px] text-[var(--danger)]">{error}</p>
-              )}
-              <Button type="submit" loading={pending} disabled={!email.trim()}>
-                CONTINUE WITH EMAIL
-              </Button>
-            </form>
-          )}
-        </div>
+          </form>
+        )}
 
         <div className="mt-4 flex items-center justify-center text-[13px] text-ink-2">
           <a
