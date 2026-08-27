@@ -9,7 +9,7 @@ import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
-import { INTRO_VIDEOS } from "@/content/missions";
+import { INTRO_VIDEOS, TRIGGER_VIDEOS } from "@/content/missions";
 import { STAR_STEPS, TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
 import { cn } from "@/lib/utils";
 
@@ -98,6 +98,8 @@ export default function OnboardingScreens({
           <div className="mt-6 space-y-3">
             {TRIGGER_ORDER.map((trigger) => {
               const meta = TRIGGERS[trigger];
+              const name =
+                meta.name[0] + meta.name.slice(1).toLowerCase();
               return (
                 <div key={trigger} className="glass rounded-[14px] p-4">
                   <div className="flex items-center gap-4">
@@ -114,6 +116,11 @@ export default function OnboardingScreens({
                       </p>
                     </div>
                   </div>
+                  <MissionVideo
+                    youtubeId={TRIGGER_VIDEOS[trigger]}
+                    title={`Antonio explains ${name}`}
+                    label={`Watch Antonio explain ${name}`}
+                  />
                 </div>
               );
             })}
@@ -159,6 +166,7 @@ export default function OnboardingScreens({
             youtubeId={INTRO_VIDEOS.star}
             title="The S.T.A.R. demonstration"
             label="Watch the S.T.A.R. demonstration"
+            defaultOpen
           />
           <BottomActions className="mt-6">
             <Button onClick={onNext}>NEXT</Button>

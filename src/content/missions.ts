@@ -51,6 +51,14 @@ export const INTRO_VIDEOS = {
   usingYourSet: "FCZ7-xwRPWI",
 } as const;
 
+/** Antonio explaining each value — shown under the Meet Your Scent Triggers
+    cards (the same videos Missions 8–10 carry). */
+export const TRIGGER_VIDEOS: Record<Trigger, string> = {
+  honor: "a9yG3pylUKY",
+  courage: "NCeKnEezPWs",
+  commitment: "ihWgFp5H0DU",
+};
+
 export const MISSIONS: MissionDef[] = [
   {
     number: 1,

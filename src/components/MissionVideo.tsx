@@ -16,13 +16,16 @@ export default function MissionVideo({
   title,
   label = "Watch Antonio explain this",
   missionNumber,
+  defaultOpen = false,
 }: {
   youtubeId: string;
   title: string;
   label?: string;
   missionNumber?: number;
+  /** Show the poster immediately (still click-to-play, never autoplay). */
+  defaultOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [playing, setPlaying] = useState(false);
 
   return (
