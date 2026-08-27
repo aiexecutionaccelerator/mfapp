@@ -75,9 +75,9 @@ export default function OnboardingScreens({
           <Headline>THIS IS MORE THAN FRAGRANCE</Headline>
           <p className="mt-5 text-[17px] leading-relaxed text-ink-1">
             You did not buy three ordinary bottles of cologne. You bought three
-            reminders of the man you want to be. Over the next 30 Missions, you
-            will choose a value, activate it with scent, take one small action,
-            and record the evidence.
+            scent triggers to help you become the man you know yourself to be.
+            Over the next 30 Missions, you will choose a value, activate it
+            with scent, take one small action, and record the evidence.
           </p>
           <p className="font-display mt-6 text-[22px] leading-snug text-gold-gradient">
             Wear the value. Take the action. Become the man.

@@ -150,8 +150,8 @@ export default function WelcomePage() {
       </h1>
 
       <p className="mt-5 text-center text-[17px] leading-relaxed text-ink-1">
-        Three fragrances. Three values. Thirty small missions that build proof
-        of the man you&apos;re becoming.
+        Three fragrances. Three values. Daily missions that prove you&apos;re
+        becoming the man you know yourself to be.
       </p>
 
       <div className="mt-8">

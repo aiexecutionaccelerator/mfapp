@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import OnboardingScreens from "@/components/onboarding/OnboardingScreens";
 import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
@@ -10,11 +10,12 @@ import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
 import { track } from "@/lib/analytics";
-import { store } from "@/lib/data/store";
+import { store, useAppData } from "@/lib/data/store";
 import type { SetStatus } from "@/lib/data/types";
 import { cn } from "@/lib/utils";
 
 const IDENTITY_EXAMPLES = [
+  "Keeps his word, acts despite fear, and follows through.",
   "Keeps the promises he makes to himself.",
   "Speaks honestly instead of avoiding hard conversations.",
   "Shows his family how much they matter.",
@@ -24,6 +25,8 @@ const IDENTITY_EXAMPLES = [
 
 const IDENTITY_MAX = 280;
 const STEP_KEY = "mission.onboardingStep";
+const NAME_KEY = "mission.onboardingName";
+const IDENTITY_KEY = "mission.onboardingIdentity";
 
 /** Survives the side trip to Using Your Set (and an accidental refresh). */
 function readStep(): number {
@@ -41,24 +44,48 @@ function readStep(): number {
 export default function OnboardingPage() {
   const router = useRouter();
   const { showToast } = useToast();
+  const { profile } = useAppData();
 
   // -1 = profile setup; 0–3 = the four onboarding screens.
   const [step, setStepState] = useState(-1);
+  const [name, setNameState] = useState("");
+  const [identity, setIdentityState] = useState("");
+  const [pending, setPending] = useState(false);
+  const finishing = useRef(false);
 
-  // Restoring the saved step out of sessionStorage on mount is the
-  // "sync with an external system" case — same as the Declare draft.
+  // Restoring the saved step and typed drafts out of sessionStorage on mount
+  // is the "sync with an external system" case — same as the Declare draft.
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    /* eslint-disable react-hooks/set-state-in-effect */
     setStepState(readStep());
+    setNameState(window.sessionStorage.getItem(NAME_KEY) ?? "");
+    setIdentityState(window.sessionStorage.getItem(IDENTITY_KEY) ?? "");
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
+
+  // Already onboarded? This page must never show again (belt to the store's
+  // stale-read suspenders) — except while finish() itself is redirecting.
+  useEffect(() => {
+    if (profile?.onboarding_completed && !finishing.current) {
+      router.replace("/home");
+    }
+  }, [profile, router]);
 
   function setStep(next: number) {
     window.sessionStorage.setItem(STEP_KEY, String(next));
     setStepState(next);
   }
-  const [name, setName] = useState("");
-  const [identity, setIdentity] = useState("");
-  const [pending, setPending] = useState(false);
+
+  /** Every keystroke is kept — a bounce or refresh must never lose typing. */
+  function setName(next: string) {
+    window.sessionStorage.setItem(NAME_KEY, next);
+    setNameState(next);
+  }
+
+  function setIdentity(next: string) {
+    window.sessionStorage.setItem(IDENTITY_KEY, next);
+    setIdentityState(next);
+  }
 
   useEffect(() => {
     track("onboarding_started");
@@ -86,6 +113,7 @@ export default function OnboardingPage() {
   }
 
   async function finish(setStatus: SetStatus) {
+    finishing.current = true;
     setPending(true);
     try {
       await store.updateProfile({
@@ -93,10 +121,13 @@ export default function OnboardingPage() {
         onboarding_completed: true,
       });
       window.sessionStorage.removeItem(STEP_KEY);
+      window.sessionStorage.removeItem(NAME_KEY);
+      window.sessionStorage.removeItem(IDENTITY_KEY);
       track("onboarding_completed");
       track("set_status_selected", { setStatus });
       router.replace(setStatus === "arrived" ? "/missions/1" : "/missions");
     } catch {
+      finishing.current = false;
       setPending(false);
       showToast("Couldn't save that. Please try again.", {
         retry: () => void finish(setStatus),

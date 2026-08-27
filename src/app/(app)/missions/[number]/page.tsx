@@ -31,13 +31,11 @@ import {
 } from "@/lib/stats";
 import { cn, formatDate } from "@/lib/utils";
 
-type SuggestionKind = "quick" | "standard" | "bold" | "custom";
-
-const SUGGESTION_LABEL: Record<Exclude<SuggestionKind, "custom">, string> = {
+const SUGGESTION_LABEL = {
   quick: "QUICK",
   standard: "STANDARD",
   bold: "BOLD",
-};
+} as const;
 
 /**
  * The one reusable Mission Detail template — every structured Mission renders
@@ -60,7 +58,7 @@ function MissionDetailInner({
     ? getMissionDef(missionNumber)
     : undefined;
 
-  const [selected, setSelected] = useState<SuggestionKind | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [customText, setCustomText] = useState("");
   const [chosenTrigger, setChosenTrigger] = useState<Trigger | null>(null);
   const [starOpen, setStarOpen] = useState(false);
@@ -114,7 +112,20 @@ function MissionDetailInner({
   const triggerChosen =
     chosenTrigger !== null || row !== null || def.recommendedTrigger !== null;
 
-  const actions = actionsFor(def, trigger);
+  // Either a plain per-trigger list (Mission 1) or Quick/Standard/Bold.
+  const suggestionList: { id: string; label: string | null; text: string }[] =
+    def.suggestionsByTrigger
+      ? def.suggestionsByTrigger[trigger].map((text, index) => ({
+          id: `s${index + 1}`,
+          label: null,
+          text,
+        }))
+      : (["quick", "standard", "bold"] as const).map((kind) => ({
+          id: kind,
+          label: SUGGESTION_LABEL[kind],
+          text: actionsFor(def, trigger)[kind],
+        }));
+
   const savedAnswer =
     lessonResponses.find(
       (r) => r.lesson_id === def.slug && r.prompt_id === "q",
@@ -124,16 +135,14 @@ function MissionDetailInner({
   const declaredText =
     selected === "custom"
       ? trimmedCustom
-      : selected !== null
-        ? actions[selected]
-        : "";
+      : (suggestionList.find((s) => s.id === selected)?.text ?? "");
   const canDeclare = triggerChosen && declaredText.length > 0;
 
   const personalCode = def.showPersonalCode
     ? compilePersonalCode(profile, lessonResponses)
     : null;
 
-  function chooseSuggestion(kind: SuggestionKind) {
+  function chooseSuggestion(kind: string) {
     setSelected(kind);
     if (kind !== "custom") {
       setCustomText("");
@@ -619,28 +628,31 @@ function MissionDetailInner({
       <section className="mt-8" role="radiogroup" aria-label="Your action">
         <Eyebrow tone="gold">YOUR ACTION</Eyebrow>
         <div className="mt-3 space-y-3">
-          {(["quick", "standard", "bold"] as const).map((kind) => (
+          {suggestionList.map((suggestion) => (
             <button
-              key={kind}
+              key={suggestion.id}
               type="button"
               role="radio"
-              aria-checked={selected === kind}
-              onClick={() => chooseSuggestion(kind)}
+              aria-checked={selected === suggestion.id}
+              onClick={() => chooseSuggestion(suggestion.id)}
               className={cn(
                 "glass block w-full rounded-[14px] px-4 py-4 text-left transition-colors",
-                selected === kind && "border-[var(--gold-500)]",
+                selected === suggestion.id && "border-[var(--gold-500)]",
               )}
             >
-              <span className="eyebrow block text-gold-300">
-                {SUGGESTION_LABEL[kind]}
-              </span>
+              {suggestion.label && (
+                <span className="eyebrow block text-gold-300">
+                  {suggestion.label}
+                </span>
+              )}
               <span
                 className={cn(
-                  "mt-1.5 block text-[17px] leading-snug",
-                  selected === kind ? "text-ink-0" : "text-ink-1",
+                  "block text-[17px] leading-snug",
+                  suggestion.label && "mt-1.5",
+                  selected === suggestion.id ? "text-ink-0" : "text-ink-1",
                 )}
               >
-                {actions[kind]}
+                {suggestion.text}
               </span>
             </button>
           ))}

@@ -32,8 +32,13 @@ export interface MissionDef {
   exampleAnswers?: string[];
   /** Trigger-independent suggestions… */
   actions?: MissionActions;
-  /** …or per-trigger suggestions (Mission 1). */
+  /** …or per-trigger Quick/Standard/Bold… */
   actionsByTrigger?: Record<Trigger, MissionActions>;
+  /**
+   * …or a plain per-trigger list with no effort labels (Mission 1 — the
+   * first action a man ever takes should just be five good options).
+   */
+  suggestionsByTrigger?: Record<Trigger, string[]>;
   proofPrompt: string;
   proofPlaceholder?: string;
   photoEncouraged?: boolean;
@@ -67,22 +72,28 @@ export const MISSIONS: MissionDef[] = [
     title: "Your First Step",
     idea: "You do not become a better man by thinking about it. You become him by acting. Choose the value you need today, use the scent, take one small action, and record your first piece of evidence.",
     recommendedTrigger: null,
-    actionsByTrigger: {
-      honor: {
-        quick: "Thank someone who deserves it.",
-        standard: "Keep a promise you made.",
-        bold: "Admit a mistake without making an excuse.",
-      },
-      courage: {
-        quick: "Send, “Can we talk today?”",
-        standard: "Send the message you have been avoiding.",
-        bold: "Make the difficult call now.",
-      },
-      commitment: {
-        quick: "Complete five focused minutes.",
-        standard: "Complete the workout or task you planned.",
-        bold: "Finish the overdue action you keep postponing.",
-      },
+    suggestionsByTrigger: {
+      honor: [
+        "Send a quick text letting someone you love know you love them today.",
+        "Call an old mentor — even if they don't pick up, leave a message telling them how much they mean to you.",
+        "Thank someone, specifically, for something they did that mattered.",
+        "Keep one small promise you made — today, without being reminded.",
+        "Admit one small mistake to the person it affected, without an excuse.",
+      ],
+      courage: [
+        "Send the message you've been putting off — even just: “Can we talk today?”",
+        "Make the phone call you've been avoiding.",
+        "Speak up once today where you'd normally stay quiet.",
+        "Ask for something you'd normally talk yourself out of.",
+        "Introduce yourself to someone you don't know.",
+      ],
+      commitment: [
+        "Spend five minutes focused on your top priority.",
+        "Do the workout you planned — a short version still counts.",
+        "Finish one small task you've been putting off all week.",
+        "Set up tomorrow tonight: lay out your clothes, write down the first task.",
+        "Put your phone in another room for one focused hour.",
+      ],
     },
     proofPrompt: "What did you do?",
     youtubeId: null,

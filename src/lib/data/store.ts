@@ -39,6 +39,13 @@ const EMPTY: Cache = {
 
 let cache: Cache = EMPTY;
 let loadedAt = 0;
+/**
+ * Bumped on every confirmed write. A background revalidate that STARTED
+ * before the latest write is a stale snapshot — publishing it would undo the
+ * write (the "finished onboarding, got bounced back into it" bug), so loads
+ * older than the last write are dropped.
+ */
+let lastWriteAt = 0;
 let inFlight: Promise<void> | null = null;
 const listeners = new Set<() => void>();
 
@@ -64,9 +71,11 @@ function getServerSnapshot(): Cache {
 
 function load(): Promise<void> {
   if (inFlight) return inFlight;
+  const startedAt = Date.now();
   inFlight = data
     .loadAll()
     .then(({ profile, missions, lessonResponses }) => {
+      if (lastWriteAt > startedAt) return; // stale vs a newer write — drop
       loadedAt = Date.now();
       publish({ profile, missions, lessonResponses, error: null });
     })
@@ -102,10 +111,12 @@ function ensureLoaded(): void {
 /* ---------- cache patches (applied only after a write succeeds) ---------- */
 
 function putProfile(profile: Profile): void {
+  lastWriteAt = Date.now();
   publish({ ...cache, profile });
 }
 
 function putMission(mission: Mission): void {
+  lastWriteAt = Date.now();
   const current = cache.missions;
   if (!current) return;
   const next = current.some((m) => m.id === mission.id)
@@ -118,6 +129,7 @@ function putMission(mission: Mission): void {
 }
 
 function dropMission(id: string): void {
+  lastWriteAt = Date.now();
   const current = cache.missions;
   if (!current) return;
   publish({ ...cache, missions: current.filter((m) => m.id !== id) });
@@ -128,6 +140,7 @@ function putLessonResponse(
   promptId: string,
   row: LessonResponse | null,
 ): void {
+  lastWriteAt = Date.now();
   const current = cache.lessonResponses;
   if (!current) return;
   const rest = current.filter(
