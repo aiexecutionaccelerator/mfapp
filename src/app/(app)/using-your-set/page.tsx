@@ -7,6 +7,7 @@ import MissionVideo from "@/components/MissionVideo";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
 import { INTRO_VIDEOS } from "@/content/missions";
+import { STAR_STEPS } from "@/content/triggers";
 
 /**
  * Using Your Set — the technical fragrance material, optional and outside the
@@ -99,6 +100,39 @@ export default function UsingYourSetPage() {
             </div>
           </div>
         ))}
+      </section>
+
+      {/* The system itself — how a Scent Trigger becomes an action. */}
+      <section className="mt-10">
+        <h2 className="font-display text-[26px] leading-tight text-ink-0 uppercase">
+          Use S.T.A.R.
+        </h2>
+        <div className="mt-4 space-y-3">
+          {STAR_STEPS.map((step) => (
+            <div
+              key={step.letter}
+              className="glass flex items-center gap-4 rounded-[14px] p-4"
+            >
+              <span className="font-display text-gold-gradient w-8 shrink-0 text-center text-[28px] leading-none">
+                {step.letter}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-[17px] text-ink-0">{step.name}</p>
+                <p className="mt-1 text-[14px] leading-snug text-ink-1">
+                  {step.text}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-[15px] text-ink-1">
+          The fragrance is the reminder. The action is the evidence.
+        </p>
+        <MissionVideo
+          youtubeId={INTRO_VIDEOS.star}
+          title="The S.T.A.R. demonstration"
+          label="Watch the S.T.A.R. demonstration"
+        />
       </section>
 
       <section className="mt-8 space-y-5">
