@@ -332,9 +332,11 @@ function MissionDetailInner({
         {answer && (
           <GlassCard className="mt-6">
             <Eyebrow tone="gold">YOUR ANSWER</Eyebrow>
-            <p className="mt-2 text-[13px] leading-snug text-ink-2">
-              {def.question}
-            </p>
+            {def.question && (
+              <p className="mt-2 text-[13px] leading-snug text-ink-2">
+                {def.question}
+              </p>
+            )}
             <p className="mt-3 text-[17px] leading-relaxed whitespace-pre-wrap text-ink-0">
               {answer}
             </p>
@@ -486,19 +488,21 @@ function MissionDetailInner({
         )}
 
         {/* The full answer stays reviewable (and editable) mid-Mission. */}
-        <section className="mt-8">
-          <Eyebrow tone="gold">YOUR ANSWER</Eyebrow>
-          <p className="mt-2 text-[13px] text-ink-2">
-            Private. Only you ever see this.
-          </p>
-          <div className="mt-4">
-            <QuestionField
-              slug={def.slug}
-              label={def.question}
-              saved={savedAnswer}
-            />
-          </div>
-        </section>
+        {def.question && (
+          <section className="mt-8">
+            <Eyebrow tone="gold">YOUR ANSWER</Eyebrow>
+            <p className="mt-2 text-[13px] text-ink-2">
+              Private. Only you ever see this.
+            </p>
+            <div className="mt-4">
+              <QuestionField
+                slug={def.slug}
+                label={def.question}
+                saved={savedAnswer}
+              />
+            </div>
+          </section>
+        )}
 
         <Sheet
           open={confirmAbandon}
@@ -586,28 +590,30 @@ function MissionDetailInner({
         </GlassCard>
       )}
 
-      {/* One question. One answer is enough. */}
-      <section className="mt-7">
-        <Eyebrow tone="gold">QUESTION</Eyebrow>
-        <p className="mt-2 text-[13px] text-ink-2">
-          Private. Only you ever see this.
-        </p>
-        <div className="mt-4">
-          <QuestionField
-            slug={def.slug}
-            label={def.question}
-            saved={savedAnswer}
-            initial={def.prefillIdentity ? profile.identity_statement : null}
-          />
-        </div>
-        {def.exampleAnswers && (
-          <ul className="mt-2 space-y-1.5 text-[13px] leading-snug text-ink-2">
-            {def.exampleAnswers.map((example) => (
-              <li key={example}>· {example}</li>
-            ))}
-          </ul>
-        )}
-      </section>
+      {/* One question at most. One answer is enough. */}
+      {def.question && (
+        <section className="mt-7">
+          <Eyebrow tone="gold">QUESTION</Eyebrow>
+          <p className="mt-2 text-[13px] text-ink-2">
+            Private. Only you ever see this.
+          </p>
+          <div className="mt-4">
+            <QuestionField
+              slug={def.slug}
+              label={def.question}
+              saved={savedAnswer}
+              initial={def.prefillIdentity ? profile.identity_statement : null}
+            />
+          </div>
+          {def.exampleAnswers && (
+            <ul className="mt-2 space-y-1.5 text-[13px] leading-snug text-ink-2">
+              {def.exampleAnswers.map((example) => (
+                <li key={example}>· {example}</li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
 
       {/* Suggested actions. */}
       <section className="mt-8" role="radiogroup" aria-label="Your action">

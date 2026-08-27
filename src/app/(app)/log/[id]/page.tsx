@@ -188,9 +188,11 @@ export default function LogDetailPage({
               return (
                 <div className="glass mt-4 rounded-[20px] p-5">
                   <Eyebrow>YOUR ANSWER</Eyebrow>
-                  <p className="mt-2 text-[13px] leading-snug text-ink-2">
-                    {def.question}
-                  </p>
+                  {def.question && (
+                    <p className="mt-2 text-[13px] leading-snug text-ink-2">
+                      {def.question}
+                    </p>
+                  )}
                   <p className="mt-3 text-[17px] leading-relaxed whitespace-pre-wrap text-ink-0">
                     {answer}
                   </p>

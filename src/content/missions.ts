@@ -26,7 +26,8 @@ export interface MissionDef {
   idea: string;
   /** null = the user chooses the value. */
   recommendedTrigger: Trigger | null;
-  question: string;
+  /** Omitted when the Mission needs no written answer (Mission 1). */
+  question?: string;
   /** Optional tap-to-consider examples under the question. */
   exampleAnswers?: string[];
   /** Trigger-independent suggestions… */
@@ -66,8 +67,6 @@ export const MISSIONS: MissionDef[] = [
     title: "Your First Step",
     idea: "You do not become a better man by thinking about it. You become him by acting. Choose the value you need today, use the scent, take one small action, and record your first piece of evidence.",
     recommendedTrigger: null,
-    question:
-      "Which man do you most need to be today—honorable, courageous, or committed?",
     actionsByTrigger: {
       honor: {
         quick: "Thank someone who deserves it.",
