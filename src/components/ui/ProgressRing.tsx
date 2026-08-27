@@ -46,6 +46,8 @@ export default function ProgressRing({
           stroke="var(--line)"
           strokeWidth={stroke}
         />
+        {/* Flat caps: rounded ends add ~half a stroke-width of arc at each
+            end, which visually doubles a small percentage. */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -53,7 +55,7 @@ export default function ProgressRing({
           fill="none"
           stroke="url(#ring-gold)"
           strokeWidth={stroke}
-          strokeLinecap="round"
+          strokeLinecap="butt"
           strokeDasharray={circumference}
           strokeDashoffset={circumference * (1 - progress)}
         />
