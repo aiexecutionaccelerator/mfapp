@@ -106,11 +106,10 @@ function MissionDetailInner({
         ? "completed"
         : "in_progress";
 
+  // The pills always reflect the trigger driving the suggestions below —
+  // Honor is the visible default on "you choose" Missions.
   const trigger: Trigger =
     chosenTrigger ?? row?.trigger ?? def.recommendedTrigger ?? "honor";
-  // "User chooses" Missions need an explicit choice before declaring.
-  const triggerChosen =
-    chosenTrigger !== null || row !== null || def.recommendedTrigger !== null;
 
   // Either a plain per-trigger list (Mission 1) or Quick/Standard/Bold.
   const suggestionList: { id: string; label: string | null; text: string }[] =
@@ -136,7 +135,7 @@ function MissionDetailInner({
     selected === "custom"
       ? trimmedCustom
       : (suggestionList.find((s) => s.id === selected)?.text ?? "");
-  const canDeclare = triggerChosen && declaredText.length > 0;
+  const canDeclare = declaredText.length > 0;
 
   const personalCode = def.showPersonalCode
     ? compilePersonalCode(profile, lessonResponses)
@@ -558,11 +557,11 @@ function MissionDetailInner({
             key={value}
             type="button"
             role="radio"
-            aria-checked={triggerChosen && trigger === value}
+            aria-checked={trigger === value}
             onClick={() => setChosenTrigger(value)}
             className={cn(
               "glass flex min-h-12 flex-1 items-center justify-center gap-2 rounded-[14px] px-2 text-[13px] tracking-[0.04em] uppercase",
-              triggerChosen && trigger === value
+              trigger === value
                 ? "border-[var(--gold-500)] text-ink-0"
                 : "text-ink-2",
             )}
