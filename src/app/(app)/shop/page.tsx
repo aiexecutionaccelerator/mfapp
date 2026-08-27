@@ -49,12 +49,7 @@ export default function ShopPage() {
 
       <Hero />
 
-      <div className="mt-6">
-        <p className="font-display text-[64px] leading-none text-gold-gradient">
-          {PRODUCT.price}
-        </p>
-        <p className="mt-1 text-[15px] text-ink-1">{PRODUCT.edition}</p>
-      </div>
+      <p className="mt-6 text-[15px] text-ink-1">{PRODUCT.edition}</p>
 
       <ul className="mt-6 space-y-3">
         {PRODUCT.included.map((item) => (
