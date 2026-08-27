@@ -38,38 +38,60 @@ function StatusCard({
   const router = useRouter();
   const { showToast } = useToast();
 
-  const active = missions.find((m) => m.status === "active") ?? null;
+  const actives = missions.filter((m) => m.status === "active");
 
-  // State C — an action is in progress (structured or free-form).
-  if (active) {
-    const doneHref =
-      active.mission_number !== null
-        ? `/missions/${active.mission_number}?done=1`
-        : `/mission/checkin/${active.id}`;
-    return (
-      <GlassCard accent={active.trigger} className="mt-6">
-        <p className="eyebrow flex items-center gap-2 text-gold-300">
-          <span
-            aria-hidden
-            className="live-dot inline-block h-2 w-2 shrink-0 rounded-full bg-[#e5484d]"
-          />
-          <span>ACTION IN PROGRESS · {TRIGGERS[active.trigger].name}</span>
-        </p>
-        <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
-          {active.action_text}
-        </p>
-        <div className="mt-5 space-y-2">
-          <Button onClick={() => router.push(doneHref)}>I DID IT</Button>
-          {active.mission_number === null && (
-            <Button
-              variant="ghost"
-              onClick={() => router.push(`/mission/active/${active.id}`)}
-            >
-              Open Mission
-            </Button>
-          )}
+  // State C — actions in progress (structured and free-form alike). One card
+  // each; with several, the row swipes and the next card peeks in from the
+  // edge so it's discoverable.
+  if (actives.length > 0) {
+    const single = actives.length === 1;
+    const cards = actives.map((active) => {
+      const doneHref =
+        active.mission_number !== null
+          ? `/missions/${active.mission_number}?done=1`
+          : `/mission/checkin/${active.id}`;
+      return (
+        <div
+          key={active.id}
+          className={single ? "w-full" : "w-[85%] shrink-0 snap-start"}
+        >
+          <GlassCard accent={active.trigger} className="h-full">
+            <p className="eyebrow flex items-center gap-2 text-gold-300">
+              <span
+                aria-hidden
+                className="live-dot inline-block h-2 w-2 shrink-0 rounded-full bg-[#e5484d]"
+              />
+              <span>
+                {active.mission_number !== null
+                  ? `MISSION ${active.mission_number} IN PROGRESS`
+                  : "ACTION IN PROGRESS"}{" "}
+                · {TRIGGERS[active.trigger].name}
+              </span>
+            </p>
+            <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
+              {active.action_text}
+            </p>
+            <div className="mt-5 space-y-2">
+              <Button onClick={() => router.push(doneHref)}>I DID IT</Button>
+              {active.mission_number === null && (
+                <Button
+                  variant="ghost"
+                  onClick={() => router.push(`/mission/active/${active.id}`)}
+                >
+                  Open Mission
+                </Button>
+              )}
+            </div>
+          </GlassCard>
         </div>
-      </GlassCard>
+      );
+    });
+
+    if (single) return <div className="mt-6">{cards}</div>;
+    return (
+      <div className="-mx-5 mt-6 snap-x snap-mandatory overflow-x-auto px-5">
+        <div className="flex gap-3 pr-5">{cards}</div>
+      </div>
     );
   }
 
