@@ -3,7 +3,7 @@ export const PRODUCT = {
   headline: "THE COMPLETE SET",
   edition: "Black Edition",
   /** The live product page. The CTA opens it in a new tab. */
-  url: "https://www.missionfragrances.com/products/mission-fragrances-set",
+  url: "https://www.missionfragrances.com/products/mf-special",
   included: [
     "Honor Eau de Parfum · 50ml",
     "Courage Eau de Parfum · 50ml",
