@@ -50,12 +50,12 @@ export default function ProgressPage() {
 
       {/* One number that only ever goes up: free-form actions + completed
           Missions, every deed counted once. The cards below always sum to it.
-          The ring is relative — done deeds over (free-form done + the 30
-          Missions), so it closes exactly when Mission 30 is logged. */}
+          The arc is on a fixed scale of 30 — each deed advances it 1/30th,
+          full circle at thirty proofs. */}
       <div className="mt-8 flex justify-center">
         <ProgressRing
           value={stats.totalDeeds}
-          max={stats.freeformTotal + MISSION_COUNT}
+          max={MISSION_COUNT}
           label="ACTION PROOFS"
           display="count"
         />
