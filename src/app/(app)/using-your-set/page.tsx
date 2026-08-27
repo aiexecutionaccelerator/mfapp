@@ -38,7 +38,7 @@ const SCENTS = [
 const GUIDE = [
   {
     title: "How much to apply",
-    body: "Spray into the cap, breathe it in, then apply. Two or three sprays on the chest is plenty; add the wrists if you want it to last the day.",
+    body: "Two or three sprays on the chest is plenty; add the wrists if you want it to last the day.",
   },
   {
     title: "You'll stop smelling it — others won't",
