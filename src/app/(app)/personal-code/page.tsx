@@ -120,6 +120,7 @@ export default function PersonalCodePage() {
               </div>
             ) : (
               <button
+                key={line.value ?? "empty"}
                 type="button"
                 onClick={() => {
                   setDraft(line.value ?? "");

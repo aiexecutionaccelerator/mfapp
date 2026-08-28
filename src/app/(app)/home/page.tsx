@@ -55,7 +55,13 @@ function StatusCard({
           key={active.id}
           className={single ? "w-full" : "w-[85%] shrink-0 snap-start"}
         >
-          <GlassCard accent={active.trigger} className="h-full">
+          {/* Keyed content (id + text): iOS Safari can splice stale lines
+              when text swaps inside a backdrop-filtered card. */}
+          <GlassCard
+            key={`${active.id}-${active.action_text}`}
+            accent={active.trigger}
+            className="h-full"
+          >
             <p className="eyebrow flex items-center gap-2 text-gold-300">
               <span
                 aria-hidden
@@ -98,7 +104,7 @@ function StatusCard({
   // State A — the set is still on the way.
   if (profile.set_status === "ordered") {
     return (
-      <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
+      <GlassCard key="state-a" className="mt-6 border-[rgba(201,166,72,.35)]">
         <Eyebrow tone="gold">YOUR SET IS ON THE WAY</Eyebrow>
         <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
           Explore Your 30-Day Mission
@@ -128,7 +134,7 @@ function StatusCard({
   // State D — all thirty Missions are complete.
   if (next === null) {
     return (
-      <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
+      <GlassCard key="state-d" className="mt-6 border-[rgba(201,166,72,.35)]">
         <Eyebrow tone="gold">30-DAY MISSION COMPLETE</Eyebrow>
         <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
           Keep Building the Evidence
@@ -147,7 +153,7 @@ function StatusCard({
   if (!def) return null;
   return (
     <Link href={`/missions/${def.number}`} className="mt-6 block">
-      <GlassCard className="border-[rgba(201,166,72,.35)]">
+      <GlassCard key={`state-b-${def.number}`} className="border-[rgba(201,166,72,.35)]">
         <Eyebrow tone="gold">NEXT MISSION · MISSION {def.number}</Eyebrow>
         <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
           {def.title}

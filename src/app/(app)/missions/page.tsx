@@ -155,7 +155,12 @@ export default function MissionListPage() {
         </GlassCard>
       )}
 
-      <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
+      {/* Keyed by target so the Continue card remounts as progress moves —
+          never an in-place text swap inside a glass card (iOS Safari). */}
+      <GlassCard
+        key={continueMission?.number ?? "complete"}
+        className="mt-6 border-[rgba(201,166,72,.35)]"
+      >
         {continueMission ? (
           <>
             <Eyebrow tone="gold">CONTINUE</Eyebrow>

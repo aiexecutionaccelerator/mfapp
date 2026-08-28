@@ -446,7 +446,7 @@ function MissionDetailInner({
       <main className="pt-2 pb-8">
         {header}
 
-        <GlassCard accent={row.trigger} className="mt-6">
+        <GlassCard key={row.action_text} accent={row.trigger} className="mt-6">
           <Eyebrow accent={row.trigger} tone="gold">
             YOUR ACTION · {TRIGGERS[row.trigger].name}
           </Eyebrow>

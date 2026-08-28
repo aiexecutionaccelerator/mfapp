@@ -347,7 +347,12 @@ export default function SettingsPage() {
           label="Using Your Set"
           onClick={() => router.push("/using-your-set")}
         />
-        <div className="flex items-center justify-between gap-4">
+        {/* Keyed by status: the line must remount, not swap in place, or iOS
+            Safari can splice old and new text inside the glass card. */}
+        <div
+          key={profile.set_status}
+          className="flex items-center justify-between gap-4"
+        >
           <div>
             <p className="text-[17px] text-ink-0">My Set Status</p>
             <p className="mt-1 text-[13px] text-ink-2">
