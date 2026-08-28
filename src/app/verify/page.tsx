@@ -69,7 +69,7 @@ function VerifyInner() {
       options: { shouldCreateUser: true },
     });
     if (otpError) {
-      setError("That code didn't work. Check it and try again, or resend.");
+      setError("Couldn't resend the code. Wait a moment and try again.");
     }
   }
 

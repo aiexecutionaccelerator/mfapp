@@ -515,7 +515,7 @@ function MissionDetailInner({
         <Sheet
           open={confirmAbandon}
           title="RESET THIS MISSION?"
-          note="Your declared action will be removed and the Mission goes back to Not Started. Nothing you've logged elsewhere changes."
+          note="Your declared action will be removed and the Mission will go back to Not Started. Nothing you've logged elsewhere changes."
           onClose={() => setConfirmAbandon(false)}
         >
           <Button variant="danger" loading={pending} onClick={() => void abandon()}>

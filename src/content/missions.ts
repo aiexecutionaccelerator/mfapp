@@ -102,11 +102,11 @@ export const MISSIONS: MissionDef[] = [
     number: 2,
     slug: "m2",
     title: "Send the Message",
-    idea: "Every time you avoid a difficult conversation, you teach yourself that discomfort makes your decisions. Courage begins when you take the first honest step—not when fear disappears.",
+    idea: "Every time you avoid a difficult conversation, you teach yourself that discomfort makes your decisions. Courage begins when you take the first honest step — not when fear disappears.",
     recommendedTrigger: "courage",
     question: "What conversation, email, or message have you been avoiding?",
     actions: {
-      quick: "Send, “Can we talk today?”",
+      quick: "Send “Can we talk today?”",
       standard: "Send the email or message you have been postponing.",
       bold: "Call the person now.",
     },
@@ -121,7 +121,7 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "commitment",
     question: "What is one small promise you can keep today?",
     actions: {
-      quick: "Complete five minutes of the task.",
+      quick: "Spend five minutes on it.",
       standard: "Do the workout, meal, call, or work block you planned.",
       bold: "Finish one overdue commitment completely.",
     },
@@ -251,7 +251,7 @@ export const MISSIONS: MissionDef[] = [
       "Doing what matters even when I do not feel like doing it.",
     ],
     actions: {
-      quick: "Complete five minutes.",
+      quick: "Spend five focused minutes on what matters most today.",
       standard: "Finish today’s planned action.",
       bold: "Return to something important you abandoned.",
     },
@@ -445,7 +445,7 @@ export const MISSIONS: MissionDef[] = [
     question:
       "What is the smallest version of an important action you can complete today?",
     actions: {
-      quick: "Do two minutes.",
+      quick: "Do two minutes of it.",
       standard: "Complete one clear portion.",
       bold: "Continue after starting and finish the entire task.",
     },
@@ -487,7 +487,7 @@ export const MISSIONS: MissionDef[] = [
     number: 25,
     slug: "m25",
     title: "Find the 20% That Matters",
-    idea: "A small number of actions create most meaningful results. Identify the work, habit, relationship, or decision that deserves disproportionate attention.",
+    idea: "A small number of actions creates most of the results that matter. Identify the work, habit, relationship, or decision that deserves disproportionate attention.",
     recommendedTrigger: "commitment",
     question:
       "What small set of actions creates the greatest result in your life right now?",
@@ -537,7 +537,7 @@ export const MISSIONS: MissionDef[] = [
     number: 28,
     slug: "m28",
     title: "Review the Evidence",
-    idea: "Your Mission Log now contains evidence—not wishes or intentions. Review what you have done and notice which actions most changed the way you see yourself.",
+    idea: "Your Mission Log now contains evidence — not wishes or intentions. Review what you have done and notice which actions most changed the way you see yourself.",
     recommendedTrigger: null,
     question:
       "Which completed action gives you the strongest evidence of the man you are becoming?",

@@ -27,13 +27,14 @@ export default function PrivacyPage() {
             give us.
           </li>
           <li>
-            <strong className="text-ink-0">Goal:</strong> the broad goal you
-            choose during setup (for example &ldquo;Confidence&rdquo;).
+            <strong className="text-ink-0">Identity statement:</strong> the
+            sentence you write during setup about the man you are becoming.
           </li>
           <li>
             <strong className="text-ink-0">Missions:</strong> the trigger you
             select (Honor, Courage, or Commitment), the action you declare, its
-            status, timestamps, and any optional reflection you choose to write.
+            status, timestamps, the answers you write to Mission questions, the
+            proof you record, and any optional photo you choose to attach.
           </li>
           <li>
             <strong className="text-ink-0">Preferences:</strong> your reminder
@@ -66,9 +67,9 @@ export default function PrivacyPage() {
           <li>To operate, secure, debug, and improve the App.</li>
         </ul>
         <p>
-          Your declared actions and reflections are personal. We do not display
-          them publicly, sell them, use them for advertising, or send their
-          contents to analytics tools.
+          Your declared actions, written answers, proofs, and photos are
+          personal. We do not display them publicly, sell them, use them for
+          advertising, or send their contents to analytics tools.
         </p>
       </Section>
 

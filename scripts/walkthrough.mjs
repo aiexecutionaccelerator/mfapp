@@ -100,9 +100,9 @@ await shot("mission-2-in-progress");
 await page.reload();
 await page.getByText("YOUR ACTION").waitFor();
 
-// Start shows ACTION IN PROGRESS → I DID IT → proof form
+// Start shows MISSION 2 IN PROGRESS → I DID IT → proof form
 await page.goto(`${BASE}/home`);
-await page.getByText("ACTION IN PROGRESS").waitFor();
+await page.getByText("MISSION 2 IN PROGRESS").waitFor();
 await shot("start-action-in-progress");
 await page.getByRole("button", { name: "I DID IT" }).click();
 await page.getByText("RECORD THE EVIDENCE").first().waitFor();

@@ -62,7 +62,7 @@ function MissionCard({
             {status === "completed" && (
               <span className="text-[var(--success)]">COMPLETE</span>
             )}
-            {status === "not_started" && <span>Not started</span>}
+            {status === "not_started" && <span>NOT STARTED</span>}
             {mission.youtubeId && (
               <span className="flex items-center gap-1">
                 <Play size={12} aria-hidden />
