@@ -627,9 +627,12 @@ function MissionDetailInner({
       <section className="mt-8" role="radiogroup" aria-label="Your action">
         <Eyebrow tone="gold">YOUR ACTION</Eyebrow>
         <div className="mt-3 space-y-3">
+          {/* Keyed by trigger so switching values remounts the cards — iOS
+              Safari partially repaints backdrop-filtered elements when their
+              text is swapped in place, splicing old and new lines together. */}
           {suggestionList.map((suggestion) => (
             <button
-              key={suggestion.id}
+              key={`${trigger}-${suggestion.id}`}
               type="button"
               role="radio"
               aria-checked={selected === suggestion.id}
