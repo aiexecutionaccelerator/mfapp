@@ -50,7 +50,7 @@ function StatusCard({
       const doneHref =
         active.mission_number !== null
           ? `/missions/${active.mission_number}?done=1`
-          : `/mission/checkin/${active.id}`;
+          : `/action/checkin/${active.id}`;
       return (
         <div
           key={active.id}
@@ -83,7 +83,7 @@ function StatusCard({
               {active.mission_number === null && (
                 <Button
                   variant="ghost"
-                  onClick={() => router.push(`/mission/active/${active.id}`)}
+                  onClick={() => router.push(`/action/active/${active.id}`)}
                 >
                   Open Action
                 </Button>
@@ -275,7 +275,7 @@ export default function HomePage() {
                 <TriggerCard
                   key={trigger}
                   trigger={trigger}
-                  href={`/mission/declare?trigger=${trigger}`}
+                  href={`/action/declare?trigger=${trigger}`}
                 />
               ))}
             </div>

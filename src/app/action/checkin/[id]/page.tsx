@@ -48,7 +48,7 @@ export default function CheckinPage({
       return;
     }
     if (found.status === "completed") {
-      router.replace(`/mission/complete/${found.id}`);
+      router.replace(`/action/complete/${found.id}`);
     }
   }, [error, missions, found, router]);
 
@@ -68,7 +68,7 @@ export default function CheckinPage({
       });
       if (photo) track("proof_photo_added", { missionNumber: null });
       clearReminderFor(completed.id);
-      router.replace(`/mission/complete/${completed.id}`);
+      router.replace(`/action/complete/${completed.id}`);
     } catch {
       submitting.current = false;
       setPending(false);
@@ -126,7 +126,7 @@ export default function CheckinPage({
 
       <BottomActions className="pt-8">
         {view === "not-yet" ? (
-          <Button onClick={() => router.push(`/mission/active/${mission.id}`)}>
+          <Button onClick={() => router.push(`/action/active/${mission.id}`)}>
             TRY AGAIN
           </Button>
         ) : view === "yes" ? (

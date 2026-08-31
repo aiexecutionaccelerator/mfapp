@@ -22,7 +22,7 @@ export default function ReminderExplainer({
     <>
       <p className="text-[15px] text-ink-1">
         We&apos;ll send one notification at the time you choose: &quot;Your
-        Mission is active. Did you do it?&quot; Nothing else — no marketing, no
+        action is waiting. Did you do it?&quot; Nothing else — no marketing, no
         streaks.
       </p>
       <Button loading={loading} onClick={onAllow}>

@@ -238,7 +238,7 @@ export default function LogDetailPage({
                   router.push(
                     mission.mission_number !== null
                       ? `/missions/${mission.mission_number}`
-                      : `/mission/active/${mission.id}`,
+                      : `/action/active/${mission.id}`,
                   )
                 }
               >

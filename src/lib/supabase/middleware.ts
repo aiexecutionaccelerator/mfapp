@@ -10,7 +10,7 @@ const PROTECTED = [
   "/progress",
   "/settings",
   "/shop",
-  "/mission",
+  "/action",
   "/onboarding",
   "/personal-code",
   "/how-it-works",

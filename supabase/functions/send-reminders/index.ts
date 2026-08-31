@@ -15,7 +15,7 @@ import { createClient } from "npm:@supabase/supabase-js@2.47.10";
 
 const BATCH_SIZE = 200;
 const TITLE = "Mission Fragrances";
-const BODY = "Your Mission is active. Did you do it?";
+const BODY = "Your action is waiting. Did you do it?";
 const DEFAULT_SUBJECT = "mailto:antonio@missionfragrances.com";
 
 interface ReminderRow {
@@ -146,7 +146,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
     const payload = JSON.stringify({
       title: TITLE,
       body: BODY,
-      url: `/mission/checkin/${reminder.mission_id}`,
+      url: `/action/checkin/${reminder.mission_id}`,
     });
 
     for (const subscription of subscriptions) {

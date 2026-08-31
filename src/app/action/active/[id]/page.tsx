@@ -19,7 +19,7 @@ import { store, useAppData } from "@/lib/data/store";
 import { getPermission, subscribeToPush, usePushSupport } from "@/lib/push";
 import { formatTime, relativeTime, writeReminder } from "@/lib/utils";
 
-const IN_APP_TOAST = "We'll flag this Mission when you're back.";
+const IN_APP_TOAST = "We'll flag this action when you're back.";
 
 const IOS_STEPS = [
   "1. Tap the Share button in Safari.",
@@ -82,7 +82,7 @@ export default function ActiveMissionPage({
       return;
     }
     if (found.status === "completed") {
-      router.replace(`/mission/complete/${found.id}`);
+      router.replace(`/action/complete/${found.id}`);
     }
   }, [error, missions, found, router]);
 
@@ -140,7 +140,7 @@ export default function ActiveMissionPage({
     }
     if (result === "denied") {
       showToast(
-        "Notifications are off for this site. We'll flag the Mission in-app instead.",
+        "Notifications are off for this site. We'll flag it in-app instead.",
       );
       return;
     }
@@ -181,7 +181,7 @@ export default function ActiveMissionPage({
       </div>
 
       <BottomActions className="pt-10">
-        <Button onClick={() => router.push(`/mission/checkin/${mission.id}`)}>
+        <Button onClick={() => router.push(`/action/checkin/${mission.id}`)}>
           CHECK IN NOW
         </Button>
         <Button

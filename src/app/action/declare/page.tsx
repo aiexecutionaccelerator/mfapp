@@ -77,7 +77,7 @@ function DeclareInner() {
     }
 
     writeDraft({ trigger, action_text, action_category });
-    router.push("/mission/trigger");
+    router.push("/action/trigger");
   }
 
   return (

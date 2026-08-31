@@ -49,7 +49,7 @@ function TriggerScreen({ missions }: { missions: Mission[] }) {
 
   const meta = TRIGGERS[draft.trigger];
   const tone = TRIGGER_ACCENTS[draft.trigger];
-  const backHref = `/mission/declare?trigger=${draft.trigger}`;
+  const backHref = `/action/declare?trigger=${draft.trigger}`;
 
   async function start() {
     if (starting.current || !draft) return;
@@ -63,12 +63,12 @@ function TriggerScreen({ missions }: { missions: Mission[] }) {
       });
       track("freeform_mission_started", { selectedTrigger: draft.trigger });
       clearDraft();
-      router.replace(`/mission/active/${mission.id}`);
+      router.replace(`/action/active/${mission.id}`);
     } catch {
       starting.current = false;
       setPending(false);
       showToast(
-        "Couldn't start your Mission. Check your connection and try again.",
+        "Couldn't start your action. Check your connection and try again.",
         { retry: () => void start() },
       );
     }

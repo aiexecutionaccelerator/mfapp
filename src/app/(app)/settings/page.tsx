@@ -172,7 +172,7 @@ export default function SettingsPage() {
     setPushOn(result === "granted");
     if (result === "denied") {
       showToast(
-        "Notifications are off for this site. We'll flag the Mission in-app instead.",
+        "Notifications are off for this site. We'll flag it in-app instead.",
       );
     }
     await saveNotifications(true);
@@ -448,7 +448,7 @@ export default function SettingsPage() {
       <Sheet
         open={confirmDelete}
         title="DELETE YOUR ACCOUNT?"
-        note="This permanently deletes your profile and every Mission you've logged. This can't be undone."
+        note="This permanently deletes your profile and every proof you've logged. This can't be undone."
         onClose={() => setConfirmDelete(false)}
       >
         <Button variant="danger" loading={deleting} onClick={deleteAccount}>
