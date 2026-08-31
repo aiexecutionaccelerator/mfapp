@@ -4,6 +4,7 @@ import { Check, ChevronRight, Play } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 import BuyRow from "@/components/BuyRow";
+import HelpSheet from "@/components/HelpSheet";
 import Button from "@/components/ui/Button";
 import Eyebrow, { AccentDot } from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
@@ -124,10 +125,13 @@ export default function MissionListPage() {
 
   return (
     <main className="pt-4">
-      <Headline>YOUR 30-DAY MISSION</Headline>
+      <div className="flex items-start justify-between gap-2">
+        <Headline>YOUR 30-DAY MISSION</Headline>
+        <HelpSheet />
+      </div>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        Thirty short prompts. Thirty real-world actions. Move in order or choose
-        what you need today.
+        Thirty numbered Missions. Move in order or open whichever you need
+        today — for a quick one-off, take an Action from Start instead.
       </p>
       <p className="mt-3 text-[13px] text-ink-2">
         {stats.missionsCompleted} of {MISSION_COUNT} Missions completed ·{" "}

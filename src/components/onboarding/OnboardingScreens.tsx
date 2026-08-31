@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 import BottleVisual from "@/components/BottleVisual";
 import MissionVideo from "@/components/MissionVideo";
 import NavAction from "@/components/NavAction";
@@ -125,13 +123,6 @@ export default function OnboardingScreens({
               );
             })}
           </div>
-          <Link
-            href="/using-your-set"
-            className="mt-4 flex min-h-12 items-center gap-2 text-[15px] text-gold-300"
-          >
-            Learn about the fragrances
-            <ArrowRight aria-hidden size={16} />
-          </Link>
           <BottomActions className="mt-6">
             <Button onClick={onNext}>NEXT</Button>
           </BottomActions>

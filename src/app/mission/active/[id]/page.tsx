@@ -169,7 +169,7 @@ export default function ActiveMissionPage({
         <Eyebrow accent={mission.trigger}>
           {TRIGGERS[mission.trigger].name}
         </Eyebrow>
-        <Headline className="mt-3">MISSION ACTIVE</Headline>
+        <Headline className="mt-3">ACTION IN PROGRESS</Headline>
         <p className="font-display mt-6 text-[28px] leading-tight text-ink-0">
           {mission.action_text}
         </p>

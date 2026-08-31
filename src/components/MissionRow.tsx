@@ -44,7 +44,7 @@ export default function MissionRow({ mission }: { mission: Mission }) {
       </div>
 
       <p className="eyebrow mt-3 text-gold-300">
-        {def ? `MISSION ${def.number} · ${def.title.toUpperCase()}` : "PERSONAL MISSION"}
+        {def ? `MISSION ${def.number} · ${def.title.toUpperCase()}` : "PERSONAL ACTION"}
       </p>
       <p className="mt-1.5 line-clamp-2 text-[17px] text-ink-0">
         {mission.action_text}

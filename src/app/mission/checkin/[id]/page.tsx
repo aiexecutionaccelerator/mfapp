@@ -91,7 +91,7 @@ export default function CheckinPage({
 
         {view === "not-yet" ? (
           <h1 className="mt-4 text-[22px] leading-snug text-ink-0">
-            That&apos;s okay. The Mission isn&apos;t over.
+            That&apos;s okay. The action isn&apos;t done yet.
           </h1>
         ) : view === "yes" ? (
           <>

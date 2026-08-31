@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import BuyRow from "@/components/BuyRow";
+import HelpSheet from "@/components/HelpSheet";
 import ProofCounts from "@/components/ProofCounts";
 import TriggerCard from "@/components/TriggerCard";
 import Wordmark from "@/components/Wordmark";
@@ -84,7 +85,7 @@ function StatusCard({
                   variant="ghost"
                   onClick={() => router.push(`/mission/active/${active.id}`)}
                 >
-                  Open Mission
+                  Open Action
                 </Button>
               )}
             </div>
@@ -93,9 +94,9 @@ function StatusCard({
       );
     });
 
-    if (single) return <div className="mt-6">{cards}</div>;
+    if (single) return <div className="mt-4">{cards}</div>;
     return (
-      <div className="-mx-5 mt-6 snap-x snap-mandatory overflow-x-auto px-5">
+      <div className="-mx-5 mt-4 snap-x snap-mandatory overflow-x-auto px-5">
         <div className="flex gap-3 pr-5">{cards}</div>
       </div>
     );
@@ -104,7 +105,7 @@ function StatusCard({
   // State A — the set is still on the way.
   if (profile.set_status === "ordered") {
     return (
-      <GlassCard key="state-a" className="mt-6 border-[rgba(201,166,72,.35)]">
+      <GlassCard key="state-a" className="mt-4 border-[rgba(201,166,72,.35)]">
         <Eyebrow tone="gold">YOUR SET IS ON THE WAY</Eyebrow>
         <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
           Explore Your 30-Day Mission
@@ -131,19 +132,18 @@ function StatusCard({
 
   const next = nextMissionNumber(missions);
 
-  // State D — all thirty Missions are complete.
+  // State D — all thirty Missions are complete. No button: the fragrance
+  // cards directly below ARE the next action.
   if (next === null) {
     return (
-      <GlassCard key="state-d" className="mt-6 border-[rgba(201,166,72,.35)]">
+      <GlassCard key="state-d" className="mt-4 border-[rgba(201,166,72,.35)]">
         <Eyebrow tone="gold">30-DAY MISSION COMPLETE</Eyebrow>
         <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
           Keep Building the Evidence
         </p>
-        <div className="mt-5">
-          <Button onClick={() => router.push("/missions")}>
-            START A NEW ACTION
-          </Button>
-        </div>
+        <p className="mt-3 text-[15px] text-ink-1">
+          Pick a fragrance below and keep logging proof.
+        </p>
       </GlassCard>
     );
   }
@@ -152,7 +152,7 @@ function StatusCard({
   const def = getMissionDef(next);
   if (!def) return null;
   return (
-    <Link href={`/missions/${def.number}`} className="mt-6 block">
+    <Link href={`/missions/${def.number}`} className="mt-4 block">
       <GlassCard key={`state-b-${def.number}`} className="border-[rgba(201,166,72,.35)]">
         <Eyebrow tone="gold">NEXT MISSION · MISSION {def.number}</Eyebrow>
         <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
@@ -236,36 +236,50 @@ export default function HomePage() {
 
   return (
     <main className="pt-4">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-2">
         <Wordmark />
-        {missions && stats.missionsCompleted > 0 && (
-          <span className="glass eyebrow rounded-full px-3 py-2 text-gold-300">
-            {stats.missionsCompleted}/{MISSION_COUNT} MISSIONS
-          </span>
-        )}
+        <div className="flex shrink-0 items-center gap-1">
+          {missions && stats.missionsCompleted > 0 && (
+            <span className="glass eyebrow rounded-full px-3 py-2 text-gold-300">
+              {stats.missionsCompleted}/{MISSION_COUNT} MISSIONS
+            </span>
+          )}
+          <HelpSheet />
+        </div>
       </div>
 
-      {profile && missions && (
-        <StatusCard profile={profile} missions={missions} />
-      )}
-
       {missions && lessonResponses && !guideDone && <GuideCard done={false} />}
-
-      <Headline className="mt-6">WHAT DO YOU NEED TODAY?</Headline>
 
       {!missions ? (
         <Skeleton />
       ) : (
         <>
-          <div className="mt-6 space-y-3">
-            {TRIGGER_ORDER.map((trigger) => (
-              <TriggerCard
-                key={trigger}
-                trigger={trigger}
-                href={`/mission/declare?trigger=${trigger}`}
-              />
-            ))}
-          </div>
+          {/* Two clearly separated paths. 1 — the numbered journey. */}
+          <section className="mt-7">
+            <Eyebrow tone="gold">1 · YOUR 30-DAY MISSION</Eyebrow>
+            <p className="mt-2 text-[14px] leading-snug text-ink-2">
+              Thirty numbered steps, in order, at your pace.
+            </p>
+            {profile && <StatusCard profile={profile} missions={missions} />}
+          </section>
+
+          {/* 2 — the everyday launcher. */}
+          <section className="mt-9">
+            <Eyebrow tone="gold">2 · TAKE AN ACTION</Eyebrow>
+            <Headline className="mt-2">WHAT DO YOU NEED TODAY?</Headline>
+            <p className="mt-2 text-[14px] leading-snug text-ink-2">
+              A one-off action any time. Pick the value, do it, log the proof.
+            </p>
+            <div className="mt-5 space-y-3">
+              {TRIGGER_ORDER.map((trigger) => (
+                <TriggerCard
+                  key={trigger}
+                  trigger={trigger}
+                  href={`/mission/declare?trigger=${trigger}`}
+                />
+              ))}
+            </div>
+          </section>
 
           <div className="mt-8">
             <ProofCounts stats={stats} />

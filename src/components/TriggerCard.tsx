@@ -43,7 +43,7 @@ export default function TriggerCard({
   return (
     <Link
       href={href}
-      aria-label={`Start a ${meta.name[0]}${meta.name.slice(1).toLowerCase()} Mission`}
+      aria-label={`Take a ${meta.name[0]}${meta.name.slice(1).toLowerCase()} Action`}
       className="block"
     >
       <GlassCard accent={trigger}>

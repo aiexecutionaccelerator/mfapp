@@ -120,12 +120,12 @@ await page.getByText("MISSION LOG").waitFor();
 // Free-form Mission from Start, with a photo
 await page.goto(`${BASE}/home`);
 await page.getByText("NEXT MISSION · MISSION 1").waitFor(); // state B is back
-await page.getByLabel(/Start a Courage Mission/).click();
+await page.getByLabel(/Take a Courage Action/).click();
 await page.getByText("WRITE MY OWN ACTION").click();
 await page.locator('input[aria-label="Your action"]').fill("Make the difficult call to Yuri.");
 await page.getByRole("button", { name: "CONTINUE" }).click();
-await page.getByRole("button", { name: "START MISSION" }).click();
-await page.getByText("MISSION ACTIVE").waitFor();
+await page.getByRole("button", { name: "TAKE ACTION", exact: true }).click();
+await page.getByText("ACTION IN PROGRESS").first().waitFor();
 await shot("freeform-active-stoic");
 await page.getByRole("button", { name: "CHECK IN NOW" }).click();
 await page.getByRole("button", { name: "YES — I DID IT" }).click();
@@ -140,13 +140,13 @@ await shot("freeform-complete");
 // Log — both entries, filters, edit, delete-reverts
 await page.goto(`${BASE}/log`);
 await page.getByText("2 proofs logged").waitFor();
-if ((await page.getByText("PERSONAL MISSION").count()) === 0) fail("no free-form entry");
+if ((await page.getByText("PERSONAL ACTION").count()) === 0) fail("no free-form entry");
 if ((await page.getByText("MISSION 2 · SEND THE MESSAGE").count()) === 0)
   fail("no structured entry");
 await shot("log-both-entries");
 
 // Edit the free-form entry
-await page.getByText("PERSONAL MISSION").first().click();
+await page.getByText("PERSONAL ACTION").first().click();
 await page.getByRole("button", { name: "Edit entry" }).click();
 await page.getByLabel("Declared action").fill("Make the difficult call to Yuri today.");
 await page.getByRole("button", { name: "SAVE", exact: true }).click();

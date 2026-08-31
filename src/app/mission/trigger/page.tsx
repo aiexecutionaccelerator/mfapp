@@ -113,7 +113,7 @@ function TriggerScreen({ missions }: { missions: Mission[] }) {
 
       <BottomActions className="pt-10">
         <Button loading={pending} onClick={start}>
-          START MISSION
+          TAKE ACTION
         </Button>
       </BottomActions>
     </main>

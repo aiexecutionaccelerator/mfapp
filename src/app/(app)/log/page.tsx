@@ -52,7 +52,7 @@ export default function LogPage() {
             body="Take one small action today."
             action={
               <Button onClick={() => router.push("/home")}>
-                START A MISSION
+                TAKE ACTION
               </Button>
             }
           />
