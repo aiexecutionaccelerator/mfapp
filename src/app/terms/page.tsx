@@ -22,7 +22,7 @@ export default function TermsPage() {
           The App is a companion to Mission Fragrances — the Honor, Courage,
           and Commitment Scent Triggers&reg;. It helps you select a value — Honor, Courage, or Commitment
           — declare a real-world action, apply the matching fragrance as a cue,
-          take the action, and record the result in your Mission Log. It works
+          take the action, and record the result in your Proof Log. It works
           with any fragrance you already own; owning the Mission Fragrances set is
           not required.
         </p>

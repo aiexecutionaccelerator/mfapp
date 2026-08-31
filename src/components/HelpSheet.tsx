@@ -52,7 +52,7 @@ export default function HelpSheet() {
           <div>
             <p className="eyebrow text-gold-300">BOTH COUNT</p>
             <p className="mt-1.5 text-[15px] leading-relaxed text-ink-1">
-              Every completed Action and Mission lands in your Mission Log as
+              Every completed Action and Mission lands in your Proof Log as
               proof. Only the thirty numbered ones move your 30-Mission count.
             </p>
           </div>

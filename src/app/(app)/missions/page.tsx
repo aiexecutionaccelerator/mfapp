@@ -179,7 +179,7 @@ export default function MissionListPage() {
           <>
             <Eyebrow tone="gold">30-DAY MISSION COMPLETE</Eyebrow>
             <p className="mt-2 text-[17px] leading-relaxed text-ink-1">
-              Thirty actions. Thirty pieces of evidence. The Mission Log stays
+              Thirty actions. Thirty pieces of evidence. Your Proof Log stays
               open.
             </p>
             <Link href="/home" className="mt-5 block">

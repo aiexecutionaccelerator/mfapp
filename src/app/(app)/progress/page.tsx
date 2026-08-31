@@ -71,7 +71,7 @@ export default function ProgressPage() {
           <Eyebrow tone="gold">30-DAY MISSION COMPLETE</Eyebrow>
           <p className="mt-3 text-[15px] leading-relaxed text-ink-1">
             You completed thirty actions and created thirty pieces of evidence.
-            The Mission Log remains open. Keep using Honor, Courage, and
+            Your Proof Log remains open. Keep using Honor, Courage, and
             Commitment whenever you need them.
           </p>
           <div className="mt-5">

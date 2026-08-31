@@ -114,8 +114,8 @@ await shot("mission-2-proof-form");
 await page.getByRole("button", { name: "LOG THE PROOF" }).click();
 await page.getByText("You acted with Courage.").waitFor();
 await shot("mission-2-proof-logged");
-await page.getByRole("button", { name: "VIEW MY MISSION LOG" }).click();
-await page.getByText("MISSION LOG").waitFor();
+await page.getByRole("button", { name: "VIEW MY PROOF LOG" }).click();
+await page.getByText("PROOF LOG").first().waitFor();
 
 // Free-form Mission from Start, with a photo
 await page.goto(`${BASE}/home`);
@@ -160,7 +160,7 @@ await page.getByRole("button", { name: "Delete entry" }).click();
 await page.getByText("goes back to in progress").waitFor();
 await shot("log-delete-confirm");
 await page.getByRole("button", { name: "DELETE ENTRY", exact: true }).click();
-await page.getByText("MISSION LOG").waitFor();
+await page.getByText("PROOF LOG").first().waitFor();
 await page.goto(`${BASE}/missions/2`);
 await page.getByText("YOUR ACTION").waitFor(); // reverted to in progress
 await shot("mission-2-reverted");

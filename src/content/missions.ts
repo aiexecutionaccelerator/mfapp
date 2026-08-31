@@ -537,7 +537,7 @@ export const MISSIONS: MissionDef[] = [
     number: 28,
     slug: "m28",
     title: "Review the Evidence",
-    idea: "Your Mission Log now contains evidence — not wishes or intentions. Review what you have done and notice which actions most changed the way you see yourself.",
+    idea: "Your Proof Log now contains evidence — not wishes or intentions. Review what you have done and notice which actions most changed the way you see yourself.",
     recommendedTrigger: null,
     question:
       "Which completed action gives you the strongest evidence of the man you are becoming?",

@@ -263,7 +263,7 @@ function MissionDetailInner({
         </p>
         <p className="mt-6 text-center text-[17px] text-ink-1">
           {allDone
-            ? "You completed thirty real-world actions and created thirty pieces of evidence. Keep using the Mission Log whenever you need Honor, Courage, or Commitment."
+            ? "You completed thirty real-world actions and created thirty pieces of evidence. Keep using Honor, Courage, and Commitment whenever you need them."
             : "This is evidence of the man you are becoming."}
         </p>
         <div className="mt-10 space-y-3">
@@ -289,7 +289,7 @@ function MissionDetailInner({
                 CONTINUE TO THE NEXT MISSION
               </Button>
               <Button variant="secondary" onClick={() => router.push("/log")}>
-                VIEW MY MISSION LOG
+                VIEW MY PROOF LOG
               </Button>
             </>
           )}
@@ -378,7 +378,7 @@ function MissionDetailInner({
 
         <div className="mt-6 space-y-3">
           <Link href={`/log/${row.id}`} className="block">
-            <Button variant="secondary">VIEW IN MISSION LOG</Button>
+            <Button variant="secondary">VIEW IN PROOF LOG</Button>
           </Link>
           {nextMissionNumber(missions) && (
             <Link

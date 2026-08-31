@@ -18,7 +18,7 @@ const STATUS_CLASS: Record<MissionStatus, string> = {
   ended: "text-ink-2 border-[var(--line)]",
 };
 
-/** One Proof card in the Mission Log — structured and free-form alike. */
+/** One Proof card in the Proof Log — Missions and Actions alike. */
 export default function MissionRow({ mission }: { mission: Mission }) {
   const def =
     mission.mission_number !== null

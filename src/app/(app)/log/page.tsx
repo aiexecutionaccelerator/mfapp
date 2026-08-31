@@ -20,7 +20,7 @@ export default function LogPage() {
 
   useEffect(() => {
     if (!error) return;
-    showToast("Couldn't load your Mission Log.", {
+    showToast("Couldn't load your Proof Log.", {
       retry: () => void refresh(),
     });
   }, [error, refresh, showToast]);
@@ -29,10 +29,11 @@ export default function LogPage() {
 
   return (
     <main className="pt-4">
-      <Headline>MISSION LOG</Headline>
+      <Headline>PROOF LOG</Headline>
 
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        Every action you log is evidence of the man you are becoming.
+        Every Mission and Action you complete lands here — evidence of the man
+        you are becoming.
       </p>
       {missions && (
         <p className="mt-2 text-[13px] text-ink-2">

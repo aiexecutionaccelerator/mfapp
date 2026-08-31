@@ -261,7 +261,7 @@ export default function LogDetailPage({
         note={
           mission.mission_number !== null && mission.status === "completed"
             ? `The proof is removed and Mission ${mission.mission_number} goes back to in progress. Your declared action stays.`
-            : "This removes the entry from your Mission Log. This can't be undone."
+            : "This removes the entry from your Proof Log. This can't be undone."
         }
         onClose={() => setConfirmDelete(false)}
       >
