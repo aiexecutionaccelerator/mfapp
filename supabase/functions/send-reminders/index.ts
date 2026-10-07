@@ -146,7 +146,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
     const payload = JSON.stringify({
       title: TITLE,
       body: BODY,
-      url: `/action/checkin/${reminder.mission_id}`,
+      url: `/action/active/${reminder.mission_id}`,
     });
 
     for (const subscription of subscriptions) {

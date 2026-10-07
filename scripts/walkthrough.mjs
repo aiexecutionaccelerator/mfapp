@@ -90,9 +90,6 @@ await page
 await page.getByText("Send the email or message you have been postponing.").click();
 await shot("mission-2-brief");
 await page.getByRole("button", { name: "DECLARE MY ACTION" }).click();
-await page.getByText("TAKE ACTION NOW").waitFor();
-await shot("mission-2-star-sheet");
-await page.getByRole("button", { name: "TAKE ACTION NOW" }).click();
 await page.getByText("YOUR ACTION").waitFor();
 await shot("mission-2-in-progress");
 
@@ -123,12 +120,10 @@ await page.getByText("NEXT MISSION · MISSION 1").waitFor(); // state B is back
 await page.getByLabel(/Take a Courage Action/).click();
 await page.getByText("WRITE MY OWN ACTION").click();
 await page.locator('input[aria-label="Your action"]').fill("Make the difficult call to Yuri.");
-await page.getByRole("button", { name: "CONTINUE" }).click();
-await page.getByRole("button", { name: "TAKE ACTION", exact: true }).click();
-await page.getByText("ACTION IN PROGRESS").first().waitFor();
-await shot("freeform-active-stoic");
-await page.getByRole("button", { name: "CHECK IN NOW" }).click();
-await page.getByRole("button", { name: "YES — I DID IT" }).click();
+await page.getByRole("button", { name: "DECLARE MY ACTION" }).click();
+await page.getByText("SPRAY THE FRAGRANCE").first().waitFor();
+await shot("freeform-active-ritual");
+await page.getByRole("button", { name: "I DID IT" }).click();
 await page.getByLabel("What did you do?").fill("Called and settled it.");
 await page.locator('input[type="file"]').setInputFiles(PHOTO);
 await page.getByLabel("Remove photo").waitFor();
@@ -222,7 +217,6 @@ await page
   .fill("Walk twenty minutes, four times a week — anchored to Commitment.");
 await page.getByText("Write the next commitment.").click();
 await page.getByRole("button", { name: "DECLARE MY ACTION" }).click();
-await page.getByRole("button", { name: "TAKE ACTION NOW" }).click();
 await page.getByText("YOUR ACTION").waitFor();
 await page.getByRole("button", { name: "I DID IT" }).click();
 await page.getByLabel("What did you do?").fill("Wrote it down and scheduled week one.");

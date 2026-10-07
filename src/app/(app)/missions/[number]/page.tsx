@@ -61,7 +61,6 @@ function MissionDetailInner({
   const [selected, setSelected] = useState<string | null>(null);
   const [customText, setCustomText] = useState("");
   const [chosenTrigger, setChosenTrigger] = useState<Trigger | null>(null);
-  const [starOpen, setStarOpen] = useState(false);
   const [confirmAbandon, setConfirmAbandon] = useState(false);
   // "auto" follows the row's status; the rest are explicit user steps.
   // ?done=1 (the Start card's I DID IT) opens the completion form directly.
@@ -172,7 +171,6 @@ function MissionDetailInner({
         suggestionType: selected,
         timeSinceMissionOpened: Date.now() - openedAt.current,
       });
-      setStarOpen(false);
       setView("auto");
     } catch {
       showToast("Couldn't save your action. Please try again.", {
@@ -471,9 +469,17 @@ function MissionDetailInner({
               </Button>
             </div>
           ) : (
-            <p className="font-display mt-3 text-[26px] leading-tight text-ink-0">
-              {row.action_text}
-            </p>
+            <>
+              <p className="font-display mt-3 text-[26px] leading-tight text-ink-0">
+                {row.action_text}
+              </p>
+              {/* The Trigger step of S.T.A.R. — on the screen he is looking at
+                  while he sprays, not behind a confirmation sheet. */}
+              <p className="eyebrow mt-5 text-gold-300">
+                SPRAY THE FRAGRANCE. RECALL A MOMENT YOU WERE{" "}
+                {TRIGGERS[row.trigger].anchorWord}. 5–15 SECONDS.
+              </p>
+            </>
           )}
         </GlassCard>
 
@@ -696,45 +702,15 @@ function MissionDetailInner({
       </section>
 
       <div className="mt-8">
-        <Button disabled={!canDeclare} onClick={() => setStarOpen(true)}>
+        <Button
+          loading={pending}
+          disabled={!canDeclare}
+          onClick={() => void declare()}
+        >
           DECLARE MY ACTION
         </Button>
       </div>
 
-      {/* The S.T.A.R. action sheet — the last look before committing. */}
-      <Sheet
-        open={starOpen}
-        title="S.T.A.R."
-        onClose={() => setStarOpen(false)}
-      >
-        <dl className="space-y-4">
-          <div>
-            <dt className="eyebrow text-gold-300">SELECT YOUR FRAGRANCE</dt>
-            <dd className="mt-1 text-[17px] text-ink-0">
-              {TRIGGERS[trigger].provedWith}
-            </dd>
-          </div>
-          <div>
-            <dt className="eyebrow text-gold-300">TRIGGER</dt>
-            <dd className="mt-1 text-[15px] leading-snug text-ink-1">
-              {TRIGGERS[trigger].starRecall}
-            </dd>
-          </div>
-          <div>
-            <dt className="eyebrow text-gold-300">ACT</dt>
-            <dd className="mt-1 text-[17px] text-ink-0">{declaredText}</dd>
-          </div>
-          <div>
-            <dt className="eyebrow text-gold-300">RECORD</dt>
-            <dd className="mt-1 text-[15px] leading-snug text-ink-1">
-              Document the action as proof.
-            </dd>
-          </div>
-        </dl>
-        <Button loading={pending} onClick={() => void declare()}>
-          TAKE ACTION NOW
-        </Button>
-      </Sheet>
     </main>
   );
 }

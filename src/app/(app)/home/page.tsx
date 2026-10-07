@@ -4,15 +4,12 @@ import { BookOpen, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import BuyRow from "@/components/BuyRow";
 import HelpSheet from "@/components/HelpSheet";
-import ProofCounts from "@/components/ProofCounts";
 import TriggerCard from "@/components/TriggerCard";
 import Wordmark from "@/components/Wordmark";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
-import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
 import { getMissionDef } from "@/content/missions";
 import { TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
@@ -50,7 +47,7 @@ function StatusCard({
       const doneHref =
         active.mission_number !== null
           ? `/missions/${active.mission_number}?done=1`
-          : `/action/checkin/${active.id}`;
+          : `/action/active/${active.id}?done=1`;
       return (
         <div
           key={active.id}
@@ -254,40 +251,28 @@ export default function HomePage() {
         <Skeleton />
       ) : (
         <>
-          {/* Two clearly separated paths. 1 — the numbered journey. */}
-          <section className="mt-7">
-            <Eyebrow tone="gold">1 · YOUR 30-DAY MISSION</Eyebrow>
-            <p className="mt-2 text-[14px] leading-snug text-ink-2">
-              Thirty numbered steps, in order, at your pace.
-            </p>
-            {profile && <StatusCard profile={profile} missions={missions} />}
-          </section>
+          {/* One prompt: the next thing to do. Everything else is found, not
+              presented — counts live on Progress, the store in Settings. */}
+          {profile && <StatusCard profile={profile} missions={missions} />}
 
-          {/* 2 — the everyday launcher. */}
+          {/* The quieter second door: a one-off, any time. */}
           <section className="mt-9">
-            <Eyebrow tone="gold">2 · TAKE AN ACTION</Eyebrow>
-            <Headline className="mt-2">WHAT DO YOU NEED TODAY?</Headline>
-            <p className="mt-2 text-[14px] leading-snug text-ink-2">
-              A one-off action any time. Pick the value, do it, log the proof.
+            <p className="text-[14px] leading-snug text-ink-2">
+              Or take a one-off action — pick what you need right now.
             </p>
-            <div className="mt-5 space-y-3">
+            <div className="mt-4 space-y-2.5">
               {TRIGGER_ORDER.map((trigger) => (
                 <TriggerCard
                   key={trigger}
                   trigger={trigger}
                   href={`/action/declare?trigger=${trigger}`}
+                  compact
                 />
               ))}
             </div>
           </section>
 
-          <div className="mt-8">
-            <ProofCounts stats={stats} />
-          </div>
-
           {guideDone && <GuideCard done />}
-
-          <BuyRow />
         </>
       )}
     </main>

@@ -2,17 +2,20 @@
 
 import { PenLine } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import NavAction from "@/components/NavAction";
 import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
+import { useToast } from "@/components/ui/Toast";
 import { suggestionsFor } from "@/content/actionSuggestions";
 import { TRIGGERS } from "@/content/triggers";
+import { track } from "@/lib/analytics";
+import { store } from "@/lib/data/store";
 import type { Trigger } from "@/lib/data/types";
-import { cn, readDraft, writeDraft } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 const CUSTOM = "custom";
 
@@ -25,30 +28,14 @@ function DeclareInner() {
   const params = useSearchParams();
   const trigger = params.get("trigger");
 
+  const { showToast } = useToast();
   const [selected, setSelected] = useState<string | null>(null);
   const [customText, setCustomText] = useState("");
+  const [pending, setPending] = useState(false);
+  const starting = useRef(false);
 
   useEffect(() => {
-    if (!isTrigger(trigger)) {
-      router.replace("/home");
-      return;
-    }
-    // Restore a draft when coming back from the trigger screen.
-    const draft = readDraft();
-    if (!draft || draft.trigger !== trigger) return;
-    const match = suggestionsFor(trigger).find(
-      (suggestion) => suggestion.text === draft.action_text,
-    );
-    // Reading the saved draft out of sessionStorage on mount is exactly the
-    // "sync with an external system" case; there is nothing to await first.
-    /* eslint-disable react-hooks/set-state-in-effect */
-    if (match) {
-      setSelected(match.id);
-    } else {
-      setSelected(CUSTOM);
-      setCustomText(draft.action_text);
-    }
-    /* eslint-enable react-hooks/set-state-in-effect */
+    if (!isTrigger(trigger)) router.replace("/home");
   }, [trigger, router]);
 
   if (!isTrigger(trigger)) return null;
@@ -65,19 +52,37 @@ function DeclareInner() {
     setCustomText("");
   }
 
-  function onContinue() {
-    if (!isTrigger(trigger) || !ready || selected === null) return;
-    const suggestion = suggestions.find((item) => item.id === selected);
-
-    let action_text = trimmedCustom;
-    let action_category = CUSTOM;
-    if (suggestion) {
-      action_text = suggestion.text;
-      action_category = suggestion.id;
+  /**
+   * Declaring creates the Action and goes straight to it. The spray-and-recall
+   * ritual lives on that screen now — where a man actually sprays — instead of
+   * behind one more tap.
+   */
+  async function declare() {
+    if (starting.current || !isTrigger(trigger) || !ready || selected === null) {
+      return;
     }
+    const suggestion = suggestions.find((item) => item.id === selected);
+    const action_text = suggestion ? suggestion.text : trimmedCustom;
+    const action_category = suggestion ? suggestion.id : CUSTOM;
 
-    writeDraft({ trigger, action_text, action_category });
-    router.push("/action/trigger");
+    starting.current = true;
+    setPending(true);
+    try {
+      const mission = await store.createMission({
+        trigger,
+        action_text,
+        action_category,
+      });
+      track("freeform_mission_started", { selectedTrigger: trigger });
+      router.replace(`/action/active/${mission.id}`);
+    } catch {
+      starting.current = false;
+      setPending(false);
+      showToast(
+        "Couldn't start your action. Check your connection and try again.",
+        { retry: () => void declare() },
+      );
+    }
   }
 
   return (
@@ -167,8 +172,12 @@ function DeclareInner() {
       </div>
 
       <BottomActions className="mt-8">
-        <Button disabled={!ready} onClick={onContinue}>
-          CONTINUE
+        <Button
+          loading={pending}
+          disabled={!ready}
+          onClick={() => void declare()}
+        >
+          DECLARE MY ACTION
         </Button>
       </BottomActions>
     </main>
