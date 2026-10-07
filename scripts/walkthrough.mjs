@@ -45,7 +45,7 @@ await page.getByText("ENTER DEMO").click();
 // B — Profile setup
 await page.getByText("LET'S SET YOU UP").waitFor();
 await page.getByLabel("Name").fill("Antonio");
-await page.getByText("Keeps the promises he makes to himself.").click();
+await page.getByText("Keeps his word, acts despite fear, and follows through.").click();
 await shot("profile-setup");
 await page.getByRole("button", { name: "CONTINUE" }).click();
 
@@ -63,11 +63,14 @@ await page.getByText("TAKE YOUR FIRST ACTION").waitFor();
 await shot("onboarding-4");
 await page.getByRole("button", { name: "NOT YET — LET ME EXPLORE" }).click();
 
-// Mission list, set on the way; all 30 visible, no locks
+// Mission list, set on the way; the next few up front, all 30 one tap away
 await page.getByText("YOUR 30-DAY MISSION").first().waitFor();
 await page.getByText("Your set is on the way").waitFor();
-if ((await page.getByText("MISSION 30").count()) === 0) fail("Mission 30 not visible");
 await shot("mission-list-ordered");
+await page.getByRole("button", { name: /SHOW ALL 30 MISSIONS/ }).click();
+await page.getByText("ALL MISSIONS").waitFor();
+if ((await page.getByText("MISSION 30").count()) === 0)
+  fail("Mission 30 not reachable");
 
 // Out-of-order access: open Mission 10, read it, leave — nothing completes
 await page.goto(`${BASE}/missions/10`);
@@ -77,9 +80,10 @@ await page.goto(`${BASE}/missions`);
 if ((await page.getByText("COMPLETE", { exact: true }).count()) > 0)
   fail("reading completed something");
 
-// Mark the set arrived from the banner
+// Mark the set arrived — Start owns that button, the list just reads ahead
+await page.goto(`${BASE}/home`);
 await page.getByRole("button", { name: "MY SET HAS ARRIVED" }).click();
-await page.getByText("Your set is on the way").waitFor({ state: "detached" });
+await page.getByText("YOUR SET IS ON THE WAY").waitFor({ state: "detached" });
 
 // Mission 2 — answer, pick STANDARD, declare, STAR sheet, go
 await page.goto(`${BASE}/missions/2`);
@@ -111,14 +115,17 @@ await shot("mission-2-proof-form");
 await page.getByRole("button", { name: "LOG THE PROOF" }).click();
 await page.getByText("You acted with Courage.").waitFor();
 await shot("mission-2-proof-logged");
-await page.getByRole("button", { name: "VIEW MY PROOF LOG" }).click();
+// One way forward from the confirmation: straight into the next Mission
+await page.getByRole("button", { name: "CONTINUE TO THE NEXT MISSION" }).click();
+await page.waitForURL("**/missions/**");
+await page.goto(`${BASE}/log`);
 await page.getByText("PROOF LOG").first().waitFor();
 
 // Free-form Mission from Start, with a photo
 await page.goto(`${BASE}/home`);
 await page.getByText("NEXT MISSION · MISSION 1").waitFor(); // state B is back
 await page.getByLabel(/Take a Courage Action/).click();
-await page.getByText("WRITE MY OWN ACTION").click();
+await page.getByText("Write your own action").waitFor();
 await page.locator('input[aria-label="Your action"]').fill("Make the difficult call to Yuri.");
 await page.getByRole("button", { name: "DECLARE MY ACTION" }).click();
 await page.getByText("SPRAY THE FRAGRANCE").first().waitFor();
@@ -142,7 +149,7 @@ await shot("log-both-entries");
 
 // Edit the free-form entry
 await page.getByText("PERSONAL ACTION").first().click();
-await page.getByRole("button", { name: "Edit entry" }).click();
+await page.getByRole("button", { name: "Edit or delete this entry" }).click();
 await page.getByLabel("Declared action").fill("Make the difficult call to Yuri today.");
 await page.getByRole("button", { name: "SAVE", exact: true }).click();
 await page.getByText("Make the difficult call to Yuri today.").waitFor();
@@ -151,6 +158,7 @@ await shot("log-entry-edited");
 // Delete the structured proof → Mission 2 reverts to in progress
 await page.goto(`${BASE}/log`);
 await page.getByText("MISSION 2 · SEND THE MESSAGE").click();
+await page.getByRole("button", { name: "Edit or delete this entry" }).click();
 await page.getByRole("button", { name: "Delete entry" }).click();
 await page.getByText("goes back to in progress").waitFor();
 await shot("log-delete-confirm");

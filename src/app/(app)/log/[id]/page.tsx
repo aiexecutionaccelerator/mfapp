@@ -117,7 +117,12 @@ export default function LogDetailPage({
 
   return (
     <main className="pt-2 pb-8">
-      <NavAction kind="back" href="/log" />
+      {/* While editing, back is Cancel — one affordance, not two. */}
+      {editing ? (
+        <NavAction kind="back" onClick={() => setEditing(false)} />
+      ) : (
+        <NavAction kind="back" href="/log" />
+      )}
 
       <div className="mt-6">
         <Eyebrow accent={mission.trigger}>
@@ -226,8 +231,10 @@ export default function LogDetailPage({
             >
               SAVE
             </Button>
-            <Button variant="ghost" onClick={() => setEditing(false)}>
-              Cancel
+            {/* Deleting lives in here with the other edits — the entry you
+                are only reading has one button. */}
+            <Button variant="ghost" onClick={() => setConfirmDelete(true)}>
+              Delete entry
             </Button>
           </>
         ) : (
@@ -246,10 +253,7 @@ export default function LogDetailPage({
               </Button>
             )}
             <Button variant="secondary" onClick={startEditing}>
-              Edit entry
-            </Button>
-            <Button variant="ghost" onClick={() => setConfirmDelete(true)}>
-              Delete entry
+              Edit or delete this entry
             </Button>
           </>
         )}

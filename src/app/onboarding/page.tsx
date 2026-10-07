@@ -16,11 +16,7 @@ import { cn } from "@/lib/utils";
 
 const IDENTITY_EXAMPLES = [
   "Keeps his word, acts despite fear, and follows through.",
-  "Keeps the promises he makes to himself.",
-  "Speaks honestly instead of avoiding hard conversations.",
   "Shows his family how much they matter.",
-  "Takes better care of his body.",
-  "Finishes the work he knows he needs to do.",
 ];
 
 const IDENTITY_MAX = 280;

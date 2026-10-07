@@ -62,6 +62,8 @@ function MissionDetailInner({
   const [customText, setCustomText] = useState("");
   const [chosenTrigger, setChosenTrigger] = useState<Trigger | null>(null);
   const [confirmAbandon, setConfirmAbandon] = useState(false);
+  const [changeOpen, setChangeOpen] = useState(false);
+  const [pickingTrigger, setPickingTrigger] = useState(false);
   // "auto" follows the row's status; the rest are explicit user steps.
   // ?done=1 (the Start card's I DID IT) opens the completion form directly.
   const [view, setView] = useState<"auto" | "proof-form" | "confirmation">(
@@ -142,13 +144,18 @@ function MissionDetailInner({
 
   function chooseSuggestion(kind: string) {
     setSelected(kind);
-    if (kind !== "custom") {
-      setCustomText("");
-      track("mission_action_selected", {
-        missionNumber: def?.number,
-        suggestionType: kind,
-      });
-    } else {
+    setCustomText("");
+    track("mission_action_selected", {
+      missionNumber: def?.number,
+      suggestionType: kind,
+    });
+  }
+
+  /** Typing your own action is itself the choice — no radio to tap first. */
+  function writeCustom(next: string) {
+    setCustomText(next);
+    setSelected(next.trim() ? "custom" : null);
+    if (next.trim().length === 1) {
       track("mission_action_customized", { missionNumber: def?.number });
     }
   }
@@ -286,9 +293,6 @@ function MissionDetailInner({
               >
                 CONTINUE TO THE NEXT MISSION
               </Button>
-              <Button variant="secondary" onClick={() => router.push("/log")}>
-                VIEW MY PROOF LOG
-              </Button>
             </>
           )}
         </div>
@@ -374,19 +378,17 @@ function MissionDetailInner({
           )}
         </GlassCard>
 
-        <div className="mt-6 space-y-3">
-          <Link href={`/log/${row.id}`} className="block">
-            <Button variant="secondary">VIEW IN PROOF LOG</Button>
-          </Link>
-          {nextMissionNumber(missions) && (
-            <Link
-              href={`/missions/${nextMissionNumber(missions)}`}
-              className="block"
+        {nextMissionNumber(missions) && (
+          <div className="mt-6">
+            <Button
+              onClick={() =>
+                router.push(`/missions/${nextMissionNumber(missions)}`)
+              }
             >
-              <Button>CONTINUE TO THE NEXT MISSION</Button>
-            </Link>
-          )}
-        </div>
+              CONTINUE TO THE NEXT MISSION
+            </Button>
+          </div>
+        )}
       </main>
     );
   }
@@ -486,17 +488,8 @@ function MissionDetailInner({
         {!editingAction && (
           <div className="mt-6 space-y-3">
             <Button onClick={() => setView("proof-form")}>I DID IT</Button>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setEditText(row.action_text);
-                setEditingAction(true);
-              }}
-            >
-              Edit action
-            </Button>
-            <Button variant="ghost" onClick={() => setConfirmAbandon(true)}>
-              Reset this Mission
+            <Button variant="ghost" onClick={() => setChangeOpen(true)}>
+              Change this action
             </Button>
           </div>
         )}
@@ -531,6 +524,33 @@ function MissionDetailInner({
             Cancel
           </Button>
         </Sheet>
+
+        {/* One quiet affordance on screen; both ways to change it live here. */}
+        <Sheet
+          open={changeOpen}
+          title="CHANGE THIS ACTION"
+          onClose={() => setChangeOpen(false)}
+        >
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setEditText(row.action_text);
+              setEditingAction(true);
+              setChangeOpen(false);
+            }}
+          >
+            EDIT THE WORDING
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setChangeOpen(false);
+              setConfirmAbandon(true);
+            }}
+          >
+            Start this Mission over
+          </Button>
+        </Sheet>
       </main>
     );
   }
@@ -551,12 +571,23 @@ function MissionDetailInner({
         />
       )}
 
-      {/* Scent Trigger — recommended, always changeable. */}
+      {/* The pills are a question. Only ask it when the Mission has not
+          already answered it — otherwise show the recommendation and let him
+          change it if he wants. */}
       <Eyebrow tone="gold" className="mt-7">
         {def.recommendedTrigger
-          ? `RECOMMENDED: ${TRIGGERS[def.recommendedTrigger].name}`
+          ? `RECOMMENDED: ${TRIGGERS[trigger].name}`
           : "CHOOSE YOUR VALUE"}
       </Eyebrow>
+      {def.recommendedTrigger && !pickingTrigger ? (
+        <button
+          type="button"
+          onClick={() => setPickingTrigger(true)}
+          className="mt-2 flex min-h-12 items-center text-[15px] text-gold-300"
+        >
+          Use a different fragrance
+        </button>
+      ) : (
       <div className="mt-3 flex gap-2">
         {TRIGGER_ORDER.map((value) => (
           <button
@@ -577,6 +608,7 @@ function MissionDetailInner({
           </button>
         ))}
       </div>
+      )}
 
       {def.showPersonalCode && personalCode && (
         <GlassCard className="mt-7">
@@ -665,39 +697,24 @@ function MissionDetailInner({
             </button>
           ))}
 
-          <button
-            type="button"
-            role="radio"
-            aria-checked={selected === "custom"}
-            onClick={() => chooseSuggestion("custom")}
-            className={cn(
-              "glass flex w-full items-center gap-3 rounded-[14px] px-4 py-4 text-left transition-colors",
-              selected === "custom"
-                ? "border-[var(--gold-500)]"
-                : "border-[rgba(201,166,72,.38)]",
-            )}
-          >
-            <PenLine aria-hidden size={20} className="shrink-0 text-gold-300" />
-            <span className="min-w-0 flex-1">
-              <span className="font-display block text-[18px] leading-none text-ink-0">
-                WRITE MY OWN ACTION
-              </span>
-              <span className="mt-1.5 block text-[13px] text-ink-2">
-                Tap to declare your own action
-              </span>
-            </span>
-          </button>
+        </div>
 
-          {selected === "custom" && (
+        {/* Your own words: the field itself, not a button that reveals one.
+            Typing is the choice — it deselects whatever was picked above. */}
+        <div className="mt-5">
+          <p className="flex items-center gap-2 text-[13px] text-ink-2">
+            <PenLine aria-hidden size={16} className="shrink-0 text-gold-300" />
+            Or write your own
+          </p>
+          <div className="mt-2">
             <Field
               value={customText}
-              onChange={setCustomText}
+              onChange={writeCustom}
               placeholder="One action. Short. Specific."
               maxLength={140}
-              autoFocus
               aria-label="Your action"
             />
-          )}
+          </div>
         </div>
       </section>
 

@@ -16,7 +16,7 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 1.0.0 (out of beta)
+- Version: 1.4.0 (out of beta)
 
 ## Architecture facts that matter
 
@@ -59,24 +59,40 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 ## App structure (tabs: Start · Log · Mission · Progress · Settings)
 
-- `/onboarding`: profile setup (name + "I am becoming a man who…") then four
-  How It Works screens ending in "Is your set with you now?". Replay at
-  `/how-it-works` (Settings).
-- `/missions` list (all 30, statuses, Continue card, set-on-the-way banner) and
-  `/missions/[number]` — ONE reusable detail template: idea → optional
-  collapsed video → trigger pills → one autosaved question →
-  Quick/Standard/Bold/write-my-own → DECLARE → S.T.A.R. sheet → in-progress →
-  RECORD THE EVIDENCE (+ optional photo) → confirmation. `?done=1` jumps to
-  the proof form (used by Start's I DID IT).
+- `/onboarding`: profile setup (name + "I am becoming a man who…", two example
+  statements) then four How It Works screens ending in "Is your set with you
+  now?". Replay at `/how-it-works` (Settings).
+- `/missions` list: NEXT card first, two more under WHAT'S NEXT, one
+  `SHOW ALL 30 MISSIONS` toggle. No separate Continue card (Start owns the
+  status) and no set-arrived button (Start owns that too).
+- `/missions/[number]` — ONE reusable detail template: idea → optional
+  collapsed video → recommended fragrance (pills only behind "Use a different
+  fragrance") → one autosaved question → Quick/Standard/Bold plus an
+  always-visible "or write your own" field → DECLARE → in-progress (the spray
+  ritual is on this screen) → RECORD THE EVIDENCE (+ optional photo) →
+  confirmation. `?done=1` jumps to the proof form (used by Start's I DID IT).
+  Mid-Mission changes live in one "Change this action" sheet.
 - `/home` Start: dynamic status card (A set-on-the-way / B next Mission /
-  C action in progress / D 30/30), three fragrance cards → free-form flow
-  (`/mission/declare|trigger|active|checkin|complete`, Stoic quote kept),
-  Proof counts strip.
-- `/log`: merged Proof log (MISSION N · TITLE vs PERSONAL MISSION), filters,
-  edit, delete (structured delete reverts the Mission to in progress).
-- `/progress`: N/30 ring, six stat cards, Mission-12 promise card, 30/30
-  completion state; `/personal-code` printable + editable in place.
-- `/course*` redirects to `/missions`. `/challenge-complete` is gone.
+  C action in progress / D 30/30) plus three fragrance cards → the one-off
+  Action flow (`/action/declare|active`). The fragrance cards hide while an
+  action is in progress; How It Works shows until it has been read once.
+- `/log`: Proof Log (MISSION N · TITLE vs PERSONAL ACTION). An entry has one
+  button — "Edit or delete this entry"; delete lives inside the edit view and
+  a structured delete reverts the Mission to in progress.
+- `/progress`: N/30 ring, stat cards, 30/30 completion state;
+  `/personal-code` printable, with only written lines as editable cards.
+- `/course*` redirects to `/missions`; `/mission/*` redirects to `/action/*`.
+
+### Tap budget (the UX metric)
+
+Every screen state is counted with a Playwright census of in-page tap targets
+(`main button, main a[href], main [role=radio], main [role=switch]`). The V2
+rebuild shipped at **178 targets across 28 screens**; the two simplification
+passes brought it to **94** (-47%). Rules that got it there, worth keeping:
+one action per card (never a card-shaped link wrapping a button), progressive
+disclosure over walls of items, a visible input instead of a button that
+reveals an input, no duplicate entry point for the same action on two screens,
+and hiding the second door while the first one is still open.
 
 ## Verification
 

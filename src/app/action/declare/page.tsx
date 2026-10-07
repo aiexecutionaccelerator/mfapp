@@ -52,6 +52,12 @@ function DeclareInner() {
     setCustomText("");
   }
 
+  /** Typing your own action is itself the choice — no radio to tap first. */
+  function writeCustom(next: string) {
+    setCustomText(next);
+    setSelected(next.trim() ? CUSTOM : null);
+  }
+
   /**
    * Declaring creates the Action and goes straight to it. The spray-and-recall
    * ritual lives on that screen now — where a man actually sprays — instead of
@@ -98,47 +104,21 @@ function DeclareInner() {
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">{meta.about}</p>
 
       <div role="radiogroup" aria-label="Your action" className="mt-7">
-        {/* Your own words first — the suggestions are the fallback, not the
-            default. */}
-        <button
-          type="button"
-          role="radio"
-          aria-checked={selected === CUSTOM}
-          onClick={() => setSelected(CUSTOM)}
-          className={cn(
-            "glass flex w-full items-center gap-3 rounded-[14px] px-4 py-4 text-left transition-colors",
-            selected === CUSTOM
-              ? "border-[var(--gold-500)]"
-              : "border-[rgba(201,166,72,.38)]",
-          )}
-        >
-          <PenLine
-            aria-hidden
-            size={20}
-            className="shrink-0 text-gold-300"
+        {/* Your own words first — the field itself, not a button that reveals
+            one. Typing is the choice. */}
+        <p className="flex items-center gap-2 text-[13px] text-ink-2">
+          <PenLine aria-hidden size={16} className="shrink-0 text-gold-300" />
+          Write your own action
+        </p>
+        <div className="mt-2">
+          <Field
+            value={customText}
+            onChange={writeCustom}
+            placeholder="One action. Short. Specific."
+            maxLength={140}
+            aria-label="Your action"
           />
-          <span className="min-w-0 flex-1">
-            <span className="font-display block text-[18px] leading-none text-ink-0">
-              WRITE MY OWN ACTION
-            </span>
-            <span className="mt-1.5 block text-[13px] text-ink-2">
-              Tap to declare your own action
-            </span>
-          </span>
-        </button>
-
-        {selected === CUSTOM && (
-          <div className="mt-3">
-            <Field
-              value={customText}
-              onChange={setCustomText}
-              placeholder="One action. Short. Specific."
-              maxLength={140}
-              autoFocus
-              aria-label="Your action"
-            />
-          </div>
-        )}
+        </div>
 
         <Eyebrow className="mt-7">OR CHOOSE ONE</Eyebrow>
 

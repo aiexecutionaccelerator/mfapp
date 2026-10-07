@@ -4,7 +4,6 @@ import { BookOpen, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import HelpSheet from "@/components/HelpSheet";
 import TriggerCard from "@/components/TriggerCard";
 import Wordmark from "@/components/Wordmark";
 import Button from "@/components/ui/Button";
@@ -75,16 +74,8 @@ function StatusCard({
             <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
               {active.action_text}
             </p>
-            <div className="mt-5 space-y-2">
+            <div className="mt-5">
               <Button onClick={() => router.push(doneHref)}>I DID IT</Button>
-              {active.mission_number === null && (
-                <Button
-                  variant="ghost"
-                  onClick={() => router.push(`/action/active/${active.id}`)}
-                >
-                  Open Action
-                </Button>
-              )}
             </div>
           </GlassCard>
         </div>
@@ -99,7 +90,8 @@ function StatusCard({
     );
   }
 
-  // State A — the set is still on the way.
+  // State A — the set is still on the way. One button, and it is the one that
+  // matters: browsing the Missions is what the tab bar is for.
   if (profile.set_status === "ordered") {
     return (
       <GlassCard key="state-a" className="mt-4 border-[rgba(201,166,72,.35)]">
@@ -107,12 +99,12 @@ function StatusCard({
         <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
           Explore Your 30-Day Mission
         </p>
-        <div className="mt-5 space-y-2">
-          <Button onClick={() => router.push("/missions")}>
-            VIEW THE MISSIONS
-          </Button>
+        <p className="mt-3 text-[15px] text-ink-1">
+          Open the Missions tab to read what is coming. Begin Mission 1 the day
+          your set lands.
+        </p>
+        <div className="mt-5">
           <Button
-            variant="ghost"
             onClick={() => {
               void store
                 .updateProfile({ set_status: "arrived" })
@@ -148,58 +140,41 @@ function StatusCard({
   // State B — the next structured Mission.
   const def = getMissionDef(next);
   if (!def) return null;
+  // The whole card is the button — a card-shaped link with a button inside it
+  // is two tap targets for one action.
   return (
     <Link href={`/missions/${def.number}`} className="mt-4 block">
       <GlassCard key={`state-b-${def.number}`} className="border-[rgba(201,166,72,.35)]">
         <Eyebrow tone="gold">NEXT MISSION · MISSION {def.number}</Eyebrow>
-        <p className="font-display mt-3 text-[22px] leading-tight text-ink-0">
-          {def.title}
-        </p>
-        <div className="mt-5">
-          <Button>OPEN MISSION</Button>
+        <div className="mt-3 flex items-center gap-3">
+          <p className="font-display min-w-0 flex-1 text-[22px] leading-tight text-ink-0">
+            {def.title}
+          </p>
+          <ChevronRight aria-hidden size={24} className="shrink-0 text-gold-300" />
         </div>
+        <p className="eyebrow mt-4 text-gold-300">OPEN MISSION</p>
       </GlassCard>
     </Link>
   );
 }
 
 /**
- * How It Works, one tap from Start. Prominent below the status card until the
- * man has been through it once, then greyed out and moved to the bottom —
- * always still openable.
+ * How It Works, one tap from Start — until the man has been through it once.
+ * After that it lives in Settings only: a row he has already read is one more
+ * thing on the screen he is trying to act from.
  */
-function GuideCard({ done }: { done: boolean }) {
+function GuideCard() {
   return (
-    <Link href="/how-it-works" className={done ? "mt-6 block" : "mt-4 block"}>
-      <div
-        className={
-          done
-            ? "glass flex items-center gap-3 rounded-[14px] px-4 py-3 opacity-60"
-            : "glass flex items-center gap-3 rounded-[14px] border-[rgba(201,166,72,.35)] px-4 py-4"
-        }
-      >
-        <BookOpen
-          aria-hidden
-          size={done ? 18 : 22}
-          className={done ? "shrink-0 text-ink-2" : "shrink-0 text-gold-300"}
-        />
+    <Link href="/how-it-works" className="mt-4 block">
+      <div className="glass flex items-center gap-3 rounded-[14px] border-[rgba(201,166,72,.35)] px-4 py-4">
+        <BookOpen aria-hidden size={22} className="shrink-0 text-gold-300" />
         <span className="min-w-0 flex-1">
-          <span
-            className={
-              done
-                ? "block text-[13px] text-ink-2"
-                : "eyebrow block text-gold-300"
-            }
-          >
-            {done ? "HOW IT WORKS · Review any time" : "START HERE"}
+          <span className="eyebrow block text-gold-300">START HERE</span>
+          <span className="mt-1.5 block text-[17px] leading-snug text-ink-0">
+            How Mission Fragrances works
           </span>
-          {!done && (
-            <span className="mt-1.5 block text-[17px] leading-snug text-ink-0">
-              How Mission Fragrances works
-            </span>
-          )}
         </span>
-        <ChevronRight aria-hidden size={done ? 18 : 20} className="shrink-0 text-ink-2" />
+        <ChevronRight aria-hidden size={20} className="shrink-0 text-ink-2" />
       </div>
     </Link>
   );
@@ -226,6 +201,7 @@ export default function HomePage() {
   }, [error, refresh, showToast]);
 
   const stats = computeStats(missions ?? []);
+  const hasActive = (missions ?? []).some((m) => m.status === "active");
   const guideDone =
     lessonResponses?.some(
       (r) => r.lesson_id === "guide" && r.prompt_id === "q" && r.answer === "done",
@@ -235,17 +211,14 @@ export default function HomePage() {
     <main className="pt-4">
       <div className="flex items-center justify-between gap-2">
         <Wordmark />
-        <div className="flex shrink-0 items-center gap-1">
-          {missions && stats.missionsCompleted > 0 && (
-            <span className="glass eyebrow rounded-full px-3 py-2 text-gold-300">
-              {stats.missionsCompleted}/{MISSION_COUNT} MISSIONS
-            </span>
-          )}
-          <HelpSheet />
-        </div>
+        {missions && stats.missionsCompleted > 0 && (
+          <span className="glass eyebrow shrink-0 rounded-full px-3 py-2 text-gold-300">
+            {stats.missionsCompleted}/{MISSION_COUNT} MISSIONS
+          </span>
+        )}
       </div>
 
-      {missions && lessonResponses && !guideDone && <GuideCard done={false} />}
+      {missions && lessonResponses && !guideDone && <GuideCard />}
 
       {!missions ? (
         <Skeleton />
@@ -255,24 +228,25 @@ export default function HomePage() {
               presented — counts live on Progress, the store in Settings. */}
           {profile && <StatusCard profile={profile} missions={missions} />}
 
-          {/* The quieter second door: a one-off, any time. */}
-          <section className="mt-9">
-            <p className="text-[14px] leading-snug text-ink-2">
-              Or take a one-off action — pick what you need right now.
-            </p>
-            <div className="mt-4 space-y-2.5">
-              {TRIGGER_ORDER.map((trigger) => (
-                <TriggerCard
-                  key={trigger}
-                  trigger={trigger}
-                  href={`/action/declare?trigger=${trigger}`}
-                  compact
-                />
-              ))}
-            </div>
-          </section>
-
-          {guideDone && <GuideCard done />}
+          {/* The quieter second door: a one-off, any time — but not while
+              something is already running. Finish that first. */}
+          {!hasActive && (
+            <section className="mt-9">
+              <p className="text-[14px] leading-snug text-ink-2">
+                Or take a one-off action — pick what you need right now.
+              </p>
+              <div className="mt-4 space-y-2.5">
+                {TRIGGER_ORDER.map((trigger) => (
+                  <TriggerCard
+                    key={trigger}
+                    trigger={trigger}
+                    href={`/action/declare?trigger=${trigger}`}
+                    compact
+                  />
+                ))}
+              </div>
+            </section>
+          )}
         </>
       )}
     </main>

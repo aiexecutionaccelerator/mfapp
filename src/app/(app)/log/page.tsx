@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import BuyRow from "@/components/BuyRow";
 import MissionRow from "@/components/MissionRow";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
@@ -66,7 +65,6 @@ export default function LogPage() {
         </div>
       )}
 
-      {missions && <BuyRow />}
     </main>
   );
 }

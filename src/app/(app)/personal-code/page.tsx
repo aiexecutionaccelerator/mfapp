@@ -50,6 +50,10 @@ export default function PersonalCodePage() {
   }
 
   const lines = compilePersonalCode(profile, lessonResponses);
+  // Only written lines are cards. The rest are one quiet sentence — six
+  // tappable "not written yet" placeholders is a chore list, not a code.
+  const written = lines.filter((line) => line.value);
+  const unwritten = lines.filter((line) => !line.value);
 
   async function saveLine(key: string, slug: string | null) {
     setPending(true);
@@ -94,7 +98,7 @@ export default function PersonalCodePage() {
       )}
 
       <div className="mt-8 space-y-5">
-        {lines.map((line) => (
+        {written.map((line) => (
           <div key={line.key} className="glass rounded-[20px] p-5">
             <Eyebrow tone="gold">{line.label}</Eyebrow>
             {editingKey === line.key ? (
@@ -120,7 +124,7 @@ export default function PersonalCodePage() {
               </div>
             ) : (
               <button
-                key={line.value ?? "empty"}
+                key={line.value}
                 type="button"
                 onClick={() => {
                   setDraft(line.value ?? "");
@@ -128,21 +132,28 @@ export default function PersonalCodePage() {
                 }}
                 className="mt-2 block w-full text-left"
               >
-                {line.value ? (
-                  <span className="text-[19px] leading-snug text-ink-0">
-                    {line.value}
-                  </span>
-                ) : (
-                  <span className="text-[15px] text-ink-2">
-                    Not written yet — answer this in {line.source}, or tap to
-                    write it now.
-                  </span>
-                )}
+                <span className="text-[19px] leading-snug text-ink-0">
+                  {line.value}
+                </span>
               </button>
             )}
           </div>
         ))}
       </div>
+
+      {unwritten.length > 0 && (
+        <p className="mt-6 text-[15px] leading-relaxed text-ink-2">
+          {written.length === 0 ? "Your code writes itself" : "The rest fills in"}{" "}
+          as you complete{" "}
+          {unwritten.map((line, i) => (
+            <span key={line.key}>
+              {i > 0 && (i === unwritten.length - 1 ? " and " : ", ")}
+              {line.source}
+            </span>
+          ))}
+          .
+        </p>
+      )}
 
       <p className="print-hide mt-8 text-center text-[13px] text-ink-2">
         Tap any line to edit it. Printing uses your browser&apos;s print dialog —
