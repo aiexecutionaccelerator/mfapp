@@ -44,8 +44,8 @@ export default function FragranceTrio() {
               className="bottle-tile relative flex flex-1 flex-col items-center rounded-[18px] px-2 pt-5 pb-3"
               style={
                 {
-                  "--cue-color": tone.color,
-                  "--cue-glow": tone.glow,
+                  "--cue-color": tone.ui,
+                  "--cue-glow": tone.uiGlow,
                 } as React.CSSProperties
               }
             >
@@ -56,7 +56,7 @@ export default function FragranceTrio() {
                   aria-hidden
                   className="bottle-pool absolute bottom-0 left-1/2 h-[6px] w-[46px] -translate-x-1/2 rounded-full"
                   style={{
-                    background: `radial-gradient(ellipse, ${tone.glow} 0%, transparent 72%)`,
+                    background: `radial-gradient(ellipse, ${tone.uiGlow} 0%, transparent 72%)`,
                   }}
                 />
               </span>
@@ -83,13 +83,13 @@ export default function FragranceTrio() {
           key={open}
           className="glass fade-in relative mt-3 overflow-hidden rounded-[18px] p-5"
           style={{
-            boxShadow: `inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.35), 0 0 34px ${TRIGGER_ACCENTS[open].glow}`,
+            boxShadow: `inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.35), 0 0 34px ${TRIGGER_ACCENTS[open].uiGlow}`,
           }}
         >
           <span
             aria-hidden
             className="absolute top-0 bottom-0 left-0 w-[2px]"
-            style={{ background: TRIGGER_ACCENTS[open].color }}
+            style={{ background: TRIGGER_ACCENTS[open].ui }}
           />
           <p className="eyebrow text-gold-300">{meta.tagline}</p>
           <p className="mt-3 text-[15px] leading-relaxed text-ink-1">

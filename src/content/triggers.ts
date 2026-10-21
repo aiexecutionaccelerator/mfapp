@@ -64,14 +64,33 @@ export const STAR_STEPS = [
 
 /**
  * Accents match the bottles: Honor = silver, Courage = gold, Commitment = black.
- * Black needs a faint light edge to read against the dark UI (`edge`).
+ *
+ * `color`/`glow` are the bottle's own finish — right for a fill, such as the
+ * dot beside an eyebrow, where black reads as black against a light ring
+ * (`edge`). `ui`/`uiGlow` are for borders, rims and glows, where black has
+ * nothing to show: Commitment takes a warm ivory rim there, because a black
+ * bottle is read by the light on its edge rather than by its colour.
  */
 export const TRIGGER_ACCENTS = {
-  honor: { color: "var(--honor)", glow: "var(--honor-glow)", edge: null },
-  courage: { color: "var(--courage)", glow: "var(--courage-glow)", edge: null },
+  honor: {
+    color: "var(--honor)",
+    glow: "var(--honor-glow)",
+    edge: null,
+    ui: "var(--honor)",
+    uiGlow: "var(--honor-glow)",
+  },
+  courage: {
+    color: "var(--courage)",
+    glow: "var(--courage-glow)",
+    edge: null,
+    ui: "var(--courage)",
+    uiGlow: "var(--courage-glow)",
+  },
   commitment: {
     color: "var(--commitment)",
     glow: "var(--commitment-glow)",
     edge: "rgba(245,241,232,.32)",
+    ui: "var(--commitment-ui)",
+    uiGlow: "var(--commitment-ui-glow)",
   },
 } as const;

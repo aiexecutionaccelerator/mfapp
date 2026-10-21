@@ -1,22 +1,21 @@
 "use client";
 
-import { ArrowLeftRight } from "lucide-react";
 import BottleVisual from "@/components/BottleVisual";
 import { TRIGGERS, TRIGGER_ACCENTS, TRIGGER_ORDER } from "@/content/triggers";
 import type { Trigger } from "@/lib/data/types";
 import { cn } from "@/lib/utils";
 
 /**
- * The fragrance for this Mission — the shelf, not a dropdown.
+ * The fragrance shelf — three bottles, one picked up.
  *
- * All three bottles sit on their own tiles, each labelled, so a new man can
- * see what he would be switching to. The one he is wearing is picked up —
- * full size, lit, standing in its own pool of light. The one the Mission
- * asks for carries an inner gold light and its own RECOMMENDED pill, so the
- * suggestion still reads once he has chosen something else.
+ * No card around it: the tiles are the surface, and a card holding cards is
+ * one box too many. Each is labelled so a man who doesn't know the set by
+ * sight can see what he would be switching to. The one the Mission asks for
+ * carries an inner gold light and its own RECOMMENDED pill, which stays put
+ * once he has chosen something else.
  *
- * The card says nothing it does not have to: where he stands and the fact
- * that he can move, on one line, above the shelf.
+ * Tinting uses the accent's `ui` colour, not its fill: Commitment's bottle is
+ * black and has no colour to glow with, so it takes an ivory rim instead.
  */
 export default function FragranceCue({
   value,
@@ -30,52 +29,16 @@ export default function FragranceCue({
   recommended?: Trigger;
   className?: string;
 }) {
-  const tone = TRIGGER_ACCENTS[value];
-  const onRecommendation = recommended !== undefined && value === recommended;
-
   return (
-    <div
-      className={cn(
-        "glass relative overflow-hidden rounded-[20px] px-4 pt-3 pb-3",
-        className,
-      )}
-      style={{
-        boxShadow: `inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.35), 0 0 40px ${tone.glow}`,
-      }}
-    >
-      {/* The chosen value's colour down the edge and washing the corner. */}
-      <span
-        aria-hidden
-        className="absolute top-0 bottom-0 left-0 w-[2px]"
-        style={{
-          background: tone.color,
-          boxShadow: tone.edge ? `1px 0 0 ${tone.edge}` : undefined,
-        }}
-      />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -top-10 -left-10 h-48 w-48 rounded-full"
-        style={{
-          background: `radial-gradient(circle, ${tone.glow} 0%, transparent 68%)`,
-        }}
-      />
-
-      {/* One row: where he stands on the left, and the fact that he can move
-          on the right. No second line for either. */}
-      <div className="eyebrow relative flex items-center justify-between gap-3 text-ink-2">
-        <span className="min-w-0 truncate">
-          {recommended !== undefined && !onRecommendation ? "YOUR CHOICE" : ""}
-        </span>
-        <span className="flex shrink-0 items-center gap-1.5">
-          <ArrowLeftRight aria-hidden size={12} className="shrink-0" />
-          TAP TO CHANGE
-        </span>
-      </div>
+    <div className={className}>
+      <p className="eyebrow text-gold-300">
+        SELECT THE FRAGRANCE YOU&apos;RE WEARING
+      </p>
 
       <div
         role="radiogroup"
         aria-label="Which fragrance are you wearing?"
-        className="relative mt-2 grid grid-cols-3 gap-2"
+        className="mt-3 grid grid-cols-3 gap-2"
       >
         {TRIGGER_ORDER.map((trigger) => {
           const chosen = trigger === value;
@@ -95,18 +58,19 @@ export default function FragranceCue({
               )}
               style={
                 {
-                  "--cue-color": accent.color,
-                  "--cue-glow": accent.glow,
+                  "--cue-color": accent.ui,
+                  "--cue-glow": accent.uiGlow,
                 } as React.CSSProperties
               }
             >
               <span className="relative flex h-[74px] items-end justify-center">
                 <BottleVisual trigger={trigger} size={chosen ? 50 : 38} />
+                {/* The pool of light it stands in — brightens with the tile. */}
                 <span
                   aria-hidden
                   className="bottle-pool absolute bottom-0 left-1/2 h-[6px] w-[46px] -translate-x-1/2 rounded-full"
                   style={{
-                    background: `radial-gradient(ellipse, ${accent.glow} 0%, transparent 72%)`,
+                    background: `radial-gradient(ellipse, ${accent.uiGlow} 0%, transparent 72%)`,
                   }}
                 />
               </span>

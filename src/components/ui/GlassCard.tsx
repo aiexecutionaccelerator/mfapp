@@ -22,7 +22,7 @@ export default function GlassCard({
       style={
         tone
           ? {
-              boxShadow: `inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.35), 0 0 34px ${tone.glow}`,
+              boxShadow: `inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.35), 0 0 34px ${tone.uiGlow}`,
               ...style,
             }
           : style
@@ -33,8 +33,7 @@ export default function GlassCard({
           aria-hidden
           className="absolute top-0 bottom-0 left-0 w-[2px]"
           style={{
-            background: tone.color,
-            boxShadow: tone.edge ? `1px 0 0 ${tone.edge}` : undefined,
+            background: tone.ui,
           }}
         />
       )}

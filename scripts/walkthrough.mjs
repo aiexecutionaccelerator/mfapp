@@ -98,13 +98,14 @@ await page.getByText("Most likely there's a message you need to send").waitFor()
 // The fragrance cue carries the T of S.T.A.R. now the ritual screen is gone
 await page.getByText("Recommended", { exact: true }).waitFor();
 await shot("mission-2");
-// All three bottles are on screen, and the card says they are tappable
-await page.getByText("TAP TO CHANGE").waitFor();
+// All three bottles are on screen, labelled as the thing to pick from
+await page.getByText("SELECT THE FRAGRANCE YOU'RE WEARING").waitFor();
 // One tap changes the one he is wearing
 await page.getByRole("radio", { name: "honor" }).click();
-await page.getByText("YOUR CHOICE", { exact: true }).waitFor();
 // The recommendation stays marked on its own tile even once he overrides it
 await page.getByText("Recommended", { exact: true }).waitFor();
+if ((await page.getByRole("radio", { name: "honor" }).getAttribute("aria-checked")) !== "true")
+  fail("switching fragrance did not stick");
 await shot("mission-2-fragrance-switched");
 await page.getByRole("radio", { name: "courage" }).click();
 await page.getByText("Recommended", { exact: true }).waitFor();

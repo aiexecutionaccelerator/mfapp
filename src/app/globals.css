@@ -24,6 +24,11 @@
   --courage-glow: rgba(212, 175, 55, 0.22);
   --commitment: #050609;
   --commitment-glow: rgba(245, 241, 232, 0.06);
+  /* A black bottle has no colour to glow with — black is read by the light
+     that catches its edge. So UI tinting for Commitment uses a warm ivory
+     rim instead of the fill, where Honor and Courage use their own colour. */
+  --commitment-ui: #e3ded2;
+  --commitment-ui-glow: rgba(227, 222, 210, 0.18);
 
   /* Status */
   --success: #7fb77e;
