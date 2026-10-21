@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import BuyRow from "@/components/BuyRow";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
@@ -101,8 +100,6 @@ export default function ProgressPage() {
       >
         VIEW MY PERSONAL CODE
       </Button>
-
-      <BuyRow />
     </main>
   );
 }

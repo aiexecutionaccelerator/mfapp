@@ -13,10 +13,12 @@ import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
 import { cn } from "@/lib/utils";
 
-const IDENTITY_EXAMPLES = [
-  "Keeps his word, acts despite fear, and follows through.",
-  "Shows his family how much they matter.",
-];
+/**
+ * The box opens with this sentence already in it — real, editable text, not
+ * grey placeholder a man can't use. He continues straight away or makes it
+ * his own.
+ */
+const IDENTITY_EXAMPLE = "Keeps his word, acts despite fear, and follows through.";
 
 const IDENTITY_MAX = 280;
 const STEP_KEY = "mission.onboardingStep";
@@ -53,7 +55,10 @@ export default function OnboardingPage() {
     /* eslint-disable react-hooks/set-state-in-effect */
     setStepState(readStep());
     setNameState(window.sessionStorage.getItem(NAME_KEY) ?? "");
-    setIdentityState(window.sessionStorage.getItem(IDENTITY_KEY) ?? "");
+    // A saved draft wins; otherwise the box starts with the example in it.
+    setIdentityState(
+      window.sessionStorage.getItem(IDENTITY_KEY) ?? IDENTITY_EXAMPLE,
+    );
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
@@ -151,30 +156,31 @@ export default function OnboardingPage() {
               maxLength={IDENTITY_MAX}
               multiline
               rows={3}
-              placeholder="keeps his word, acts despite fear, and follows through"
             />
           </div>
 
           <p className="mt-1 text-[13px] text-ink-2">
-            One sentence is enough. Tap an example to start from it:
+            One sentence is enough. Tap the example below to get you started.
           </p>
-          <div className="mt-3 space-y-2">
-            {IDENTITY_EXAMPLES.map((example) => (
-              <button
-                key={example}
-                type="button"
-                onClick={() => setIdentity(example)}
-                className={cn(
-                  "glass block w-full rounded-[14px] px-4 py-3 text-left text-[15px] leading-snug",
-                  identity === example
-                    ? "border-[var(--gold-500)] text-ink-0"
-                    : "text-ink-1",
-                )}
-              >
-                {example}
-              </button>
-            ))}
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => setIdentity(IDENTITY_EXAMPLE)}
+              className={cn(
+                "glass block w-full rounded-[14px] px-4 py-3 text-left text-[15px] leading-snug",
+                identity === IDENTITY_EXAMPLE
+                  ? "border-[var(--gold-500)] text-ink-0"
+                  : "text-ink-1",
+              )}
+            >
+              {IDENTITY_EXAMPLE}
+            </button>
           </div>
+
+          <p className="mt-3 text-[13px] leading-snug text-ink-2">
+            Write your own or keep this one — you can change it any time in
+            Settings.
+          </p>
 
           <BottomActions className="mt-8">
             <Button

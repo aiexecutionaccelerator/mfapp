@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
+import BuyRow from "@/components/BuyRow";
 import TabBar from "@/components/TabBar";
 import { useAppData } from "@/lib/data/store";
 
@@ -22,6 +23,8 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     <>
       <div className="flex flex-1 flex-col pb-[calc(env(safe-area-inset-bottom)+92px)]">
         {children}
+        {/* One place, every screen — it pins to the bottom when there is room. */}
+        <BuyRow />
       </div>
       <TabBar />
     </>

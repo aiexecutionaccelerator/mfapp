@@ -42,16 +42,29 @@ await page.getByText("ENTER DEMO").waitFor();
 await shot("welcome");
 await page.getByText("ENTER DEMO").click();
 
-// B — Profile setup
+// B — Profile setup. The identity box opens with real, editable text in it,
+// so CONTINUE is live the moment a name is typed.
 await page.getByText("LET'S SET YOU UP").waitFor();
+const identity = page.getByLabel(/I am becoming a man who/);
+if ((await identity.inputValue()) !== "Keeps his word, acts despite fear, and follows through.")
+  fail("the identity box did not open with the example in it");
+await page.getByText("Tap the example below to get you started").waitFor();
+await page.getByText("you can change it any time in Settings").waitFor();
 await page.getByLabel("Name").fill("Antonio");
-await page.getByText("Keeps his word, acts despite fear, and follows through.").click();
+if (await page.getByRole("button", { name: "CONTINUE" }).isDisabled())
+  fail("CONTINUE is still greyed out with the example in the box");
+// Editing it, then tapping the example to come back, both work
+await identity.fill("Shows up for the people who count on him.");
+await page
+  .getByRole("button", { name: "Keeps his word, acts despite fear, and follows through." })
+  .click();
 await shot("profile-setup");
 await page.getByRole("button", { name: "CONTINUE" }).click();
 
 // C — How It Works: two screens, then straight into Mission 1
 await page.getByText("MORE THAN COLOGNE").first().waitFor();
 await page.getByText("olfactory conditioning").waitFor();
+await page.getByText("which man you are about to be").waitFor();
 await shot("onboarding-1");
 await page.getByRole("button", { name: "NEXT" }).click();
 await page.getByText("MEET YOUR SCENT TRIGGERS").waitFor();
@@ -151,6 +164,13 @@ await page.getByRole("button", { name: "LOG THIS ACTION" }).click();
 await page.getByText("PROOF LOGGED.").waitFor();
 await page.getByRole("button", { name: "DONE" }).click();
 await page.waitForURL("**/missions");
+
+// The claim-your-set row is at the foot of every screen in the app
+for (const path of ["/missions", "/log", "/progress", "/settings"]) {
+  await page.goto(`${BASE}${path}`);
+  if ((await page.getByText("Click here to claim your set").count()) === 0)
+    fail(`no buy row on ${path}`);
+}
 
 // J — Proof Log: every proof, Missions and one-offs together
 await page.goto(`${BASE}/log`);

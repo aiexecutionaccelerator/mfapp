@@ -84,7 +84,9 @@ export default function OnboardingScreens({
             fragrance and recalling a moment you lived it, then{" "}
             <span className="text-ink-0">Act</span> and{" "}
             <span className="text-ink-0">Record</span> what you did in the same
-            breath. Do that thirty times and the bottle stops being a bottle.
+            breath. Wear it enough times and the scent stops being something
+            you put on in the morning — it becomes the signal that tells you
+            which man you are about to be.
           </p>
           <p className="font-display text-gold-gradient mt-6 text-[22px] leading-snug">
             The fragrance is the trigger. Recording your action is the
