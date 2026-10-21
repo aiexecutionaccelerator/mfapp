@@ -85,7 +85,10 @@ export default function FragranceCue({
               aria-label={TRIGGERS[trigger].name.toLowerCase()}
               data-open={chosen}
               onClick={() => onChange(trigger)}
-              className="bottle-tile flex flex-col items-center rounded-[14px] px-1 pt-3 pb-2"
+              className={cn(
+                "bottle-tile flex flex-col items-center rounded-[14px] px-1 pt-3 pb-2",
+                trigger === recommended && "is-recommended",
+              )}
               style={
                 {
                   "--cue-color": accent.color,
@@ -111,27 +114,29 @@ export default function FragranceCue({
               >
                 {TRIGGERS[trigger].name}
               </span>
-              {/* Which one the Mission asks for, whatever he picks. */}
-              <span
-                aria-hidden
-                className={cn(
-                  "mt-1.5 block h-1 w-1 rounded-full",
-                  trigger === recommended
-                    ? "bg-[var(--gold-500)]"
-                    : "bg-transparent",
-                )}
-              />
+              {/* Which one the Mission asks for, whatever he picks. The
+                  spacer keeps all three tiles the same height. */}
+              {trigger === recommended ? (
+                <span className="mt-2 block rounded-full border border-[rgba(201,166,72,.45)] px-1.5 py-[2px] text-[8px] leading-none tracking-[0.1em] text-gold-300 uppercase">
+                  Recommended
+                </span>
+              ) : (
+                <span aria-hidden className="mt-2 block h-[14px]" />
+              )}
             </button>
           );
         })}
       </div>
 
-      <div className="relative mt-4 text-center">
-        <p className="eyebrow text-ink-2">
+      <div className="relative mt-3 text-center">
+        {/* The tile already says RECOMMENDED, so this line only speaks when
+            it has something to add — and keeps its height either way so the
+            name never jumps. */}
+        <p className="eyebrow min-h-[16px] text-ink-2">
           {recommended === undefined
             ? "YOUR FRAGRANCE"
             : onRecommendation
-              ? "RECOMMENDED"
+              ? ""
               : "YOUR CHOICE"}
         </p>
         {/* Keyed so the line remounts on a switch: iOS Safari splices text
@@ -144,9 +149,6 @@ export default function FragranceCue({
           }}
         >
           {meta.name}
-        </p>
-        <p key={`${value}-line`} className="mt-2 text-[13px] leading-snug text-ink-1">
-          {meta.starRecall}
         </p>
       </div>
     </div>

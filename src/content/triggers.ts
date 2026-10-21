@@ -13,8 +13,6 @@ export const TRIGGERS = {
     applyLine: "Apply Honor now.",
     /** For the anchor line: "recall a moment you were HONORABLE". */
     anchorWord: "HONORABLE",
-    /** The T of S.T.A.R., personalized to the value. */
-    starRecall: "Spray the fragrance. Recall one time you acted with honor.",
     /** "Proof logged. You acted with Honor." */
     provedWith: "Honor",
   },
@@ -29,7 +27,6 @@ export const TRIGGERS = {
       "Courage isn't a switch you flip in a crisis. It's built through the daily practice of mastering your fear — mental, moral, and physical strength earned by doing the hard thing anyway. Not every brave act is audacious: sticking to the plan, saying no, climbing the ladder. Every small act builds a courageous man.",
     applyLine: "Apply Courage now.",
     anchorWord: "COURAGEOUS",
-    starRecall: "Spray the fragrance. Recall one time you acted despite fear.",
     provedWith: "Courage",
   },
   commitment: {
@@ -43,7 +40,6 @@ export const TRIGGERS = {
       "Commitment is more than a promise. It's a conscious decision to stick to a goal or task in the face of adversity — the spirit of determination and dedication that leads to the mastery of self. It doesn't come and go with your moods. It starts small: daily decisions that line up with what you said you wanted.",
     applyLine: "Apply Commitment now.",
     anchorWord: "COMMITTED",
-    starRecall: "Spray the fragrance. Recall one time you followed through.",
     provedWith: "Commitment",
   },
 } as const;

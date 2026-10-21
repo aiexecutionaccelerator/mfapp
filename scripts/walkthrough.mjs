@@ -96,18 +96,18 @@ await page.getByRole("button", { name: "CONTINUE TO THE NEXT MISSION" }).click()
 await page.waitForURL("**/missions/2");
 await page.getByText("Most likely there's a message you need to send").waitFor();
 // The fragrance cue carries the T of S.T.A.R. now the ritual screen is gone
-await page.getByText("RECOMMENDED", { exact: true }).waitFor();
-await page.getByText("Spray the fragrance. Recall one time you acted despite fear.").waitFor();
+await page.getByText("Recommended", { exact: true }).waitFor();
 await shot("mission-2");
 // All three bottles are on screen, and the card says they are tappable
 await page.getByText("TAP TO CHANGE").waitFor();
 // One tap changes the one he is wearing
 await page.getByRole("radio", { name: "honor" }).click();
 await page.getByText("YOUR CHOICE", { exact: true }).waitFor();
-await page.getByText("Spray the fragrance. Recall one time you acted with honor.").waitFor();
+// The recommendation stays marked on its own tile even once he overrides it
+await page.getByText("Recommended", { exact: true }).waitFor();
 await shot("mission-2-fragrance-switched");
 await page.getByRole("radio", { name: "courage" }).click();
-await page.getByText("RECOMMENDED", { exact: true }).waitFor();
+await page.getByText("Recommended", { exact: true }).waitFor();
 
 // E — Mission 2, completed from the list side
 await page

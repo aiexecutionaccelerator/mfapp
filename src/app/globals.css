@@ -213,12 +213,31 @@ body {
     opacity: 1;
   }
 
+  /* The bottle the Mission asks for carries its own light from the inside,
+     so the recommendation reads even when he is wearing something else. */
+  .bottle-tile.is-recommended {
+    border-color: rgba(201, 166, 72, 0.3);
+    box-shadow: inset 0 0 22px rgba(201, 166, 72, 0.16);
+  }
+
+  .bottle-tile.is-recommended:hover,
+  .bottle-tile.is-recommended[data-open="true"] {
+    box-shadow:
+      inset 0 0 26px rgba(201, 166, 72, 0.22),
+      0 0 34px var(--cue-glow);
+  }
+
   /* A finger is not a cursor: never leave a tile stuck in its hover state. */
   @media (hover: none) {
     .bottle-tile:hover {
       border-color: var(--line);
       box-shadow: none;
       transform: none;
+    }
+
+    .bottle-tile.is-recommended:hover {
+      border-color: rgba(201, 166, 72, 0.3);
+      box-shadow: inset 0 0 22px rgba(201, 166, 72, 0.16);
     }
 
     .bottle-tile:hover .bottle-pool {
