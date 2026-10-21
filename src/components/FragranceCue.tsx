@@ -9,15 +9,14 @@ import { cn } from "@/lib/utils";
 /**
  * The fragrance for this Mission — the shelf, not a dropdown.
  *
- * All three bottles sit on their own tiles. The one the Mission calls for is
- * picked up: full size, lit, named, carrying the spray instruction. The other
- * two stand back on outlined tiles, one tap away, each labelled so a new man
- * knows what he would be switching to. So the recommendation is obvious, and
- * changing it costs one tap with nothing to open or find.
+ * All three bottles sit on their own tiles, each labelled, so a new man can
+ * see what he would be switching to. The one he is wearing is picked up —
+ * full size, lit, standing in its own pool of light. The one the Mission
+ * asks for carries an inner gold light and its own RECOMMENDED pill, so the
+ * suggestion still reads once he has chosen something else.
  *
- * It also carries the T of S.T.A.R. When the ritual screen was folded away,
- * "spray it and recall a moment you lived this" lost its home; it belongs on
- * the screen he is looking at while he sprays.
+ * The card says nothing it does not have to: where he stands and the fact
+ * that he can move, on one line, above the shelf.
  */
 export default function FragranceCue({
   value,
@@ -31,14 +30,13 @@ export default function FragranceCue({
   recommended?: Trigger;
   className?: string;
 }) {
-  const meta = TRIGGERS[value];
   const tone = TRIGGER_ACCENTS[value];
   const onRecommendation = recommended !== undefined && value === recommended;
 
   return (
     <div
       className={cn(
-        "glass relative overflow-hidden rounded-[20px] px-4 pt-3 pb-5",
+        "glass relative overflow-hidden rounded-[20px] px-4 pt-3 pb-3",
         className,
       )}
       style={{
@@ -62,11 +60,17 @@ export default function FragranceCue({
         }}
       />
 
-      {/* Says out loud what the tiles imply: this one is yours to change. */}
-      <p className="eyebrow relative flex items-center justify-end gap-1.5 text-ink-2">
-        <ArrowLeftRight aria-hidden size={12} className="shrink-0" />
-        TAP TO CHANGE
-      </p>
+      {/* One row: where he stands on the left, and the fact that he can move
+          on the right. No second line for either. */}
+      <div className="eyebrow relative flex items-center justify-between gap-3 text-ink-2">
+        <span className="min-w-0 truncate">
+          {recommended !== undefined && !onRecommendation ? "YOUR CHOICE" : ""}
+        </span>
+        <span className="flex shrink-0 items-center gap-1.5">
+          <ArrowLeftRight aria-hidden size={12} className="shrink-0" />
+          TAP TO CHANGE
+        </span>
+      </div>
 
       <div
         role="radiogroup"
@@ -126,30 +130,6 @@ export default function FragranceCue({
             </button>
           );
         })}
-      </div>
-
-      <div className="relative mt-3 text-center">
-        {/* The tile already says RECOMMENDED, so this line only speaks when
-            it has something to add — and keeps its height either way so the
-            name never jumps. */}
-        <p className="eyebrow min-h-[16px] text-ink-2">
-          {recommended === undefined
-            ? "YOUR FRAGRANCE"
-            : onRecommendation
-              ? ""
-              : "YOUR CHOICE"}
-        </p>
-        {/* Keyed so the line remounts on a switch: iOS Safari splices text
-            that changes in place inside a backdrop-filtered card. */}
-        <p
-          key={value}
-          className="font-display mt-1.5 text-[26px] leading-none"
-          style={{
-            color: value === "commitment" ? "var(--ink-0)" : tone.color,
-          }}
-        >
-          {meta.name}
-        </p>
       </div>
     </div>
   );
