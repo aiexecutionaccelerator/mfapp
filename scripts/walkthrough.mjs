@@ -99,9 +99,11 @@ await page.getByText("Most likely there's a message you need to send").waitFor()
 await page.getByText("WEAR THIS FOR MISSION").waitFor();
 await page.getByText("Spray the fragrance. Recall one time you acted despite fear.").waitFor();
 await shot("mission-2");
-// All three bottles are on screen: one tap changes the one he is wearing
+// All three bottles are on screen, and the card says they are tappable
+await page.getByText("TAP TO CHANGE").waitFor();
+// One tap changes the one he is wearing
 await page.getByRole("radio", { name: "honor" }).click();
-await page.getByText("YOUR CHOICE · TAP TO SWITCH BACK").waitFor();
+await page.getByText("YOUR CHOICE · THE DOT MARKS THE RECOMMENDATION").waitFor();
 await page.getByText("Spray the fragrance. Recall one time you acted with honor.").waitFor();
 await shot("mission-2-fragrance-switched");
 await page.getByRole("radio", { name: "courage" }).click();
