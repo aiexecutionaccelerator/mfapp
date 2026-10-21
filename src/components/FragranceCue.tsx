@@ -31,13 +31,15 @@ export default function FragranceCue({
 }) {
   return (
     <div className={className}>
-      <p className="eyebrow text-gold-300">
-        SELECT THE FRAGRANCE YOU&apos;RE WEARING
-      </p>
+      {/* Tenseless on purpose: "you're wearing" assumes he already sprayed,
+          "you'll wear" assumes he hasn't, and this screen spans both. An
+          imperative also puts the T of S.T.A.R. back on the screen where he
+          is standing when he sprays. */}
+      <p className="eyebrow text-gold-300">SPRAY THE ONE YOU NEED</p>
 
       <div
         role="radiogroup"
-        aria-label="Which fragrance are you wearing?"
+        aria-label="Which fragrance"
         className="mt-3 grid grid-cols-3 gap-2"
       >
         {TRIGGER_ORDER.map((trigger) => {

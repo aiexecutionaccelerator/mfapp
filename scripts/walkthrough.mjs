@@ -99,7 +99,7 @@ await page.getByText("Most likely there's a message you need to send").waitFor()
 await page.getByText("Recommended", { exact: true }).waitFor();
 await shot("mission-2");
 // All three bottles are on screen, labelled as the thing to pick from
-await page.getByText("SELECT THE FRAGRANCE YOU'RE WEARING").waitFor();
+await page.getByText("SPRAY THE ONE YOU NEED").waitFor();
 // One tap changes the one he is wearing
 await page.getByRole("radio", { name: "honor" }).click();
 // The recommendation stays marked on its own tile even once he overrides it
