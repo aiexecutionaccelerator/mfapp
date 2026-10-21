@@ -82,6 +82,12 @@ if ((await page.getByText("Use a different fragrance").count()) > 0)
 if ((await page.getByText("Private. Only you ever see this.").count()) > 0)
   fail("private-question line is back");
 await shot("mission-1");
+// The example is a button: one tap puts it in the field, and then it's gone
+await page.getByRole("button", { name: /Use this example/ }).click();
+if (!(await page.getByLabel("What did you do?").inputValue()).startsWith("Texted my brother"))
+  fail("tapping the example did not fill the field");
+if ((await page.getByRole("button", { name: /Use this example/ }).count()) > 0)
+  fail("the example button is still there once the field has text");
 await page.getByLabel("What did you do?").fill("Texted my brother that I'm proud of him.");
 await page.getByRole("button", { name: "COMPLETE MISSION 1" }).click();
 await page.getByText("MISSION COMPLETE.").waitFor();

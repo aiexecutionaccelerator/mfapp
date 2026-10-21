@@ -7,6 +7,7 @@ import NavAction from "@/components/NavAction";
 import FragranceCue from "@/components/FragranceCue";
 import MissionVideo from "@/components/MissionVideo";
 import PhotoInput from "@/components/PhotoInput";
+import TapToUse from "@/components/TapToUse";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
@@ -290,9 +291,22 @@ function MissionDetailInner({
           maxLength={PROOF_TEXT_MAX}
           multiline
           rows={5}
-          placeholder={def.inputPlaceholder}
+          placeholder="Write it here."
         />
       </div>
+
+      {/* The example is a button, not grey text he can only look at. It goes
+          the moment there is anything in the field. */}
+      {def.inputExample && !text.trim() && (
+        <TapToUse
+          className="mt-3"
+          text={def.inputExample}
+          onUse={(value) => {
+            setText(value);
+            track("mission_example_used", { missionNumber: def?.number });
+          }}
+        />
+      )}
 
       {def.photoEncouraged && (
         <div className="mt-4">

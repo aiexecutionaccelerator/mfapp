@@ -156,6 +156,24 @@ body {
       0 12px 36px rgba(201, 166, 72, 0.15);
   }
 
+  /* ---------- Tap-to-use example ---------- */
+
+  /* A dashed edge says "not filled in yet" the way a solid card can't. */
+  .tap-to-use {
+    background: rgba(18, 23, 34, 0.45);
+    border: 1px dashed rgba(201, 166, 72, 0.4);
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .tap-to-use:hover,
+  .tap-to-use:active {
+    border-color: var(--gold-500);
+    border-style: solid;
+    background: rgba(26, 32, 48, 0.6);
+  }
+
   /* ---------- The three bottles ---------- */
 
   /*
