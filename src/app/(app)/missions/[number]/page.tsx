@@ -288,12 +288,29 @@ function MissionDetailInner({
         </GlassCard>
       )}
 
-      {/* The one thing the screen is for. Room to write more than a line,
-          and lit like the button it leads to. */}
-      <div className="mt-7">
+      {/* The question, then an example of an answer, then the box he writes
+          in — read in that order, which is the order he needs them. The
+          label lives out here so the example can sit between the two. */}
+      <p className="eyebrow mt-7 text-gold-300">{def.inputLabel}</p>
+
+      {/* The example is a button, not grey text he can only look at. It goes
+          the moment there is anything in the field, and the field rises to
+          meet the button. */}
+      {def.inputExample && !text.trim() && (
+        <TapToUse
+          className="mt-2"
+          text={def.inputExample}
+          onUse={(value) => {
+            setText(value);
+            track("mission_example_used", { missionNumber: def?.number });
+          }}
+        />
+      )}
+
+      <div className="mt-3">
         <Field
           variant="prominent"
-          label={def.inputLabel}
+          aria-label={def.inputLabel}
           value={text}
           onChange={setText}
           maxLength={PROOF_TEXT_MAX}
@@ -302,19 +319,6 @@ function MissionDetailInner({
           placeholder="Write it here."
         />
       </div>
-
-      {/* The example is a button, not grey text he can only look at. It goes
-          the moment there is anything in the field. */}
-      {def.inputExample && !text.trim() && (
-        <TapToUse
-          className="mt-3"
-          text={def.inputExample}
-          onUse={(value) => {
-            setText(value);
-            track("mission_example_used", { missionNumber: def?.number });
-          }}
-        />
-      )}
 
       {def.photoEncouraged && (
         <div className="mt-4">

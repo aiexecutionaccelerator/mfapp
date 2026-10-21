@@ -131,8 +131,8 @@ export default function FragranceCue({
           {recommended === undefined
             ? "YOUR FRAGRANCE"
             : onRecommendation
-              ? "WEAR THIS FOR MISSION"
-              : "YOUR CHOICE · THE DOT MARKS THE RECOMMENDATION"}
+              ? "RECOMMENDED"
+              : "YOUR CHOICE"}
         </p>
         {/* Keyed so the line remounts on a switch: iOS Safari splices text
             that changes in place inside a backdrop-filtered card. */}
