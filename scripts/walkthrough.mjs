@@ -48,16 +48,13 @@ await page.getByText("LET'S SET YOU UP").waitFor();
 const identity = page.getByLabel(/I am becoming a man who/);
 if ((await identity.inputValue()) !== "Keeps his word, acts despite fear, and follows through.")
   fail("the identity box did not open with the example in it");
-await page.getByText("Tap the example below to get you started").waitFor();
 await page.getByText("you can change it any time in Settings").waitFor();
 await page.getByLabel("Name").fill("Antonio");
 if (await page.getByRole("button", { name: "CONTINUE" }).isDisabled())
   fail("CONTINUE is still greyed out with the example in the box");
-// Editing it, then tapping the example to come back, both work
-await identity.fill("Shows up for the people who count on him.");
-await page
-  .getByRole("button", { name: "Keeps his word, acts despite fear, and follows through." })
-  .click();
+// Nothing duplicates the sentence that is already in the box
+if ((await page.getByRole("button", { name: /Keeps his word/ }).count()) > 0)
+  fail("the example chip is still there under a filled box");
 await shot("profile-setup");
 await page.getByRole("button", { name: "CONTINUE" }).click();
 
@@ -102,6 +99,13 @@ await page.getByText("Most likely there's a message you need to send").waitFor()
 await page.getByText("WEAR THIS FOR MISSION").waitFor();
 await page.getByText("Spray the fragrance. Recall one time you acted despite fear.").waitFor();
 await shot("mission-2");
+// All three bottles are on screen: one tap changes the one he is wearing
+await page.getByRole("radio", { name: "honor" }).click();
+await page.getByText("YOUR CHOICE · TAP TO SWITCH BACK").waitFor();
+await page.getByText("Spray the fragrance. Recall one time you acted with honor.").waitFor();
+await shot("mission-2-fragrance-switched");
+await page.getByRole("radio", { name: "courage" }).click();
+await page.getByText("WEAR THIS FOR MISSION").waitFor();
 
 // E — Mission 2, completed from the list side
 await page
@@ -163,7 +167,7 @@ await shot("personal-code");
 await page.goto(`${BASE}/missions`);
 await page.getByText("ONE-OFF ACTION").first().click();
 await page.waitForURL("**/action/declare");
-await page.getByRole("radio", { name: "COURAGE" }).click();
+await page.getByRole("radio", { name: "courage" }).click();
 await page.getByLabel("What did you do?").fill("Made the call I'd been dodging.");
 await shot("one-off-action");
 await page.getByRole("button", { name: "LOG THIS ACTION" }).click();

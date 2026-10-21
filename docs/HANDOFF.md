@@ -19,7 +19,7 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 2.2.1 (one input, one click)
+- Version: 2.3.0 (one input, one click)
 
 ## Architecture facts that matter
 
@@ -77,8 +77,10 @@ opens on the Missions themselves; `/home` redirects to `/missions`.
   `SHOW ALL 30 MISSIONS` toggle, one `ONE-OFF ACTION` row at the bottom.
   Statuses are Complete and Not Started — nothing else.
 - `/missions/[number]` — ONE reusable template: `MISSION N` + title, the why
-  in Antonio's voice, optional collapsed video, `RECOMMENDED: <VALUE>`
-  (shown, never chosen), one field, one button. Submitting calls
+  in Antonio's voice, optional collapsed video, the FragranceCue shelf (all
+  three bottles, the recommended one picked up and lit, one tap to wear a
+  different one — the gold dot always marks what the Mission suggests), one
+  field, one button. Submitting calls
   `store.logProof` once; for the Personal Code Missions (m8–m13, m30) the same
   sentence is also written to `lesson_responses`, which is what keeps
   `/personal-code` compiling. Missions 7 and 19 also take an optional photo.

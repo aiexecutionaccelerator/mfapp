@@ -20,7 +20,7 @@ import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
 import { compilePersonalCode } from "@/lib/personalCode";
-import { PROOF_TEXT_MAX } from "@/lib/data/types";
+import { PROOF_TEXT_MAX, type Trigger } from "@/lib/data/types";
 import {
   MISSION_COUNT,
   computeStats,
@@ -54,6 +54,8 @@ function MissionDetailInner({
     : undefined;
 
   const [text, setText] = useState("");
+  // The Mission recommends; he decides. Null means he has not overridden it.
+  const [chosenTrigger, setChosenTrigger] = useState<Trigger | null>(null);
   const [photo, setPhoto] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [justLogged, setJustLogged] = useState(false);
@@ -94,7 +96,8 @@ function MissionDetailInner({
 
   const row = structuredMissionRow(missions, def.number);
   const done = row?.status === "completed";
-  const trigger = def.recommendedTrigger;
+  const trigger: Trigger =
+    row?.trigger ?? chosenTrigger ?? def.recommendedTrigger;
   const valueName = TRIGGERS[trigger].name;
 
   const personalCode = def.showPersonalCode
@@ -108,7 +111,7 @@ function MissionDetailInner({
     setPending(true);
     try {
       await store.logProof({
-        trigger: def.recommendedTrigger,
+        trigger,
         action_text: entry.slice(0, PROOF_TEXT_MAX),
         action_category: "mission",
         mission_number: def.number,
@@ -126,7 +129,7 @@ function MissionDetailInner({
       }
       track("mission_action_completed", {
         missionNumber: def.number,
-        selectedTrigger: def.recommendedTrigger,
+        selectedTrigger: trigger,
         timeSinceMissionOpened: Date.now() - openedAt.current,
       });
       if (photo) track("proof_photo_added", { missionNumber: def.number });
@@ -260,7 +263,12 @@ function MissionDetailInner({
         />
       )}
 
-      <FragranceCue trigger={trigger} className="mt-7" />
+      <FragranceCue
+        value={trigger}
+        recommended={def.recommendedTrigger}
+        onChange={setChosenTrigger}
+        className="mt-7"
+      />
 
       {personalCode && (
         <GlassCard className="mt-5">

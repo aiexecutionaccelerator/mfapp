@@ -11,7 +11,6 @@ import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
 import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
-import { cn } from "@/lib/utils";
 
 /**
  * The box opens with this sentence already in it — real, editable text, not
@@ -159,27 +158,11 @@ export default function OnboardingPage() {
             />
           </div>
 
-          <p className="mt-1 text-[13px] text-ink-2">
-            One sentence is enough. Tap the example below to get you started.
-          </p>
-          <div className="mt-3">
-            <button
-              type="button"
-              onClick={() => setIdentity(IDENTITY_EXAMPLE)}
-              className={cn(
-                "glass block w-full rounded-[14px] px-4 py-3 text-left text-[15px] leading-snug",
-                identity === IDENTITY_EXAMPLE
-                  ? "border-[var(--gold-500)] text-ink-0"
-                  : "text-ink-1",
-              )}
-            >
-              {IDENTITY_EXAMPLE}
-            </button>
-          </div>
-
-          <p className="mt-3 text-[13px] leading-snug text-ink-2">
-            Write your own or keep this one — you can change it any time in
-            Settings.
+          {/* The sentence is already in the box, so there is nothing to offer
+              him a copy of — one line is all this needs. */}
+          <p className="mt-1 text-[13px] leading-snug text-ink-2">
+            One sentence is enough. Keep this one or write your own — you can
+            change it any time in Settings.
           </p>
 
           <BottomActions className="mt-8">

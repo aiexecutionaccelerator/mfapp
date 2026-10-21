@@ -2,17 +2,16 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useRef, useState } from "react";
+import FragranceCue from "@/components/FragranceCue";
 import NavAction from "@/components/NavAction";
 import Button from "@/components/ui/Button";
-import Eyebrow, { AccentDot } from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
-import { TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
+import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
 import { store } from "@/lib/data/store";
 import { PROOF_TEXT_MAX, type Trigger } from "@/lib/data/types";
-import { cn } from "@/lib/utils";
 
 function isTrigger(value: string | null): value is Trigger {
   return value === "honor" || value === "courage" || value === "commitment";
@@ -89,29 +88,11 @@ function DeclareInner() {
         with everything else.
       </p>
 
-      <Eyebrow tone="gold" className="mt-7">
-        WHICH VALUE?
-      </Eyebrow>
-      <div className="mt-3 flex gap-2" role="radiogroup" aria-label="Which value?">
-        {TRIGGER_ORDER.map((value) => (
-          <button
-            key={value}
-            type="button"
-            role="radio"
-            aria-checked={trigger === value}
-            onClick={() => setTrigger(value)}
-            className={cn(
-              "glass flex min-h-12 flex-1 items-center justify-center gap-2 rounded-[14px] px-2 text-[13px] tracking-[0.04em] uppercase",
-              trigger === value
-                ? "border-[var(--gold-500)] text-ink-0"
-                : "text-ink-2",
-            )}
-          >
-            <AccentDot trigger={value} />
-            {TRIGGERS[value].name}
-          </button>
-        ))}
-      </div>
+      <FragranceCue
+        value={trigger}
+        onChange={setTrigger}
+        className="mt-7"
+      />
 
       <div className="mt-7">
         <Field
