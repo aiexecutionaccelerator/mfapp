@@ -79,6 +79,9 @@ await shot("mission-1-complete");
 await page.getByRole("button", { name: "CONTINUE TO THE NEXT MISSION" }).click();
 await page.waitForURL("**/missions/2");
 await page.getByText("Most likely there's a message you need to send").waitFor();
+// The fragrance cue carries the T of S.T.A.R. now the ritual screen is gone
+await page.getByText("WEAR THIS FOR MISSION").waitFor();
+await page.getByText("Spray the fragrance. Recall one time you acted despite fear.").waitFor();
 await shot("mission-2");
 
 // E — Mission 2, completed from the list side
@@ -105,6 +108,14 @@ await page.getByRole("button", { name: /SHOW ALL 30 MISSIONS/ }).click();
 await page.getByText("ALL MISSIONS").waitFor();
 if ((await page.getByText("MISSION 30").count()) === 0)
   fail("Mission 30 not reachable");
+
+// The three bottles at the foot of the list: side by side, tap to read
+await page.getByRole("button", { name: /SHOW LESS/ }).click();
+await page.getByText("YOUR THREE FRAGRANCES").waitFor();
+await page.getByRole("button", { name: /What courage is for/i }).click();
+if ((await page.getByText("Courage isn't a switch you flip").count()) === 0)
+  fail("the bottle did not open its description");
+await shot("fragrance-trio");
 
 // G — A Mission that carries a photo (Mission 7)
 await page.goto(`${BASE}/missions/7`);

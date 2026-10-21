@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Suspense, use, useEffect, useRef, useState } from "react";
 import NavAction from "@/components/NavAction";
+import FragranceCue from "@/components/FragranceCue";
 import MissionVideo from "@/components/MissionVideo";
 import PhotoInput from "@/components/PhotoInput";
 import Button from "@/components/ui/Button";
@@ -258,7 +259,7 @@ function MissionDetailInner({
         />
       )}
 
-      <p className="eyebrow mt-6 text-gold-300">RECOMMENDED: {valueName}</p>
+      <FragranceCue trigger={trigger} className="mt-7" />
 
       {personalCode && (
         <GlassCard className="mt-5">

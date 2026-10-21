@@ -3,6 +3,7 @@
 import { Check, ChevronRight, Play } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import FragranceTrio from "@/components/FragranceTrio";
 import Button from "@/components/ui/Button";
 import Eyebrow, { AccentDot } from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
@@ -177,6 +178,8 @@ export default function MissionListPage() {
           <ChevronRight aria-hidden className="shrink-0 text-ink-2" size={20} />
         </div>
       </Link>
+
+      <FragranceTrio />
     </main>
   );
 }

@@ -156,6 +156,70 @@ body {
       0 12px 36px rgba(201, 166, 72, 0.15);
   }
 
+  /* ---------- The three bottles ---------- */
+
+  /*
+   * A bottle tile on the Missions list. The accent colour arrives as
+   * --cue-color / --cue-glow so hover and the open state can be styled in
+   * CSS instead of inline, where :hover cannot reach.
+   */
+  .bottle-tile {
+    background: linear-gradient(
+      180deg,
+      rgba(26, 32, 48, 0.55),
+      rgba(18, 23, 34, 0.4)
+    );
+    border: 1px solid var(--line);
+    transition:
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  .bottle-tile .bottle-pool {
+    opacity: 0.35;
+    transition: opacity 180ms ease;
+  }
+
+  .bottle-tile:hover,
+  .bottle-tile[data-open="true"] {
+    border-color: var(--cue-color);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 0 34px var(--cue-glow);
+    transform: translateY(-2px);
+  }
+
+  .bottle-tile:hover .bottle-pool,
+  .bottle-tile[data-open="true"] .bottle-pool {
+    opacity: 1;
+  }
+
+  /* A finger is not a cursor: never leave a tile stuck in its hover state. */
+  @media (hover: none) {
+    .bottle-tile:hover {
+      border-color: var(--line);
+      box-shadow: none;
+      transform: none;
+    }
+
+    .bottle-tile:hover .bottle-pool {
+      opacity: 0.35;
+    }
+
+    .bottle-tile[data-open="true"] {
+      border-color: var(--cue-color);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 34px var(--cue-glow);
+      transform: translateY(-2px);
+    }
+
+    .bottle-tile[data-open="true"] .bottle-pool {
+      opacity: 1;
+    }
+  }
+
   /* ---------- Glass ---------- */
 
   .glass {
