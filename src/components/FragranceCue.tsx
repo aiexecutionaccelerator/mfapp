@@ -31,11 +31,11 @@ export default function FragranceCue({
 }) {
   return (
     <div className={className}>
-      {/* Tenseless on purpose: "you're wearing" assumes he already sprayed,
-          "you'll wear" assumes he hasn't, and this screen spans both. An
-          imperative also puts the T of S.T.A.R. back on the screen where he
-          is standing when he sprays. */}
-      <p className="eyebrow text-gold-300">SPRAY THE ONE YOU NEED</p>
+      {/* Tenseless on purpose: "the one you're wearing" assumes he already
+          sprayed, "you'll wear" assumes he hasn't, and this screen spans
+          both. Scent Trigger is the product's own name for these, taught on
+          the second onboarding screen. */}
+      <p className="eyebrow text-gold-300">CHOOSE YOUR SCENT TRIGGER</p>
 
       <div
         role="radiogroup"
