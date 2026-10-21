@@ -278,14 +278,17 @@ function MissionDetailInner({
         </GlassCard>
       )}
 
+      {/* The one thing the screen is for. Room to write more than a line,
+          and lit like the button it leads to. */}
       <div className="mt-7">
         <Field
+          variant="prominent"
           label={def.inputLabel}
           value={text}
           onChange={setText}
           maxLength={PROOF_TEXT_MAX}
-          multiline={def.multiline}
-          rows={def.multiline ? 3 : undefined}
+          multiline
+          rows={5}
           placeholder={def.inputPlaceholder}
         />
       </div>
@@ -296,7 +299,8 @@ function MissionDetailInner({
         </div>
       )}
 
-      <div className="mt-7">
+      {/* Tight to the field: the counter row below it already gives air. */}
+      <div className="mt-4">
         <Button
           loading={pending}
           disabled={!text.trim()}

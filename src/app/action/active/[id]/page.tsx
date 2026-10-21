@@ -91,15 +91,18 @@ export default function FinishActionPage({
 
       <div className="mt-7">
         <Field
+          variant="prominent"
           label="What did you do?"
           value={text}
           onChange={setText}
           maxLength={PROOF_TEXT_MAX}
+          multiline
+          rows={4}
           placeholder="Short and specific."
         />
       </div>
 
-      <div className="mt-7">
+      <div className="mt-4">
         <Button
           loading={pending}
           disabled={!text.trim()}

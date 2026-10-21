@@ -28,8 +28,6 @@ export interface MissionDef {
   /** The single field's label — what he writes to complete the Mission. */
   inputLabel: string;
   inputPlaceholder?: string;
-  /** Longer answers (the Personal Code lines) get a taller field. */
-  multiline?: boolean;
   /** An optional photo alongside the sentence — only where it earns its place. */
   photoEncouraged?: boolean;
   /** Mission 13: open the field with the identity statement already in it. */
@@ -150,7 +148,6 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "honor",
     inputLabel: "Honor means…",
     inputPlaceholder: "Doing what I said I'd do, even when it costs me.",
-    multiline: true,
     youtubeId: "a9yG3pylUKY",
   },
   {
@@ -161,7 +158,6 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "courage",
     inputLabel: "Courage means…",
     inputPlaceholder: "Saying the honest thing while my voice is shaking.",
-    multiline: true,
     youtubeId: "NCeKnEezPWs",
   },
   {
@@ -172,7 +168,6 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "commitment",
     inputLabel: "Commitment means…",
     inputPlaceholder: "Doing it after the motivation is gone.",
-    multiline: true,
     youtubeId: "ihWgFp5H0DU",
   },
   {
@@ -183,7 +178,6 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "honor",
     inputLabel: "My non-negotiable is…",
     inputPlaceholder: "I tell the truth, even when the lie would be easier.",
-    multiline: true,
     youtubeId: null,
   },
   {
@@ -194,7 +188,6 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "commitment",
     inputLabel: "The promise I'm keeping is…",
     inputPlaceholder: "I'm home for dinner, phone in the other room, every weeknight.",
-    multiline: true,
     youtubeId: null,
   },
   {
@@ -205,7 +198,6 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "honor",
     inputLabel: "I am becoming a man who…",
     inputPlaceholder: "keeps his word, acts despite fear, and follows through.",
-    multiline: true,
     prefillIdentity: true,
     youtubeId: null,
   },
@@ -348,7 +340,6 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "commitment",
     inputLabel: "What did you commit to, and what was your first action?",
     inputPlaceholder: "Twenty minutes of reading, five nights a week. Did tonight's.",
-    multiline: true,
     youtubeId: "QZQjcgh26jA",
   },
   {
@@ -368,7 +359,6 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "honor",
     inputLabel: "What did you change, and who did you send it to?",
     showPersonalCode: true,
-    multiline: true,
     youtubeId: null,
   },
   {
@@ -379,7 +369,6 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "commitment",
     inputLabel: "What's your next 30-day commitment?",
     inputPlaceholder: "Courage — one hard conversation a week, for thirty days.",
-    multiline: true,
     youtubeId: null,
   },
 ];
