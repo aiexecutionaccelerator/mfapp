@@ -18,5 +18,5 @@ export default async function RootPage() {
     .eq("id", user.id)
     .maybeSingle();
 
-  redirect(profile?.onboarding_completed ? "/home" : "/onboarding");
+  redirect(profile?.onboarding_completed ? "/missions" : "/onboarding");
 }

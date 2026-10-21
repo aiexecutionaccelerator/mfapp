@@ -6,9 +6,8 @@ import OnboardingScreens from "@/components/onboarding/OnboardingScreens";
 import { store } from "@/lib/data/store";
 
 /**
- * How It Works — the four onboarding screens, replayable from Start or
- * Settings. Finishing it once flips the Start card to its greyed-out,
- * bottom-of-page form (stored like a Mission answer: slug "guide").
+ * How It Works — the two onboarding screens, replayable from Settings.
+ * The read is recorded like a Mission answer (slug "guide").
  */
 export default function HowItWorksPage() {
   const router = useRouter();
@@ -16,7 +15,7 @@ export default function HowItWorksPage() {
 
   function leave() {
     if (window.history.length > 1) router.back();
-    else router.push("/home");
+    else router.push("/missions");
   }
 
   function finish() {

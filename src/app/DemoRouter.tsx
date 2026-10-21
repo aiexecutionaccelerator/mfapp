@@ -13,7 +13,7 @@ export default function DemoRouter() {
     let cancelled = false;
     data.getProfile().then((profile) => {
       if (cancelled) return;
-      router.replace(profile.onboarding_completed ? "/home" : "/welcome");
+      router.replace(profile.onboarding_completed ? "/missions" : "/welcome");
     });
     return () => {
       cancelled = true;

@@ -5,38 +5,39 @@ import MissionVideo from "@/components/MissionVideo";
 import NavAction from "@/components/NavAction";
 import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
-import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
 import { INTRO_VIDEOS, TRIGGER_VIDEOS } from "@/content/missions";
-import { STAR_STEPS, TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
-import { cn } from "@/lib/utils";
+import { TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
 
-export const ONBOARDING_SCREEN_COUNT = 4;
+export const ONBOARDING_SCREEN_COUNT = 2;
 
 /**
- * The four How It Works screens — shown once after profile setup, replayable
- * any time from Settings. Videos are optional and never block progress. In
- * replay mode the final screen closes instead of asking about the set.
+ * How It Works — two screens, shown once after profile setup and replayable
+ * from Settings.
+ *
+ * Screen 1 explains what the set is and how the S.T.A.R. system conditions
+ * you to it; its video is open on arrival because it is the single best
+ * explanation we have. Screen 2 introduces the three fragrances, with
+ * Antonio's per-value videos collapsed, and ends by handing the man his
+ * first Mission. There is no fourth screen — the first Mission is the thing
+ * to do, so we take him to it instead of describing it.
  */
 export default function OnboardingScreens({
   screen,
   replay = false,
   onBack,
   onNext,
-  onSetHere,
-  onSetOnTheWay,
+  onStart,
   onDone,
   pending = false,
 }: {
-  /** 0–3 */
+  /** 0–1 */
   screen: number;
   replay?: boolean;
   onBack: () => void;
   onNext: () => void;
-  /** Real onboarding only: "YES — START MISSION 1". */
-  onSetHere?: () => void;
-  /** Real onboarding only: "NOT YET — LET ME EXPLORE". */
-  onSetOnTheWay?: () => void;
+  /** Real onboarding only: into Mission 1. */
+  onStart?: () => void;
   /** Replay only: close the final screen. */
   onDone?: () => void;
   pending?: boolean;
@@ -56,12 +57,11 @@ export default function OnboardingScreens({
           {Array.from({ length: ONBOARDING_SCREEN_COUNT }, (_, index) => (
             <span
               key={index}
-              className={cn(
-                "h-1.5 w-1.5 rounded-full",
+              className={
                 index === screen
-                  ? "bg-[var(--gold-500)]"
-                  : "bg-[var(--line-strong)]",
-              )}
+                  ? "h-1.5 w-1.5 rounded-full bg-[var(--gold-500)]"
+                  : "h-1.5 w-1.5 rounded-full bg-[var(--line-strong)]"
+              }
             />
           ))}
         </div>
@@ -70,19 +70,30 @@ export default function OnboardingScreens({
 
       {screen === 0 && (
         <div className="mt-6 flex flex-1 flex-col">
-          <Headline>THIS IS MORE THAN FRAGRANCE</Headline>
+          <Headline>MORE THAN COLOGNE</Headline>
           <p className="mt-5 text-[17px] leading-relaxed text-ink-1">
-            You did not buy three ordinary bottles of cologne. You bought three
-            scent triggers to help you become the man you know yourself to be.
-            Over the next 30 Missions, you will choose a value, activate it
-            with scent, take one small action, and record the evidence.
+            Mission Fragrances are more than colognes. They work through
+            olfactory conditioning — scent is the one sense wired straight to
+            memory and emotion, which is why a smell can put you somewhere you
+            haven&apos;t been in twenty years.
           </p>
-          <p className="font-display mt-6 text-[22px] leading-snug text-gold-gradient">
-            Wear the value. Take the action. Become the man.
+          <p className="mt-4 text-[17px] leading-relaxed text-ink-1">
+            You condition yourself to a scent using our S.T.A.R. system:{" "}
+            <span className="text-ink-0">Select</span> the value you need,{" "}
+            <span className="text-ink-0">Trigger</span> it by spraying the
+            fragrance and recalling a moment you lived it, then{" "}
+            <span className="text-ink-0">Act</span> and{" "}
+            <span className="text-ink-0">Record</span> what you did in the same
+            breath. Do that thirty times and the bottle stops being a bottle.
+          </p>
+          <p className="font-display text-gold-gradient mt-6 text-[22px] leading-snug">
+            The fragrance is the trigger. Recording your action is the
+            evidence.
           </p>
           <MissionVideo
             youtubeId={INTRO_VIDEOS.moreThanFragrance}
             title="This Is More Than Fragrance"
+            defaultOpen
           />
           <BottomActions className="mt-8">
             <Button onClick={onNext}>NEXT</Button>
@@ -96,8 +107,7 @@ export default function OnboardingScreens({
           <div className="mt-6 space-y-3">
             {TRIGGER_ORDER.map((trigger) => {
               const meta = TRIGGERS[trigger];
-              const name =
-                meta.name[0] + meta.name.slice(1).toLowerCase();
+              const name = meta.name[0] + meta.name.slice(1).toLowerCase();
               return (
                 <div key={trigger} className="glass rounded-[14px] p-4">
                   <div className="flex items-center gap-4">
@@ -123,78 +133,20 @@ export default function OnboardingScreens({
               );
             })}
           </div>
-          <BottomActions className="mt-6">
-            <Button onClick={onNext}>NEXT</Button>
-          </BottomActions>
-        </div>
-      )}
 
-      {screen === 2 && (
-        <div className="mt-6 flex flex-1 flex-col">
-          <Headline>USE S.T.A.R.</Headline>
-          <div className="mt-6 space-y-3">
-            {STAR_STEPS.map((step) => (
-              <div
-                key={step.letter}
-                className="glass flex items-center gap-4 rounded-[14px] p-4"
-              >
-                <span className="font-display text-gold-gradient w-8 shrink-0 text-center text-[28px] leading-none">
-                  {step.letter}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[17px] text-ink-0">{step.name}</p>
-                  <p className="mt-1 text-[14px] leading-snug text-ink-1">
-                    {step.text}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="mt-5 text-[15px] text-ink-1">
-            The fragrance is the reminder. The action is the evidence.
+          <p className="font-display mt-8 text-[22px] leading-snug text-ink-0">
+            You have everything you need. Let&apos;s get started.
           </p>
-          <MissionVideo
-            youtubeId={INTRO_VIDEOS.star}
-            title="The S.T.A.R. demonstration"
-            label="Watch the S.T.A.R. demonstration"
-            defaultOpen
-          />
-          <BottomActions className="mt-6">
-            <Button onClick={onNext}>NEXT</Button>
-          </BottomActions>
-        </div>
-      )}
 
-      {screen === 3 && (
-        <div className="mt-6 flex flex-1 flex-col">
-          <Headline>TAKE YOUR FIRST ACTION</Headline>
-          <p className="mt-5 text-[17px] leading-relaxed text-ink-1">
-            Your first Mission will help you choose the value you need, use the
-            scent, take one small action, and record your first proof.
-          </p>
-          {replay ? (
-            <BottomActions className="mt-8">
+          <BottomActions className="mt-5">
+            {replay ? (
               <Button onClick={onDone}>GOT IT</Button>
-            </BottomActions>
-          ) : (
-            <>
-              <Eyebrow tone="gold" className="mt-8">
-                IS YOUR SET WITH YOU NOW?
-              </Eyebrow>
-              <BottomActions className="mt-4">
-                <Button loading={pending} onClick={onSetHere}>
-                  YES — START MISSION 1
-                </Button>
-                <Button
-                  variant="secondary"
-                  disabled={pending}
-                  onClick={onSetOnTheWay}
-                >
-                  NOT YET — LET ME EXPLORE
-                </Button>
-              </BottomActions>
-            </>
-          )}
+            ) : (
+              <Button loading={pending} onClick={onStart}>
+                START MISSION 1
+              </Button>
+            )}
+          </BottomActions>
         </div>
       )}
     </div>

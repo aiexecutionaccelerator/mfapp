@@ -8,7 +8,7 @@
 
 const DEFAULT_TITLE = "Mission Fragrances";
 const DEFAULT_BODY = "Your action is waiting. Did you do it?";
-const DEFAULT_URL = "/home";
+const DEFAULT_URL = "/missions";
 
 self.addEventListener("install", () => {
   self.skipWaiting();

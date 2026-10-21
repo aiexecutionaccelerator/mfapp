@@ -50,7 +50,7 @@ export default function WelcomePage() {
   async function enterDemo() {
     setPending(true);
     const profile = await data.getProfile();
-    router.push(profile.onboarding_completed ? "/home" : "/onboarding");
+    router.push(profile.onboarding_completed ? "/missions" : "/onboarding");
   }
 
   async function continueWithEmail(event?: FormEvent) {

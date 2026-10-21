@@ -222,14 +222,11 @@ export default function SettingsPage() {
           (m) => m.mission_number === n && m.status === "completed",
         );
         if (exists) continue;
-        const row = await store.createMission({
-          trigger: def.recommendedTrigger ?? "honor",
-          action_text: `Seeded action for Mission ${n}`,
+        await store.logProof({
+          trigger: def.recommendedTrigger,
+          action_text: `Seeded proof for Mission ${n}`,
           action_category: "dev-seed",
           mission_number: n,
-        });
-        await store.completeMission(row.id, {
-          reflection: `Seeded proof for Mission ${n}`,
         });
       }
       showToast("Missions 1–29 completed.");

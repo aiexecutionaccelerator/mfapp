@@ -11,7 +11,6 @@ import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
 import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
-import type { SetStatus } from "@/lib/data/types";
 import { cn } from "@/lib/utils";
 
 const IDENTITY_EXAMPLES = [
@@ -24,25 +23,24 @@ const STEP_KEY = "mission.onboardingStep";
 const NAME_KEY = "mission.onboardingName";
 const IDENTITY_KEY = "mission.onboardingIdentity";
 
-/** Survives the side trip to Using Your Set (and an accidental refresh). */
+/** Survives an accidental refresh mid-onboarding. */
 function readStep(): number {
   if (typeof window === "undefined") return -1;
   const raw = window.sessionStorage.getItem(STEP_KEY);
   const step = raw === null ? NaN : Number(raw);
-  return Number.isInteger(step) && step >= -1 && step <= 3 ? step : -1;
+  return Number.isInteger(step) && step >= -1 && step <= 1 ? step : -1;
 }
 
 /**
- * Setup (name + identity statement), then the four How It Works screens,
- * ending on the set-arrival question. Completed once; replayable read-only
- * from Settings → How It Works.
+ * Setup (name + identity statement), then the two How It Works screens,
+ * ending in Mission 1. Completed once; replayable from Settings.
  */
 export default function OnboardingPage() {
   const router = useRouter();
   const { showToast } = useToast();
   const { profile } = useAppData();
 
-  // -1 = profile setup; 0–3 = the four onboarding screens.
+  // -1 = profile setup; 0–1 = the two How It Works screens.
   const [step, setStepState] = useState(-1);
   const [name, setNameState] = useState("");
   const [identity, setIdentityState] = useState("");
@@ -50,7 +48,7 @@ export default function OnboardingPage() {
   const finishing = useRef(false);
 
   // Restoring the saved step and typed drafts out of sessionStorage on mount
-  // is the "sync with an external system" case — same as the Declare draft.
+  // is the "sync with an external system" case.
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect */
     setStepState(readStep());
@@ -63,7 +61,7 @@ export default function OnboardingPage() {
   // stale-read suspenders) — except while finish() itself is redirecting.
   useEffect(() => {
     if (profile?.onboarding_completed && !finishing.current) {
-      router.replace("/home");
+      router.replace("/missions");
     }
   }, [profile, router]);
 
@@ -108,25 +106,22 @@ export default function OnboardingPage() {
     }
   }
 
-  async function finish(setStatus: SetStatus) {
+  /** Straight into Mission 1 — the first action is the point. */
+  async function finish() {
     finishing.current = true;
     setPending(true);
     try {
-      await store.updateProfile({
-        set_status: setStatus,
-        onboarding_completed: true,
-      });
+      await store.updateProfile({ onboarding_completed: true });
       window.sessionStorage.removeItem(STEP_KEY);
       window.sessionStorage.removeItem(NAME_KEY);
       window.sessionStorage.removeItem(IDENTITY_KEY);
       track("onboarding_completed");
-      track("set_status_selected", { setStatus });
-      router.replace(setStatus === "arrived" ? "/missions/1" : "/missions");
+      router.replace("/missions/1");
     } catch {
       finishing.current = false;
       setPending(false);
       showToast("Couldn't save that. Please try again.", {
-        retry: () => void finish(setStatus),
+        retry: () => void finish(),
       });
     }
   }
@@ -202,8 +197,7 @@ export default function OnboardingPage() {
         pending={pending}
         onBack={() => setStep(step === 0 ? -1 : step - 1)}
         onNext={() => setStep(step + 1)}
-        onSetHere={() => void finish("arrived")}
-        onSetOnTheWay={() => void finish("ordered")}
+        onStart={() => void finish()}
       />
     </main>
   );

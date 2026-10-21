@@ -1,27 +1,23 @@
 "use client";
 
-import { Check, PenLine } from "lucide-react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Suspense, use, useEffect, useRef, useState } from "react";
 import NavAction from "@/components/NavAction";
 import MissionVideo from "@/components/MissionVideo";
 import PhotoInput from "@/components/PhotoInput";
-import QuestionField from "@/components/QuestionField";
 import Button from "@/components/ui/Button";
-import Eyebrow, { AccentDot } from "@/components/ui/Eyebrow";
+import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
 import GlassCard from "@/components/ui/GlassCard";
 import Headline from "@/components/ui/Headline";
-import Sheet from "@/components/ui/Sheet";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
-import { actionsFor, getMissionDef } from "@/content/missions";
-import { TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
+import { PERSONAL_CODE_SLUGS, getMissionDef } from "@/content/missions";
+import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
 import { compilePersonalCode } from "@/lib/personalCode";
-import type { Trigger } from "@/lib/data/types";
 import { PROOF_TEXT_MAX } from "@/lib/data/types";
 import {
   MISSION_COUNT,
@@ -29,18 +25,16 @@ import {
   nextMissionNumber,
   structuredMissionRow,
 } from "@/lib/stats";
-import { cn, formatDate } from "@/lib/utils";
-
-const SUGGESTION_LABEL = {
-  quick: "QUICK",
-  standard: "STANDARD",
-  bold: "BOLD",
-} as const;
+import { formatDate } from "@/lib/utils";
 
 /**
- * The one reusable Mission Detail template — every structured Mission renders
- * through here, driven by `content/missions.ts` plus the user's state row.
- * Reading never completes anything: only LOG THE PROOF does.
+ * The one reusable Mission Detail template — every Mission renders through
+ * here, driven by `content/missions.ts` plus the user's state row.
+ *
+ * One input, one click: why it matters, the recommended fragrance, one field,
+ * one button. Submitting completes the Mission and writes the Proof. There is
+ * no declare step, no in-progress state and no separate record screen — if a
+ * man commits to a two-minute action, he does it.
  */
 function MissionDetailInner({
   params,
@@ -49,7 +43,6 @@ function MissionDetailInner({
 }) {
   const { number } = use(params);
   const router = useRouter();
-  const search = useSearchParams();
   const { showToast } = useToast();
   const { profile, missions, lessonResponses, error, refresh } = useAppData();
 
@@ -58,24 +51,12 @@ function MissionDetailInner({
     ? getMissionDef(missionNumber)
     : undefined;
 
-  const [selected, setSelected] = useState<string | null>(null);
-  const [customText, setCustomText] = useState("");
-  const [chosenTrigger, setChosenTrigger] = useState<Trigger | null>(null);
-  const [confirmAbandon, setConfirmAbandon] = useState(false);
-  const [changeOpen, setChangeOpen] = useState(false);
-  const [pickingTrigger, setPickingTrigger] = useState(false);
-  // "auto" follows the row's status; the rest are explicit user steps.
-  // ?done=1 (the Start card's I DID IT) opens the completion form directly.
-  const [view, setView] = useState<"auto" | "proof-form" | "confirmation">(
-    search.get("done") === "1" ? "proof-form" : "auto",
-  );
-  const [proofText, setProofText] = useState("");
+  const [text, setText] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
-  const [editingAction, setEditingAction] = useState(false);
-  const [editText, setEditText] = useState("");
   const [pending, setPending] = useState(false);
+  const [justLogged, setJustLogged] = useState(false);
   const submitting = useRef(false);
-  // For the timeSinceMissionOpened analytics property (spec §12).
+  const seeded = useRef(false);
   const openedAt = useRef(Date.now());
 
   useEffect(() => {
@@ -91,6 +72,16 @@ function MissionDetailInner({
     showToast("Couldn't load this Mission.", { retry: () => void refresh() });
   }, [error, refresh, showToast]);
 
+  // Mission 13 opens with the identity statement already in the field.
+  useEffect(() => {
+    if (seeded.current || !def || !profile) return;
+    seeded.current = true;
+    if (def.prefillIdentity && profile.identity_statement) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setText(profile.identity_statement);
+    }
+  }, [def, profile]);
+
   if (!def || !profile || !missions || !lessonResponses) {
     return (
       <main className="flex flex-1 items-center justify-center text-ink-2">
@@ -100,120 +91,49 @@ function MissionDetailInner({
   }
 
   const row = structuredMissionRow(missions, def.number);
-  const status: "not_started" | "in_progress" | "completed" =
-    row === null
-      ? "not_started"
-      : row.status === "completed"
-        ? "completed"
-        : "in_progress";
-
-  // The pills always reflect the trigger driving the suggestions below —
-  // Honor is the visible default on "you choose" Missions.
-  const trigger: Trigger =
-    chosenTrigger ?? row?.trigger ?? def.recommendedTrigger ?? "honor";
-
-  // Either a plain per-trigger list (Mission 1) or Quick/Standard/Bold.
-  const suggestionList: { id: string; label: string | null; text: string }[] =
-    def.suggestionsByTrigger
-      ? def.suggestionsByTrigger[trigger].map((text, index) => ({
-          id: `s${index + 1}`,
-          label: null,
-          text,
-        }))
-      : (["quick", "standard", "bold"] as const).map((kind) => ({
-          id: kind,
-          label: SUGGESTION_LABEL[kind],
-          text: actionsFor(def, trigger)[kind],
-        }));
-
-  const savedAnswer =
-    lessonResponses.find(
-      (r) => r.lesson_id === def.slug && r.prompt_id === "q",
-    )?.answer ?? null;
-
-  const trimmedCustom = customText.trim();
-  const declaredText =
-    selected === "custom"
-      ? trimmedCustom
-      : (suggestionList.find((s) => s.id === selected)?.text ?? "");
-  const canDeclare = declaredText.length > 0;
+  const done = row?.status === "completed";
+  const trigger = def.recommendedTrigger;
+  const valueName = TRIGGERS[trigger].name;
 
   const personalCode = def.showPersonalCode
     ? compilePersonalCode(profile, lessonResponses)
     : null;
 
-  function chooseSuggestion(kind: string) {
-    setSelected(kind);
-    setCustomText("");
-    track("mission_action_selected", {
-      missionNumber: def?.number,
-      suggestionType: kind,
-    });
-  }
-
-  /** Typing your own action is itself the choice — no radio to tap first. */
-  function writeCustom(next: string) {
-    setCustomText(next);
-    setSelected(next.trim() ? "custom" : null);
-    if (next.trim().length === 1) {
-      track("mission_action_customized", { missionNumber: def?.number });
-    }
-  }
-
-  async function declare() {
-    if (submitting.current || !def || !canDeclare) return;
+  async function logIt() {
+    const entry = text.trim();
+    if (submitting.current || !def || !entry) return;
     submitting.current = true;
     setPending(true);
     try {
-      await store.createMission({
-        trigger,
-        action_text: declaredText.slice(0, 140),
-        action_category: selected === "custom" ? "custom" : selected,
+      await store.logProof({
+        trigger: def.recommendedTrigger,
+        action_text: entry.slice(0, PROOF_TEXT_MAX),
+        action_category: "mission",
         mission_number: def.number,
-        question_answer: savedAnswer,
-      });
-      track("mission_action_declared", {
-        missionNumber: def.number,
-        selectedTrigger: trigger,
-        suggestionType: selected,
-        timeSinceMissionOpened: Date.now() - openedAt.current,
-      });
-      setView("auto");
-    } catch {
-      showToast("Couldn't save your action. Please try again.", {
-        retry: () => void declare(),
-      });
-    } finally {
-      submitting.current = false;
-      setPending(false);
-    }
-  }
-
-  async function logProof() {
-    if (submitting.current || !row || !proofText.trim()) return;
-    submitting.current = true;
-    setPending(true);
-    try {
-      const completed = await store.completeMission(row.id, {
-        reflection: proofText,
         photo_url: photo,
+        // Finishes a row declared under the old two-step flow.
+        existingId: row && row.status !== "completed" ? row.id : null,
       });
+      // The Personal Code compiles from these answers, so the same sentence
+      // is written to the Mission's answer too — one input, two homes.
+      if (PERSONAL_CODE_SLUGS.has(def.slug)) {
+        await store.saveLessonResponse(def.slug, "q", entry);
+        if (def.prefillIdentity) {
+          await store.updateProfile({ identity_statement: entry });
+        }
+      }
       track("mission_action_completed", {
-        missionNumber: def?.number,
-        selectedTrigger: completed.trigger,
+        missionNumber: def.number,
+        selectedTrigger: def.recommendedTrigger,
         timeSinceMissionOpened: Date.now() - openedAt.current,
       });
-      if (photo) track("proof_photo_added", { missionNumber: def?.number });
-      const after = computeStats(
-        missions?.map((m) => (m.id === completed.id ? completed : m)) ?? [],
-      );
-      if (after.missionsCompleted === MISSION_COUNT) {
-        track("mission_30_completed");
-      }
-      setView("confirmation");
+      if (photo) track("proof_photo_added", { missionNumber: def.number });
+      const after = computeStats(missions ?? []).missionsCompleted + 1;
+      if (after >= MISSION_COUNT) track("mission_30_completed");
+      setJustLogged(true);
     } catch {
-      showToast("Couldn't log your proof. Please try again.", {
-        retry: () => void logProof(),
+      showToast("Couldn't log that. Please try again.", {
+        retry: () => void logIt(),
       });
     } finally {
       submitting.current = false;
@@ -221,79 +141,36 @@ function MissionDetailInner({
     }
   }
 
-  async function abandon() {
-    if (!row) return;
-    setPending(true);
-    try {
-      await store.deleteMission(row.id);
-      setConfirmAbandon(false);
-      setSelected(null);
-      setCustomText("");
-      setView("auto");
-    } catch {
-      showToast("Couldn't reset this Mission. Please try again.");
-    } finally {
-      setPending(false);
-    }
-  }
+  /* ---------- just logged ---------- */
 
-  async function saveEditedAction() {
-    if (!row) return;
-    const trimmed = editText.trim();
-    if (!trimmed) return;
-    setPending(true);
-    try {
-      await store.updateMission(row.id, { action_text: trimmed.slice(0, 140) });
-      setEditingAction(false);
-    } catch {
-      showToast("Couldn't save that. Please try again.");
-    } finally {
-      setPending(false);
-    }
-  }
-
-  /* ---------- confirmation (just logged) ---------- */
-
-  if (view === "confirmation") {
-    const done = computeStats(missions).missionsCompleted;
-    const allDone = done >= MISSION_COUNT;
+  if (justLogged) {
+    const completedCount = computeStats(missions).missionsCompleted;
+    const allDone = completedCount >= MISSION_COUNT;
     const next = nextMissionNumber(missions);
     return (
       <main className="fade-in flex flex-1 flex-col pt-10">
         <Headline className="text-center">
-          {allDone && def.number === 30 ? "30-DAY MISSION COMPLETE" : "PROOF LOGGED."}
+          {allDone ? "30-DAY MISSION COMPLETE" : "MISSION COMPLETE."}
         </Headline>
         <p className="font-display text-gold-gradient mt-4 text-center text-[24px] leading-snug">
-          You acted with {TRIGGERS[row?.trigger ?? trigger].provedWith}.
+          You acted with {TRIGGERS[trigger].provedWith}.
         </p>
         <p className="mt-6 text-center text-[17px] text-ink-1">
           {allDone
-            ? "You completed thirty real-world actions and created thirty pieces of evidence. Keep using Honor, Courage, and Commitment whenever you need them."
-            : "This is evidence of the man you are becoming."}
+            ? "Thirty real actions. Thirty pieces of evidence. Keep using Honor, Courage and Commitment whenever you need them."
+            : "That's evidence of the man you're becoming. It's in your Proof Log."}
         </p>
-        <div className="mt-10 space-y-3">
+        <div className="mt-10">
           {allDone ? (
-            <>
-              <Button onClick={() => router.push("/home")}>
-                LOG A NEW ACTION
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => router.push("/personal-code")}
-              >
-                VIEW MY PERSONAL CODE
-              </Button>
-            </>
+            <Button onClick={() => router.push("/personal-code")}>
+              VIEW MY PERSONAL CODE
+            </Button>
           ) : (
-            <>
-              <Button
-                onClick={() =>
-                  router.push(next ? `/missions/${next}` : "/missions")
-                }
-              >
-                CONTINUE TO THE NEXT MISSION
-              </Button>
-            </>
+            <Button
+              onClick={() => router.push(next ? `/missions/${next}` : "/missions")}
+            >
+              CONTINUE TO THE NEXT MISSION
+            </Button>
           )}
         </div>
       </main>
@@ -301,73 +178,42 @@ function MissionDetailInner({
   }
 
   const header = (
-    <>
-      <div className="flex items-center justify-between">
-        <NavAction kind="back" href="/missions" />
-        <span className="eyebrow text-ink-2">
-          MISSION {def.number} OF {MISSION_COUNT}
-        </span>
-        <span
-          className={cn(
-            "eyebrow",
-            status === "completed"
-              ? "text-[var(--success)]"
-              : status === "in_progress"
-                ? "text-gold-300"
-                : "text-ink-2",
-          )}
-        >
-          {status === "completed"
-            ? "COMPLETE"
-            : status === "in_progress"
-              ? "IN PROGRESS"
-              : "NOT STARTED"}
-        </span>
-      </div>
-      <Headline level={2} className="mt-6">
-        {def.title}
-      </Headline>
-    </>
+    <div className="flex items-center justify-between">
+      <NavAction kind="back" href="/missions" />
+      <span className="eyebrow text-ink-2">
+        MISSION {def.number} OF {MISSION_COUNT}
+      </span>
+      <span className={done ? "eyebrow text-[var(--success)]" : "eyebrow text-ink-2"}>
+        {done ? "COMPLETE" : "NOT STARTED"}
+      </span>
+    </div>
   );
 
   /* ---------- completed ---------- */
 
-  if (status === "completed" && row) {
-    const answer = savedAnswer ?? row.question_answer;
+  if (done && row) {
+    const next = nextMissionNumber(missions);
     return (
       <main className="pt-2 pb-8">
         {header}
-        <p className="mt-4 text-[15px] leading-relaxed text-ink-1">{def.idea}</p>
+        <Eyebrow tone="gold" className="mt-6">
+          MISSION {def.number}
+        </Eyebrow>
+        <Headline level={2} className="mt-2">
+          {def.title}
+        </Headline>
 
-        {answer && (
-          <GlassCard className="mt-6">
-            <Eyebrow tone="gold">YOUR ANSWER</Eyebrow>
-            {def.question && (
-              <p className="mt-2 text-[13px] leading-snug text-ink-2">
-                {def.question}
-              </p>
-            )}
-            <p className="mt-3 text-[17px] leading-relaxed whitespace-pre-wrap text-ink-0">
-              {answer}
-            </p>
-          </GlassCard>
-        )}
-
-        <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
+        <GlassCard key={row.id} className="mt-6 border-[rgba(201,166,72,.35)]">
           <div className="flex items-center gap-2">
             <Check aria-hidden size={18} className="text-gold-300" />
             <Eyebrow tone="gold">
-              PROOF LOGGED{row.completed_at ? ` · ${formatDate(row.completed_at)}` : ""}
+              {valueName}
+              {row.completed_at ? ` · ${formatDate(row.completed_at)}` : ""}
             </Eyebrow>
           </div>
-          <p className="eyebrow mt-4 text-ink-2">DECLARED</p>
-          <p className="mt-1 text-[17px] text-ink-0">{row.action_text}</p>
-          {row.reflection && (
-            <>
-              <p className="eyebrow mt-4 text-ink-2">COMPLETED</p>
-              <p className="mt-1 text-[17px] text-ink-0">{row.reflection}</p>
-            </>
-          )}
+          <p className="mt-3 text-[19px] leading-relaxed whitespace-pre-wrap text-ink-0">
+            {row.reflection ?? row.action_text}
+          </p>
           {row.photo_url && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -378,13 +224,9 @@ function MissionDetailInner({
           )}
         </GlassCard>
 
-        {nextMissionNumber(missions) && (
+        {next && (
           <div className="mt-6">
-            <Button
-              onClick={() =>
-                router.push(`/missions/${nextMissionNumber(missions)}`)
-              }
-            >
+            <Button onClick={() => router.push(`/missions/${next}`)}>
               CONTINUE TO THE NEXT MISSION
             </Button>
           </div>
@@ -393,175 +235,20 @@ function MissionDetailInner({
     );
   }
 
-  /* ---------- in progress ---------- */
-
-  if (status === "in_progress" && row) {
-    if (view === "proof-form") {
-      return (
-        <main className="pt-2 pb-8">
-          <div className="flex items-center justify-between">
-            <NavAction kind="back" onClick={() => setView("auto")} />
-            <span className="eyebrow text-ink-2">
-              MISSION {def.number} OF {MISSION_COUNT}
-            </span>
-            <span className="h-12 w-12" />
-          </div>
-          <Headline className="mt-6">RECORD THE EVIDENCE</Headline>
-          <p className="font-display mt-5 text-[22px] leading-tight text-ink-0">
-            {row.action_text}
-          </p>
-          <div className="mt-7">
-            <Field
-              label="What did you do?"
-              value={proofText}
-              onChange={setProofText}
-              maxLength={PROOF_TEXT_MAX}
-              multiline
-              autoFocus
-              placeholder="I sent the email and asked for the conversation."
-            />
-          </div>
-          <div className="mt-4">
-            <PhotoInput value={photo} onChange={setPhoto} />
-            {def.photoEncouraged && !photo && (
-              <p className="mt-2 text-[13px] text-ink-2">
-                A photo makes this proof easy to revisit.
-              </p>
-            )}
-          </div>
-          <div className="mt-8">
-            <Button
-              loading={pending}
-              disabled={!proofText.trim()}
-              onClick={() => void logProof()}
-            >
-              LOG THE PROOF
-            </Button>
-          </div>
-        </main>
-      );
-    }
-
-    return (
-      <main className="pt-2 pb-8">
-        {header}
-
-        <GlassCard key={row.action_text} accent={row.trigger} className="mt-6">
-          <Eyebrow accent={row.trigger} tone="gold">
-            YOUR ACTION · {TRIGGERS[row.trigger].name}
-          </Eyebrow>
-          {editingAction ? (
-            <div className="mt-4 space-y-3">
-              <Field
-                value={editText}
-                onChange={setEditText}
-                maxLength={140}
-                autoFocus
-                aria-label="Your action"
-              />
-              <Button
-                loading={pending}
-                disabled={!editText.trim()}
-                onClick={() => void saveEditedAction()}
-              >
-                SAVE
-              </Button>
-              <Button variant="ghost" onClick={() => setEditingAction(false)}>
-                Cancel
-              </Button>
-            </div>
-          ) : (
-            <>
-              <p className="font-display mt-3 text-[26px] leading-tight text-ink-0">
-                {row.action_text}
-              </p>
-              {/* The Trigger step of S.T.A.R. — on the screen he is looking at
-                  while he sprays, not behind a confirmation sheet. */}
-              <p className="eyebrow mt-5 text-gold-300">
-                SPRAY THE FRAGRANCE. RECALL A MOMENT YOU WERE{" "}
-                {TRIGGERS[row.trigger].anchorWord}. 5–15 SECONDS.
-              </p>
-            </>
-          )}
-        </GlassCard>
-
-        {!editingAction && (
-          <div className="mt-6 space-y-3">
-            <Button onClick={() => setView("proof-form")}>I DID IT</Button>
-            <Button variant="ghost" onClick={() => setChangeOpen(true)}>
-              Change this action
-            </Button>
-          </div>
-        )}
-
-        {/* The full answer stays reviewable (and editable) mid-Mission. */}
-        {def.question && (
-          <section className="mt-8">
-            <Eyebrow tone="gold">YOUR ANSWER</Eyebrow>
-            <p className="mt-2 text-[13px] text-ink-2">
-              Private. Only you ever see this.
-            </p>
-            <div className="mt-4">
-              <QuestionField
-                slug={def.slug}
-                label={def.question}
-                saved={savedAnswer}
-              />
-            </div>
-          </section>
-        )}
-
-        <Sheet
-          open={confirmAbandon}
-          title="RESET THIS MISSION?"
-          note="Your declared action will be removed and the Mission will go back to Not Started. Nothing you've logged elsewhere changes."
-          onClose={() => setConfirmAbandon(false)}
-        >
-          <Button variant="danger" loading={pending} onClick={() => void abandon()}>
-            RESET MISSION
-          </Button>
-          <Button variant="ghost" onClick={() => setConfirmAbandon(false)}>
-            Cancel
-          </Button>
-        </Sheet>
-
-        {/* One quiet affordance on screen; both ways to change it live here. */}
-        <Sheet
-          open={changeOpen}
-          title="CHANGE THIS ACTION"
-          onClose={() => setChangeOpen(false)}
-        >
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setEditText(row.action_text);
-              setEditingAction(true);
-              setChangeOpen(false);
-            }}
-          >
-            EDIT THE WORDING
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setChangeOpen(false);
-              setConfirmAbandon(true);
-            }}
-          >
-            Start this Mission over
-          </Button>
-        </Sheet>
-      </main>
-    );
-  }
-
-  /* ---------- not started ---------- */
+  /* ---------- not started: one field, one button ---------- */
 
   return (
     <main className="pt-2 pb-8">
       {header}
 
-      <p className="mt-4 text-[15px] leading-relaxed text-ink-1">{def.idea}</p>
+      <Eyebrow tone="gold" className="mt-6">
+        MISSION {def.number}
+      </Eyebrow>
+      <Headline level={2} className="mt-2">
+        {def.title}
+      </Headline>
+
+      <p className="mt-4 text-[17px] leading-relaxed text-ink-1">{def.idea}</p>
 
       {def.youtubeId && (
         <MissionVideo
@@ -571,47 +258,10 @@ function MissionDetailInner({
         />
       )}
 
-      {/* The pills are a question. Only ask it when the Mission has not
-          already answered it — otherwise show the recommendation and let him
-          change it if he wants. */}
-      <Eyebrow tone="gold" className="mt-7">
-        {def.recommendedTrigger
-          ? `RECOMMENDED: ${TRIGGERS[trigger].name}`
-          : "CHOOSE YOUR VALUE"}
-      </Eyebrow>
-      {def.recommendedTrigger && !pickingTrigger ? (
-        <button
-          type="button"
-          onClick={() => setPickingTrigger(true)}
-          className="mt-2 flex min-h-12 items-center text-[15px] text-gold-300"
-        >
-          Use a different fragrance
-        </button>
-      ) : (
-      <div className="mt-3 flex gap-2">
-        {TRIGGER_ORDER.map((value) => (
-          <button
-            key={value}
-            type="button"
-            role="radio"
-            aria-checked={trigger === value}
-            onClick={() => setChosenTrigger(value)}
-            className={cn(
-              "glass flex min-h-12 flex-1 items-center justify-center gap-2 rounded-[14px] px-2 text-[13px] tracking-[0.04em] uppercase",
-              trigger === value
-                ? "border-[var(--gold-500)] text-ink-0"
-                : "text-ink-2",
-            )}
-          >
-            <AccentDot trigger={value} />
-            {TRIGGERS[value].name}
-          </button>
-        ))}
-      </div>
-      )}
+      <p className="eyebrow mt-6 text-gold-300">RECOMMENDED: {valueName}</p>
 
-      {def.showPersonalCode && personalCode && (
-        <GlassCard className="mt-7">
+      {personalCode && (
+        <GlassCard className="mt-5">
           <Eyebrow tone="gold">MY PERSONAL CODE</Eyebrow>
           <dl className="mt-4 space-y-3">
             {personalCode.map((line) => (
@@ -619,115 +269,42 @@ function MissionDetailInner({
                 <dt className="text-[13px] text-ink-2">{line.label}</dt>
                 <dd className="mt-0.5 text-[15px] leading-snug text-ink-0">
                   {line.value ?? (
-                    <span className="text-ink-2">
-                      Not written yet — {line.source}.
-                    </span>
+                    <span className="text-ink-2">Not written yet — {line.source}.</span>
                   )}
                 </dd>
               </div>
             ))}
           </dl>
-          <Link
-            href="/personal-code"
-            className="mt-4 inline-flex min-h-12 items-center text-[15px] text-gold-300"
-          >
-            Open my Personal Code
-          </Link>
         </GlassCard>
       )}
 
-      {/* One question at most. One answer is enough. */}
-      {def.question && (
-        <section className="mt-7">
-          <Eyebrow tone="gold">QUESTION</Eyebrow>
-          <p className="mt-2 text-[13px] text-ink-2">
-            Private. Only you ever see this.
-          </p>
-          <div className="mt-4">
-            <QuestionField
-              slug={def.slug}
-              label={def.question}
-              saved={savedAnswer}
-              initial={def.prefillIdentity ? profile.identity_statement : null}
-            />
-          </div>
-          {def.exampleAnswers && (
-            <ul className="mt-2 space-y-1.5 text-[13px] leading-snug text-ink-2">
-              {def.exampleAnswers.map((example) => (
-                <li key={example}>· {example}</li>
-              ))}
-            </ul>
-          )}
-        </section>
-      )}
-
-      {/* Suggested actions. */}
-      <section className="mt-8" role="radiogroup" aria-label="Your action">
-        <Eyebrow tone="gold">YOUR ACTION</Eyebrow>
-        <div className="mt-3 space-y-3">
-          {/* Keyed by trigger so switching values remounts the cards — iOS
-              Safari partially repaints backdrop-filtered elements when their
-              text is swapped in place, splicing old and new lines together. */}
-          {suggestionList.map((suggestion) => (
-            <button
-              key={`${trigger}-${suggestion.id}`}
-              type="button"
-              role="radio"
-              aria-checked={selected === suggestion.id}
-              onClick={() => chooseSuggestion(suggestion.id)}
-              className={cn(
-                "glass block w-full rounded-[14px] px-4 py-4 text-left transition-colors",
-                selected === suggestion.id && "border-[var(--gold-500)]",
-              )}
-            >
-              {suggestion.label && (
-                <span className="eyebrow block text-gold-300">
-                  {suggestion.label}
-                </span>
-              )}
-              <span
-                className={cn(
-                  "block text-[17px] leading-snug",
-                  suggestion.label && "mt-1.5",
-                  selected === suggestion.id ? "text-ink-0" : "text-ink-1",
-                )}
-              >
-                {suggestion.text}
-              </span>
-            </button>
-          ))}
-
-        </div>
-
-        {/* Your own words: the field itself, not a button that reveals one.
-            Typing is the choice — it deselects whatever was picked above. */}
-        <div className="mt-5">
-          <p className="flex items-center gap-2 text-[13px] text-ink-2">
-            <PenLine aria-hidden size={16} className="shrink-0 text-gold-300" />
-            Or write your own
-          </p>
-          <div className="mt-2">
-            <Field
-              value={customText}
-              onChange={writeCustom}
-              placeholder="One action. Short. Specific."
-              maxLength={140}
-              aria-label="Your action"
-            />
-          </div>
-        </div>
-      </section>
-
-      <div className="mt-8">
-        <Button
-          loading={pending}
-          disabled={!canDeclare}
-          onClick={() => void declare()}
-        >
-          DECLARE MY ACTION
-        </Button>
+      <div className="mt-7">
+        <Field
+          label={def.inputLabel}
+          value={text}
+          onChange={setText}
+          maxLength={PROOF_TEXT_MAX}
+          multiline={def.multiline}
+          rows={def.multiline ? 3 : undefined}
+          placeholder={def.inputPlaceholder}
+        />
       </div>
 
+      {def.photoEncouraged && (
+        <div className="mt-4">
+          <PhotoInput value={photo} onChange={setPhoto} />
+        </div>
+      )}
+
+      <div className="mt-7">
+        <Button
+          loading={pending}
+          disabled={!text.trim()}
+          onClick={() => void logIt()}
+        >
+          COMPLETE MISSION {def.number}
+        </Button>
+      </div>
     </main>
   );
 }

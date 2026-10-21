@@ -1,20 +1,15 @@
 "use client";
 
-import {
-  BookOpen,
-  ScrollText,
-  Settings,
-  Target,
-  TrendingUp,
-} from "lucide-react";
+import { BookOpen, ScrollText, Settings, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
+// Four tabs since logging became one click inside the Mission itself: there
+// is nothing left for a Start screen to launch.
 const TABS = [
-  { href: "/home", label: "Start", Icon: Target },
+  { href: "/missions", label: "Missions", Icon: BookOpen },
   { href: "/log", label: "Log", Icon: ScrollText },
-  { href: "/missions", label: "Mission", Icon: BookOpen },
   { href: "/progress", label: "Progress", Icon: TrendingUp },
   { href: "/settings", label: "Settings", Icon: Settings },
 ];
@@ -46,8 +41,7 @@ export default function TabBar() {
                   )}
                 >
                   <Icon size={20} aria-hidden />
-                  {/* Five items at 375px: 12px is the floor, so the tracking
-                      gives way before the type size does. */}
+                  {/* 12px is the floor; the tracking gives way first. */}
                   <span className="text-[12px] tracking-[0.04em] whitespace-nowrap uppercase">
                     {label}
                   </span>

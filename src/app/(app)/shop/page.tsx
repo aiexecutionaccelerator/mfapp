@@ -42,7 +42,7 @@ export default function ShopPage() {
   return (
     // Bottom padding clears the fixed CTA bar so no copy is ever unreachable.
     <main className="pt-2 pb-[148px]">
-      <NavAction kind="back" href="/home" />
+      <NavAction kind="back" href="/missions" />
 
       <Eyebrow className="mt-4">{PRODUCT.eyebrow}</Eyebrow>
       <Headline className="mt-3">{PRODUCT.headline}</Headline>

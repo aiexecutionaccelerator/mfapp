@@ -187,6 +187,54 @@ export const store = {
     return mission;
   },
 
+  /**
+   * One input, one click. Writes the Proof and completes the Mission in a
+   * single step — there is no in-progress state to pass through any more.
+   * `existingId` finishes a row left behind by the old declare-then-record
+   * flow; without it a fresh row is created, and if completing that row fails
+   * it is removed so no half-written Mission can survive.
+   */
+  async logProof(input: {
+    trigger: Trigger;
+    action_text: string;
+    action_category?: string | null;
+    mission_number?: number | null;
+    photo_url?: string | null;
+    existingId?: string | null;
+  }): Promise<Mission> {
+    const { existingId, photo_url = null, action_text, trigger } = input;
+
+    if (existingId) {
+      await data.updateMission(existingId, { action_text, trigger });
+      const done = await data.completeMission(existingId, {
+        reflection: action_text,
+        photo_url,
+      });
+      putMission(done);
+      await dropReminders(done.id);
+      return done;
+    }
+
+    const created = await data.createMission({
+      trigger,
+      action_text,
+      action_category: input.action_category ?? null,
+      mission_number: input.mission_number ?? null,
+    });
+    try {
+      const done = await data.completeMission(created.id, {
+        reflection: action_text,
+        photo_url,
+      });
+      putMission(done);
+      return done;
+    } catch (error) {
+      await data.deleteMission(created.id).catch(() => {});
+      dropMission(created.id);
+      throw error;
+    }
+  },
+
   async completeMission(
     id: string,
     input: { reflection: string; photo_url?: string | null },

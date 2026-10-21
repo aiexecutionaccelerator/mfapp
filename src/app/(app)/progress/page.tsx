@@ -75,24 +75,24 @@ export default function ProgressPage() {
             Commitment whenever you need them.
           </p>
           <div className="mt-5">
-            <Button onClick={() => router.push("/home")}>
+            <Button onClick={() => router.push("/missions")}>
               LOG A NEW ACTION
             </Button>
           </div>
         </GlassCard>
       )}
 
+      {/* Every proof counted, Missions included — a Mission logged with
+          Courage is a Courage proof. Honor + Courage + Commitment always
+          equals the number in the ring. */}
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <Stat label="Honor" value={stats.freeform.honor} />
-        <Stat label="Courage" value={stats.freeform.courage} />
-        <Stat label="Commitment" value={stats.freeform.commitment} />
-        <Stat label="Actions In Progress" value={stats.actionsInProgress} />
-        <div className="col-span-2">
-          <Stat
-            label="Missions Completed"
-            value={`${stats.missionsCompleted}/${MISSION_COUNT}`}
-          />
-        </div>
+        <Stat label="Honor" value={stats.proofs.honor} />
+        <Stat label="Courage" value={stats.proofs.courage} />
+        <Stat label="Commitment" value={stats.proofs.commitment} />
+        <Stat
+          label="Missions Completed"
+          value={`${stats.missionsCompleted}/${MISSION_COUNT}`}
+        />
       </div>
 
       <Button

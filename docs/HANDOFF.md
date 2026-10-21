@@ -9,20 +9,25 @@ Commitment fragrances into a behavior system. V2 ("Your 30-Day Mission", spec
 in `docs/V2_PLAN.md`) replaced the day-locked course: **thirty always-unlocked
 Missions**, opened in any order, where reading completes nothing — a Mission is
 complete only when a real-world action is logged as a **Proof** (S.T.A.R.:
-Select · Trigger · Act · Record). Free-form actions from the Start tab log
-Proofs too but never inflate the 30/30 count. No streaks, no locks, no failure
+Select · Trigger · Act · Record). Since v2.0.0 that takes **one input and one
+click**: the Mission screen is why-it-matters, the recommended fragrance, one
+field, one button, and submitting it writes the Proof and completes the
+Mission. There is no declare step and no in-progress state. One-off Actions
+use the same shape and log Proofs too, but never inflate the 30/30 count. No streaks, no locks, no failure
 states. The Vivid Vision is archived; its replacement is the compiled, printable
 **Personal Code** (`/personal-code`).
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 1.4.0 (out of beta)
+- Version: 2.0.0 (one input, one click)
 
 ## Architecture facts that matter
 
 - **The `missions` table is the unified Proof log.** A structured Mission's
-  state IS its row: `mission_number` 1–30 set, `status` active = in progress,
-  completed = proof logged; no row = not started. A DB partial unique index
+  state IS its row: `mission_number` 1–30 set, `status` completed = proof
+  logged, no row = not started. `active` is legacy only — rows left open by
+  the pre-2.0 declare-then-record flow; nothing creates them any more, and
+  `store.logProof({ existingId })` closes one if a man still has it. A DB partial unique index
   (`user_id, mission_number`) makes double-declare/complete impossible. All
   stats are computed from rows (`src/lib/stats.ts`) — no stored counters.
 - **Mission content** lives in `src/content/missions.ts` (all 30, verbatim from
@@ -57,42 +62,58 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 - Commerce: Shop page → live Shopify product at $595, linked ONLY from
   Settings when `owns_set = false` (purchase banners removed everywhere).
 
-## App structure (tabs: Start · Log · Mission · Progress · Settings)
+## App structure (tabs: Missions · Log · Progress · Settings)
+
+There is no Start tab. Logging is one click inside the Mission, so the app
+opens on the Missions themselves; `/home` redirects to `/missions`.
 
 - `/onboarding`: profile setup (name + "I am becoming a man who…", two example
-  statements) then four How It Works screens ending in "Is your set with you
-  now?". Replay at `/how-it-works` (Settings).
+  statements) then two How It Works screens — (1) more than cologne, olfactory
+  conditioning and S.T.A.R. in two paragraphs, video open on arrival, (2) the
+  three fragrances with Antonio's videos collapsed, ending in
+  `START MISSION 1`. Onboarding no longer asks about the set (Settings owns
+  set status). Replay at `/how-it-works` (Settings).
 - `/missions` list: NEXT card first, two more under WHAT'S NEXT, one
-  `SHOW ALL 30 MISSIONS` toggle. No separate Continue card (Start owns the
-  status) and no set-arrived button (Start owns that too).
-- `/missions/[number]` — ONE reusable detail template: idea → optional
-  collapsed video → recommended fragrance (pills only behind "Use a different
-  fragrance") → one autosaved question → Quick/Standard/Bold plus an
-  always-visible "or write your own" field → DECLARE → in-progress (the spray
-  ritual is on this screen) → RECORD THE EVIDENCE (+ optional photo) →
-  confirmation. `?done=1` jumps to the proof form (used by Start's I DID IT).
-  Mid-Mission changes live in one "Change this action" sheet.
-- `/home` Start: dynamic status card (A set-on-the-way / B next Mission /
-  C action in progress / D 30/30) plus three fragrance cards → the one-off
-  Action flow (`/action/declare|active`). The fragrance cards hide while an
-  action is in progress; How It Works shows until it has been read once.
-- `/log`: Proof Log (MISSION N · TITLE vs PERSONAL ACTION). An entry has one
-  button — "Edit or delete this entry"; delete lives inside the edit view and
-  a structured delete reverts the Mission to in progress.
-- `/progress`: N/30 ring, stat cards, 30/30 completion state;
-  `/personal-code` printable, with only written lines as editable cards.
-- `/course*` redirects to `/missions`; `/mission/*` redirects to `/action/*`.
+  `SHOW ALL 30 MISSIONS` toggle, one `ONE-OFF ACTION` row at the bottom.
+  Statuses are Complete and Not Started — nothing else.
+- `/missions/[number]` — ONE reusable template: `MISSION N` + title, the why
+  in Antonio's voice, optional collapsed video, `RECOMMENDED: <VALUE>`
+  (shown, never chosen), one field, one button. Submitting calls
+  `store.logProof` once; for the Personal Code Missions (m8–m13, m30) the same
+  sentence is also written to `lesson_responses`, which is what keeps
+  `/personal-code` compiling. Missions 7 and 19 also take an optional photo.
+- `/action/declare`: a one-off Action — three value pills, one field, one
+  button. `/action/active/[id]` only exists to close a legacy `active` row.
+- `/log`: Proof Log. One entry is one sentence (`reflection ?? action_text`);
+  legacy rows that carried two show the declared half separately. One button,
+  "Edit or delete this entry"; deleting removes the row, so the Mission simply
+  reads Not Started again.
+- `/progress`: the ring counts every Proof, and the Honor / Courage /
+  Commitment tiles count **all** completed rows (`stats.proofs`), Missions
+  included — using `stats.freeform` there was the Oct-21 bug where a Courage
+  Mission left Courage reading 0.
+- `/course*` and `/home` redirect to `/missions`; `/mission/*` → `/action/*`.
+
+### Writing a Mission
+
+`src/content/missions.ts` is the whole content layer: `idea` carries the why
+AND any prompt or example (never canned Quick/Standard/Bold options — they
+limit the man and usually don't fit), `inputLabel` is the one field's label,
+`recommendedTrigger` is required. Actions must be doable in one or two
+minutes. Antonio's voice: second person, name the reality he's in, name the
+cost or the fear, then make today's ask concrete. Mission 2 is the model.
 
 ### Tap budget (the UX metric)
 
 Every screen state is counted with a Playwright census of in-page tap targets
 (`main button, main a[href], main [role=radio], main [role=switch]`). The V2
-rebuild shipped at **178 targets across 28 screens**; the two simplification
-passes brought it to **94** (-47%). Rules that got it there, worth keeping:
-one action per card (never a card-shaped link wrapping a button), progressive
-disclosure over walls of items, a visible input instead of a button that
-reveals an input, no duplicate entry point for the same action on two screens,
-and hiding the second door while the first one is still open.
+rebuild shipped at 178 across 28 screens; the simplification passes took it to
+94, and one-input-one-click to **61 across 19 screens**. A Mission screen is
+2: the back arrow and the button that completes it. Rules worth keeping: one
+action per card (never a card-shaped link wrapping a button), a visible input
+instead of a button that reveals one, no duplicate entry point for the same
+action on two screens, and no screen whose only job is to confirm the screen
+before it.
 
 ## Verification
 

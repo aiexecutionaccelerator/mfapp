@@ -51,7 +51,7 @@ export default function LogPage() {
             title="No proof yet."
             body="Take one small action today."
             action={
-              <Button onClick={() => router.push("/home")}>
+              <Button onClick={() => router.push("/missions")}>
                 TAKE ACTION
               </Button>
             }

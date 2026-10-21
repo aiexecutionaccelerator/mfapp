@@ -59,7 +59,11 @@ export const STAR_STEPS = [
     text: "Spray the fragrance and recall one time you lived that value.",
   },
   { letter: "A", name: "Act", text: "Take one small real-world action." },
-  { letter: "R", name: "Record", text: "Return and log what you did." },
+  {
+    letter: "R",
+    name: "Record",
+    text: "Write down what you did — that one line completes the Mission.",
+  },
 ] as const;
 
 /**

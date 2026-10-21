@@ -8,7 +8,9 @@ import { cn, formatDate, formatTime } from "@/lib/utils";
 
 const STATUS_LABEL: Record<MissionStatus, string> = {
   completed: "COMPLETE",
-  active: "IN PROGRESS",
+  // Nothing creates these any more — only rows left open by the old
+  // declare-then-record flow still read this way.
+  active: "NOT LOGGED YET",
   ended: "ENDED",
 };
 
@@ -44,16 +46,19 @@ export default function MissionRow({ mission }: { mission: Mission }) {
       </div>
 
       <p className="eyebrow mt-3 text-gold-300">
-        {def ? `MISSION ${def.number} · ${def.title.toUpperCase()}` : "PERSONAL ACTION"}
+        {def ? `MISSION ${def.number} · ${def.title.toUpperCase()}` : "ONE-OFF ACTION"}
       </p>
-      <p className="mt-1.5 line-clamp-2 text-[17px] text-ink-0">
-        {mission.action_text}
+      {/* One entry, one sentence. Rows from the old declare-then-record flow
+          kept two, so the declared half shows only when it differs. */}
+      <p className="mt-1.5 line-clamp-3 text-[17px] text-ink-0">
+        {mission.reflection ?? mission.action_text}
       </p>
-      {mission.reflection && (
-        <p className="mt-1.5 line-clamp-2 text-[14px] leading-snug text-ink-1">
-          {mission.reflection}
-        </p>
-      )}
+      {mission.reflection !== null &&
+        mission.action_text !== mission.reflection && (
+          <p className="mt-1.5 line-clamp-1 text-[14px] leading-snug text-ink-2">
+            Declared: {mission.action_text}
+          </p>
+        )}
 
       <div className="mt-3 flex items-center gap-3 text-[13px] text-ink-2">
         <span>

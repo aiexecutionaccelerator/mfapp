@@ -18,12 +18,6 @@ import { store, useAppData } from "@/lib/data/store";
 import { PROOF_TEXT_MAX } from "@/lib/data/types";
 import { formatDateTime } from "@/lib/utils";
 
-const STATUS_LABEL = {
-  completed: "COMPLETE",
-  active: "IN PROGRESS",
-  ended: "ENDED",
-} as const;
-
 export default function LogDetailPage({
   params,
 }: {
@@ -32,12 +26,11 @@ export default function LogDetailPage({
   const { id } = use(params);
   const router = useRouter();
   const { showToast } = useToast();
-  const { missions, lessonResponses, error } = useAppData();
+  const { missions, error } = useAppData();
   const mission = missions?.find((m) => m.id === id) ?? null;
 
   const [editing, setEditing] = useState(false);
-  const [actionText, setActionText] = useState("");
-  const [proofText, setProofText] = useState("");
+  const [text, setText] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [pending, setPending] = useState(false);
@@ -59,27 +52,37 @@ export default function LogDetailPage({
       ? getMissionDef(mission.mission_number)
       : undefined;
 
+  // One entry, one sentence. Rows from the old declare-then-record flow kept
+  // two, so the declared half is shown separately only when it differs.
+  const proofText = mission.reflection ?? mission.action_text;
+  const declaredSeparately =
+    mission.reflection !== null && mission.action_text !== mission.reflection
+      ? mission.action_text
+      : null;
+  const legacyAnswer =
+    mission.question_answer && mission.question_answer !== proofText
+      ? mission.question_answer
+      : null;
+
   function startEditing() {
     if (!mission) return;
-    setActionText(mission.action_text);
-    setProofText(mission.reflection ?? "");
+    setText(proofText);
     setPhoto(mission.photo_url);
     setEditing(true);
   }
 
   async function saveEdits() {
-    if (!mission || !actionText.trim()) return;
+    if (!mission || !text.trim()) return;
+    const next = text.trim().slice(0, PROOF_TEXT_MAX);
     setPending(true);
     try {
       await store.updateMission(mission.id, {
-        action_text: actionText.trim().slice(0, 140),
+        action_text: next,
         ...(mission.status === "completed"
-          ? { reflection: proofText.trim() || null, photo_url: photo }
+          ? { reflection: next, photo_url: photo }
           : {}),
       });
-      track("proof_entry_edited", {
-        missionNumber: mission.mission_number,
-      });
+      track("proof_entry_edited", { missionNumber: mission.mission_number });
       setEditing(false);
     } catch {
       showToast("Couldn't save that. Please try again.", {
@@ -90,22 +93,12 @@ export default function LogDetailPage({
     }
   }
 
-  /**
-   * Deleting a structured Proof keeps the declared action, so the Mission
-   * reverts to in progress (spec §8). A free-form entry is removed entirely.
-   */
+  /** The row goes entirely — a Mission simply reads Not Started again. */
   async function deleteEntry() {
     if (!mission) return;
     setPending(true);
     try {
-      if (mission.mission_number !== null && mission.status === "completed") {
-        await store.uncompleteMission(mission.id);
-        showToast(
-          `Proof deleted. Mission ${mission.mission_number} is back in progress.`,
-        );
-      } else {
-        await store.deleteMission(mission.id);
-      }
+      await store.deleteMission(mission.id);
       track("proof_entry_deleted", { missionNumber: mission.mission_number });
       router.replace("/log");
     } catch {
@@ -128,86 +121,59 @@ export default function LogDetailPage({
         <Eyebrow accent={mission.trigger}>
           {TRIGGERS[mission.trigger].name}
         </Eyebrow>
-        {def && (
-          <p className="eyebrow mt-2 text-gold-300">
-            MISSION {def.number} · {def.title.toUpperCase()}
-          </p>
-        )}
+        <p className="eyebrow mt-2 text-gold-300">
+          {def ? `MISSION ${def.number} · ${def.title.toUpperCase()}` : "ONE-OFF ACTION"}
+        </p>
         {editing ? (
           <div className="mt-4">
             <Field
-              label="Declared action"
-              value={actionText}
-              onChange={setActionText}
-              maxLength={140}
+              label="What you did"
+              value={text}
+              onChange={setText}
+              maxLength={PROOF_TEXT_MAX}
+              multiline
             />
           </div>
         ) : (
           <Headline level={2} className="mt-3 break-words">
-            {mission.action_text}
+            {proofText}
           </Headline>
         )}
       </div>
 
       <dl className="glass mt-6 space-y-3 rounded-[20px] p-5 text-[15px]">
         <div className="flex justify-between gap-4">
-          <dt className="text-ink-2">Status</dt>
-          <dd className="text-ink-0">{STATUS_LABEL[mission.status]}</dd>
+          <dt className="text-ink-2">Logged</dt>
+          <dd className="text-ink-0">
+            {formatDateTime(mission.completed_at ?? mission.started_at)}
+          </dd>
         </div>
-        <div className="flex justify-between gap-4">
-          <dt className="text-ink-2">Declared</dt>
-          <dd className="text-ink-0">{formatDateTime(mission.started_at)}</dd>
-        </div>
-        {mission.completed_at && (
+        {mission.status !== "completed" && (
           <div className="flex justify-between gap-4">
-            <dt className="text-ink-2">Completed</dt>
-            <dd className="text-ink-0">
-              {formatDateTime(mission.completed_at)}
-            </dd>
+            <dt className="text-ink-2">Status</dt>
+            <dd className="text-gold-300">NOT LOGGED YET</dd>
           </div>
         )}
       </dl>
 
-      {editing && mission.status === "completed" ? (
-        <div className="mt-4 space-y-4">
-          <Field
-            label="What did you do?"
-            value={proofText}
-            onChange={setProofText}
-            maxLength={PROOF_TEXT_MAX}
-            multiline
-          />
+      {editing ? (
+        <div className="mt-4">
           <PhotoInput value={photo} onChange={setPhoto} />
         </div>
       ) : (
         <>
-          {def &&
-            (() => {
-              // Prefer the live answer (still editable on the Mission) over
-              // the snapshot taken at declare time.
-              const answer =
-                lessonResponses?.find(
-                  (r) => r.lesson_id === def.slug && r.prompt_id === "q",
-                )?.answer ?? mission.question_answer;
-              if (!answer) return null;
-              return (
-                <div className="glass mt-4 rounded-[20px] p-5">
-                  <Eyebrow>YOUR ANSWER</Eyebrow>
-                  {def.question && (
-                    <p className="mt-2 text-[13px] leading-snug text-ink-2">
-                      {def.question}
-                    </p>
-                  )}
-                  <p className="mt-3 text-[17px] leading-relaxed whitespace-pre-wrap text-ink-0">
-                    {answer}
-                  </p>
-                </div>
-              );
-            })()}
-          {mission.reflection && (
+          {declaredSeparately && (
             <div className="glass mt-4 rounded-[20px] p-5">
-              <Eyebrow>WHAT YOU DID</Eyebrow>
-              <p className="mt-3 text-[17px] text-ink-0">{mission.reflection}</p>
+              <Eyebrow>DECLARED</Eyebrow>
+              <p className="mt-3 text-[17px] text-ink-0">{declaredSeparately}</p>
+            </div>
+          )}
+          {legacyAnswer && (
+            <div className="glass mt-4 rounded-[20px] p-5">
+              <Eyebrow>YOUR ANSWER</Eyebrow>
+              <p className="mt-3 text-[17px] leading-relaxed whitespace-pre-wrap text-ink-0">
+                {legacyAnswer}
+              </p>
             </div>
           )}
           {mission.photo_url && (
@@ -226,7 +192,7 @@ export default function LogDetailPage({
           <>
             <Button
               loading={pending}
-              disabled={!actionText.trim()}
+              disabled={!text.trim()}
               onClick={() => void saveEdits()}
             >
               SAVE
@@ -249,7 +215,7 @@ export default function LogDetailPage({
                   )
                 }
               >
-                OPEN MISSION
+                FINISH THIS ACTION
               </Button>
             )}
             <Button variant="secondary" onClick={startEditing}>
@@ -263,8 +229,8 @@ export default function LogDetailPage({
         open={confirmDelete}
         title="DELETE THIS ENTRY?"
         note={
-          mission.mission_number !== null && mission.status === "completed"
-            ? `The proof is removed and Mission ${mission.mission_number} goes back to in progress. Your declared action stays.`
+          mission.mission_number !== null
+            ? `This removes the proof and Mission ${mission.mission_number} reads Not Started again. This can't be undone.`
             : "This removes the entry from your Proof Log. This can't be undone."
         }
         onClose={() => setConfirmDelete(false)}

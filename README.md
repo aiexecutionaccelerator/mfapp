@@ -2,9 +2,10 @@
 
 Mobile-first PWA for Mission Fragrances. It turns HONOR, COURAGE and COMMITMENT
 into a behavior system: **Select → Trigger → Act → Record** (S.T.A.R.). Thirty
-always-unlocked Missions plus free-form actions from Start; a Proof is only
-counted when a Mission's status becomes `completed` — never for spraying,
-opening or reading. No streaks, no locks, no failure states.
+always-unlocked Missions plus one-off Actions; each one is a two-minute
+real-world action, and writing one line about it is what completes it — one
+input, one click, no declare step and no in-progress state. No streaks, no
+locks, no failure states.
 
 The V2 spec is `docs/V2_PLAN.md` (implementation) — the original visual system
 spec is `docs/BUILD_SPEC.md`.
@@ -226,24 +227,26 @@ Run in demo mode (no env vars) at a 390×844 viewport.
 
 - **A.** `/` → Welcome renders wordmark, ghost words, `ENTER DEMO`.
 - **B.** Profile setup: name + "I am becoming a man who…" (tap-to-use examples)
-  → four onboarding screens → `NOT YET — LET ME EXPLORE` lands on the Mission
-  list with the set-on-the-way banner.
-- **C.** All 30 Missions are visible, none locked; Mission 10 opens before
-  Mission 1; reading completes nothing.
-- **D.** Mission 2: answer the question → pick STANDARD → `DECLARE MY ACTION` →
-  S.T.A.R. sheet → `I'M GOING TO DO IT` → in progress; survives a reload.
-- **E.** Start shows `ACTION IN PROGRESS` with `I DID IT` → `RECORD THE
-  EVIDENCE` (required) → `LOG THE PROOF` → "Proof logged. You acted with
-  Courage."
-- **F.** Free-form: Start → Courage card → declare → trigger screen →
-  check-in → proof → `COURAGE PROOF #2 LOGGED`; Log shows both entries
-  (MISSION 2 and PERSONAL MISSION), filters work, edit and delete work —
-  deleting the structured Proof reverts Mission 2 to in progress.
-- **G.** Progress shows the `N/30` ring, Proof counts, the Mission 12 promise
-  card, and links to the printable Personal Code.
-- **H.** Settings: identity statement editable, How It Works replays
-  onboarding, Using Your Set opens, set status toggles.
-- **I.** Shop renders with a disabled CTA when not configured; Settings →
+  → two How It Works screens → `START MISSION 1` lands on `/missions/1`.
+- **C.** Mission 1: explanation, `RECOMMENDED: COURAGE`, one field, one button.
+  No value picker, no Quick/Standard/Bold, no declare step.
+- **D.** Filling the field and pressing `COMPLETE MISSION 1` completes it in
+  one click: "Mission complete. You acted with Courage." The Mission reads
+  COMPLETE, and the sentence is in the Proof Log with its number, value
+  and date.
+- **E.** Mission 8 (a Personal Code Mission): the same sentence also appears
+  on `/personal-code` as the "Honor means…" line.
+- **F.** Mission list: Complete / Not Started only — no in-progress state —
+  with `SHOW ALL 30 MISSIONS` and one `ONE-OFF ACTION` row at the bottom.
+- **G.** One-off Action: choose the value, one field, `LOG THIS ACTION` →
+  "Proof logged." It never counts toward 30/30.
+- **H.** Log: Mission and one-off entries together, `Edit or delete this
+  entry`; deleting a Mission proof makes that Mission read Not Started again.
+- **I.** Progress: the ring equals Honor + Courage + Commitment, and those
+  tiles count completed Missions, not only one-offs. No "Actions In Progress".
+- **J.** Settings: identity statement editable, How It Works replays the two
+  screens, Using Your Set opens, set status toggles.
+- **K.** Shop renders with a disabled CTA when not configured; Settings →
   Delete Account → Welcome with "Your account has been deleted."
 
 Screenshots of the walkthrough live in `docs/screenshots/`.

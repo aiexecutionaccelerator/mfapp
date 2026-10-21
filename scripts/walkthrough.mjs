@@ -1,5 +1,5 @@
-/* V2 demo-mode walkthrough — drives the README acceptance script end to end
-   and captures screenshots into docs/screenshots/v2-rebuild/.
+/* Demo-mode walkthrough — drives the whole app end to end and captures
+   screenshots into docs/screenshots/v2-rebuild/.
 
    Run: npm run build && PORT=3100 npm start &
         npm i --no-save playwright   # browsers come from /opt/pw-browsers or a local install
@@ -49,150 +49,162 @@ await page.getByText("Keeps his word, acts despite fear, and follows through.").
 await shot("profile-setup");
 await page.getByRole("button", { name: "CONTINUE" }).click();
 
-// Onboarding screens 1–4
-await page.getByText("THIS IS MORE THAN FRAGRANCE").waitFor();
+// C — How It Works: two screens, then straight into Mission 1
+await page.getByText("MORE THAN COLOGNE").first().waitFor();
+await page.getByText("olfactory conditioning").waitFor();
 await shot("onboarding-1");
 await page.getByRole("button", { name: "NEXT" }).click();
 await page.getByText("MEET YOUR SCENT TRIGGERS").waitFor();
+await page.getByText("You have everything you need").waitFor();
 await shot("onboarding-2");
-await page.getByRole("button", { name: "NEXT" }).click();
-await page.getByText("USE S.T.A.R.").waitFor();
-await shot("onboarding-3");
-await page.getByRole("button", { name: "NEXT" }).click();
-await page.getByText("TAKE YOUR FIRST ACTION").waitFor();
-await shot("onboarding-4");
-await page.getByRole("button", { name: "NOT YET — LET ME EXPLORE" }).click();
+await page.getByRole("button", { name: "START MISSION 1" }).click();
 
-// Mission list, set on the way; the next few up front, all 30 one tap away
+// D — Mission 1: one field, one click
+await page.waitForURL("**/missions/1");
+await page.getByText("Your First Step").first().waitFor();
+if ((await page.getByRole("button", { name: /DECLARE/ }).count()) > 0)
+  fail("declare step is back");
+if ((await page.getByText("Use a different fragrance").count()) > 0)
+  fail("fragrance picker is back");
+if ((await page.getByText("Private. Only you ever see this.").count()) > 0)
+  fail("private-question line is back");
+await shot("mission-1");
+await page.getByLabel("What did you do?").fill("Texted my brother that I'm proud of him.");
+await page.getByRole("button", { name: "COMPLETE MISSION 1" }).click();
+await page.getByText("MISSION COMPLETE.").waitFor();
+await page.getByText("You acted with Courage.").waitFor();
+await shot("mission-1-complete");
+
+// It must land as a Proof straight away, with the Mission marked complete
+await page.getByRole("button", { name: "CONTINUE TO THE NEXT MISSION" }).click();
+await page.waitForURL("**/missions/2");
+await page.getByText("Most likely there's a message you need to send").waitFor();
+await shot("mission-2");
+
+// E — Mission 2, completed from the list side
+await page
+  .getByLabel("Who did you send it to, and what did you say?")
+  .fill("My old business partner — asked if we could talk this week.");
+await page.getByRole("button", { name: "COMPLETE MISSION 2" }).click();
+await page.getByText("MISSION COMPLETE.").waitFor();
+
+await page.goto(`${BASE}/missions/2`);
+await page.getByText("COMPLETE", { exact: true }).first().waitFor();
+if ((await page.getByText("My old business partner").count()) === 0)
+  fail("the proof is not shown on the completed Mission");
+await shot("mission-2-complete");
+
+// F — Mission list: Complete / Not Started only, all 30 one tap away
+await page.goto(`${BASE}/missions`);
 await page.getByText("YOUR 30-DAY MISSION").first().waitFor();
-await page.getByText("Your set is on the way").waitFor();
-await shot("mission-list-ordered");
+await page.getByText("2/30 COMPLETE").waitFor();
+if ((await page.getByText("IN PROGRESS").count()) > 0)
+  fail("an in-progress state survived");
+await shot("mission-list");
 await page.getByRole("button", { name: /SHOW ALL 30 MISSIONS/ }).click();
 await page.getByText("ALL MISSIONS").waitFor();
 if ((await page.getByText("MISSION 30").count()) === 0)
   fail("Mission 30 not reachable");
 
-// Out-of-order access: open Mission 10, read it, leave — nothing completes
-await page.goto(`${BASE}/missions/10`);
-await page.getByText("Commitment, in Your Words").first().waitFor();
-await shot("mission-10-open");
-await page.goto(`${BASE}/missions`);
-if ((await page.getByText("COMPLETE", { exact: true }).count()) > 0)
-  fail("reading completed something");
-
-// Mark the set arrived — Start owns that button, the list just reads ahead
-await page.goto(`${BASE}/home`);
-await page.getByRole("button", { name: "MY SET HAS ARRIVED" }).click();
-await page.getByText("YOUR SET IS ON THE WAY").waitFor({ state: "detached" });
-
-// Mission 2 — answer, pick STANDARD, declare, STAR sheet, go
-await page.goto(`${BASE}/missions/2`);
-await page.getByText("Send the Message").first().waitFor();
+// G — A Mission that carries a photo (Mission 7)
+await page.goto(`${BASE}/missions/7`);
+await page.getByText("Build Your Shrine").first().waitFor();
 await page
-  .getByLabel("What conversation, email, or message have you been avoiding?")
-  .fill("The email to my business partner.");
-await page.getByText("Send the email or message you have been postponing.").click();
-await shot("mission-2-brief");
-await page.getByRole("button", { name: "DECLARE MY ACTION" }).click();
-await page.getByText("YOUR ACTION").waitFor();
-await shot("mission-2-in-progress");
-
-// Persistence across reload
-await page.reload();
-await page.getByText("YOUR ACTION").waitFor();
-
-// Start shows MISSION 2 IN PROGRESS → I DID IT → proof form
-await page.goto(`${BASE}/home`);
-await page.getByText("MISSION 2 IN PROGRESS").waitFor();
-await shot("start-action-in-progress");
-await page.getByRole("button", { name: "I DID IT" }).click();
-await page.getByText("RECORD THE EVIDENCE").first().waitFor();
-await page.getByText("What did you do?").waitFor();
-await page
-  .getByLabel("What did you do?")
-  .fill("I sent the email and asked for the conversation.");
-await shot("mission-2-proof-form");
-await page.getByRole("button", { name: "LOG THE PROOF" }).click();
-await page.getByText("You acted with Courage.").waitFor();
-await shot("mission-2-proof-logged");
-// One way forward from the confirmation: straight into the next Mission
-await page.getByRole("button", { name: "CONTINUE TO THE NEXT MISSION" }).click();
-await page.waitForURL("**/missions/**");
-await page.goto(`${BASE}/log`);
-await page.getByText("PROOF LOG").first().waitFor();
-
-// Free-form Mission from Start, with a photo
-await page.goto(`${BASE}/home`);
-await page.getByText("NEXT MISSION · MISSION 1").waitFor(); // state B is back
-await page.getByLabel(/Take a Courage Action/).click();
-await page.getByText("Write your own action").waitFor();
-await page.locator('input[aria-label="Your action"]').fill("Make the difficult call to Yuri.");
-await page.getByRole("button", { name: "DECLARE MY ACTION" }).click();
-await page.getByText("SPRAY THE FRAGRANCE").first().waitFor();
-await shot("freeform-active-ritual");
-await page.getByRole("button", { name: "I DID IT" }).click();
-await page.getByLabel("What did you do?").fill("Called and settled it.");
+  .getByLabel("What did you set up, and where?")
+  .fill("Top of the dresser — three bottles and my grandfather's watch.");
 await page.locator('input[type="file"]').setInputFiles(PHOTO);
 await page.getByLabel("Remove photo").waitFor();
-await shot("freeform-proof-with-photo");
-await page.getByRole("button", { name: "LOG THE PROOF" }).click();
-await page.getByText("PROOF #2 LOGGED").first().waitFor();
-await shot("freeform-complete");
+await shot("mission-7-with-photo");
+await page.getByRole("button", { name: "COMPLETE MISSION 7" }).click();
+await page.getByText("MISSION COMPLETE.").waitFor();
 
-// Log — both entries, filters, edit, delete-reverts
+// H — A Personal Code Mission writes its answer through to the code
+await page.goto(`${BASE}/missions/8`);
+await page.getByLabel("Honor means…").fill("Doing what I said I'd do, even when it costs me.");
+await page.getByRole("button", { name: "COMPLETE MISSION 8" }).click();
+await page.getByText("MISSION COMPLETE.").waitFor();
+await page.goto(`${BASE}/personal-code`);
+await page.getByText("MY PERSONAL CODE").first().waitFor();
+if ((await page.getByText("Doing what I said I'd do").count()) === 0)
+  fail("Mission 8's answer did not reach the Personal Code");
+await shot("personal-code");
+
+// I — One-off Action: value, one field, one click
+await page.goto(`${BASE}/missions`);
+await page.getByText("ONE-OFF ACTION").first().click();
+await page.waitForURL("**/action/declare");
+await page.getByRole("radio", { name: "COURAGE" }).click();
+await page.getByLabel("What did you do?").fill("Made the call I'd been dodging.");
+await shot("one-off-action");
+await page.getByRole("button", { name: "LOG THIS ACTION" }).click();
+await page.getByText("PROOF LOGGED.").waitFor();
+await page.getByRole("button", { name: "DONE" }).click();
+await page.waitForURL("**/missions");
+
+// J — Proof Log: every proof, Missions and one-offs together
 await page.goto(`${BASE}/log`);
-await page.getByText("2 proofs logged").waitFor();
-if ((await page.getByText("PERSONAL ACTION").count()) === 0) fail("no free-form entry");
+await page.getByText("5 proofs logged").waitFor();
+if ((await page.getByText("ONE-OFF ACTION").count()) === 0) fail("no one-off entry");
 if ((await page.getByText("MISSION 2 · SEND THE MESSAGE").count()) === 0)
-  fail("no structured entry");
-await shot("log-both-entries");
+  fail("no Mission entry");
+await shot("log");
 
-// Edit the free-form entry
-await page.getByText("PERSONAL ACTION").first().click();
+// Edit an entry
+await page.getByText("ONE-OFF ACTION").first().click();
 await page.getByRole("button", { name: "Edit or delete this entry" }).click();
-await page.getByLabel("Declared action").fill("Make the difficult call to Yuri today.");
+await page.getByLabel("What you did").fill("Made the call I'd been dodging for a month.");
 await page.getByRole("button", { name: "SAVE", exact: true }).click();
-await page.getByText("Make the difficult call to Yuri today.").waitFor();
+await page.getByText("Made the call I'd been dodging for a month.").first().waitFor();
 await shot("log-entry-edited");
 
-// Delete the structured proof → Mission 2 reverts to in progress
+// Delete a Mission proof → that Mission reads Not Started again
 await page.goto(`${BASE}/log`);
-await page.getByText("MISSION 2 · SEND THE MESSAGE").click();
+await page.getByText("MISSION 8 · HONOR, IN YOUR WORDS").click();
 await page.getByRole("button", { name: "Edit or delete this entry" }).click();
 await page.getByRole("button", { name: "Delete entry" }).click();
-await page.getByText("goes back to in progress").waitFor();
+await page.getByText("reads Not Started again").waitFor();
 await shot("log-delete-confirm");
 await page.getByRole("button", { name: "DELETE ENTRY", exact: true }).click();
 await page.getByText("PROOF LOG").first().waitFor();
-await page.goto(`${BASE}/missions/2`);
-await page.getByText("YOUR ACTION").waitFor(); // reverted to in progress
-await shot("mission-2-reverted");
-// Re-complete it for the numbers below
-await page.getByRole("button", { name: "I DID IT" }).click();
-await page.getByLabel("What did you do?").fill("Sent it. Conversation booked.");
-await page.getByRole("button", { name: "LOG THE PROOF" }).click();
-await page.getByText("You acted with Courage.").waitFor();
+await page.goto(`${BASE}/missions/8`);
+await page.getByText("NOT STARTED").first().waitFor();
+// Re-log it for the numbers below
+await page.getByLabel("Honor means…").fill("Doing what I said I'd do, even when it costs me.");
+await page.getByRole("button", { name: "COMPLETE MISSION 8" }).click();
+await page.getByText("MISSION COMPLETE.").waitFor();
 
-// Progress + Personal Code
+// K — Progress: the value tiles count Missions, not just one-offs
 await page.goto(`${BASE}/progress`);
 await page.getByText("YOUR PROGRESS").waitFor();
+const tile = (label) =>
+  page
+    .locator("div.glass", { has: page.getByText(label, { exact: true }) })
+    .first()
+    .locator("p")
+    .first()
+    .innerText();
+const honor = Number(await tile("Honor"));
+const courage = Number(await tile("Courage"));
+const commitment = Number(await tile("Commitment"));
+if (honor + courage + commitment !== 5)
+  fail(`value tiles sum to ${honor + courage + commitment}, expected 5`);
+if (honor === 0) fail("Honor is 0 though Mission 8 was logged with Honor");
+if ((await page.getByText("Actions In Progress").count()) > 0)
+  fail("the Actions In Progress tile survived");
 await shot("progress");
-await page.goto(`${BASE}/personal-code`);
-await page.getByText("MY PERSONAL CODE").waitFor();
-await shot("personal-code");
 
-// Settings, How It Works replay, Using Your Set
+// L — Settings and the guides
 await page.goto(`${BASE}/settings`);
 await page.getByText("The man I am becoming").waitFor();
 await shot("settings");
 await page.getByText("How It Works").click();
-await page.getByText("THIS IS MORE THAN FRAGRANCE").first().waitFor();
+await page.getByText("MORE THAN COLOGNE").first().waitFor();
 await shot("how-it-works");
 await page.goto(`${BASE}/using-your-set`);
 await page.getByText("USING YOUR SET").waitFor();
 await shot("using-your-set");
 
-// 30/30: seed 1–29 straight into demo storage, then finish Mission 30 for real
+// M — 30/30: seed the rest straight into demo storage, then finish 30 for real
 await page.evaluate(() => {
   const read = JSON.parse(localStorage.getItem("mission.missions") ?? "[]");
   const now = Date.now();
@@ -204,7 +216,7 @@ await page.evaluate(() => {
       id: crypto.randomUUID(),
       user_id: "demo-user",
       trigger: triggers[n % 3],
-      action_text: `Seeded action for Mission ${n}`,
+      action_text: `Seeded proof for Mission ${n}`,
       action_category: "dev-seed",
       status: "completed",
       started_at: new Date(now - (30 - n) * 86400000).toISOString(),
@@ -222,29 +234,24 @@ await page.goto(`${BASE}/missions/30`);
 await page.getByText("Choose the Next Mission").first().waitFor();
 await page
   .getByLabel(/next 30-day commitment/)
-  .fill("Walk twenty minutes, four times a week — anchored to Commitment.");
-await page.getByText("Write the next commitment.").click();
-await page.getByRole("button", { name: "DECLARE MY ACTION" }).click();
-await page.getByText("YOUR ACTION").waitFor();
-await page.getByRole("button", { name: "I DID IT" }).click();
-await page.getByLabel("What did you do?").fill("Wrote it down and scheduled week one.");
-await page.getByRole("button", { name: "LOG THE PROOF" }).click();
+  .fill("Courage — one hard conversation a week, for thirty days.");
+await page.getByRole("button", { name: "COMPLETE MISSION 30" }).click();
 await page.getByText("30-DAY MISSION COMPLETE").waitFor();
 await shot("mission-30-complete");
 await page.goto(`${BASE}/progress`);
 await page.getByText("30-DAY MISSION COMPLETE").waitFor();
 await shot("progress-30-of-30");
-await page.goto(`${BASE}/home`);
-await page.getByText("Keep Building the Evidence").waitFor();
-await shot("start-state-d");
 await page.goto(`${BASE}/missions`);
+await page.getByText("Thirty actions. Thirty pieces of evidence.").waitFor();
 await shot("mission-list-complete");
 
-// Old route redirects
+// N — Old routes still land somewhere real
 await page.goto(`${BASE}/course`);
 await page.waitForURL("**/missions");
+await page.goto(`${BASE}/home`);
+await page.waitForURL("**/missions");
 
-// Desktop width sanity
+// O — Desktop width sanity
 await page.setViewportSize({ width: 1280, height: 900 });
 await page.goto(`${BASE}/missions`);
 await page.getByText("YOUR 30-DAY MISSION").first().waitFor();

@@ -32,9 +32,9 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong className="text-ink-0">Missions:</strong> the trigger you
-            select (Honor, Courage, or Commitment), the action you declare, its
-            status, timestamps, the answers you write to Mission questions, the
-            proof you record, and any optional photo you choose to attach.
+            select (Honor, Courage, or Commitment), what you write when you log
+            a Mission or a one-off action, timestamps, and any optional photo
+            you choose to attach.
           </li>
           <li>
             <strong className="text-ink-0">Preferences:</strong> your reminder
