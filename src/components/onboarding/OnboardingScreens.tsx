@@ -72,25 +72,23 @@ export default function OnboardingScreens({
         <div className="mt-6 flex flex-1 flex-col">
           <Headline>MORE THAN COLOGNE</Headline>
           <p className="mt-5 text-[17px] leading-relaxed text-ink-1">
-            Mission Fragrances are more than colognes. They work through
-            olfactory conditioning — scent is the one sense wired straight to
-            memory and emotion, which is why a smell can put you somewhere you
-            haven&apos;t been in twenty years.
+            Mission Fragrances are Scent Triggers: colognes with a job. They
+            work through olfactory conditioning. Scent is the one sense wired
+            straight to memory and emotion, which is why a smell can put you
+            somewhere you haven&apos;t been in twenty years.
           </p>
           <p className="mt-4 text-[17px] leading-relaxed text-ink-1">
-            You condition yourself to a scent using our S.T.A.R. system:{" "}
-            <span className="text-ink-0">Select</span> the value you need,{" "}
-            <span className="text-ink-0">Trigger</span> it by spraying the
-            fragrance and recalling a moment you lived it, then{" "}
-            <span className="text-ink-0">Act</span> and{" "}
-            <span className="text-ink-0">Record</span> what you did in the same
-            breath. Wear it enough times and the scent stops being something
-            you put on in the morning — it becomes the signal that tells you
-            which man you are about to be.
+            You condition yourself to a Scent Trigger with the S.T.A.R.
+            System. <span className="text-ink-0">Select</span> the value you
+            need. <span className="text-ink-0">Trigger</span> it: spray, and
+            recall a moment you lived that value.{" "}
+            <span className="text-ink-0">Act</span> on it.{" "}
+            <span className="text-ink-0">Record</span> what you did. Do it
+            enough times and the scent stops being something you put on in the
+            morning.
           </p>
           <p className="font-display text-gold-gradient mt-6 text-[22px] leading-snug">
-            The fragrance is the trigger. Recording your action is the
-            evidence.
+            It becomes the signal for the man you&apos;re about to be.
           </p>
           <MissionVideo
             youtubeId={INTRO_VIDEOS.moreThanFragrance}

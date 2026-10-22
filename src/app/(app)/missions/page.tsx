@@ -127,8 +127,9 @@ export default function MissionListPage() {
 
       <Headline className="mt-6">YOUR 30-DAY MISSION</Headline>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        Thirty Missions. Each one is a real action that takes a minute or two,
-        and writing it down is what completes it.
+        Thirty Missions. Each one is a real action that takes a minute or
+        two. Spray your Scent Trigger, do it, write it down — that&apos;s what
+        completes it.
       </p>
 
       {profile.set_status === "ordered" && (
@@ -172,7 +173,7 @@ export default function MissionListPage() {
           <span className="min-w-0 flex-1">
             <span className="eyebrow block text-gold-300">ONE-OFF ACTION</span>
             <span className="mt-1.5 block text-[15px] leading-snug text-ink-1">
-              Need Honor, Courage or Commitment right now? Log it here.
+              Something outside the thirty? Log it here.
             </span>
           </span>
           <ChevronRight aria-hidden className="shrink-0 text-ink-2" size={20} />

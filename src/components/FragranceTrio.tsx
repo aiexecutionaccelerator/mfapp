@@ -20,9 +20,9 @@ export default function FragranceTrio() {
 
   return (
     <section className="mt-10">
-      <p className="eyebrow text-ink-2">YOUR THREE FRAGRANCES</p>
+      <p className="eyebrow text-ink-2">YOUR THREE SCENT TRIGGERS</p>
       <p className="mt-2 text-[13px] text-ink-2">
-        Tap a bottle to remember what it is for.
+        Tap a bottle to remember what it&apos;s for.
       </p>
 
       <div className="mt-4 flex gap-3">

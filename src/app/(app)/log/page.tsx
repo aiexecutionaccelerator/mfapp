@@ -31,8 +31,8 @@ export default function LogPage() {
       <Headline>PROOF LOG</Headline>
 
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        Every Mission and Action you complete lands here — evidence of the man
-        you are becoming.
+        Every Mission and One-Off Action you complete lands here. Evidence of
+        the man you&apos;re becoming.
       </p>
       {missions && (
         <p className="mt-2 text-[13px] text-ink-2">
@@ -48,11 +48,11 @@ export default function LogPage() {
       ) : missions.length === 0 ? (
         <div className="mt-6">
           <EmptyState
-            title="No proof yet."
-            body="Take one small action today."
+            title="Nothing logged yet."
+            body="Open Mission 1. Two minutes is enough."
             action={
-              <Button onClick={() => router.push("/missions")}>
-                TAKE ACTION
+              <Button onClick={() => router.push("/missions/1")}>
+                START MISSION 1
               </Button>
             }
           />

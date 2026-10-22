@@ -61,7 +61,7 @@ await page.getByRole("button", { name: "CONTINUE" }).click();
 // C — How It Works: two screens, then straight into Mission 1
 await page.getByText("MORE THAN COLOGNE").first().waitFor();
 await page.getByText("olfactory conditioning").waitFor();
-await page.getByText("which man you are about to be").waitFor();
+await page.getByText("the signal for the man you're about to be").waitFor();
 await shot("onboarding-1");
 await page.getByRole("button", { name: "NEXT" }).click();
 await page.getByText("MEET YOUR SCENT TRIGGERS").waitFor();
@@ -94,7 +94,7 @@ await shot("mission-1-complete");
 // It must land as a Proof straight away, with the Mission marked complete
 await page.getByRole("button", { name: "CONTINUE TO THE NEXT MISSION" }).click();
 await page.waitForURL("**/missions/2");
-await page.getByText("Most likely there's a message you need to send").waitFor();
+await page.getByText("There's a message you've been avoiding").waitFor();
 // The fragrance cue carries the T of S.T.A.R. now the ritual screen is gone
 await page.getByText("Recommended", { exact: true }).waitFor();
 await shot("mission-2");
@@ -137,7 +137,7 @@ if ((await page.getByText("MISSION 30").count()) === 0)
 
 // The three bottles at the foot of the list: side by side, tap to read
 await page.getByRole("button", { name: /SHOW LESS/ }).click();
-await page.getByText("YOUR THREE FRAGRANCES").waitFor();
+await page.getByText("YOUR THREE SCENT TRIGGERS").waitFor();
 await page.getByRole("button", { name: /What courage is for/i }).click();
 if ((await page.getByText("Courage isn't a switch you flip").count()) === 0)
   fail("the bottle did not open its description");
@@ -147,7 +147,7 @@ await shot("fragrance-trio");
 await page.goto(`${BASE}/missions/7`);
 await page.getByText("Build Your Shrine").first().waitFor();
 await page
-  .getByLabel("What did you set up, and where?")
+  .getByLabel("What's on it, and where is it?")
   .fill("Top of the dresser — three bottles and my grandfather's watch.");
 await page.locator('input[type="file"]').setInputFiles(PHOTO);
 await page.getByLabel("Remove photo").waitFor();
@@ -157,7 +157,7 @@ await page.getByText("MISSION COMPLETE.").waitFor();
 
 // H — A Personal Code Mission writes its answer through to the code
 await page.goto(`${BASE}/missions/8`);
-await page.getByLabel("Honor means…").fill("Doing what I said I'd do, even when it costs me.");
+await page.getByLabel("For me, honor means…").fill("Doing what I said I'd do, even when it costs me.");
 await page.getByRole("button", { name: "COMPLETE MISSION 8" }).click();
 await page.getByText("MISSION COMPLETE.").waitFor();
 await page.goto(`${BASE}/personal-code`);
@@ -188,13 +188,18 @@ for (const path of ["/missions", "/log", "/progress", "/settings"]) {
 // J — Proof Log: every proof, Missions and one-offs together
 await page.goto(`${BASE}/log`);
 await page.getByText("5 proofs logged").waitFor();
-if ((await page.getByText("ONE-OFF ACTION").count()) === 0) fail("no one-off entry");
+// The intro line mentions One-Off Actions too, so match the row itself
+const oneOffRow = page
+  .getByRole("link")
+  .filter({ hasText: "ONE-OFF ACTION" })
+  .first();
+if ((await oneOffRow.count()) === 0) fail("no one-off entry");
 if ((await page.getByText("MISSION 2 · SEND THE MESSAGE").count()) === 0)
   fail("no Mission entry");
 await shot("log");
 
 // Edit an entry
-await page.getByText("ONE-OFF ACTION").first().click();
+await oneOffRow.click();
 await page.getByRole("button", { name: "Edit or delete this entry" }).click();
 await page.getByLabel("What you did").fill("Made the call I'd been dodging for a month.");
 await page.getByRole("button", { name: "SAVE", exact: true }).click();
@@ -213,7 +218,7 @@ await page.getByText("PROOF LOG").first().waitFor();
 await page.goto(`${BASE}/missions/8`);
 await page.getByText("NOT STARTED").first().waitFor();
 // Re-log it for the numbers below
-await page.getByLabel("Honor means…").fill("Doing what I said I'd do, even when it costs me.");
+await page.getByLabel("For me, honor means…").fill("Doing what I said I'd do, even when it costs me.");
 await page.getByRole("button", { name: "COMPLETE MISSION 8" }).click();
 await page.getByText("MISSION COMPLETE.").waitFor();
 
@@ -277,7 +282,7 @@ await page.evaluate(() => {
 await page.goto(`${BASE}/missions/30`);
 await page.getByText("Choose the Next Mission").first().waitFor();
 await page
-  .getByLabel(/next 30-day commitment/)
+  .getByLabel(/which Scent Trigger carries it/)
   .fill("Courage — one hard conversation a week, for thirty days.");
 await page.getByRole("button", { name: "COMPLETE MISSION 30" }).click();
 await page.getByText("30-DAY MISSION COMPLETE").waitFor();

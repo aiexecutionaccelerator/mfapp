@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useRef, useState } from "react";
 import FragranceCue from "@/components/FragranceCue";
 import NavAction from "@/components/NavAction";
+import TapToUse from "@/components/TapToUse";
 import Button from "@/components/ui/Button";
 import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
@@ -12,6 +13,13 @@ import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
 import { store } from "@/lib/data/store";
 import { PROOF_TEXT_MAX, type Trigger } from "@/lib/data/types";
+
+/** One plain example per value, in the voice of a man typing fast. */
+const ONE_OFF_EXAMPLES: Record<Trigger, string> = {
+  honor: "Owned the mistake in front of the team instead of explaining it away.",
+  courage: "Made the call I'd been dodging for a month.",
+  commitment: "Did the workout I'd already talked myself out of.",
+};
 
 function isTrigger(value: string | null): value is Trigger {
   return value === "honor" || value === "courage" || value === "commitment";
@@ -83,9 +91,9 @@ function DeclareInner() {
 
       <Headline className="mt-4">A ONE-OFF ACTION</Headline>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        Something outside the thirty. Pick the value you need right now, spray
-        it, take the action, and write it down — it lands in your Proof Log
-        with everything else.
+        Something outside the thirty. Choose the value you need right now,
+        spray it, do the thing, and write it down. It lands in your Proof Log
+        with everything else, and it doesn&apos;t count against the thirty.
       </p>
 
       <FragranceCue
@@ -94,16 +102,28 @@ function DeclareInner() {
         className="mt-7"
       />
 
-      <div className="mt-7">
+      <p className="eyebrow mt-7 text-gold-300">WHAT DID YOU DO?</p>
+
+      {/* The example follows the Scent Trigger he picked — a Courage example
+          is no use to a man reaching for Commitment. */}
+      {!text.trim() && (
+        <TapToUse
+          className="mt-2"
+          text={ONE_OFF_EXAMPLES[trigger]}
+          onUse={setText}
+        />
+      )}
+
+      <div className="mt-3">
         <Field
           variant="prominent"
-          label="What did you do?"
+          aria-label="What did you do?"
           value={text}
           onChange={setText}
           maxLength={PROOF_TEXT_MAX}
           multiline
           rows={4}
-          placeholder="One action. Short. Specific."
+          placeholder="Write it here."
         />
       </div>
 

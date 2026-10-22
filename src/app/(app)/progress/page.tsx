@@ -61,8 +61,8 @@ export default function ProgressPage() {
       </div>
 
       <p className="mt-6 text-center text-[15px] text-ink-1">
-        Every completed action is proof that you&apos;re taking steps toward
-        the man you know you&apos;re becoming.
+        Every entry is proof you did something, not that you meant to. Most
+        men have no record of themselves at all.
       </p>
 
       {complete && (
