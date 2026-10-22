@@ -15,7 +15,7 @@ import { createClient } from "npm:@supabase/supabase-js@2.47.10";
 
 const BATCH_SIZE = 200;
 const TITLE = "Mission Fragrances";
-const BODY = "Your action is waiting. Did you do it?";
+const BODY = "One Mission. Two minutes. Do it and write it down.";
 const DEFAULT_SUBJECT = "mailto:antonio@missionfragrances.com";
 
 interface ReminderRow {

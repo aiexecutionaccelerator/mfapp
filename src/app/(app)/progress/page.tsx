@@ -55,7 +55,7 @@ export default function ProgressPage() {
         <ProgressRing
           value={stats.totalDeeds}
           max={100}
-          label="ACTION PROOFS"
+          label="PROOFS LOGGED"
           display="count"
         />
       </div>
@@ -69,13 +69,13 @@ export default function ProgressPage() {
         <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
           <Eyebrow tone="gold">30-DAY MISSION COMPLETE</Eyebrow>
           <p className="mt-3 text-[15px] leading-relaxed text-ink-1">
-            You completed thirty actions and created thirty pieces of evidence.
-            Your Proof Log remains open. Keep using Honor, Courage, and
-            Commitment whenever you need them.
+            Thirty actions. Thirty pieces of evidence with your name on them.
+            Your Proof Log stays open — keep reaching for the Scent Trigger
+            you need.
           </p>
           <div className="mt-5">
-            <Button onClick={() => router.push("/missions")}>
-              LOG A NEW ACTION
+            <Button onClick={() => router.push("/action/declare")}>
+              LOG A ONE-OFF ACTION
             </Button>
           </div>
         </GlassCard>

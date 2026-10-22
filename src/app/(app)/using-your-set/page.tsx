@@ -47,7 +47,7 @@ const GUIDE = [
   },
   {
     title: "Reapplying",
-    body: "Reapply the same trigger later if you like — two or three sprays every five hours or so is the ceiling worth respecting.",
+    body: "Reapply the same Scent Trigger later if you like — two or three sprays every five hours or so is the ceiling worth respecting.",
   },
   {
     title: "The travel atomizer",
