@@ -18,7 +18,10 @@ import type { Trigger } from "@/lib/data/types";
  * review: too wordy, and it doesn't sound American. So these are hard limits,
  * not suggestions:
  *
- * - Statement: ONE short sentence, two at most. About 10 words.
+ * - Antonio's own words are the spec. Where he gave exact wording, use it
+ *   verbatim — these limits cut OUR copy, never his.
+ * - Statement: optional. Only when it earns the reader's attention. One
+ *   short sentence, two at most.
  * - Action: one sentence. About 10 words.
  * - Question: under 7 words.
  * - Examples: under 10 words. Three of them. Exactly one means no example
@@ -44,8 +47,12 @@ export interface MissionDef {
   /** Stable answer key: lesson_id in lesson_responses is this slug. */
   slug: string;
   title: string;
-  /** Why it matters. One or two short lines. */
-  statement: string;
+  /**
+   * Why it matters, in a line or two. OPTIONAL: every line costs the reader
+   * attention, so a Mission whose title and action already say it all goes
+   * straight to "Let's get started with the S.T.A.R. System."
+   */
+  statement?: string;
   /** What to do. Under 60 seconds. */
   action: string;
   /** The Scent Trigger this Mission recommends. He can wear another. */
@@ -108,10 +115,10 @@ export const MISSIONS: MissionDef[] = [
     number: 1,
     slug: "m1",
     title: "Prove It",
-    statement: "Thinking doesn't make you a better man. Action does.",
-    action: "Do one honorable thing right now.",
+    statement: "You don't become a better man by thinking about it. You become a better man by taking action.",
+    action: "Today's Mission is to get started. Do one honorable thing.",
     recommendedTrigger: "honor",
-    inputLabel: "What will you do?",
+    inputLabel: "What are you going to do?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to telling someone I'm proud of them.",
@@ -140,10 +147,9 @@ export const MISSIONS: MissionDef[] = [
     number: 3,
     slug: "m3",
     title: "Keep Your Word",
-    statement: "Every broken promise tells you your word is cheap.",
     action: "Make one promise to someone. Keep it.",
     recommendedTrigger: "commitment",
-    inputLabel: "What promise will you keep?",
+    inputLabel: "What promise are you going to keep?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to being home for dinner tonight.",
@@ -159,7 +165,7 @@ export const MISSIONS: MissionDef[] = [
     statement: "Someone you love doesn't know how much they matter to you.",
     action: "Tell them exactly what they did and why it mattered.",
     recommendedTrigger: "honor",
-    inputLabel: "Who will you tell?",
+    inputLabel: "Who are you going to tell?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to thanking my wife for all she carries.",
@@ -308,7 +314,7 @@ export const MISSIONS: MissionDef[] = [
     statement: "Most men never write one. You just did.",
     action: "Read it. Pick the line you need today.",
     recommendedTrigger: "honor",
-    inputLabel: "Which line will you live by today?",
+    inputLabel: "Which line are you living by today?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to no white lies today.",
@@ -341,7 +347,7 @@ export const MISSIONS: MissionDef[] = [
     statement: "Your family needs you around for a long time.",
     action: "Do one thing your body will thank you for.",
     recommendedTrigger: "courage",
-    inputLabel: "What will you do?",
+    inputLabel: "What are you going to do?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to booking my physical.",
@@ -357,7 +363,7 @@ export const MISSIONS: MissionDef[] = [
     statement: "Easy jobs feel like progress. They aren't.",
     action: "Start the job you keep dodging. Right now.",
     recommendedTrigger: "commitment",
-    inputLabel: "What will you start?",
+    inputLabel: "What are you going to start?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to starting our will.",
@@ -373,7 +379,7 @@ export const MISSIONS: MissionDef[] = [
     statement: "Money problems grow when you don't look.",
     action: "Open the account you've been avoiding.",
     recommendedTrigger: "courage",
-    inputLabel: "What will you look at?",
+    inputLabel: "What are you going to look at?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to opening my credit card statement.",
@@ -386,7 +392,6 @@ export const MISSIONS: MissionDef[] = [
     number: 19,
     slug: "m19",
     title: "Fix Your Space",
-    statement: "Your house is either helping you or holding you back.",
     action: "Fix one small thing in the next minute.",
     recommendedTrigger: "commitment",
     inputLabel: "What did you fix?",
@@ -402,10 +407,9 @@ export const MISSIONS: MissionDef[] = [
     number: 20,
     slug: "m20",
     title: "Be Useful",
-    statement: "You'll be remembered for how you helped.",
     action: "Help one person with something quick.",
     recommendedTrigger: "honor",
-    inputLabel: "Who will you help?",
+    inputLabel: "Who are you going to help?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to sending my neighbor my mechanic's number.",
@@ -453,7 +457,7 @@ export const MISSIONS: MissionDef[] = [
     statement: "You won't feel 1% better today. Do it anyway.",
     action: "Make one daily habit a little better.",
     recommendedTrigger: "commitment",
-    inputLabel: "What will you improve?",
+    inputLabel: "What are you going to improve?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to charging my phone outside the bedroom.",
@@ -469,7 +473,7 @@ export const MISSIONS: MissionDef[] = [
     statement: "Every yes costs you something.",
     action: "Say no to one thing that doesn't matter.",
     recommendedTrigger: "courage",
-    inputLabel: "What will you say no to?",
+    inputLabel: "What are you saying no to?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to skipping golf for my daughter's game.",
@@ -482,10 +486,9 @@ export const MISSIONS: MissionDef[] = [
     number: 25,
     slug: "m25",
     title: "Cut the Dead Weight",
-    statement: "Some habits give you nothing back.",
-    action: "Pick one and drop it this week.",
+    action: "Pick one habit that gives you nothing back. Drop it this week.",
     recommendedTrigger: "commitment",
-    inputLabel: "What will you drop?",
+    inputLabel: "What are you going to drop?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to no phone in bed.",
@@ -501,7 +504,7 @@ export const MISSIONS: MissionDef[] = [
     statement: "Don't ask what's easy. Ask what he'd do.",
     action: "Think of a decision you're facing. Do what he would do.",
     recommendedTrigger: "honor",
-    inputLabel: "What will you do?",
+    inputLabel: "What are you going to do?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to telling my son I was wrong.",
@@ -533,7 +536,7 @@ export const MISSIONS: MissionDef[] = [
     statement: "Your Proof Log is real. Dates and all.",
     action: "Read it. Pick your best one and do it again, bigger.",
     recommendedTrigger: "courage",
-    inputLabel: "Which one will you repeat?",
+    inputLabel: "Which one are you going to repeat?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to calling my dad again.",
@@ -549,7 +552,7 @@ export const MISSIONS: MissionDef[] = [
     statement: "A code nobody sees is easy to break.",
     action: "Send it to one man who'll hold you to it.",
     recommendedTrigger: "honor",
-    inputLabel: "Who will you send it to?",
+    inputLabel: "Who are you sending it to?",
     inputPrefix: COMMIT,
     examples: [
       "I commit to sending it to my brother.",

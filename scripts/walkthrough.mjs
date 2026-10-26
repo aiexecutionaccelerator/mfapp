@@ -29,6 +29,8 @@ let step = 0;
 // Full-page captures re-lay-out fixed elements, so anything modal (a sheet)
 // is shot at the viewport instead — that's what a man actually sees.
 async function shot(name, { full = true } = {}) {
+  // Sheets rise and fade in over 220ms; don't photograph them mid-fade.
+  if (!full) await page.waitForTimeout(400);
   step += 1;
   const file = `${OUT}/${String(step).padStart(2, "0")}-${name}.png`;
   await page.screenshot({ path: file, fullPage: full });
@@ -44,11 +46,17 @@ await page.getByText("ENTER DEMO").waitFor();
 await page.getByText("Three Scent Triggers. Three core values.").waitFor();
 await page.getByText("30 action-oriented Missions").waitFor();
 await shot("welcome");
+if ((await page.getByRole("button", { name: "Save as an app" }).count()) > 0)
+  fail("Save as an app belongs on the code screen, not Welcome");
+// The Check Your Email screen carries it at the bottom
+await page.goto(`${BASE}/verify?email=antonio%40example.com`);
+await page.getByText("CHECK YOUR EMAIL").waitFor();
 await page.getByRole("button", { name: "Save as an app" }).click();
 await page.getByText("Add to Home Screen", { exact: true }).waitFor();
 await page.getByText("Install app").waitFor();
 await shot("save-as-app", { full: false });
 await page.getByRole("button", { name: "GOT IT" }).click();
+await page.goto(`${BASE}/welcome`);
 await page.getByText("ENTER DEMO").click();
 
 // B — Profile setup. The identity box opens with real, editable text in it,
@@ -69,7 +77,8 @@ await page.getByRole("button", { name: "CONTINUE" }).click();
 
 // C — How It Works: three screens, then straight into Mission 1
 await page.getByText("MORE THAN COLOGNE").first().waitFor();
-await page.getByText("on command").waitFor();
+await page.getByText("pull up, on command").waitFor();
+await page.getByText("It becomes the signal for the man you're about to be.").waitFor();
 if ((await page.getByText("twenty years").count()) > 0)
   fail("the twenty-years line is back");
 await shot("onboarding-1");
@@ -78,11 +87,13 @@ await page.getByRole("button", { name: "NEXT" }).click();
 await page.getByText("HOW OLFACTORY CONDITIONING WORKS").first().waitFor();
 for (const step of ["Select", "Trigger", "Act", "Record"])
   await page.getByText(step, { exact: true }).first().waitFor();
-await page.getByText("it's hardwired").waitFor();
+await page.getByText("it becomes hardwired").waitFor();
+await page.getByText("You condition yourself to a Scent Trigger").waitFor();
 await shot("onboarding-2-star");
 await page.getByRole("button", { name: "NEXT" }).click();
 await page.getByText("MEET YOUR SCENT TRIGGERS").waitFor();
 await page.getByText("You live by a moral code").waitFor();
+await page.getByText("You fulfill your responsibilities through consistent effort and perseverance.").waitFor();
 await page.getByText("You have everything you need").waitFor();
 await shot("onboarding-3");
 await page.getByRole("button", { name: "START MISSION 1" }).click();
@@ -94,7 +105,8 @@ await page.getByText("Prove It").first().waitFor();
 for (const step of ["SELECT", "TRIGGER", "ACT", "RECORD"])
   await page.getByText(step, { exact: true }).first().waitFor();
 await page.getByText("Spray your selected fragrance.").waitFor();
-await page.getByText("Takes less than 60 seconds.").waitFor();
+await page.getByText("This should take you less than 60 seconds.").waitFor();
+await page.getByText("Let's get started with the S.T.A.R. System.").waitFor();
 if ((await page.getByText("Spray your Scent Trigger").count()) > 0)
   fail("a spray instruction is back inside the Mission copy");
 // The reminder opens the same four cards
@@ -110,7 +122,7 @@ if ((await page.getByText("Private. Only you ever see this.").count()) > 0)
   fail("private-question line is back");
 await shot("mission-1");
 // A commitment: the field opens on "I commit to", and that alone isn't enough
-const m1 = page.getByLabel("What will you do?");
+const m1 = page.getByLabel("What are you going to do?");
 if ((await m1.inputValue()) !== "I commit to ")
   fail("the commitment field did not open on 'I commit to'");
 if (!(await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).isDisabled()))

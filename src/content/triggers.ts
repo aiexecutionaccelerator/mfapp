@@ -34,11 +34,8 @@ export const TRIGGERS = {
     name: "COMMITMENT",
     tagline: "Discipline · Consistency · Follow-Through",
     onboardingWords: "Discipline · Consistency · Follow-Through",
-    // DRAFT — the sales page's own Commitment line was cut off in Antonio's
-    // recording and the site isn't reachable from the build environment.
-    // Replace with the verbatim sentence from missionfragrances.com.
     onboardingLine:
-      "You finish what you start, even after the excitement's gone.",
+      "You fulfill your responsibilities through consistent effort and perseverance.",
     declareHeadline: "WHAT WILL YOU COMMIT TO TODAY?",
     about:
       "Commitment is keeping a promise after the excitement's gone. It doesn't care about your mood. It starts small, one choice a day.",
@@ -58,24 +55,28 @@ export const TRIGGER_ORDER = ["honor", "courage", "commitment"] as const;
  * value works almost as well as doing something new.
  */
 export const STAR_STEPS = [
-  { letter: "S", name: "Select", text: "Pick the value you need." },
-  { letter: "T", name: "Trigger", text: "Spray the fragrance." },
+  { letter: "S", name: "Select", text: "Select the core value you need." },
+  {
+    letter: "T",
+    name: "Trigger",
+    text: "Spray the fragrance and breathe it in. This is how you build the trigger.",
+  },
   {
     letter: "A",
     name: "Act",
-    text: "Do one small thing that fits the value, or remember a time you did.",
-    example: "Spray Honor. Do something honorable, or remember a time you did.",
+    text: "Take one small action that's aligned with the value, or recall a time you lived it.",
+    example: "Example: spray Honor, then do or remember something honorable.",
   },
   {
     letter: "R",
     name: "Record",
-    text: "Log it in the app. Every entry is proof.",
+    text: "Log what you did in the app. It's one piece of proof that you're becoming the man you know yourself to be.",
   },
 ] as const;
 
 /** Under the four steps, wherever they appear. */
 export const STAR_CLOSER =
-  "Do this a dozen times and the scent starts to bring back the feeling. Do it 30 times and it's hardwired.";
+  "Do this a dozen times and you start to associate the scent with the emotion and the memory. Do it 30 times and it becomes hardwired.";
 
 /**
  * Accents match the bottles: Honor = silver, Courage = gold, Commitment = black.

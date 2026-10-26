@@ -17,18 +17,18 @@ export default function StarSystem({
 }) {
   return (
     <div className={className}>
-      <div className="space-y-3">
+      <div className="space-y-4">
         {STAR_STEPS.map((step) => (
           <div
             key={step.letter}
-            className="glass flex items-start gap-4 rounded-[14px] p-4"
+            className="glass flex items-start gap-5 rounded-[16px] px-5 py-5"
           >
-            <span className="font-display text-gold-gradient w-8 shrink-0 pt-0.5 text-center text-[30px] leading-none">
+            <span className="font-display text-gold-gradient w-9 shrink-0 pt-0.5 text-center text-[36px] leading-none">
               {step.letter}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-[17px] text-ink-0">{step.name}</p>
-              <p className="mt-1 text-[15px] leading-snug text-ink-1">
+              <p className="text-[19px] text-ink-0">{step.name}</p>
+              <p className="mt-1.5 text-[16px] leading-relaxed text-ink-1">
                 {step.text}
               </p>
               {"example" in step && (
@@ -41,7 +41,7 @@ export default function StarSystem({
         ))}
       </div>
       {closer && (
-        <p className={cn("mt-5 text-[15px] leading-relaxed text-ink-1")}>
+        <p className={cn("mt-6 text-[16px] leading-relaxed text-ink-1")}>
           {STAR_CLOSER}
         </p>
       )}

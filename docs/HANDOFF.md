@@ -19,7 +19,7 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 2.8.0 (every Mission is the S.T.A.R. System)
+- Version: 2.9.0 (every Mission is the S.T.A.R. System)
 
 ## Architecture facts that matter
 
@@ -166,14 +166,12 @@ seed-Missions-1–29 helpers in Settings.
 - Secrets live outside the repo (.env.local, Supabase function secrets).
 
 - **Unconfirmed, waiting on Antonio / Yuri:**
-  - Regular price. The sale price is confirmed at $297 and shows on Claim
-    Your Set. The regular (struck-through) price isn't confirmed — the
-    landing page says $595, Antonio said $597 — so `compareAtPrice` in
-    `src/content/product.ts` is null and nothing is struck through. Set it,
-    and the same compare-at price in Shopify.
-  - Commitment's sales-page definition (`onboardingLine` in
-    `src/content/triggers.ts`) is a DRAFT — the real line was cut off in the
-    recording. Replace it verbatim.
+  - Regular price. $297 sale price is live on Claim Your Set. Antonio said
+    $597 regular ($300 saving) in his third Loom, but an earlier Loom showed
+    the Shopify page at $595 — so `compareAtPrice` in
+    `src/content/product.ts` stays null until that's confirmed. One number
+    turns on "~~$597~~ $297 · YOU SAVE $300"; set the same compare-at price
+    in Shopify.
 
 ## Working conventions
 

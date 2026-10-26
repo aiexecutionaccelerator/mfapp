@@ -8,7 +8,7 @@ import { readFileSync } from "node:fs";
 const SOURCE = new URL("../src/content/missions.ts", import.meta.url);
 const text = readFileSync(SOURCE, "utf8");
 
-const LIMITS = { statement: 16, action: 12, inputLabel: 7, example: 12 };
+const LIMITS = { statement: 18, action: 12, inputLabel: 7, example: 12 };
 // Tells of written-not-spoken English.
 const BANNED = [
   ["—", "em-dash"],

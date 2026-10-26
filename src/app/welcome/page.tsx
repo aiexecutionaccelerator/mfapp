@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState, type FormEvent } from "react";
 import BottleVisual from "@/components/BottleVisual";
-import SaveAsApp from "@/components/SaveAsApp";
 import Wordmark from "@/components/Wordmark";
 import Button from "@/components/ui/Button";
 import Field from "@/components/ui/Field";
@@ -200,8 +199,6 @@ export default function WelcomePage() {
           >
             Terms
           </a>
-          <span aria-hidden>·</span>
-          <SaveAsApp />
         </div>
       </div>
     </main>

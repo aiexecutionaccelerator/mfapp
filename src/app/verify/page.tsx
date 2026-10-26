@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import NavAction from "@/components/NavAction";
+import SaveAsApp from "@/components/SaveAsApp";
 import Button from "@/components/ui/Button";
 import Headline from "@/components/ui/Headline";
 import { createClient } from "@/lib/supabase/client";
@@ -117,6 +118,12 @@ function VerifyInner() {
             </Button>
           </div>
         </form>
+      </div>
+
+      {/* Pinned to the foot of the code screen — the moment he's signing in
+          on his phone is the moment to put the app on his home screen. */}
+      <div className="mt-auto flex justify-center pt-10 text-[13px] text-ink-2">
+        <SaveAsApp />
       </div>
     </main>
   );

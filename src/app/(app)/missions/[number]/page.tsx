@@ -271,8 +271,13 @@ function MissionDetailInner({
         {def.title}
       </Headline>
 
-      {/* Why it matters — on its own, before any instruction. */}
-      <p className="mt-4 text-[19px] leading-snug text-ink-0">{def.statement}</p>
+      {/* Why it matters — on its own, before any instruction. Optional:
+          some Missions say it all in the title and the action. */}
+      {def.statement && (
+        <p className="mt-4 text-[19px] leading-snug text-ink-0">
+          {def.statement}
+        </p>
+      )}
 
       {/* The reminder replaces the "spray your Scent Trigger, take a
           breath…" lines that used to be written into every Mission. */}
@@ -289,6 +294,11 @@ function MissionDetailInner({
       </button>
 
       <div className="mt-6 border-t border-[var(--line)]" />
+
+      {/* Antonio's lead-in: the steps below ARE the system. */}
+      <p className="font-display mt-6 text-[20px] leading-snug text-ink-0">
+        Let&apos;s get started with the S.T.A.R. System.
+      </p>
 
       <StarStep letter="S" name="Select">
         <p className="text-[15px] text-ink-1">Select your Scent Trigger.</p>
@@ -308,7 +318,7 @@ function MissionDetailInner({
       <StarStep letter="A" name="Act">
         <p className="text-[17px] leading-snug text-ink-0">{def.action}</p>
         <p className="mt-2 text-[14px] text-ink-2">
-          Takes less than 60 seconds.
+          This should take you less than 60 seconds.
         </p>
         {personalCode && (
           <GlassCard className="mt-4">

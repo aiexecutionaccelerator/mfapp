@@ -73,14 +73,16 @@ export default function OnboardingScreens({
         <div className="mt-6 flex flex-1 flex-col">
           <Headline>MORE THAN COLOGNE</Headline>
           <p className="mt-5 text-[17px] leading-relaxed text-ink-1">
-            Mission Fragrances are Scent Triggers: colognes with a job.
+            Mission Fragrances are Scent Triggers: colognes with a job. They
+            work through olfactory conditioning. Scent is the one sense wired
+            straight to memory and emotion.
           </p>
-          <p className="mt-3 text-[17px] leading-relaxed text-ink-1">
-            Scent is wired straight to memory and emotion. Use it to call up
-            the feeling you need, on command.
+          <p className="mt-4 text-[17px] leading-relaxed text-ink-1">
+            Scent Triggers let you pull up, on command, the feelings you need
+            to become the man you know yourself to be.
           </p>
           <p className="font-display text-gold-gradient mt-6 text-[22px] leading-snug">
-            The scent becomes your signal.
+            It becomes the signal for the man you&apos;re about to be.
           </p>
           <MissionVideo
             youtubeId={INTRO_VIDEOS.moreThanFragrance}
@@ -97,7 +99,8 @@ export default function OnboardingScreens({
         <div className="mt-6 flex flex-1 flex-col">
           <Headline>HOW OLFACTORY CONDITIONING WORKS</Headline>
           <p className="mt-4 text-[17px] leading-relaxed text-ink-1">
-            You train yourself with the S.T.A.R. System.
+            You condition yourself to a Scent Trigger with the S.T.A.R.
+            System.
           </p>
           <StarSystem className="mt-6" />
           <MissionVideo
