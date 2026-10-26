@@ -19,7 +19,7 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 2.6.1 (one input, one click)
+- Version: 2.7.0 (every Mission is the S.T.A.R. System)
 
 ## Architecture facts that matter
 
@@ -67,11 +67,12 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 There is no Start tab. Logging is one click inside the Mission, so the app
 opens on the Missions themselves; `/home` redirects to `/missions`.
 
-- `/onboarding`: profile setup (name + "I am becoming a man who…", two example
-  statements) then two How It Works screens — (1) more than cologne, olfactory
-  conditioning and S.T.A.R. in two paragraphs, video open on arrival, (2) the
-  three fragrances with Antonio's videos collapsed, ending in
-  `START MISSION 1`. Onboarding no longer asks about the set (Settings owns
+- `/onboarding`: profile setup (name + "I am becoming a man who…", pre-filled)
+  then three How It Works screens — (1) More Than Cologne, video open,
+  (2) How Olfactory Conditioning Works: the four S.T.A.R. cards and the
+  demonstration video, (3) Meet Your Scent Triggers in the sales page's own
+  words, ending in `START MISSION 1`. Settings → "How It Works: The S.T.A.R.
+  System" replays them opening on screen 2. Onboarding no longer asks about the set (Settings owns
   set status). Replay at `/how-it-works` (Settings).
 - `/missions` list: NEXT card first, two more under WHAT'S NEXT, one
   `SHOW ALL 30 MISSIONS` toggle, one `ONE-OFF ACTION` row at the bottom.
@@ -98,12 +99,31 @@ opens on the Missions themselves; `/home` redirects to `/missions`.
 
 ### Writing a Mission
 
-`src/content/missions.ts` is the whole content layer: `idea` carries the why
-AND any prompt or example (never canned Quick/Standard/Bold options — they
-limit the man and usually don't fit), `inputLabel` is the one field's label,
-`recommendedTrigger` is required. Actions must be doable in one or two
-minutes. Antonio's voice: second person, name the reality he's in, name the
-cost or the fear, then make today's ask concrete. Mission 2 is the model.
+`src/content/missions.ts` is the whole content layer; its header holds the
+full rules. Every Mission screen IS the S.T.A.R. System, in order:
+`statement` (why, 1–2 lines) → a "reminder of how S.T.A.R. works" sheet →
+**S** Select (the shelf) → **T** Trigger ("Spray your selected fragrance.") →
+**A** Act (`action` + "This should take you less than 60 seconds.") →
+**R** Record (`inputLabel`, up to three tap-to-use `examples`, the field,
+`RECORD · COMPLETE MISSION N`).
+
+Antonio's writing rules (third Loom, Oct 26) — apply them to every word:
+
+- Native American English, his voice: visceral, cut to the core. Five words
+  beat ten. No walls of text.
+- Statement (why) and action (what) are never one paragraph, and neither
+  ever says "spray" — the T step owns that.
+- Every action takes under 60 seconds. Two minutes at most.
+- Actions out in the world are logged as commitments: the field opens on
+  "I commit to " (`inputPrefix`), and logging it completes the Mission.
+  Actions that happen on the screen (finish a sentence, recall a moment)
+  keep a plain question.
+- About three short, general examples. Exactly one → no example box; the
+  field is pre-filled with it.
+- Readers are men in their 40s and 50s; 90% don't own a business.
+- Recommended values rotate — never the same one twice in a row.
+- The S.T.A.R. wording lives once, in `STAR_STEPS` (`src/content/triggers.ts`),
+  rendered by `<StarSystem>` everywhere it appears.
 
 ### Tap budget (the UX metric)
 
@@ -140,6 +160,15 @@ seed-Missions-1–29 helpers in Settings.
 - Verify Netlify env (`NEXT_PUBLIC_VAPID_PUBLIC_KEY` set, `CRON_SECRET`
   removed); custom domain pending DNS.
 - Secrets live outside the repo (.env.local, Supabase function secrets).
+
+- **Unconfirmed, waiting on Antonio / Yuri:**
+  - Set prices. `PRICING` in `src/content/product.ts` is null, so Claim Your
+    Set shows no price yet. The store disagrees with itself ($595 landing,
+    $297 special) and Antonio said $597 regular. Fill in both numbers and
+    set the same compare-at price in Shopify.
+  - Commitment's sales-page definition (`onboardingLine` in
+    `src/content/triggers.ts`) is a DRAFT — the real line was cut off in the
+    recording. Replace it verbatim.
 
 ## Working conventions
 

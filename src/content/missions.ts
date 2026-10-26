@@ -3,29 +3,40 @@ import type { Trigger } from "@/lib/data/types";
 /**
  * Your 30-Day Mission — the thirty Missions.
  *
- * One input, one click. The Mission screen is: why this matters (in Antonio's
- * voice), the Scent Trigger shelf, one field, one button. Submitting the
- * field completes the Mission and writes the Proof — there is no declare step,
- * no in-progress state and no separate "record the evidence" screen.
+ * Every Mission screen is the S.T.A.R. System, in order:
  *
- * House rules for this file, learned the hard way:
+ *   statement  — why it matters. One or two lines. Never the instructions.
+ *   (link)     — a reminder of how S.T.A.R. works, so no Mission has to
+ *                re-explain spraying.
+ *   S Select   — the Scent Trigger shelf, recommendation marked.
+ *   T Trigger  — "Spray your selected fragrance." Same for every Mission.
+ *   A Act      — `action`, plus "This should take you less than 60 seconds."
+ *   R Record   — `inputLabel`, up to three tap-to-use `examples`, the field,
+ *                and RECORD · COMPLETE MISSION N.
  *
- * - Write to a man in his thirties or forties with a job, a family and no
- *   patience for therapy language. Name the situation he is actually in, name
- *   what it costs, then make today's ask concrete. Short sentences. No
- *   "journey", no "unlock", no "mindset".
- * - Every action must be doable in one or two minutes.
- * - `inputLabel` is a QUESTION ABOUT A FACT — who, what, when — never about a
- *   feeling, and always in the past tense, because answering it is what
- *   completes the Mission.
- * - `inputExample` must sound like a real man typed it in thirty seconds:
- *   specific, a little rough, never aspirational. It is a tap-to-use button,
- *   so it also has to be an answer he would be willing to keep.
- * - The Missions build on each other. 15–20 walk the six areas of a life;
- *   21 picks one of them; 22 and 25 act on that choice; 27 sharpens the
- *   promise from 12; 28 reads back the whole log. Keep those threads true.
- * - The early Missions say "spray your Scent Trigger" out loud because the
- *   conditioning is still being taught. By Mission 8 it is assumed.
+ * Antonio's rules for every word in this file (third Loom, Oct 26):
+ *
+ * - Native American English, his voice: visceral, cut to the core. If it
+ *   can be said in five words instead of ten, use five.
+ * - No walls of text. If it doesn't need saying, don't say it.
+ * - The statement is WHY; the action is WHAT. Never run them together, and
+ *   never put "spray your Scent Trigger" in either — the T step owns that.
+ * - Every action takes under 60 seconds, two minutes at most. "Go for a
+ *   walk" is a 30-minute action and doesn't belong here.
+ * - Actions out in the world are logged as a COMMITMENT, not a report: the
+ *   field opens on "I commit to " (`inputPrefix`) and logging it completes
+ *   the Mission. Otherwise he'd have to do it, come back, and remember to log
+ *   it — and he won't. Actions that happen on the screen itself (finishing a
+ *   sentence, recalling a moment, clearing a counter you'll photograph) keep
+ *   a plain question.
+ * - About three examples, short and general, so he can tap one or write his
+ *   own. One example means no example box: the field is pre-filled instead.
+ * - The reader is a man in his 40s or 50s. Ninety percent don't own a
+ *   business. Family, friends, health, money, home — work only now and then.
+ * - Recommended values rotate. Never the same one twice in a row.
+ * - The Missions build on each other: 15–20 walk the six areas of a life,
+ *   21 picks one, 22 and 25 act on it, 27 sharpens the promise from 12,
+ *   28 reads the whole log back. Keep those threads true.
  *
  * One reusable Mission Detail template renders these; never add a per-Mission
  * component. Edit copy here, not in screens.
@@ -36,26 +47,34 @@ export interface MissionDef {
   /** Stable answer key: lesson_id in lesson_responses is this slug. */
   slug: string;
   title: string;
-  /** The why, in Antonio's voice, ending with what to do today. */
-  idea: string;
+  /** Why it matters. One or two short lines. */
+  statement: string;
+  /** What to do. Under 60 seconds. */
+  action: string;
   /** The Scent Trigger this Mission recommends. He can wear another. */
   recommendedTrigger: Trigger;
-  /** The single field's label — a question about a fact, in the past tense. */
+  /** The Record step's question. */
   inputLabel: string;
+  /** The field opens with this ("I commit to ") for actions out in the world. */
+  inputPrefix?: string;
   /**
-   * One example answer. It is not greyed-out placeholder text a man can only
-   * read — it renders as a tap-to-use button under an empty field.
+   * Tap-to-use answers, complete as they'll be logged (prefix included).
+   * Three is the target. Exactly one means no example box — the field is
+   * pre-filled with it instead.
    */
-  inputExample?: string;
+  examples?: string[];
   /** An optional photo alongside the sentence — only where it earns its place. */
   photoEncouraged?: boolean;
   /** Mission 13: open the field with the identity statement already in it. */
   prefillIdentity?: boolean;
-  /** Missions 14 and 29: show the compiled Personal Code above the field. */
+  /** Missions 14 and 29: show the compiled Personal Code in the Act step. */
   showPersonalCode?: boolean;
   /** Optional, collapsed, never required. */
   youtubeId: string | null;
 }
+
+/** The commitment opener for actions out in the world. */
+export const COMMIT = "I commit to ";
 
 /** Optional intro videos reused from the old library. Never block progress. */
 export const INTRO_VIDEOS = {
@@ -91,71 +110,116 @@ export const MISSIONS: MissionDef[] = [
   {
     number: 1,
     slug: "m1",
-    title: "Your First Step",
-    idea: "You don't become a better man by thinking about it. You become him by doing one small thing, today, while the thought is still warm. So spray your Scent Trigger, take one breath, and do it now: send the text you keep meaning to send, make the call, say the thing you've been holding. Two minutes is enough. Then write it down below. It's the first entry in a Proof Log that's about to get thick.",
-    recommendedTrigger: "courage",
-    inputLabel: "What did you do?",
-    inputExample: "Texted my brother to tell him I'm proud of him.",
+    title: "Prove It",
+    statement:
+      "You don't become a better man by thinking about it. You become a better man by taking action.",
+    action: "Today's Mission is to get started. Do one honorable thing.",
+    recommendedTrigger: "honor",
+    inputLabel: "What are you going to do?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to texting someone to tell them I'm proud of them.",
+      "I commit to calling an old friend, and leaving a message if he doesn't pick up.",
+      "I commit to apologizing for the argument and telling them they matter to me.",
+    ],
     youtubeId: null,
   },
   {
     number: 2,
     slug: "m2",
-    title: "Send the Message",
-    idea: "There's a message you've been avoiding. Everyone has one: business, personal, or someone you haven't spoken to in years. It may mean confronting them, or being honest about something you'd rather not say, and you have to send it knowing you may never get a reply. Spray your Scent Trigger. Send it now, before you talk yourself out of it.",
+    title: "Stop Putting It Off",
+    statement:
+      "Everyone has one thing they keep putting off. Every day you dodge it, it gets heavier.",
+    action: "Pick the thing you've been avoiding and do the first 60 seconds of it.",
     recommendedTrigger: "courage",
-    inputLabel: "Who did you send it to, and what did you say?",
-    inputExample: "My old business partner. Asked if we could talk this week.",
+    inputLabel: "What are you going to stop putting off?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to making the phone call I've been dodging.",
+      "I commit to opening the bill I've been ignoring.",
+      "I commit to booking the doctor's appointment I keep pushing back.",
+    ],
     youtubeId: null,
   },
   {
     number: 3,
     slug: "m3",
-    title: "Keep One Promise",
-    idea: "You keep your word to everyone but yourself. The promises you break in private are the expensive ones, because you're the one keeping score, and every broken one teaches you that your word is negotiable. Pick the smallest promise you've been breaking: the ten minutes, the walk, the early night. Spray your Scent Trigger and keep it right now. It doesn't have to be impressive. It has to be kept.",
+    title: "Keep Your Word",
+    statement:
+      "Every promise you break teaches you that your word doesn't count.",
+    action: "Make one promise that matters to someone, and keep it.",
     recommendedTrigger: "commitment",
-    inputLabel: "What promise did you keep?",
-    inputExample: "Said I'd be off my phone at dinner. I was.",
+    inputLabel: "What promise are you going to keep?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to being home for dinner tonight, phone in the other room.",
+      "I commit to calling my dad back tonight like I said I would.",
+      "I commit to being at my kid's game this weekend. No excuses.",
+    ],
     youtubeId: null,
   },
   {
     number: 4,
     slug: "m4",
     title: "Honor Someone Who Matters",
-    idea: "There's someone in your life who has no idea how much they matter to you. You assume they know. They don't, not specifically, not in words. Spray your Scent Trigger and tell one person exactly what they did and why it mattered. Not “thanks for everything.” Be specific. It costs you sixty seconds and they'll carry it for years.",
+    statement:
+      "Someone in your life has no idea how much they matter to you. You assume they know. They don't.",
+    action: "Tell one person exactly what they did and why it mattered. Be specific.",
     recommendedTrigger: "honor",
-    inputLabel: "Who did you tell, and what did you say?",
-    inputExample: "Called my mother. Told her the one thing she taught me that stuck.",
+    inputLabel: "Who are you going to tell, and what will you say?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to telling my wife the one thing she does that holds us together.",
+      "I commit to thanking my old coach for not giving up on me.",
+      "I commit to telling my mother what she taught me that I still use.",
+    ],
     youtubeId: null,
   },
   {
     number: 5,
     slug: "m5",
     title: "Act Before You Feel Ready",
-    idea: "Ready is a feeling, and it arrives after you start, never before. Whatever you've been waiting to feel ready for, spray your Scent Trigger and take the smallest real step on it in the next two minutes. Open the document. Send the application. Ask the question. You can be nervous and still be moving. What you can't do is wait your way into confidence.",
+    statement: "Ready is a feeling. It shows up after you start, never before.",
+    action: "Take the smallest real step on the thing you've been waiting to feel ready for.",
     recommendedTrigger: "courage",
-    inputLabel: "What step did you take?",
-    inputExample: "Sent the proposal that's been sitting in drafts since August.",
+    inputLabel: "What step are you going to take?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to signing up for the class I keep looking at.",
+      "I commit to asking the question I've been sitting on.",
+      "I commit to sending the message I've rewritten three times.",
+    ],
     youtubeId: null,
   },
   {
     number: 6,
     slug: "m6",
-    title: "Remember the Man You Have Already Been",
-    idea: "You're not building Honor, Courage and Commitment out of nothing. You've already lived them: a hard season you got through, a promise you kept when nobody was watching, a time you stood up and it cost you something. You've just stopped giving yourself credit for it. Bring one of those moments back to mind, and spray your Scent Trigger while it's there. That pairing is the whole method. Then do a small version of that same thing today.",
+    title: "Remember the Man You've Been",
+    statement:
+      "You've already lived Honor, Courage and Commitment. You've just stopped giving yourself credit.",
+    action: "Bring back one time you stood up, held on, or kept your word. Hold it while the scent is fresh.",
     recommendedTrigger: "honor",
-    inputLabel: "Which moment came back, and what did you do today?",
-    inputExample: "The year I worked two jobs. Today I did the hard task first.",
+    inputLabel: "What moment did you bring back?",
+    examples: [
+      "The year I worked two jobs to keep the house.",
+      "The time I told the truth and it cost me.",
+      "Sitting with my father in the hospital every night.",
+    ],
     youtubeId: null,
   },
   {
     number: 7,
     slug: "m7",
-    title: "Build Your Shrine to Self-Improvement",
-    idea: "The man you're becoming needs somewhere to live in your house. Pick one surface: a dresser, a shelf, the corner of your desk. Put your three Scent Triggers there, and one object that means something — a photograph, a coin, a book, something your father gave you. This isn't decoration. It's the first thing you'll see on the mornings you'd rather not be him. Two minutes, then photograph it.",
+    title: "Build Your Shrine",
+    statement: "The man you're becoming needs a place in your house.",
+    action: "Pick one spot — a dresser, a shelf — and put your three bottles there with one thing that means something to you.",
     recommendedTrigger: "commitment",
-    inputLabel: "What's on it, and where is it?",
-    inputExample: "Top of the dresser. The three bottles and my grandfather's watch.",
+    inputLabel: "Where is it, and what's on it?",
+    examples: [
+      "On my dresser. The bottles and my grandfather's watch.",
+      "Corner of my desk. The bottles and a photo of my kids.",
+      "Bedroom bookshelf. The bottles and my dad's old pocketknife.",
+    ],
     photoEncouraged: true,
     youtubeId: "GCpsEfFp_E8",
   },
@@ -163,60 +227,89 @@ export const MISSIONS: MissionDef[] = [
     number: 8,
     slug: "m8",
     title: "Honor, in Your Words",
-    idea: "Honor isn't a dictionary word. It's your word, and it only does any work when the right thing is expensive. When nobody would ever know. When it costs you money, or the sale, or the easier evening. Finish this sentence in your own language, the way you'd say it to your son or to the younger man you were. Then live by it for the rest of today. This becomes the first line of your Personal Code.",
+    statement:
+      "Honor isn't a dictionary word. It's your word, and it only counts when doing right costs you something.",
+    action: "Finish the sentence the way you'd say it to your son. It becomes the first line of your Personal Code.",
     recommendedTrigger: "honor",
     inputLabel: "For me, honor means…",
-    inputExample: "Doing what I said I'd do, even when it costs me.",
+    examples: [
+      "Doing what I said I'd do, even when it costs me.",
+      "Telling the truth when a lie would be easier.",
+      "Owning my mistakes before anyone points them out.",
+    ],
     youtubeId: "a9yG3pylUKY",
   },
   {
     number: 9,
     slug: "m9",
     title: "Courage, in Your Words",
-    idea: "Courage isn't the absence of fear. If you're not afraid, you're not being brave. You're just comfortable. Courage is deciding that fear doesn't get the final vote. Finish this sentence in your own language. Then act on it once before the day is over. This becomes the second line of your Personal Code.",
+    statement:
+      "Courage isn't the absence of fear. It's deciding fear doesn't get the final vote.",
+    action: "Finish the sentence in your own words. It becomes the second line of your Personal Code.",
     recommendedTrigger: "courage",
     inputLabel: "For me, courage means…",
-    inputExample: "Saying the honest thing while my voice is shaking.",
+    examples: [
+      "Saying the honest thing while my voice is shaking.",
+      "Doing the right thing when nobody's backing me up.",
+      "Going first when everyone else is waiting.",
+    ],
     youtubeId: "NCeKnEezPWs",
   },
   {
     number: 10,
     slug: "m10",
     title: "Commitment, in Your Words",
-    idea: "Commitment starts the day the excitement dies. Anybody can show up on day one. You're defining what follow-through looks like on day eighteen, when nothing feels different yet and nobody is clapping. Finish this sentence in your own language. Then prove the definition with one small action today. This becomes the third line of your Personal Code.",
+    statement:
+      "Commitment starts the day the excitement dies. Anybody can show up on day one.",
+    action: "Finish the sentence in your own words. It becomes the third line of your Personal Code.",
     recommendedTrigger: "commitment",
     inputLabel: "For me, commitment means…",
-    inputExample: "Doing it after the motivation is gone.",
+    examples: [
+      "Doing it after the motivation is gone.",
+      "Showing up on the days I don't feel like it.",
+      "Finishing what I start, even when nobody's watching.",
+    ],
     youtubeId: "ihWgFp5H0DU",
   },
   {
     number: 11,
     slug: "m11",
     title: "Your Non-Negotiable",
-    idea: "Most men negotiate with themselves all day long, and lose. One standard that isn't up for discussion ends the argument before it starts. Your Personal Code says what you stand for. This is the one line you won't cross: the thing you will not trade for convenience, money or approval. One sentence. Then make one decision today that proves it's true.",
+    statement:
+      "Most men negotiate with themselves all day and lose. One line you won't cross ends the argument.",
+    action: "Name the one thing you won't trade for convenience, money or approval.",
     recommendedTrigger: "honor",
     inputLabel: "The line I won't cross is…",
-    inputExample: "I don't lie to my wife, even about small things.",
+    examples: [
+      "I don't lie to my wife, even about small things.",
+      "I don't break a promise to my kids.",
+      "I don't take what isn't mine.",
+    ],
     youtubeId: null,
   },
   {
     number: 12,
     slug: "m12",
     title: "The Promise That Matters Most",
-    idea: "Ten goals is noise. One promise is direction. Out of everything you'd like to change, there's one that would make the rest easier if you simply kept it, and you already know which one it is. Name it plainly, then take the first step on it right now — not tomorrow, now, even if the step is small enough to feel silly. You'll come back to this promise near the end and make it something anyone could measure.",
+    statement: "Ten goals is noise. One promise is direction.",
+    action: "Name the one promise that would make everything else easier if you kept it.",
     recommendedTrigger: "commitment",
     inputLabel: "The promise I'm keeping is…",
-    inputExample: "Home for dinner, phone in the other room, every weeknight.",
+    examples: [
+      "Home for dinner, phone in the other room, every weeknight.",
+      "No drinking on weeknights.",
+      "In bed by 10:30 so I'm up before the house.",
+    ],
     youtubeId: null,
   },
   {
     number: 13,
     slug: "m13",
-    title: "The Man You Are Becoming",
-    idea: "You wrote this sentence the day you started. You know more now. Read it again. Cut what's no longer true, and make it something you'd say out loud to someone who knows you well. That sentence is what makes the next decision easy, because a man like you doesn't do certain things. When it's rewritten, do one thing in the next two minutes that proves it.",
-    recommendedTrigger: "honor",
+    title: "The Man You're Becoming",
+    statement: "You wrote this sentence on day one. You know more now.",
+    action: "Read it again. Cut what isn't true. Make it something you'd say out loud.",
+    recommendedTrigger: "courage",
     inputLabel: "I am becoming a man who…",
-    inputExample: "keeps his word, acts despite fear, and follows through.",
     prefillIdentity: true,
     youtubeId: null,
   },
@@ -224,10 +317,17 @@ export const MISSIONS: MissionDef[] = [
     number: 14,
     slug: "m14",
     title: "Your Personal Code",
-    idea: "Look at what you've written: who you're becoming, what your three values mean, the standard you won't trade, the promise you're keeping. That isn't a worksheet. That's your Personal Code, in your own words, and most men go their whole lives without one. Read it through. Then pick the single line you most need today and act on it before you put the phone down.",
+    statement:
+      "That's your Personal Code, in your own words. Most men go their whole lives without one.",
+    action: "Read it through. Pick the one line you need most today.",
     recommendedTrigger: "honor",
-    inputLabel: "Which line did you act on, and what did you do?",
-    inputExample: "The promise line. Left work at 5:30 and made dinner.",
+    inputLabel: "Which line are you going to live today?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to the honor line: no white lies today.",
+      "I commit to the promise line: home for dinner, phone away.",
+      "I commit to the courage line: saying what I've been holding back.",
+    ],
     showPersonalCode: true,
     youtubeId: null,
   },
@@ -235,50 +335,81 @@ export const MISSIONS: MissionDef[] = [
     number: 15,
     slug: "m15",
     title: "Strengthen a Relationship",
-    idea: "You work, you provide, you solve problems, and the people all of that is for get whatever's left at the end of the day, which is usually nothing. One relationship is thinner than it should be right now, and you know exactly whose it is. You've sent messages on this Mission. Today, put something on the calendar: a dinner, a drive, an hour with your phone in the other room. Set the date before you log it. Sixty minutes of real attention beats another month of meaning to.",
-    recommendedTrigger: "honor",
-    inputLabel: "What did you put on the calendar, and when?",
-    inputExample: "Breakfast with my daughter, Saturday 8am. Told her. It's set.",
+    statement:
+      "The people you work for get whatever's left at the end of the day. Usually nothing.",
+    action: "Put time with one person on the calendar: a dinner, a drive, an hour with no phone.",
+    recommendedTrigger: "commitment",
+    inputLabel: "What are you putting on the calendar, and when?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to breakfast with my daughter Saturday at 8.",
+      "I commit to a drive with my son Sunday, phones off.",
+      "I commit to date night Friday. Sitter's booked.",
+    ],
     youtubeId: "NGi4l1rNc50",
   },
   {
     number: 16,
     slug: "m16",
     title: "Respect Your Body",
-    idea: "This isn't vanity. You're carrying the only body you get, and the people who depend on you need it to last. Don't overhaul anything today. Do one thing the healthier version of you would respect: the water, the ten-minute walk, the appointment you keep postponing, the second drink you don't pour. Then write it down.",
-    recommendedTrigger: "commitment",
-    inputLabel: "What did you do for your body?",
-    inputExample: "Booked the physical I've been putting off since spring.",
+    statement: "This isn't vanity. The people who depend on you need you around.",
+    action: "Do one thing the healthier version of you would respect.",
+    recommendedTrigger: "courage",
+    inputLabel: "What are you going to do for your body?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to booking the physical I've been putting off.",
+      "I commit to skipping the second drink tonight.",
+      "I commit to ten push-ups before I put the phone down.",
+    ],
     youtubeId: "co2ZBwcMsjM",
   },
   {
     number: 17,
     slug: "m17",
-    title: "Do the Important Work",
-    idea: "Easy work feels like progress, which is exactly why you keep choosing it. There's one task you've been burying under smaller, safer ones — the one that turns up in your head in the shower. Give it ten honest minutes right now. Not the whole thing. Ten minutes, and then you'll know whether it was ever as big as you made it.",
+    title: "Do the Important Thing",
+    statement: "Easy jobs feel like progress. That's why you keep choosing them.",
+    action: "Name the job you've been burying under smaller ones, and give it the next 60 seconds.",
     recommendedTrigger: "commitment",
-    inputLabel: "What did you work on?",
-    inputExample: "Ten minutes on the contract I've been avoiding for three weeks.",
+    inputLabel: "What important thing are you going to start?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to starting the will we keep saying we need.",
+      "I commit to calling about the roof leak.",
+      "I commit to clearing the garage one shelf at a time, starting now.",
+    ],
     youtubeId: "8UbE1PcGqC0",
   },
   {
     number: 18,
     slug: "m18",
     title: "Face the Numbers",
-    idea: "Money problems grow in the dark, and not looking is a decision you make every day you don't. Open the account. Read the statement. Look at the real number, whatever it turns out to be. This isn't a financial act, it's a courage act, and everything downstream of it gets easier the moment you've actually seen it.",
+    statement:
+      "Money problems grow in the dark. Not looking is a choice you make every day.",
+    action: "Open the account you've been avoiding and look at the real number.",
     recommendedTrigger: "courage",
-    inputLabel: "What did you open or look at?",
-    inputExample: "Opened every account and wrote down the real total.",
+    inputLabel: "What are you going to look at?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to opening the credit card statement I've been ignoring.",
+      "I commit to checking what's actually in our retirement.",
+      "I commit to writing down exactly what we owe.",
+    ],
     youtubeId: "GqQmxeLr6GI",
   },
   {
     number: 19,
     slug: "m19",
-    title: "Improve Your Environment",
-    idea: "Your rooms are either helping you or quietly working against you. The pile you walk past. The desk you can't actually work at. The phone full of things that pull you sideways. Fix one of them today: one surface, one drawer, one screen. Two minutes is enough to change how a room feels when you walk into it tomorrow.",
+    title: "Fix Your Space",
+    statement: "Your house is either helping you or working against you.",
+    action: "Fix one small thing: one counter, one drawer, one screen.",
     recommendedTrigger: "commitment",
     inputLabel: "What did you clear or fix?",
-    inputExample: "Cleared the desk. Deleted the apps that eat my evenings.",
+    examples: [
+      "Cleared the kitchen counter.",
+      "Deleted the apps that eat my evenings.",
+      "Cleaned out the junk in the truck.",
+    ],
     photoEncouraged: true,
     youtubeId: null,
   },
@@ -286,100 +417,165 @@ export const MISSIONS: MissionDef[] = [
     number: 20,
     slug: "m20",
     title: "Be Useful to Someone",
-    idea: "You'll be remembered for what you were useful for. Somebody in your circle is stuck on something you could solve in five minutes: an introduction, a name, a piece of advice you already paid for, a hand with something heavy. Do it today, and don't mention it afterwards.",
+    statement: "You'll be remembered for what you were useful for.",
+    action: "Help one person with something you could solve in a minute: a name, a number, a hand.",
     recommendedTrigger: "honor",
-    inputLabel: "Who did you help, and how?",
-    inputExample: "Introduced Dave to the contractor who did my roof.",
+    inputLabel: "Who are you going to help, and how?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to sending my neighbor the name of my mechanic.",
+      "I commit to helping my buddy move his couch Saturday.",
+      "I commit to calling my nephew about the job he's after.",
+    ],
     youtubeId: "oU7fHhMoXoY",
   },
   {
     number: 21,
     slug: "m21",
     title: "Pick Your One Area",
-    idea: "The last six Missions each touched one area: relationships, health, work, money, your home, service. Not all of them deserve your attention right now, and trying to fix all six at once is why nothing moves. One of them would lift the other five if you gave it consistent attention. Choose it, say it plainly, and take one small step on it today so the choice is real and not just a thought.",
+    statement:
+      "The last six Missions touched six areas: relationships, health, work, money, home, service. You can't fix all six at once.",
+    action: "Pick the one that would lift the other five.",
     recommendedTrigger: "commitment",
-    inputLabel: "Which area did you choose, and what was your first step?",
-    inputExample: "Health. Walked at lunch instead of eating at my desk.",
+    inputLabel: "Which area are you going to focus on?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to my health. Everything else gets easier if I'm stronger.",
+      "I commit to my marriage. It's been running on fumes.",
+      "I commit to our money. I'm tired of not knowing.",
+    ],
     youtubeId: null,
   },
   {
     number: 22,
     slug: "m22",
     title: "One Thing Beats Nothing",
-    idea: "Starting is the hard part. Once you're moving, you tend to keep moving, which is why the smallest version of the right action beats the perfect plan you never start. Two minutes of the workout. One paragraph. One phone call. Take the smallest honest piece of the area you chose in the last Mission and do it right now. Then notice whether you stopped at two minutes. Most men don't.",
-    recommendedTrigger: "commitment",
-    inputLabel: "What did you start, and how long did you actually go?",
-    inputExample: "Two minutes of push-ups. Ended up doing fifteen.",
+    statement: "Starting is the hard part. Once you're moving, you keep moving.",
+    action: "Take the area you picked last Mission and do the smallest piece of it now.",
+    recommendedTrigger: "courage",
+    inputLabel: "What's the smallest piece you're going to do?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to ten push-ups before I put the phone down.",
+      "I commit to texting my wife one thing I love about her.",
+      "I commit to writing down every subscription we pay for.",
+    ],
     youtubeId: "FaJhvhVPb9c",
   },
   {
     number: 23,
     slug: "m23",
     title: "Get 1% Better",
-    idea: "You won't feel a one percent improvement today. That's the problem with it, and it's also the whole power of it. Take something you already do every day and make it slightly better: one more rep, one less scroll, one earlier alarm, one honest sentence. Small enough that you can't talk yourself out of it tomorrow either.",
+    statement: "You won't feel 1% better today. That's exactly why it works.",
+    action: "Take one thing you do every day and make it slightly better.",
     recommendedTrigger: "commitment",
-    inputLabel: "What did you make better, and by how much?",
-    inputExample: "Phone charges in the kitchen now, not next to the bed.",
+    inputLabel: "What are you going to make 1% better?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to charging my phone in the kitchen, not by the bed.",
+      "I commit to setting the alarm 15 minutes earlier.",
+      "I commit to one more set than last time.",
+    ],
     youtubeId: "MePOS7sTKH0",
   },
   {
     number: 24,
     slug: "m24",
     title: "Protect What Matters",
-    idea: "Every yes spends something you don't get back. Most men say yes because no feels rude, then quietly resent the person they said it to. Today, say no to one thing that's merely good so there's room for the thing that's important. Decline it, cancel it, or hand it to someone who should have had it in the first place.",
+    statement: "Every yes spends something you don't get back.",
+    action: "Say no to one thing that's merely good, so there's room for what matters.",
     recommendedTrigger: "courage",
-    inputLabel: "What did you say no to?",
-    inputExample: "Declined the Saturday meeting. That's my daughter's game.",
+    inputLabel: "What are you going to say no to?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to skipping Saturday golf so I'm at my daughter's game.",
+      "I commit to saying no to the extra shift this week.",
+      "I commit to turning off the game and going to bed.",
+    ],
     youtubeId: "VkA4H2mZNII",
   },
   {
     number: 25,
     slug: "m25",
-    title: "Find the 20% That Matters",
-    idea: "A small handful of what you do produces almost everything you get. The rest is motion that feels like work. You've already practised giving the important thing your first minutes. This Mission is the other side of it. Look at a normal week and name one regular activity that produces nothing you'd miss. Drop it, this week, and give its time to the handful that pays.",
+    title: "Cut the Dead Weight",
+    statement:
+      "A handful of what you do produces almost everything you get. The rest is just motion.",
+    action: "Name one habit in a normal week that gives you nothing back, and drop it this week.",
     recommendedTrigger: "commitment",
-    inputLabel: "What did you drop, and what gets that time now?",
-    inputExample: "The Monday status call. That hour goes to client work.",
+    inputLabel: "What are you going to drop?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to dropping the late-night scrolling.",
+      "I commit to skipping the morning news.",
+      "I commit to cutting the Sunday TV binge.",
+    ],
     youtubeId: "CiNTVRxOgyY",
   },
   {
     number: 26,
     slug: "m26",
     title: "What Would He Do?",
-    idea: "Goals ask what you want. Your Personal Code asks what a man like you does next. You're facing a decision right now, small or large. You thought of it as you read that. Don't ask what's easiest. Ask what an honorable, courageous, committed man does here, then go do that, today, while it's still in front of you.",
+    statement:
+      "Goals ask what you want. Your Personal Code asks what a man like you does next.",
+    action: "Think of a decision you're facing. Ask what an honorable, courageous, committed man would do.",
     recommendedTrigger: "honor",
-    inputLabel: "What was the decision, and what did you do?",
-    inputExample: "Told the client the mistake was mine before he found it.",
+    inputLabel: "What's the decision, and what will you do?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to telling my son the truth about why I got it wrong.",
+      "I commit to paying my brother back this month like I said.",
+      "I commit to owning my mistake before anyone finds it.",
+    ],
     youtubeId: "ZMBy99RiuvM",
   },
   {
     number: 27,
     slug: "m27",
     title: "Make One Real Commitment",
-    idea: "A commitment you can't measure is a wish wearing a suit. Earlier you named the promise that matters most. Now make it clear enough that anybody could tell whether you kept it: one behavior, one number, one timeframe. “I'll walk twenty minutes, four days a week, until the end of next month.” Write yours that plainly. Then do the first one now, not on Monday.",
+    statement: "A commitment you can't measure is a wish wearing a suit.",
+    action: "Take the promise you named earlier. Give it one behavior, one number, one deadline.",
     recommendedTrigger: "commitment",
-    inputLabel: "What's the commitment, and what did you do first?",
-    inputExample: "Twenty minutes of reading, five nights a week, until June 30. Did tonight's.",
+    inputLabel: "What's your commitment?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to walking 20 minutes, four days a week, through the end of next month.",
+      "I commit to no drinking on weeknights until Thanksgiving.",
+      "I commit to dinner with no phones, five nights a week, for 30 days.",
+    ],
     youtubeId: "QZQjcgh26jA",
   },
   {
     number: 28,
     slug: "m28",
     title: "Review the Evidence",
-    idea: "Open your Proof Log and actually read it. Those aren't intentions. They're things you did, with dates on them, and most men have no such record of themselves. One of those entries changed how you see yourself more than the others. Find it, and do that same thing again today, one size larger.",
-    recommendedTrigger: "commitment",
-    inputLabel: "Which entry did you pick, and what did you do today?",
-    inputExample: "Mission 2, the message. Today I called instead of texting.",
+    statement:
+      "Your Proof Log isn't intentions. It's things you did, with dates on them.",
+    action: "Read it. Find the entry that changed how you see yourself, and do it again, bigger.",
+    recommendedTrigger: "courage",
+    inputLabel: "Which one are you going to repeat, and how?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to calling my dad again, this time for an hour.",
+      "I commit to keeping the dinner promise all week, not just one night.",
+      "I commit to having the next hard conversation I've been avoiding.",
+    ],
     youtubeId: null,
   },
   {
     number: 29,
     slug: "m29",
-    title: "Finalize and Share Your Personal Code",
-    idea: "Your Personal Code should sound like the man these weeks proved you are, not the one you hoped you'd be on day one. Read it once more and change whatever the evidence has earned. Then send it to one person who will hold you to it. That's the part that makes it real, and it's the part most men skip.",
+    title: "Share Your Personal Code",
+    statement:
+      "Your Personal Code should sound like the man these weeks proved you are.",
+    action: "Read it once more. Change what needs changing. Send it to one man who'll hold you to it.",
     recommendedTrigger: "honor",
-    inputLabel: "What did you change, and who did you send it to?",
-    inputExample: "Cut the line about money. Sent it to my brother.",
+    inputLabel: "Who are you going to send it to?",
+    inputPrefix: COMMIT,
+    examples: [
+      "I commit to sending it to my brother tonight.",
+      "I commit to reading it to my wife after dinner.",
+      "I commit to sending it to my oldest friend.",
+    ],
     showPersonalCode: true,
     youtubeId: null,
   },
@@ -387,10 +583,16 @@ export const MISSIONS: MissionDef[] = [
     number: 30,
     slug: "m30",
     title: "Choose the Next Mission",
-    idea: "Thirty Missions. Thirty pieces of evidence with your name on them. The 30-Day Mission ends here. The man doesn't. Choose what you're building next and tie it to one of your three Scent Triggers, so the scent keeps doing the work of reminding you. Name it, and take the first step today.",
+    statement:
+      "Thirty Missions. Thirty pieces of evidence. The challenge ends here. The man doesn't.",
+    action: "Choose what you're building next and tie it to one of your three Scent Triggers.",
     recommendedTrigger: "commitment",
     inputLabel: "What's next, and which Scent Trigger carries it?",
-    inputExample: "Courage. One hard conversation a week, for the next thirty days.",
+    examples: [
+      "Courage. One hard conversation a week for 30 days.",
+      "Commitment. In bed by 10:30 every night for 30 days.",
+      "Honor. One call a week to someone who matters.",
+    ],
     youtubeId: null,
   },
 ];

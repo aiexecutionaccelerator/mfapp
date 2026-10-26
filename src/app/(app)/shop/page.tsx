@@ -5,9 +5,40 @@ import BottleVisual from "@/components/BottleVisual";
 import NavAction from "@/components/NavAction";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
-import { PRODUCT } from "@/content/product";
+import { PRICING, PRODUCT } from "@/content/product";
 import { TRIGGER_ORDER } from "@/content/triggers";
 import { artUrl } from "@/lib/art";
+
+const dollars = (amount: number) => `$${amount.toLocaleString("en-US")}`;
+
+/**
+ * Price, with the regular price struck through and the saving spelled out
+ * when the set is marked down. Renders nothing until PRICING is confirmed.
+ */
+function PriceTag() {
+  const { price, compareAtPrice } = PRICING;
+  if (price === null) return null;
+  const markedDown = compareAtPrice !== null && compareAtPrice > price;
+  return (
+    <div className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      {markedDown && (
+        <span className="text-[20px] text-ink-2 line-through decoration-1">
+          <span className="sr-only">Regular price </span>
+          {dollars(compareAtPrice)}
+        </span>
+      )}
+      <span className="font-display text-[34px] leading-none text-ink-0">
+        {markedDown && <span className="sr-only">Sale price </span>}
+        {dollars(price)}
+      </span>
+      {markedDown && (
+        <span className="eyebrow rounded-full border border-[rgba(201,166,72,.45)] px-2.5 py-1 text-gold-300">
+          YOU SAVE {dollars(compareAtPrice - price)}
+        </span>
+      )}
+    </div>
+  );
+}
 
 function Hero() {
   const hero = artUrl(PRODUCT.heroImage);
@@ -48,6 +79,8 @@ export default function ShopPage() {
       <Headline className="mt-3">{PRODUCT.headline}</Headline>
 
       <Hero />
+
+      <PriceTag />
 
       <p className="mt-6 text-[15px] text-ink-1">{PRODUCT.edition}</p>
 

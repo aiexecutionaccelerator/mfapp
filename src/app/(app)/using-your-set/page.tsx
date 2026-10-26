@@ -7,7 +7,7 @@ import MissionVideo from "@/components/MissionVideo";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
 import { INTRO_VIDEOS } from "@/content/missions";
-import { STAR_STEPS } from "@/content/triggers";
+import StarSystem from "@/components/StarSystem";
 
 /**
  * Using Your Set — the technical fragrance material, optional and outside the
@@ -39,11 +39,11 @@ const SCENTS = [
 const GUIDE = [
   {
     title: "How much to apply",
-    body: "Two or three sprays on the chest is plenty; add the wrists if you want it to last the day.",
+    body: "One spray is often enough. Apply it on your chest or your wrists.",
   },
   {
     title: "You'll stop smelling it — others won't",
-    body: "Within minutes your nose tunes it out. That's normal olfactory fatigue, not the fragrance fading. Others still notice it.",
+    body: "Within 15 minutes your nose may tune out the scent. That's normal. It's called olfactory fatigue, not the fragrance fading. These fragrances are strong.",
   },
   {
     title: "Reapplying",
@@ -105,29 +105,10 @@ export default function UsingYourSetPage() {
       {/* The system itself — how a Scent Trigger becomes an action. */}
       <section className="mt-10">
         <h2 className="font-display text-[26px] leading-tight text-ink-0 uppercase">
-          Use S.T.A.R.
+          The S.T.A.R. System
         </h2>
-        <div className="mt-4 space-y-3">
-          {STAR_STEPS.map((step) => (
-            <div
-              key={step.letter}
-              className="glass flex items-center gap-4 rounded-[14px] p-4"
-            >
-              <span className="font-display text-gold-gradient w-8 shrink-0 text-center text-[28px] leading-none">
-                {step.letter}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-[17px] text-ink-0">{step.name}</p>
-                <p className="mt-1 text-[14px] leading-snug text-ink-1">
-                  {step.text}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <p className="mt-4 text-[15px] text-ink-1">
-          The fragrance is the reminder. The action is the evidence.
-        </p>
+        {/* The same four cards as onboarding and the Mission reminder. */}
+        <StarSystem className="mt-4" />
         <MissionVideo
           youtubeId={INTRO_VIDEOS.star}
           title="The S.T.A.R. demonstration"

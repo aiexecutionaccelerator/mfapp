@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 const FOCUSABLE =
   'button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
@@ -61,10 +62,13 @@ export default function Sheet({
     };
   }, [open]);
 
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
-  return (
-    <div className="fixed inset-0 z-40 flex items-end justify-center">
+  // Portaled to <body>: rendered in place, a sheet is trapped in whatever
+  // stacking context its parent makes, and a hero headline or a transformed
+  // card can paint straight over it.
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-end justify-center">
       <button
         type="button"
         aria-label="Close"
@@ -77,7 +81,10 @@ export default function Sheet({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="glass rise-in relative w-full max-w-[430px] rounded-t-[20px] bg-[rgba(13,17,25,.97)] p-5 pb-[calc(env(safe-area-inset-bottom)+20px)]"
+        className="glass rise-in relative max-h-[88dvh] w-full max-w-[430px] overflow-y-auto rounded-t-[20px] p-5 pb-[calc(env(safe-area-inset-bottom)+20px)]"
+        // Solid, inline: .glass's translucent gradient otherwise wins over a
+        // background utility, and the page behind reads through the sheet.
+        style={{ background: "rgb(13, 17, 25)" }}
       >
         <p id={titleId} className="text-[17px] font-semibold text-ink-0">
           {title}
@@ -85,6 +92,7 @@ export default function Sheet({
         {note && <p className="mt-2 text-[13px] text-ink-2">{note}</p>}
         <div className="mt-5 space-y-3">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

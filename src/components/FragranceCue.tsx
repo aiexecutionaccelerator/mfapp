@@ -22,25 +22,26 @@ export default function FragranceCue({
   onChange,
   recommended,
   className,
+  label = "SELECT YOUR SCENT TRIGGER",
 }: {
   value: Trigger;
   onChange: (next: Trigger) => void;
   /** The Mission's suggestion. Omitted for a one-off Action. */
   recommended?: Trigger;
   className?: string;
+  /** The heading above the shelf. Null when a S.T.A.R. step heading owns it. */
+  label?: string | null;
 }) {
   return (
     <div className={className}>
-      {/* Tenseless on purpose: "the one you're wearing" assumes he already
-          sprayed, "you'll wear" assumes he hasn't, and this screen spans
-          both. Scent Trigger is the product's own name for these, taught on
-          the second onboarding screen. */}
-      <p className="eyebrow text-gold-300">CHOOSE YOUR SCENT TRIGGER</p>
+      {/* SELECT is the S of S.T.A.R. — it has to come before any "spray",
+          so the shelf always sits above the Trigger step. */}
+      {label && <p className="eyebrow mb-3 text-gold-300">{label}</p>}
 
       <div
         role="radiogroup"
-        aria-label="Which fragrance"
-        className="mt-3 grid grid-cols-3 gap-2"
+        aria-label="Select your Scent Trigger"
+        className="grid grid-cols-3 gap-2"
       >
         {TRIGGER_ORDER.map((trigger) => {
           const chosen = trigger === value;

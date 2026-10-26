@@ -23,3 +23,20 @@ export const PRODUCT = {
   /** Filename under public/images — see lib/art.ts. */
   heroImage: "mfset.png",
 } as const;
+
+/**
+ * The set's price on Claim Your Set, with the regular price struck through
+ * and the saving called out whenever it's marked down.
+ *
+ * UNCONFIRMED — both stay null, and the price block stays hidden, until
+ * Antonio confirms them. The live store disagrees with itself: the landing
+ * page shows $595, the special page $297, and Antonio said $597 as the
+ * regular price. A wrong struck-through "regular" price on a sales page is
+ * worse than no price at all. Set the two numbers (whole dollars) here once
+ * they're confirmed, and set the same compare-at price in Shopify so the
+ * store's own page strikes it through too.
+ */
+export const PRICING: { price: number | null; compareAtPrice: number | null } = {
+  price: null,
+  compareAtPrice: null,
+};

@@ -29,11 +29,11 @@ function readStep(): number {
   if (typeof window === "undefined") return -1;
   const raw = window.sessionStorage.getItem(STEP_KEY);
   const step = raw === null ? NaN : Number(raw);
-  return Number.isInteger(step) && step >= -1 && step <= 1 ? step : -1;
+  return Number.isInteger(step) && step >= -1 && step <= 2 ? step : -1;
 }
 
 /**
- * Setup (name + identity statement), then the two How It Works screens,
+ * Setup (name + identity statement), then the three How It Works screens,
  * ending in Mission 1. Completed once; replayable from Settings.
  */
 export default function OnboardingPage() {
@@ -41,7 +41,7 @@ export default function OnboardingPage() {
   const { showToast } = useToast();
   const { profile } = useAppData();
 
-  // -1 = profile setup; 0–1 = the two How It Works screens.
+  // -1 = profile setup; 0–2 = the three How It Works screens.
   const [step, setStepState] = useState(-1);
   const [name, setNameState] = useState("");
   const [identity, setIdentityState] = useState("");

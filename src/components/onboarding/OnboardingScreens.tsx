@@ -6,21 +6,22 @@ import NavAction from "@/components/NavAction";
 import BottomActions from "@/components/ui/BottomActions";
 import Button from "@/components/ui/Button";
 import Headline from "@/components/ui/Headline";
+import StarSystem from "@/components/StarSystem";
 import { INTRO_VIDEOS, TRIGGER_VIDEOS } from "@/content/missions";
 import { TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
 
-export const ONBOARDING_SCREEN_COUNT = 2;
+export const ONBOARDING_SCREEN_COUNT = 3;
 
 /**
- * How It Works — two screens, shown once after profile setup and replayable
- * from Settings.
+ * How It Works — three screens, shown once after profile setup and
+ * replayable from Settings (which opens straight on the S.T.A.R. screen,
+ * since a returning man needs the system, not the pitch).
  *
- * Screen 1 explains what the set is and how the S.T.A.R. system conditions
- * you to it; its video is open on arrival because it is the single best
- * explanation we have. Screen 2 introduces the three fragrances, with
- * Antonio's per-value videos collapsed, and ends by handing the man his
- * first Mission. There is no fourth screen — the first Mission is the thing
- * to do, so we take him to it instead of describing it.
+ * 0 More Than Cologne — what a Scent Trigger is. Short, video open.
+ * 1 How Olfactory Conditioning Works — the S.T.A.R. System as four separate
+ *   cards, with its demonstration video. It used to be buried in a paragraph.
+ * 2 Meet Your Scent Triggers — the three, in the sales page's own words,
+ *   ending by handing him Mission 1.
  */
 export default function OnboardingScreens({
   screen,
@@ -31,7 +32,7 @@ export default function OnboardingScreens({
   onDone,
   pending = false,
 }: {
-  /** 0–1 */
+  /** 0–2 */
   screen: number;
   replay?: boolean;
   onBack: () => void;
@@ -74,21 +75,14 @@ export default function OnboardingScreens({
           <p className="mt-5 text-[17px] leading-relaxed text-ink-1">
             Mission Fragrances are Scent Triggers: colognes with a job. They
             work through olfactory conditioning. Scent is the one sense wired
-            straight to memory and emotion, which is why a smell can put you
-            somewhere you haven&apos;t been in twenty years.
+            straight to memory and emotion.
           </p>
           <p className="mt-4 text-[17px] leading-relaxed text-ink-1">
-            You condition yourself to a Scent Trigger with the S.T.A.R.
-            System. <span className="text-ink-0">Select</span> the value you
-            need. <span className="text-ink-0">Trigger</span> it: spray, and
-            recall a moment you lived that value.{" "}
-            <span className="text-ink-0">Act</span> on it.{" "}
-            <span className="text-ink-0">Record</span> what you did. Do it
-            enough times and the scent stops being something you put on in the
-            morning.
+            Scent Triggers let you pull up, on command, the feelings you need
+            to become the man you know yourself to be.
           </p>
           <p className="font-display text-gold-gradient mt-6 text-[22px] leading-snug">
-            It becomes the signal for the man you&apos;re about to be.
+            The scent becomes the signal for the man you&apos;re about to be.
           </p>
           <MissionVideo
             youtubeId={INTRO_VIDEOS.moreThanFragrance}
@@ -102,6 +96,26 @@ export default function OnboardingScreens({
       )}
 
       {screen === 1 && (
+        <div className="mt-6 flex flex-1 flex-col">
+          <Headline>HOW OLFACTORY CONDITIONING WORKS</Headline>
+          <p className="mt-4 text-[17px] leading-relaxed text-ink-1">
+            You condition yourself to a Scent Trigger with the S.T.A.R.
+            System.
+          </p>
+          <StarSystem className="mt-6" />
+          <MissionVideo
+            youtubeId={INTRO_VIDEOS.star}
+            title="The S.T.A.R. demonstration"
+            label="Watch Antonio demonstrate S.T.A.R."
+            defaultOpen
+          />
+          <BottomActions className="mt-8">
+            <Button onClick={onNext}>NEXT</Button>
+          </BottomActions>
+        </div>
+      )}
+
+      {screen === 2 && (
         <div className="mt-6 flex flex-1 flex-col">
           <Headline>MEET YOUR SCENT TRIGGERS</Headline>
           <div className="mt-6 space-y-3">

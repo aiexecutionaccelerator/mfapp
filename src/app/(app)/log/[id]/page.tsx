@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import NavAction from "@/components/NavAction";
-import PhotoInput from "@/components/PhotoInput";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
@@ -31,7 +30,6 @@ export default function LogDetailPage({
 
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState("");
-  const [photo, setPhoto] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [pending, setPending] = useState(false);
 
@@ -67,7 +65,6 @@ export default function LogDetailPage({
   function startEditing() {
     if (!mission) return;
     setText(proofText);
-    setPhoto(mission.photo_url);
     setEditing(true);
   }
 
@@ -79,7 +76,7 @@ export default function LogDetailPage({
       await store.updateMission(mission.id, {
         action_text: next,
         ...(mission.status === "completed"
-          ? { reflection: next, photo_url: photo }
+          ? { reflection: next }
           : {}),
       });
       track("proof_entry_edited", { missionNumber: mission.mission_number });
@@ -156,11 +153,9 @@ export default function LogDetailPage({
         )}
       </dl>
 
-      {editing ? (
-        <div className="mt-4">
-          <PhotoInput value={photo} onChange={setPhoto} />
-        </div>
-      ) : (
+      {/* Editing is the words only. Adding a photo here was a leftover from
+          the old flow — the only place in the app it still appeared. */}
+      {!editing && (
         <>
           {declaredSeparately && (
             <div className="glass mt-4 rounded-[20px] p-5">

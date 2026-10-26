@@ -337,7 +337,7 @@ export default function SettingsPage() {
 
       <Group title="Mission Fragrances Guide">
         <LinkRow
-          label="How It Works"
+          label="How It Works: The S.T.A.R. System"
           onClick={() => router.push("/how-it-works")}
         />
         <LinkRow
