@@ -8,6 +8,7 @@ const PROTECTED = [
   "/log",
   "/progress",
   "/settings",
+  "/share",
   "/shop",
   "/action",
   "/onboarding",

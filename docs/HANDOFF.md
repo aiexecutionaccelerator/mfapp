@@ -19,7 +19,7 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 2.10.0 (every Mission is the S.T.A.R. System)
+- Version: 2.11.0 (share the app from Settings)
 
 ## Architecture facts that matter
 
@@ -128,6 +128,21 @@ semicolon or British spelling. Run it before every push.
 - Recommended values rotate — never the same one twice in a row.
 - The S.T.A.R. wording lives once, in `STAR_STEPS` (`src/content/triggers.ts`),
   rendered by `<StarSystem>` everywhere it appears.
+
+### Sharing (Settings → Share)
+
+- **Share the app** — the device share sheet with the main URL
+  (`SHARE_URL`, from `NEXT_PUBLIC_APP_URL`, else app.missionfragrances.com);
+  copies the link where there is no share sheet.
+- **Share on social** → `/share`: the square image, "Share with the image"
+  (image + caption in one share sheet on phones), and prefilled links for
+  Messages, WhatsApp, Facebook, X, LinkedIn and Email. Instagram can't be
+  prefilled from the web, so it copies the caption and shares or saves the image.
+- **Save as an app on your phone** — the same `SaveAsApp` sheet as Check Your Email.
+- The images are generated at build time by `src/lib/shareCard.tsx` (next/og):
+  `/share-card.png` (1080×1080) and `opengraph-image` / `twitter-image`
+  (1200×630, the preview when the link is pasted anywhere). Copy lives in
+  `SHARE_TEXT` (`src/lib/share.ts`).
 
 ### Tap budget (the UX metric)
 

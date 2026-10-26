@@ -1,7 +1,7 @@
 "use client";
 
 import { Share, MoreVertical } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Button from "@/components/ui/Button";
 import Sheet from "@/components/ui/Sheet";
 
@@ -11,18 +11,29 @@ import Sheet from "@/components/ui/Sheet";
  * holding. No install prompt API: iOS has none, and a recipe works the same
  * everywhere.
  */
-export default function SaveAsApp({ className }: { className?: string }) {
+export default function SaveAsApp({
+  className,
+  trigger,
+}: {
+  className?: string;
+  /** Renders its own opener, e.g. a Settings row. */
+  trigger?: (open: () => void) => ReactNode;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className={className ?? "inline-flex min-h-12 items-center px-3"}
-      >
-        Save as an app
-      </button>
+      {trigger ? (
+        trigger(() => setOpen(true))
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className={className ?? "inline-flex min-h-12 items-center px-3"}
+        >
+          Save as an app
+        </button>
+      )}
 
       <Sheet
         open={open}

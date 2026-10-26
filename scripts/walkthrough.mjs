@@ -347,6 +347,35 @@ if ((await page.getByText("The fragrance is the reminder.").count()) > 0)
   fail("the reminder/evidence line is back on Using Your Set");
 await shot("using-your-set");
 
+// Share: the three Settings rows, the share screen, and the images it sends
+await page.goto(`${BASE}/settings`);
+await page.getByText("The man I am becoming").waitFor();
+for (const row of ["Share the app", "Share on social", "Save as an app on your phone"])
+  if ((await page.getByRole("button", { name: row, exact: true }).count()) !== 1)
+    fail(`Settings is missing the "${row}" row`);
+await page.getByRole("button", { name: "Save as an app on your phone" }).click();
+await page.getByText("SAVE IT AS AN APP").waitFor();
+await shot("settings-save-as-app", { full: false });
+await page.getByRole("button", { name: "GOT IT" }).click();
+await page.getByRole("button", { name: "Share on social", exact: true }).click();
+await page.getByRole("heading", { name: "SHARE THE MISSION" }).waitFor();
+for (const label of ["Messages", "WhatsApp", "Instagram", "Facebook", "X", "LinkedIn", "Email", "Copy link"])
+  if ((await page.getByText(label, { exact: true }).count()) < 1)
+    fail(`the share screen is missing ${label}`);
+const wa = await page.getByRole("link", { name: "WhatsApp" }).getAttribute("href");
+if (!wa?.startsWith("https://wa.me/?text=") || !wa.includes("missionfragrances.com"))
+  fail(`WhatsApp link is wrong: ${wa}`);
+await page.waitForFunction(() => {
+  const img = document.querySelector('img[src="/share-card.png"]');
+  return img && img.complete && img.naturalWidth === 1080;
+});
+await shot("share", { full: true });
+for (const path of ["/share-card.png", "/opengraph-image", "/twitter-image"]) {
+  const res = await page.request.get(`${BASE}${path}`);
+  if (res.status() !== 200 || res.headers()["content-type"] !== "image/png")
+    fail(`${path} is not a PNG (${res.status()} ${res.headers()["content-type"]})`);
+}
+
 // M — 30/30: seed the rest straight into demo storage, then finish 30 for real
 await page.evaluate(() => {
   const read = JSON.parse(localStorage.getItem("mission.missions") ?? "[]");

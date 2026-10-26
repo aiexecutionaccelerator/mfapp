@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import ReminderExplainer, {
   REMINDER_EXPLAINER_TITLE,
 } from "@/components/ReminderExplainer";
+import SaveAsApp from "@/components/SaveAsApp";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
@@ -15,6 +16,7 @@ import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import pkg from "../../../../package.json";
 import { getMissionDef } from "@/content/missions";
+import { shareLink } from "@/lib/share";
 import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
 import {
@@ -237,6 +239,13 @@ export default function SettingsPage() {
     }
   }
 
+  async function shareApp() {
+    const result = await shareLink();
+    track("app_shared", { via: "settings-link", result });
+    if (result === "copied") showToast("Link copied. Paste it anywhere.");
+    if (result === "failed") showToast("Couldn't share the link.");
+  }
+
   async function signOut() {
     try {
       await store.signOut();
@@ -379,6 +388,19 @@ export default function SettingsPage() {
             onClick={() => router.push("/shop")}
           />
         )}
+      </Group>
+
+      <Group title="Share">
+        <LinkRow label="Share the app" onClick={() => void shareApp()} />
+        <LinkRow
+          label="Share on social"
+          onClick={() => router.push("/share")}
+        />
+        <SaveAsApp
+          trigger={(open) => (
+            <LinkRow label="Save as an app on your phone" onClick={open} />
+          )}
+        />
       </Group>
 
       <Group title="Legal & support">
