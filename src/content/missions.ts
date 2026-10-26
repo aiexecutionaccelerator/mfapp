@@ -255,7 +255,7 @@ export const MISSIONS: MissionDef[] = [
     number: 10,
     slug: "m10",
     title: "Commitment, in Your Words",
-    statement: "Anyone shows up on day one. Commitment is day 18.",
+    statement: "Commitment is showing up after the excitement wears off.",
     action: "Finish the sentence. It's line three of your Personal Code.",
     recommendedTrigger: "commitment",
     inputLabel: "For me, commitment means…",
