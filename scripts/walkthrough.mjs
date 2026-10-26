@@ -231,6 +231,19 @@ if ((await page.getByText("Doing what I said I'd do").count()) === 0)
 await page.getByText("LIVE IT EVERY DAY").waitFor();
 await shot("personal-code");
 
+// Mission 13: his onboarding sentence pre-filled, AND options to tap
+await page.goto(`${BASE}/missions/13`);
+const m13 = page.getByLabel("I am becoming a man who…");
+await m13.waitFor();
+if ((await m13.inputValue()) !== "Keeps his word, acts despite fear, and follows through.")
+  fail("Mission 13 didn't pre-fill the sentence from onboarding");
+if ((await page.getByRole("button", { name: /Use this example/ }).count()) !== 3)
+  fail("Mission 13 should offer three options alongside the pre-fill");
+await shot("mission-13");
+await page.getByRole("button", { name: /Use this example/ }).first().click();
+if ((await m13.inputValue()) !== "Keeps his word, even when it costs him.")
+  fail("tapping a Mission 13 option didn't replace the pre-fill");
+
 // I — One-off Action: value, one field, one click
 await page.goto(`${BASE}/missions`);
 await page.getByText("ONE-OFF ACTION").first().click();

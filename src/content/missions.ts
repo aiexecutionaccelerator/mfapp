@@ -33,6 +33,11 @@ import type { Trigger } from "@/lib/data/types";
  * - World actions are commitments: the field opens on "I commit to ". On-
  *   screen actions (finish a sentence, remember something) ask plainly.
  * - Readers are men in their 40s and 50s. 90% don't own a business.
+ * - Everyone should see himself in the examples. Married or not, kids or
+ *   not, parents living or not. Write the relationship as options he can
+ *   trim: "my wife/partner/girlfriend", "my dad/mom", "my kids/family".
+ *   Say "my", not "our", unless only a couple could mean it.
+ *   Times are "10:30PM", not "10:30".
  * - Recommended values rotate. Never the same one twice in a row.
  * - 15–20 cover relationships, health, work, money, home and service; 21
  *   picks one; 22 acts on it; 27 sharpens the promise from 12.
@@ -136,8 +141,8 @@ export const MISSIONS: MissionDef[] = [
     inputPrefix: COMMIT,
     examples: [
       "I commit to making that phone call.",
-      "I commit to opening that bill.",
-      "I commit to booking my doctor's appointment.",
+      "I commit to setting up that meeting to go over my finances/relationship/fitness goals.",
+      "I commit to booking my doctor appointment.",
     ],
     youtubeId: null,
   },
@@ -152,8 +157,8 @@ export const MISSIONS: MissionDef[] = [
     inputPrefix: COMMIT,
     examples: [
       "I commit to being home for dinner tonight.",
-      "I commit to calling my dad back tonight.",
-      "I commit to making my kid's game Saturday.",
+      "I commit to calling my dad/mom back tonight.",
+      "I commit to making my kid's/nephew's game Saturday.",
     ],
     youtubeId: null,
   },
@@ -167,9 +172,9 @@ export const MISSIONS: MissionDef[] = [
     inputLabel: "Who are you going to tell?",
     inputPrefix: COMMIT,
     examples: [
-      "I commit to thanking my wife for all she carries.",
-      "I commit to thanking my old coach.",
-      "I commit to telling my mom what she taught me.",
+      "I commit to thanking my wife/partner/girlfriend for all she carries.",
+      "I commit to reaching out to thank my old coach.",
+      "I commit to telling my mom/sister/aunt what she taught me.",
     ],
     youtubeId: null,
   },
@@ -200,7 +205,7 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "Working two jobs to keep the house.",
       "Telling the truth when it cost me.",
-      "Staying with my dad in the hospital.",
+      "Staying with my dad/mom/uncle/aunt at the hospital.",
     ],
     youtubeId: null,
   },
@@ -213,8 +218,8 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "commitment",
     inputLabel: "Where did you put them?",
     examples: [
-      "On my dresser, next to my granddad's watch.",
-      "On my desk, by a photo of my kids.",
+      "On my dresser, next to my dad's/granddad's watch.",
+      "On my desk, by a photo of my kids/family.",
       "On the shelf in my bedroom.",
     ],
     photoEncouraged: true,
@@ -274,8 +279,8 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "honor",
     inputLabel: "The line I won't cross is…",
     examples: [
-      "Lying to my wife.",
-      "Breaking a promise to my kids.",
+      "Lying to my wife/partner/girlfriend.",
+      "Breaking a promise to my kids/family.",
       "Taking what isn't mine.",
     ],
     youtubeId: null,
@@ -291,7 +296,7 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "Home for dinner, phone away, every weeknight.",
       "No drinking on weeknights.",
-      "In bed by 10:30.",
+      "In bed by 10:30PM.",
     ],
     youtubeId: null,
   },
@@ -303,6 +308,11 @@ export const MISSIONS: MissionDef[] = [
     action: "Read it. Fix what isn't true.",
     recommendedTrigger: "courage",
     inputLabel: "I am becoming a man who…",
+    examples: [
+      "Keeps his word, even when it costs him.",
+      "Shows up for the people who count on him.",
+      "Does the hard thing first.",
+    ],
     prefillIdentity: true,
     youtubeId: null,
   },
@@ -333,9 +343,9 @@ export const MISSIONS: MissionDef[] = [
     inputLabel: "Who, and when?",
     inputPrefix: COMMIT,
     examples: [
-      "I commit to breakfast with my daughter Saturday.",
-      "I commit to a drive with my son Sunday.",
-      "I commit to date night Friday.",
+      "I commit to breakfast with my son/daughter Saturday.",
+      "I commit to a drive with my dad/brother/buddy Sunday.",
+      "I commit to date night with my wife/partner/girlfriend Friday.",
     ],
     youtubeId: "NGi4l1rNc50",
   },
@@ -365,7 +375,7 @@ export const MISSIONS: MissionDef[] = [
     inputLabel: "What are you going to start?",
     inputPrefix: COMMIT,
     examples: [
-      "I commit to starting our will.",
+      "I commit to starting my will.",
       "I commit to calling about the roof.",
       "I commit to cleaning out one garage shelf.",
     ],
@@ -382,8 +392,8 @@ export const MISSIONS: MissionDef[] = [
     inputPrefix: COMMIT,
     examples: [
       "I commit to opening my credit card statement.",
-      "I commit to checking our retirement account.",
-      "I commit to writing down what we owe.",
+      "I commit to checking my retirement account.",
+      "I commit to writing down everything I owe.",
     ],
     youtubeId: "GqQmxeLr6GI",
   },
@@ -415,7 +425,7 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I commit to sending my neighbor my mechanic's number.",
       "I commit to helping my buddy move Saturday.",
-      "I commit to calling my nephew about that job.",
+      "I commit to calling my nephew/niece about that job.",
     ],
     youtubeId: "oU7fHhMoXoY",
   },
@@ -430,8 +440,8 @@ export const MISSIONS: MissionDef[] = [
     inputPrefix: COMMIT,
     examples: [
       "I commit to my health.",
-      "I commit to my marriage.",
-      "I commit to our money.",
+      "I commit to my marriage/relationship.",
+      "I commit to my money.",
     ],
     youtubeId: null,
   },
@@ -446,8 +456,8 @@ export const MISSIONS: MissionDef[] = [
     inputPrefix: COMMIT,
     examples: [
       "I commit to 10 push-ups now.",
-      "I commit to texting my wife something sweet.",
-      "I commit to listing every subscription we pay for.",
+      "I commit to texting my wife/partner/girlfriend something sweet.",
+      "I commit to listing every subscription I pay for.",
     ],
     youtubeId: "FaJhvhVPb9c",
   },
@@ -477,7 +487,7 @@ export const MISSIONS: MissionDef[] = [
     inputLabel: "What are you saying no to?",
     inputPrefix: COMMIT,
     examples: [
-      "I commit to skipping golf for my daughter's game.",
+      "I commit to skipping golf for my kid's game.",
       "I commit to turning down the extra shift.",
       "I commit to turning off the TV and going to bed.",
     ],
@@ -509,8 +519,8 @@ export const MISSIONS: MissionDef[] = [
     inputLabel: "What are you going to do?",
     inputPrefix: COMMIT,
     examples: [
-      "I commit to telling my son I was wrong.",
-      "I commit to paying my brother back this month.",
+      "I commit to telling my son/daughter I was wrong.",
+      "I commit to paying my brother/sister/buddy back this month.",
       "I commit to owning my mistake at work.",
     ],
     youtubeId: "ZMBy99RiuvM",
@@ -541,7 +551,7 @@ export const MISSIONS: MissionDef[] = [
     inputLabel: "Which one are you going to repeat?",
     inputPrefix: COMMIT,
     examples: [
-      "I commit to calling my dad again.",
+      "I commit to calling my dad/mom again.",
       "I commit to keeping the dinner promise all week.",
       "I commit to the next hard conversation.",
     ],
@@ -552,13 +562,13 @@ export const MISSIONS: MissionDef[] = [
     slug: "m29",
     title: "Share Your Personal Code",
     statement: "A code nobody sees is easy to break.",
-    action: "Send it to one man who'll hold you to it.",
+    action: "Send it to one person who'll hold you to it.",
     recommendedTrigger: "honor",
     inputLabel: "Who are you sending it to?",
     inputPrefix: COMMIT,
     examples: [
-      "I commit to sending it to my brother.",
-      "I commit to reading it to my wife.",
+      "I commit to sending it to my brother/sister.",
+      "I commit to reading it to my wife/partner/girlfriend.",
       "I commit to sending it to my best friend.",
     ],
     showPersonalCode: true,
@@ -574,7 +584,7 @@ export const MISSIONS: MissionDef[] = [
     inputLabel: "What's next?",
     examples: [
       "Courage: one hard conversation a week.",
-      "Commitment: in bed by 10:30 for 30 days.",
+      "Commitment: in bed by 10:30PM for 30 days.",
       "Honor: one call a week to someone who matters.",
     ],
     youtubeId: null,

@@ -63,6 +63,9 @@ function MissionDetailInner({
   const [pending, setPending] = useState(false);
   const [justLogged, setJustLogged] = useState(false);
   const [starOpen, setStarOpen] = useState(false);
+  // What the field opened with. Until he changes it, the examples stay up —
+  // Mission 13 opens on his own sentence AND offers options.
+  const [seed, setSeed] = useState<string | null>(null);
   const submitting = useRef(false);
   const seeded = useRef(false);
   const openedAt = useRef(Date.now());
@@ -87,12 +90,15 @@ function MissionDetailInner({
     if (seeded.current || !def || !profile) return;
     seeded.current = true;
     /* eslint-disable react-hooks/set-state-in-effect */
-    if (def.prefillIdentity && profile.identity_statement) {
-      setText(profile.identity_statement);
-    } else if (def.examples?.length === 1) {
-      setText(def.examples[0]);
-    } else if (def.inputPrefix) {
-      setText(def.inputPrefix);
+    const initial =
+      def.prefillIdentity && profile.identity_statement
+        ? profile.identity_statement
+        : def.examples?.length === 1
+          ? def.examples[0]
+          : (def.inputPrefix ?? null);
+    if (initial !== null) {
+      setText(initial);
+      setSeed(initial);
     }
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [def, profile]);
@@ -120,7 +126,7 @@ function MissionDetailInner({
   const hasAnswer = text.trim().length > 0 && text.trim() !== opener;
   const showExamples =
     (def.examples?.length ?? 0) > 1 &&
-    (text.trim() === "" || text.trim() === opener);
+    (text.trim() === "" || text.trim() === opener || text === seed);
 
   async function logIt() {
     const entry = text.trim();
