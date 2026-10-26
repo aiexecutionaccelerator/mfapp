@@ -35,7 +35,11 @@ for (const block of body.split(/\n  \{\n/).slice(1)) {
   for (const field of ["statement", "action", "inputLabel"]) {
     const value = block.match(new RegExp(`${field}: "((?:[^"\\\\]|\\\\.)*)"`))?.[1];
     if (value !== undefined) check(n, field, JSON.parse(`"${value}"`), LIMITS[field]);
-  }
+  }  // Every Mission opens with its one-line statement. A missing one reads
+  // as a broken screen next to the rest.
+  if (!/\n    statement: "/.test("\n" + block))
+    problems.push(`Mission ${n}: no statement (every Mission needs its one line)`);
+
   const examples = block.match(/examples: \[([\s\S]*?)\]/)?.[1] ?? "";
   for (const m of examples.matchAll(/"((?:[^"\\]|\\.)*)"/g))
     check(n, "example", JSON.parse(`"${m[1]}"`), LIMITS.example);

@@ -271,13 +271,8 @@ function MissionDetailInner({
         {def.title}
       </Headline>
 
-      {/* Why it matters — on its own, before any instruction. Optional:
-          some Missions say it all in the title and the action. */}
-      {def.statement && (
-        <p className="mt-4 text-[19px] leading-snug text-ink-0">
-          {def.statement}
-        </p>
-      )}
+      {/* Why it matters — on its own, before any instruction. */}
+      <p className="mt-4 text-[19px] leading-snug text-ink-0">{def.statement}</p>
 
       {/* The reminder replaces the "spray your Scent Trigger, take a
           breath…" lines that used to be written into every Mission. */}

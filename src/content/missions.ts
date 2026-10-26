@@ -20,8 +20,7 @@ import type { Trigger } from "@/lib/data/types";
  *
  * - Antonio's own words are the spec. Where he gave exact wording, use it
  *   verbatim — these limits cut OUR copy, never his.
- * - Statement: optional. Only when it earns the reader's attention. One
- *   short sentence, two at most.
+ * - Statement: every Mission has one. One short sentence, two at most.
  * - Action: one sentence. About 10 words.
  * - Question: under 7 words.
  * - Examples: under 10 words. Three of them. Exactly one means no example
@@ -48,11 +47,10 @@ export interface MissionDef {
   slug: string;
   title: string;
   /**
-   * Why it matters, in a line or two. OPTIONAL: every line costs the reader
-   * attention, so a Mission whose title and action already say it all goes
-   * straight to "Let's get started with the S.T.A.R. System."
+   * Why it matters, in ONE short sentence. Required: a Mission that opens
+   * without one looks broken next to the twenty-nine that have one.
    */
-  statement?: string;
+  statement: string;
   /** What to do. Under 60 seconds. */
   action: string;
   /** The Scent Trigger this Mission recommends. He can wear another. */
@@ -147,6 +145,7 @@ export const MISSIONS: MissionDef[] = [
     number: 3,
     slug: "m3",
     title: "Keep Your Word",
+    statement: "Your word only counts if you keep it.",
     action: "Make one promise to someone. Keep it.",
     recommendedTrigger: "commitment",
     inputLabel: "What promise are you going to keep?",
@@ -392,6 +391,7 @@ export const MISSIONS: MissionDef[] = [
     number: 19,
     slug: "m19",
     title: "Fix Your Space",
+    statement: "A messy space makes for a messy head.",
     action: "Fix one small thing in the next minute.",
     recommendedTrigger: "commitment",
     inputLabel: "What did you fix?",
@@ -407,6 +407,7 @@ export const MISSIONS: MissionDef[] = [
     number: 20,
     slug: "m20",
     title: "Be Useful",
+    statement: "You'll be remembered for how you helped.",
     action: "Help one person with something quick.",
     recommendedTrigger: "honor",
     inputLabel: "Who are you going to help?",
@@ -486,7 +487,8 @@ export const MISSIONS: MissionDef[] = [
     number: 25,
     slug: "m25",
     title: "Cut the Dead Weight",
-    action: "Pick one habit that gives you nothing back. Drop it this week.",
+    statement: "Every habit costs you time. Some give nothing back.",
+    action: "Pick one of those and drop it this week.",
     recommendedTrigger: "commitment",
     inputLabel: "What are you going to drop?",
     inputPrefix: COMMIT,
