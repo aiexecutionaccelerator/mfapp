@@ -69,7 +69,7 @@ await page.getByRole("button", { name: "CONTINUE" }).click();
 
 // C — How It Works: three screens, then straight into Mission 1
 await page.getByText("MORE THAN COLOGNE").first().waitFor();
-await page.getByText("pull up, on command").waitFor();
+await page.getByText("on command").waitFor();
 if ((await page.getByText("twenty years").count()) > 0)
   fail("the twenty-years line is back");
 await shot("onboarding-1");
@@ -78,7 +78,7 @@ await page.getByRole("button", { name: "NEXT" }).click();
 await page.getByText("HOW OLFACTORY CONDITIONING WORKS").first().waitFor();
 for (const step of ["Select", "Trigger", "Act", "Record"])
   await page.getByText(step, { exact: true }).first().waitFor();
-await page.getByText("it becomes hardwired").waitFor();
+await page.getByText("it's hardwired").waitFor();
 await shot("onboarding-2-star");
 await page.getByRole("button", { name: "NEXT" }).click();
 await page.getByText("MEET YOUR SCENT TRIGGERS").waitFor();
@@ -94,7 +94,7 @@ await page.getByText("Prove It").first().waitFor();
 for (const step of ["SELECT", "TRIGGER", "ACT", "RECORD"])
   await page.getByText(step, { exact: true }).first().waitFor();
 await page.getByText("Spray your selected fragrance.").waitFor();
-await page.getByText("This should take you less than 60 seconds.").waitFor();
+await page.getByText("Takes less than 60 seconds.").waitFor();
 if ((await page.getByText("Spray your Scent Trigger").count()) > 0)
   fail("a spray instruction is back inside the Mission copy");
 // The reminder opens the same four cards
@@ -110,7 +110,7 @@ if ((await page.getByText("Private. Only you ever see this.").count()) > 0)
   fail("private-question line is back");
 await shot("mission-1");
 // A commitment: the field opens on "I commit to", and that alone isn't enough
-const m1 = page.getByLabel("What are you going to do?");
+const m1 = page.getByLabel("What will you do?");
 if ((await m1.inputValue()) !== "I commit to ")
   fail("the commitment field did not open on 'I commit to'");
 if (!(await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).isDisabled()))
@@ -119,7 +119,7 @@ if (!(await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).i
 if ((await page.getByRole("button", { name: /Use this example/ }).count()) !== 3)
   fail("Mission 1 should offer three examples");
 await page.getByRole("button", { name: /Use this example/ }).first().click();
-if (!(await m1.inputValue()).startsWith("I commit to texting someone"))
+if (!(await m1.inputValue()).startsWith("I commit to telling someone"))
   fail("tapping the example did not fill the field");
 if ((await page.getByRole("button", { name: /Use this example/ }).count()) > 0)
   fail("the examples are still there once the field has an answer");
@@ -149,7 +149,7 @@ await page.getByText("Recommended", { exact: true }).waitFor();
 
 // E — Mission 2, completed from the list side
 await page
-  .getByLabel("What are you going to stop putting off?")
+  .getByLabel("What are you done putting off?")
   .fill("I commit to calling the insurance company about the claim.");
 await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 2" }).click();
 await page.getByText("MISSION COMPLETE.").waitFor();
@@ -176,7 +176,7 @@ if ((await page.getByText("MISSION 30").count()) === 0)
 await page.getByRole("button", { name: /SHOW LESS/ }).click();
 await page.getByText("YOUR THREE SCENT TRIGGERS").waitFor();
 await page.getByRole("button", { name: /What courage is for/i }).click();
-if ((await page.getByText("Courage isn't a switch you flip").count()) === 0)
+if ((await page.getByText("Courage is built, not born.").count()) === 0)
   fail("the bottle did not open its description");
 await shot("fragrance-trio");
 
@@ -184,7 +184,7 @@ await shot("fragrance-trio");
 await page.goto(`${BASE}/missions/7`);
 await page.getByText("Build Your Shrine").first().waitFor();
 await page
-  .getByLabel("Where is it, and what's on it?")
+  .getByLabel("Where did you put them?")
   .fill("Top of the dresser — three bottles and my grandfather's watch.");
 await page.locator('input[type="file"]').setInputFiles(PHOTO);
 await page.getByLabel("Remove photo").waitFor();
@@ -214,6 +214,13 @@ await page.getByRole("button", { name: "LOG THIS ACTION" }).click();
 await page.getByText("PROOF LOGGED.").waitFor();
 await page.getByRole("button", { name: "DONE" }).click();
 await page.waitForURL("**/missions");
+
+// Claim Your Set shows the confirmed price, and nothing struck through
+// until the regular price is confirmed too
+await page.goto(`${BASE}/shop`);
+await page.getByText("$297", { exact: true }).waitFor();
+if ((await page.getByText("YOU SAVE").count()) > 0)
+  fail("a savings line is showing without a confirmed regular price");
 
 // The claim-your-set row is at the foot of every screen in the app
 for (const path of ["/missions", "/log", "/progress", "/settings"]) {
@@ -326,7 +333,7 @@ await page.evaluate(() => {
 await page.goto(`${BASE}/missions/30`);
 await page.getByText("Choose the Next Mission").first().waitFor();
 await page
-  .getByLabel(/which Scent Trigger carries it/)
+  .getByLabel("What's next?")
   .fill("Courage — one hard conversation a week, for thirty days.");
 await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 30" }).click();
 await page.getByText("30-DAY MISSION COMPLETE").waitFor();
@@ -335,7 +342,7 @@ await page.goto(`${BASE}/progress`);
 await page.getByText("30-DAY MISSION COMPLETE").waitFor();
 await shot("progress-30-of-30");
 await page.goto(`${BASE}/missions`);
-await page.getByText("Thirty actions. Thirty pieces of evidence.").waitFor();
+await page.getByText("30 Missions. 30 proofs. Your Proof Log stays open.").waitFor();
 await shot("mission-list-complete");
 
 // N — Old routes still land somewhere real

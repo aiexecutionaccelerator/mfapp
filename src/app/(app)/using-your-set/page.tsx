@@ -20,19 +20,19 @@ const SCENTS = [
     trigger: "honor" as const,
     name: "HONOR",
     notes:
-      "Fresh and clean — a fougère built on bergamot, citrus, neroli, and musk. Light enough for every day; a morning pick-me-up heading into work.",
+      "Fresh and clean. Bergamot, citrus, neroli and musk. Light enough for every day.",
   },
   {
     trigger: "courage" as const,
     name: "COURAGE",
     notes:
-      "A citrus aromatic with galbanum, lemongrass, grapefruit, and lavender — noticeable without being loud, and it lasts most of a working day.",
+      "Bright citrus. Galbanum, lemongrass, grapefruit and lavender. Noticed, never loud.",
   },
   {
     trigger: "commitment" as const,
     name: "COMMITMENT",
     notes:
-      "The amber-woody: vetiver, cedarwood, sweet amber, vanilla, tonka, and oud. Deeper, for the evening and the lasting impression.",
+      "Deep and woody. Vetiver, cedar, amber, vanilla, tonka and oud. Made for evenings.",
   },
 ];
 
@@ -42,20 +42,20 @@ const GUIDE = [
     body: "One spray is often enough. Apply it on your chest or your wrists.",
   },
   {
-    title: "You'll stop smelling it — others won't",
+    title: "You'll stop smelling it. Others won't.",
     body: "Within 15 minutes your nose may tune out the scent. That's normal. It's called olfactory fatigue, not the fragrance fading. These fragrances are strong.",
   },
   {
     title: "Reapplying",
-    body: "Reapply the same Scent Trigger later if you like — two or three sprays every five hours or so is the ceiling worth respecting.",
+    body: "Reapply every few hours if you want. Don't overdo it.",
   },
   {
     title: "The travel atomizer",
-    body: "It fills straight from the bottle: pop the nozzle off, press the atomizer onto it, pump a few times, replace the nozzle.",
+    body: "Pop off the nozzle, press the atomizer on, pump a few times. Done.",
   },
   {
     title: "Caring for the bottles",
-    body: "Keep them capped, out of direct sunlight, and away from heat. A shelf or your shrine beats a bathroom windowsill.",
+    body: "Keep them capped and out of sun and heat. Not on the bathroom windowsill.",
   },
 ];
 
@@ -74,8 +74,7 @@ export default function UsingYourSetPage() {
 
       <Headline className="mt-6">USING YOUR SET</Headline>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        The technical side — scents, sprays, and care. None of this is required
-        for your Missions.
+        Scents, sprays and care. Optional reading.
       </p>
 
       <MissionVideo

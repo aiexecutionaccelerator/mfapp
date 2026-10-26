@@ -180,8 +180,8 @@ function MissionDetailInner({
         </p>
         <p className="mt-6 text-center text-[17px] text-ink-1">
           {allDone
-            ? "Thirty real actions. Thirty pieces of evidence. Keep using Honor, Courage and Commitment whenever you need them."
-            : "That's evidence of the man you're becoming. It's in your Proof Log."}
+            ? "30 Missions. 30 proofs. Keep going."
+            : "It's in your Proof Log."}
         </p>
         <div className="mt-10">
           {allDone ? (
@@ -308,7 +308,7 @@ function MissionDetailInner({
       <StarStep letter="A" name="Act">
         <p className="text-[17px] leading-snug text-ink-0">{def.action}</p>
         <p className="mt-2 text-[14px] text-ink-2">
-          This should take you less than 60 seconds.
+          Takes less than 60 seconds.
         </p>
         {personalCode && (
           <GlassCard className="mt-4">
@@ -320,7 +320,7 @@ function MissionDetailInner({
                   <dd className="mt-0.5 text-[15px] leading-snug text-ink-0">
                     {line.value ?? (
                       <span className="text-ink-2">
-                        Not written yet — {line.source}.
+                        Not written yet ({line.source}).
                       </span>
                     )}
                   </dd>

@@ -19,7 +19,7 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 2.7.0 (every Mission is the S.T.A.R. System)
+- Version: 2.8.0 (every Mission is the S.T.A.R. System)
 
 ## Architecture facts that matter
 
@@ -107,7 +107,11 @@ full rules. Every Mission screen IS the S.T.A.R. System, in order:
 **R** Record (`inputLabel`, up to three tap-to-use `examples`, the field,
 `RECORD · COMPLETE MISSION N`).
 
-Antonio's writing rules (third Loom, Oct 26) — apply them to every word:
+Antonio's writing rules — apply them to every word. His feedback in every
+review has been "too wordy" and "doesn't sound American", so the limits are
+now ENFORCED: `npm run check:copy` fails on any Mission statement over 16
+words, action over 12, question over 7, example over 12, or any em-dash,
+semicolon or British spelling. Run it before every push.
 
 - Native American English, his voice: visceral, cut to the core. Five words
   beat ten. No walls of text.
@@ -162,10 +166,11 @@ seed-Missions-1–29 helpers in Settings.
 - Secrets live outside the repo (.env.local, Supabase function secrets).
 
 - **Unconfirmed, waiting on Antonio / Yuri:**
-  - Set prices. `PRICING` in `src/content/product.ts` is null, so Claim Your
-    Set shows no price yet. The store disagrees with itself ($595 landing,
-    $297 special) and Antonio said $597 regular. Fill in both numbers and
-    set the same compare-at price in Shopify.
+  - Regular price. The sale price is confirmed at $297 and shows on Claim
+    Your Set. The regular (struck-through) price isn't confirmed — the
+    landing page says $595, Antonio said $597 — so `compareAtPrice` in
+    `src/content/product.ts` is null and nothing is struck through. Set it,
+    and the same compare-at price in Shopify.
   - Commitment's sales-page definition (`onboardingLine` in
     `src/content/triggers.ts`) is a DRAFT — the real line was cut off in the
     recording. Replace it verbatim.

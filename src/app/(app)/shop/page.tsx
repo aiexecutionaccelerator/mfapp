@@ -49,7 +49,7 @@ function Hero() {
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={hero}
-          alt="Mission Fragrances — the complete set, Black Edition"
+          alt="Mission Fragrances, the complete set, Black Edition"
           className="max-h-[300px] w-full object-contain"
           style={{ filter: "drop-shadow(0 16px 28px rgba(0,0,0,.5))" }}
         />

@@ -10,7 +10,7 @@ export const TRIGGERS = {
       "You live by a moral code, tell the truth, keep promises, and own your actions.",
     declareHeadline: "HOW WILL YOU BE A MAN OF HONOR TODAY?",
     about:
-      "Honor is the gift a man gives himself — the standard he lives by. It isn't bestowed by anyone else; it's cultivated from within and measured by the quiet satisfaction of acting in line with your principles. Be true to your word. Stand up for what you believe in. Take responsibility for your actions.",
+      "Honor is the standard you live by. Nobody hands it to you. Keep your word. Stand up for what's right. Own what you do.",
     applyLine: "Apply Honor now.",
     /** For the anchor line: "recall a moment you were HONORABLE". */
     anchorWord: "HONORABLE",
@@ -25,7 +25,7 @@ export const TRIGGERS = {
       "You do what you know is right despite fear, danger, or pressure to do otherwise.",
     declareHeadline: "HOW WILL YOU PRACTICE COURAGE TODAY?",
     about:
-      "Courage isn't a switch you flip in a crisis. It's built through the daily practice of mastering your fear — mental, moral, and physical strength earned by doing the hard thing anyway. Not every brave act is audacious: sticking to the plan, saying no, climbing the ladder. Every small act builds a courageous man.",
+      "Courage is built, not born. Every time you do the hard thing anyway, you get stronger. Small acts count.",
     applyLine: "Apply Courage now.",
     anchorWord: "COURAGEOUS",
     provedWith: "Courage",
@@ -38,10 +38,10 @@ export const TRIGGERS = {
     // recording and the site isn't reachable from the build environment.
     // Replace with the verbatim sentence from missionfragrances.com.
     onboardingLine:
-      "You follow through on what you start, long after the excitement is gone.",
+      "You finish what you start, even after the excitement's gone.",
     declareHeadline: "WHAT WILL YOU COMMIT TO TODAY?",
     about:
-      "Commitment is more than a promise. It's a conscious decision to stick to a goal or task in the face of adversity — the spirit of determination and dedication that leads to the mastery of self. It doesn't come and go with your moods. It starts small: daily decisions that line up with what you said you wanted.",
+      "Commitment is keeping a promise after the excitement's gone. It doesn't care about your mood. It starts small, one choice a day.",
     applyLine: "Apply Commitment now.",
     anchorWord: "COMMITTED",
     provedWith: "Commitment",
@@ -58,28 +58,24 @@ export const TRIGGER_ORDER = ["honor", "courage", "commitment"] as const;
  * value works almost as well as doing something new.
  */
 export const STAR_STEPS = [
-  { letter: "S", name: "Select", text: "Select the core value you need." },
-  {
-    letter: "T",
-    name: "Trigger",
-    text: "Spray the fragrance. This is how you build the trigger.",
-  },
+  { letter: "S", name: "Select", text: "Pick the value you need." },
+  { letter: "T", name: "Trigger", text: "Spray the fragrance." },
   {
     letter: "A",
     name: "Act",
-    text: "Take one small action that's aligned with the value, or recall a time you lived it.",
-    example: "Spray Honor, then do — or remember — something honorable.",
+    text: "Do one small thing that fits the value, or remember a time you did.",
+    example: "Spray Honor. Do something honorable, or remember a time you did.",
   },
   {
     letter: "R",
     name: "Record",
-    text: "Log what you did in the app. It's one piece of proof that you're becoming the man you know yourself to be.",
+    text: "Log it in the app. Every entry is proof.",
   },
 ] as const;
 
 /** Under the four steps, wherever they appear. */
 export const STAR_CLOSER =
-  "Do this a dozen times and you start to associate the scent with the emotion and the memory. Do it 30 times and it becomes hardwired.";
+  "Do this a dozen times and the scent starts to bring back the feeling. Do it 30 times and it's hardwired.";
 
 /**
  * Accents match the bottles: Honor = silver, Courage = gold, Commitment = black.
@@ -88,7 +84,7 @@ export const STAR_CLOSER =
  * dot beside an eyebrow, where black reads as black against a light ring
  * (`edge`). `ui`/`uiGlow` are for borders, rims and glows, where black has
  * nothing to show: Commitment takes a warm ivory rim there, because a black
- * bottle is read by the light on its edge rather than by its colour.
+ * bottle is read by the light on its edge rather than by its color.
  */
 export const TRIGGER_ACCENTS = {
   honor: {

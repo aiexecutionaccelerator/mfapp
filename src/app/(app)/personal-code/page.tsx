@@ -156,8 +156,7 @@ export default function PersonalCodePage() {
       )}
 
       <p className="print-hide mt-8 text-center text-[13px] text-ink-2">
-        Tap any line to edit it. Printing uses your browser&apos;s print dialog —
-        nothing to install.
+        Tap a line to edit it.
       </p>
     </main>
   );

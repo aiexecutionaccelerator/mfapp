@@ -61,17 +61,14 @@ export default function ProgressPage() {
       </div>
 
       <p className="mt-6 text-center text-[15px] text-ink-1">
-        Every entry is proof you did something, not that you meant to. Most
-        men have no record of themselves at all.
+        Proof you did it, not that you meant to.
       </p>
 
       {complete && (
         <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
           <Eyebrow tone="gold">30-DAY MISSION COMPLETE</Eyebrow>
           <p className="mt-3 text-[15px] leading-relaxed text-ink-1">
-            Thirty actions. Thirty pieces of evidence with your name on them.
-            Your Proof Log stays open — keep reaching for the Scent Trigger
-            you need.
+            30 Missions. 30 proofs. Keep going.
           </p>
           <div className="mt-5">
             <Button onClick={() => router.push("/action/declare")}>

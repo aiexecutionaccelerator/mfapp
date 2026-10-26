@@ -161,8 +161,8 @@ export default function OnboardingPage() {
           {/* The sentence is already in the box, so there is nothing to offer
               him a copy of — one line is all this needs. */}
           <p className="mt-1 text-[13px] leading-snug text-ink-2">
-            One sentence is enough. Keep this one or write your own — you can
-            change it any time in Settings.
+            Keep it or write your own. You can change it any time in
+            Settings.
           </p>
 
           <BottomActions className="mt-8">

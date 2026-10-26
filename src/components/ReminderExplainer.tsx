@@ -21,9 +21,7 @@ export default function ReminderExplainer({
   return (
     <>
       <p className="text-[15px] text-ink-1">
-        One notification, at the time you choose: &quot;One Mission. Two
-        minutes. Do it and write it down.&quot; Nothing else — no marketing,
-        no streaks, no nagging if you miss a day.
+        One reminder a day, at the time you pick. No ads. No nagging.
       </p>
       <Button loading={loading} onClick={onAllow}>
         ALLOW NOTIFICATIONS

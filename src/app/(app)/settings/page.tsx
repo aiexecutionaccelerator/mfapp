@@ -301,7 +301,7 @@ export default function SettingsPage() {
           <div>
             <p className="text-[17px] text-ink-0">Daily Mission Reminder</p>
             <p className="mt-1 text-[13px] text-ink-2">
-              One nudge a day. One Mission takes two minutes.
+              One reminder a day.
             </p>
             <p className="mt-1 text-[13px] text-ink-2">{reminderHelper}</p>
           </div>

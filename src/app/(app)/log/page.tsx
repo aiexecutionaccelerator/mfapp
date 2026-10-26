@@ -49,7 +49,7 @@ export default function LogPage() {
         <div className="mt-6">
           <EmptyState
             title="Nothing logged yet."
-            body="Open Mission 1. Two minutes is enough."
+            body="Start with Mission 1. It takes a minute."
             action={
               <Button onClick={() => router.push("/missions/1")}>
                 START MISSION 1

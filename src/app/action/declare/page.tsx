@@ -16,9 +16,9 @@ import { PROOF_TEXT_MAX, type Trigger } from "@/lib/data/types";
 
 /** One plain example per value, in the voice of a man typing fast. */
 const ONE_OFF_EXAMPLES: Record<Trigger, string> = {
-  honor: "Owned the mistake in front of the team instead of explaining it away.",
-  courage: "Made the call I'd been dodging for a month.",
-  commitment: "Did the workout I'd already talked myself out of.",
+  honor: "Owned up to my mistake.",
+  courage: "Made the call I'd been dodging.",
+  commitment: "Did the workout anyway.",
 };
 
 function isTrigger(value: string | null): value is Trigger {
@@ -91,9 +91,7 @@ function DeclareInner() {
 
       <Headline className="mt-4">A ONE-OFF ACTION</Headline>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        Something outside the thirty. Choose the value you need right now,
-        spray it, do the thing, and write it down. It lands in your Proof Log
-        with everything else, and it doesn&apos;t count against the thirty.
+        Not part of the 30. Pick a value, spray, act, log it.
       </p>
 
       <FragranceCue
