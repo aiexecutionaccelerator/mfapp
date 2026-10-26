@@ -503,7 +503,7 @@ export const MISSIONS: MissionDef[] = [
     number: 26,
     slug: "m26",
     title: "What Would He Do?",
-    statement: "Don't ask what's easy. Ask what he'd do.",
+    statement: "Don't ask what's easy. Ask what the man you're becoming would do.",
     action: "Think of a decision you're facing. Do what he would do.",
     recommendedTrigger: "honor",
     inputLabel: "What are you going to do?",

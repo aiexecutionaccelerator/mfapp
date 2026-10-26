@@ -1,6 +1,7 @@
 "use client";
 
-import { Printer } from "lucide-react";
+import { ChevronRight, Printer } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import NavAction from "@/components/NavAction";
 import Button from "@/components/ui/Button";
@@ -158,6 +159,26 @@ export default function PersonalCodePage() {
       <p className="print-hide mt-8 text-center text-[13px] text-ink-2">
         Tap a line to edit it.
       </p>
+
+      {/* A code is lived between Missions too. This is the moment he's
+          reading what he stands for — point him at the way to act on it
+          any day, not just the thirty. Never printed. */}
+      <Link
+        href="/action/declare"
+        onClick={() => track("personal_code_one_off_opened")}
+        className="print-hide mt-8 block"
+      >
+        <div className="glass flex items-center gap-3 rounded-[14px] border-[rgba(201,166,72,.35)] px-4 py-4">
+          <span className="min-w-0 flex-1">
+            <span className="eyebrow block text-gold-300">LIVE IT EVERY DAY</span>
+            <span className="mt-1.5 block text-[15px] leading-snug text-ink-1">
+              Your code isn&apos;t just for the 30 Missions. Log a One-Off
+              Action any time you live it.
+            </span>
+          </span>
+          <ChevronRight aria-hidden size={20} className="shrink-0 text-ink-2" />
+        </div>
+      </Link>
     </main>
   );
 }

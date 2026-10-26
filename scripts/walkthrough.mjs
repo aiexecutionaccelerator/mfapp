@@ -227,6 +227,8 @@ await page.goto(`${BASE}/personal-code`);
 await page.getByText("MY PERSONAL CODE").first().waitFor();
 if ((await page.getByText("Doing what I said I'd do").count()) === 0)
   fail("Mission 8's answer did not reach the Personal Code");
+// …and points him at One-Off Actions, to live the code between Missions
+await page.getByText("LIVE IT EVERY DAY").waitFor();
 await shot("personal-code");
 
 // I — One-off Action: value, one field, one click
