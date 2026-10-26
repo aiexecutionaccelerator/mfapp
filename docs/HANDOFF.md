@@ -134,9 +134,9 @@ semicolon or British spelling. Run it before every push.
 - **Share the app** — the device share sheet with the main URL
   (`SHARE_URL`, from `NEXT_PUBLIC_APP_URL`, else app.missionfragrances.com);
   copies the link where there is no share sheet.
-- **Share on social** → `/share`: the square image, "Share with the image"
-  (image + caption in one share sheet on phones), and prefilled links for
-  Messages, WhatsApp, Facebook, X, LinkedIn and Email. Instagram can't be
+- **Share on social** → `/share`, link first: the URL with Copy, "Share the
+  link" (device share sheet), prefilled links for Messages, WhatsApp,
+  Facebook, X, LinkedIn and Email, then the square image with "Share the image". Instagram can't be
   prefilled from the web, so it copies the caption and shares or saves the image.
 - **Save as an app on your phone** — the same `SaveAsApp` sheet as Check Your Email.
 - The images are generated at build time by `src/lib/shareCard.tsx` (next/og):

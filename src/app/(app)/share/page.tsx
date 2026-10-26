@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Link2, Mail, MessageCircle, Share } from "lucide-react";
+import { Copy, Mail, MessageCircle, Share } from "lucide-react";
 import BrandIcon, { type Brand } from "@/components/BrandIcon";
 import NavAction from "@/components/NavAction";
 import Button from "@/components/ui/Button";
@@ -12,15 +12,17 @@ import {
   copyText,
   downloadImage,
   platformUrl,
+  SHARE_HOST,
   SHARE_IMAGE_PATH,
   SHARE_TEXT,
   SHARE_URL,
   shareImage,
+  shareLink,
   type Platform,
 } from "@/lib/share";
 
 type Tile = {
-  id: Platform | "instagram" | "copy";
+  id: Platform | "instagram";
   label: string;
   icon: React.ReactNode;
 };
@@ -35,25 +37,31 @@ const TILES: Tile[] = [
   { id: "x", label: "X", icon: brand("x") },
   { id: "linkedin", label: "LinkedIn", icon: brand("linkedin") },
   { id: "email", label: "Email", icon: <Mail size={22} aria-hidden /> },
-  { id: "copy", label: "Copy link", icon: <Link2 size={22} aria-hidden /> },
 ];
 
 const TILE_CLASS =
   "glass flex min-h-[76px] flex-col items-center justify-center gap-2 rounded-[14px] px-1 text-[12px] text-ink-1 transition-colors hover:text-ink-0";
 
 /**
- * Share the app — the image, the words, and one tap per platform. Every link
- * opens prefilled. Instagram can't be prefilled from the web, so it gets the
+ * Share the app — the link first (it's what he came for), one tap per
+ * platform, then the image. Every platform link opens prefilled with the URL. Instagram can't be prefilled from the web, so it gets the
  * image and the caption on the clipboard instead.
  */
 export default function SharePage() {
   const { showToast } = useToast();
 
+  async function shareTheLink() {
+    const result = await shareLink();
+    track("app_shared", { via: "native-link", result });
+    if (result === "copied") showToast("Link copied. Paste it anywhere.");
+    if (result === "failed") showToast("Couldn't share. Tap Copy instead.");
+  }
+
   async function shareWithImage() {
     const result = await shareImage();
     track("app_shared", { via: "native-image", result });
     if (result === "copied") showToast("Link copied.");
-    if (result === "failed") showToast("Couldn't share. Copy the link below.");
+    if (result === "failed") showToast("Couldn't share. Tap Copy instead.");
   }
 
   async function instagram() {
@@ -84,25 +92,30 @@ export default function SharePage() {
         <NavAction kind="back" href="/settings" />
       </div>
 
-      <Headline className="mt-2">SHARE THE MISSION</Headline>
-      <p className="mt-3 text-[15px] leading-relaxed text-ink-1">
-        Know a man who&apos;d do this with you? Send it. The image and the words
-        are ready.
-      </p>
+      <Headline className="mt-2">SHARE THE APP</Headline>
 
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={SHARE_IMAGE_PATH}
-        alt="Mission Fragrances share image: the three bottles and Turn Scent Into Action."
-        width={1080}
-        height={1080}
-        className="mx-auto mt-6 aspect-square w-full max-w-[340px] rounded-[18px] border border-[var(--line)] shadow-[0_18px_50px_rgba(0,0,0,.5),0_0_40px_rgba(201,166,72,.12)]"
-      />
+      {/* The link is the thing he came for: shown, copyable, shareable. */}
+      <div className="glass mt-6 flex items-center gap-3 rounded-[14px] py-2 pr-2 pl-4">
+        <span className="min-w-0 flex-1 text-[15px] break-all text-ink-0">
+          {SHARE_HOST}
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            track("app_shared", { via: "copy-link" });
+            void copy(SHARE_URL, "Link");
+          }}
+          className="inline-flex min-h-12 items-center gap-2 px-3 text-[14px] font-semibold tracking-[0.08em] text-gold-300"
+        >
+          <Copy size={16} aria-hidden />
+          COPY
+        </button>
+      </div>
 
-      <div className="mt-6">
-        <Button onClick={() => void shareWithImage()}>
+      <div className="mt-4">
+        <Button onClick={() => void shareTheLink()}>
           <Share size={18} aria-hidden />
-          SHARE WITH THE IMAGE
+          SHARE THE LINK
         </Button>
       </div>
 
@@ -115,21 +128,6 @@ export default function SharePage() {
               {tile.label}
             </>
           );
-          if (tile.id === "copy") {
-            return (
-              <button
-                key={tile.id}
-                type="button"
-                className={TILE_CLASS}
-                onClick={() => {
-                  track("app_shared", { via: "copy-link" });
-                  void copy(SHARE_URL, "Link");
-                }}
-              >
-                {body}
-              </button>
-            );
-          }
           if (tile.id === "instagram") {
             return (
               <button
@@ -159,19 +157,19 @@ export default function SharePage() {
         })}
       </div>
 
-      <Eyebrow className="mt-8">Caption</Eyebrow>
-      <div className="glass mt-3 rounded-[14px] p-4">
-        <p className="text-[15px] leading-relaxed text-ink-1">
-          {SHARE_TEXT.caption}
-        </p>
-        <button
-          type="button"
-          onClick={() => void copy(SHARE_TEXT.caption, "Caption")}
-          className="mt-3 inline-flex min-h-12 items-center gap-2 text-[14px] font-semibold tracking-[0.08em] text-gold-300"
-        >
-          <Copy size={16} aria-hidden />
-          COPY CAPTION
-        </button>
+      <Eyebrow className="mt-8">Or send the image</Eyebrow>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={SHARE_IMAGE_PATH}
+        alt="Mission Fragrances share image: the three bottles and Turn Scent Into Action."
+        width={1080}
+        height={1080}
+        className="mx-auto mt-3 aspect-square w-full max-w-[300px] rounded-[18px] border border-[var(--line)] shadow-[0_18px_50px_rgba(0,0,0,.5),0_0_40px_rgba(201,166,72,.12)]"
+      />
+      <div className="mt-4">
+        <Button variant="secondary" onClick={() => void shareWithImage()}>
+          SHARE THE IMAGE
+        </Button>
       </div>
     </main>
   );

@@ -358,8 +358,8 @@ await page.getByText("SAVE IT AS AN APP").waitFor();
 await shot("settings-save-as-app", { full: false });
 await page.getByRole("button", { name: "GOT IT" }).click();
 await page.getByRole("button", { name: "Share on social", exact: true }).click();
-await page.getByRole("heading", { name: "SHARE THE MISSION" }).waitFor();
-for (const label of ["Messages", "WhatsApp", "Instagram", "Facebook", "X", "LinkedIn", "Email", "Copy link"])
+await page.getByRole("heading", { name: "SHARE THE APP" }).waitFor();
+for (const label of ["Messages", "WhatsApp", "Instagram", "Facebook", "X", "LinkedIn", "Email", "COPY"])
   if ((await page.getByText(label, { exact: true }).count()) < 1)
     fail(`the share screen is missing ${label}`);
 const wa = await page.getByRole("link", { name: "WhatsApp" }).getAttribute("href");

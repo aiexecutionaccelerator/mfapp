@@ -110,7 +110,7 @@ export async function shareImage(): Promise<ShareResult> {
       await navigator.share({
         files: [file],
         title: "Mission Fragrances",
-        text: `${SHARE_TEXT.caption}`,
+        text: `${SHARE_TEXT.message} ${SHARE_URL}`,
       });
       return "shared";
     }
