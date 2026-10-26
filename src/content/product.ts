@@ -28,13 +28,12 @@ export const PRODUCT = {
  * The set's price on Claim Your Set, with the regular price struck through
  * and the saving called out whenever it's marked down.
  *
- * The price is confirmed at $297. The regular price is NOT confirmed yet —
- * the landing page shows $595 and Antonio said $597 — so compareAtPrice
- * stays null and nothing is struck through. A wrong "regular" price on a
- * sales page is worse than none. Once confirmed, set it here (whole dollars)
- * and set the same compare-at price in Shopify.
+ * Confirmed: $597 regular, $297 sale — $300 off. When the sale ends, set
+ * compareAtPrice back to null (or price to the new number) so nothing is
+ * struck through that isn't true. Keep Shopify's compare-at price matching,
+ * so the store's own page strikes it through the same way.
  */
 export const PRICING: { price: number | null; compareAtPrice: number | null } = {
   price: 297,
-  compareAtPrice: null,
+  compareAtPrice: 597,
 };

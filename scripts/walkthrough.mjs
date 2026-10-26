@@ -227,12 +227,14 @@ await page.getByText("PROOF LOGGED.").waitFor();
 await page.getByRole("button", { name: "DONE" }).click();
 await page.waitForURL("**/missions");
 
-// Claim Your Set shows the confirmed price, and nothing struck through
-// until the regular price is confirmed too
+// Claim Your Set: regular price struck through, sale price, and the saving
 await page.goto(`${BASE}/shop`);
-await page.getByText("$297", { exact: true }).waitFor();
-if ((await page.getByText("YOU SAVE").count()) > 0)
-  fail("a savings line is showing without a confirmed regular price");
+// Each price carries a screen-reader label ("Regular price $597"), so match
+// on how the text ends rather than the whole string.
+await page.getByText(/\$297$/).waitFor();
+await page.getByText(/\$597$/).waitFor();
+await page.getByText("YOU SAVE $300").waitFor();
+await shot("claim-your-set");
 
 // The claim-your-set row is at the foot of every screen in the app
 for (const path of ["/missions", "/log", "/progress", "/settings"]) {

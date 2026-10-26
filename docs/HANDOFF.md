@@ -19,7 +19,7 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 2.9.0 (every Mission is the S.T.A.R. System)
+- Version: 2.9.1 (every Mission is the S.T.A.R. System)
 
 ## Architecture facts that matter
 
@@ -166,12 +166,10 @@ seed-Missions-1–29 helpers in Settings.
 - Secrets live outside the repo (.env.local, Supabase function secrets).
 
 - **Unconfirmed, waiting on Antonio / Yuri:**
-  - Regular price. $297 sale price is live on Claim Your Set. Antonio said
-    $597 regular ($300 saving) in his third Loom, but an earlier Loom showed
-    the Shopify page at $595 — so `compareAtPrice` in
-    `src/content/product.ts` stays null until that's confirmed. One number
-    turns on "~~$597~~ $297 · YOU SAVE $300"; set the same compare-at price
-    in Shopify.
+  - Shopify's compare-at price. The app shows ~~$597~~ $297 · YOU SAVE $300
+    (confirmed). The Shopify product page needs the same $597 compare-at
+    price set in Shopify admin to strike it through there too — that can't
+    be done from this repo.
 
 ## Working conventions
 
