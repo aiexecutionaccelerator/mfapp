@@ -78,8 +78,9 @@ export default function OnboardingScreens({
             straight to memory and emotion.
           </p>
           <p className="mt-4 text-[17px] leading-relaxed text-ink-1">
-            Scent Triggers let you pull up, on command, the feelings you need
-            to become the man you know yourself to be.
+            Spray before you act. Do the hard thing. Log it. Repeat that enough
+            times and the scent stops being something you put on in the
+            morning.
           </p>
           <p className="font-display text-gold-gradient mt-6 text-[22px] leading-snug">
             It becomes the signal for the man you&apos;re about to be.
@@ -131,10 +132,10 @@ export default function OnboardingScreens({
                         {meta.name}
                       </p>
                       <p className="mt-2 text-[14px] leading-snug text-ink-1">
-                        {meta.onboardingLine}
+                        {meta.definition}
                       </p>
                       <p className="eyebrow mt-2 text-gold-300">
-                        {meta.onboardingWords}
+                        {meta.words}
                       </p>
                     </div>
                   </div>

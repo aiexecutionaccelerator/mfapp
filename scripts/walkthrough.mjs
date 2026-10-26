@@ -77,7 +77,7 @@ await page.getByRole("button", { name: "CONTINUE" }).click();
 
 // C — How It Works: three screens, then straight into Mission 1
 await page.getByText("MORE THAN COLOGNE").first().waitFor();
-await page.getByText("pull up, on command").waitFor();
+await page.getByText("Spray before you act. Do the hard thing. Log it.").waitFor();
 await page.getByText("It becomes the signal for the man you're about to be.").waitFor();
 if ((await page.getByText("twenty years").count()) > 0)
   fail("the twenty-years line is back");
@@ -109,9 +109,14 @@ await page.getByText("This should take you less than 60 seconds.").waitFor();
 await page.getByText("Let's get started with the S.T.A.R. System.").waitFor();
 if ((await page.getByText("Spray your Scent Trigger").count()) > 0)
   fail("a spray instruction is back inside the Mission copy");
-// The reminder opens the same four cards
+// The reminder opens the same four cards — at the TOP, not scrolled down to
+// its button (focus used to land on GOT IT and drag the sheet with it)
 await page.getByRole("button", { name: /reminder of how the S.T.A.R. System works/ }).click();
-await page.getByRole("dialog", { name: "THE S.T.A.R. SYSTEM" }).waitFor();
+const starSheet = page.getByRole("dialog", { name: "THE S.T.A.R. SYSTEM" });
+await starSheet.waitFor();
+await page.waitForTimeout(400);
+if ((await starSheet.evaluate((el) => el.scrollTop)) !== 0)
+  fail("the S.T.A.R. reminder opened scrolled down instead of at the top");
 await shot("star-reminder", { full: false });
 await page.getByRole("button", { name: "GOT IT" }).click();
 if ((await page.getByRole("button", { name: /DECLARE/ }).count()) > 0)
@@ -144,6 +149,9 @@ await shot("mission-1-complete");
 await page.getByRole("button", { name: "CONTINUE TO THE NEXT MISSION" }).click();
 await page.waitForURL("**/missions/2");
 await page.getByText("Stop Putting It Off").first().waitFor();
+await page.getByText("Let's use the S.T.A.R. System.").waitFor();
+if ((await page.getByText("Let's get started with the S.T.A.R. System.").count()) > 0)
+  fail("'get started' belongs on Mission 1 only");
 // The fragrance cue carries the T of S.T.A.R. now the ritual screen is gone
 await page.getByText("Recommended", { exact: true }).waitFor();
 await shot("mission-2");
@@ -188,8 +196,10 @@ if ((await page.getByText("MISSION 30").count()) === 0)
 await page.getByRole("button", { name: /SHOW LESS/ }).click();
 await page.getByText("YOUR THREE SCENT TRIGGERS").waitFor();
 await page.getByRole("button", { name: /What courage is for/i }).click();
-if ((await page.getByText("Courage is built, not born.").count()) === 0)
-  fail("the bottle did not open its description");
+// The same words onboarding used — one description per value, everywhere
+if ((await page.getByText("You do what you know is right despite fear, danger, or pressure to do otherwise.").count()) === 0)
+  fail("the bottle doesn't show the onboarding definition");
+await page.getByText("Speak Honestly · Move First · Act Despite Fear").waitFor();
 await shot("fragrance-trio");
 
 // G — A Mission that carries a photo (Mission 7)

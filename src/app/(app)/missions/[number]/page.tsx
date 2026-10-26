@@ -295,9 +295,12 @@ function MissionDetailInner({
 
       <div className="mt-6 border-t border-[var(--line)]" />
 
-      {/* Antonio's lead-in: the steps below ARE the system. */}
+      {/* The lead-in into the steps. "Get started" only makes sense once —
+          on Mission 1. Every Mission after that is using it again. */}
       <p className="font-display mt-6 text-[20px] leading-snug text-ink-0">
-        Let&apos;s get started with the S.T.A.R. System.
+        {def.number === 1
+          ? "Let's get started with the S.T.A.R. System."
+          : "Let's use the S.T.A.R. System."}
       </p>
 
       <StarStep letter="S" name="Select">

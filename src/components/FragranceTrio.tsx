@@ -91,10 +91,10 @@ export default function FragranceTrio() {
             className="absolute top-0 bottom-0 left-0 w-[2px]"
             style={{ background: TRIGGER_ACCENTS[open].ui }}
           />
-          <p className="eyebrow text-gold-300">{meta.tagline}</p>
-          <p className="mt-3 text-[15px] leading-relaxed text-ink-1">
-            {meta.about}
+          <p className="text-[15px] leading-relaxed text-ink-1">
+            {meta.definition}
           </p>
+          <p className="eyebrow mt-3 text-gold-300">{meta.words}</p>
         </div>
       )}
     </section>

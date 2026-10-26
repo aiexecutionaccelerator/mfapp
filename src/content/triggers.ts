@@ -1,46 +1,32 @@
+/**
+ * The three Scent Triggers. ONE description each, shown everywhere a value is
+ * described — onboarding's Meet Your Scent Triggers and the three bottles on
+ * the Missions list read the same words. There used to be a second set here
+ * (tagline/about) that drifted from the first; don't add another.
+ */
 export const TRIGGERS = {
   honor: {
     name: "HONOR",
-    /** Behavior descriptors — the Start cards. */
-    tagline: "Integrity · Responsibility · Respect",
-    /** Behavior words on the Meet Your Scent Triggers onboarding screen. */
-    onboardingWords: "Integrity · Responsibility · Respect",
     /** The definition from the missionfragrances.com sales page. */
-    onboardingLine:
+    definition:
       "You live by a moral code, tell the truth, keep promises, and own your actions.",
-    declareHeadline: "HOW WILL YOU BE A MAN OF HONOR TODAY?",
-    about:
-      "Honor is the standard you live by. Nobody hands it to you. Keep your word. Stand up for what's right. Own what you do.",
-    applyLine: "Apply Honor now.",
-    /** For the anchor line: "recall a moment you were HONORABLE". */
-    anchorWord: "HONORABLE",
-    /** "Proof logged. You acted with Honor." */
+    /** The keyword tags under the definition. */
+    words: "Integrity · Responsibility · Respect",
+    /** "You acted with Honor." */
     provedWith: "Honor",
   },
   courage: {
     name: "COURAGE",
-    tagline: "Act Despite Fear · Speak Honestly · Move Forward",
-    onboardingWords: "Speak Honestly · Move First · Act Despite Fear",
-    onboardingLine:
+    definition:
       "You do what you know is right despite fear, danger, or pressure to do otherwise.",
-    declareHeadline: "HOW WILL YOU PRACTICE COURAGE TODAY?",
-    about:
-      "Courage is built, not born. Every time you do the hard thing anyway, you get stronger. Small acts count.",
-    applyLine: "Apply Courage now.",
-    anchorWord: "COURAGEOUS",
+    words: "Speak Honestly · Move First · Act Despite Fear",
     provedWith: "Courage",
   },
   commitment: {
     name: "COMMITMENT",
-    tagline: "Discipline · Consistency · Follow-Through",
-    onboardingWords: "Discipline · Consistency · Follow-Through",
-    onboardingLine:
+    definition:
       "You fulfill your responsibilities through consistent effort and perseverance.",
-    declareHeadline: "WHAT WILL YOU COMMIT TO TODAY?",
-    about:
-      "Commitment is keeping a promise after the excitement's gone. It doesn't care about your mood. It starts small, one choice a day.",
-    applyLine: "Apply Commitment now.",
-    anchorWord: "COMMITTED",
+    words: "Discipline · Consistency · Follow-Through",
     provedWith: "Commitment",
   },
 } as const;

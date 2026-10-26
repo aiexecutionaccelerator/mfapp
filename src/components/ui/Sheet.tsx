@@ -33,7 +33,12 @@ export default function Sheet({
     const { body } = document;
     const previousOverflow = body.style.overflow;
     body.style.overflow = "hidden";
-    panel.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
+    // Focus the sheet itself, not its first button: in a long sheet the
+    // first button can be the last thing in it (the S.T.A.R. reminder's GOT
+    // IT), and focusing it scrolled the sheet to the bottom on open. A man
+    // should land on the title and read down. Tab still reaches the buttons.
+    panel.current?.focus({ preventScroll: true });
+    if (panel.current) panel.current.scrollTop = 0;
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -45,7 +50,8 @@ export default function Sheet({
       if (items.length === 0) return;
       const first = items[0];
       const last = items[items.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
+      const onPanel = document.activeElement === panel.current;
+      if (event.shiftKey && (document.activeElement === first || onPanel)) {
         event.preventDefault();
         last.focus();
       } else if (!event.shiftKey && document.activeElement === last) {
@@ -81,7 +87,8 @@ export default function Sheet({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="glass rise-in relative max-h-[88dvh] w-full max-w-[430px] overflow-y-auto rounded-t-[20px] p-5 pb-[calc(env(safe-area-inset-bottom)+20px)]"
+        tabIndex={-1}
+        className="glass rise-in relative max-h-[88dvh] w-full max-w-[430px] overflow-y-auto rounded-t-[20px] p-5 outline-none pb-[calc(env(safe-area-inset-bottom)+20px)]"
         // Solid, inline: .glass's translucent gradient otherwise wins over a
         // background utility, and the page behind reads through the sheet.
         style={{ background: "rgb(13, 17, 25)" }}
