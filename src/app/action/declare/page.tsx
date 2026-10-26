@@ -27,7 +27,7 @@ function isTrigger(value: string | null): value is Trigger {
 
 /**
  * A one-off Action — outside the thirty Missions, same shape as a Mission:
- * choose the value, write the one line, one button, done. It logs a Proof and
+ * select the Scent Trigger, write the one line, one button, done. It logs a Proof and
  * never counts toward the 30/30.
  */
 function DeclareInner() {
@@ -91,7 +91,7 @@ function DeclareInner() {
 
       <Headline className="mt-4">A ONE-OFF ACTION</Headline>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        Not part of the 30. Pick a value, spray, act, log it.
+        Not part of the 30. Select your Scent Trigger, spray, act, log it.
       </p>
 
       <FragranceCue

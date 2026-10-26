@@ -238,7 +238,7 @@ Run in demo mode (no env vars) at a 390×844 viewport.
   on `/personal-code` as the "Honor means…" line.
 - **F.** Mission list: Complete / Not Started only — no in-progress state —
   with `SHOW ALL 30 MISSIONS` and one `ONE-OFF ACTION` row at the bottom.
-- **G.** One-off Action: choose the value, one field, `LOG THIS ACTION` →
+- **G.** One-off Action: select the Scent Trigger, one field, `LOG THIS ACTION` →
   "Proof logged." It never counts toward 30/30.
 - **H.** Log: Mission and one-off entries together, `Edit or delete this
   entry`; deleting a Mission proof makes that Mission read Not Started again.

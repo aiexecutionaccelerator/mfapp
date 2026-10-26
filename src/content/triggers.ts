@@ -41,7 +41,8 @@ export const TRIGGER_ORDER = ["honor", "courage", "commitment"] as const;
  * value works almost as well as doing something new.
  */
 export const STAR_STEPS = [
-  { letter: "S", name: "Select", text: "Select the core value you need." },
+  // S is "Select your Scent Trigger" — the bottle, not an abstract value.
+  { letter: "S", name: "Select", text: "Select your Scent Trigger." },
   {
     letter: "T",
     name: "Trigger",

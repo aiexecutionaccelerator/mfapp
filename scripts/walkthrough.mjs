@@ -87,6 +87,10 @@ await page.getByRole("button", { name: "NEXT" }).click();
 await page.getByText("HOW OLFACTORY CONDITIONING WORKS").first().waitFor();
 for (const step of ["Select", "Trigger", "Act", "Record"])
   await page.getByText(step, { exact: true }).first().waitFor();
+// S is "Select your Scent Trigger", never "the core value"
+await page.getByText("Select your Scent Trigger.").first().waitFor();
+if ((await page.getByText(/core value you need/).count()) > 0)
+  fail("S still says 'core value'");
 await page.getByText("it becomes hardwired").waitFor();
 await page.getByText("You condition yourself to a Scent Trigger").waitFor();
 await shot("onboarding-2-star");
