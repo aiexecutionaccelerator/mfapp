@@ -1,0 +1,27 @@
+# Rebuilds the Netlify staging site whenever the staging branch changes.
+#
+# Netlify's own GitHub auto-deploy isn't firing for this site, so this calls
+# the site's build hook instead. The hook URL is a repository secret
+# (Settings → Secrets and variables → Actions → NETLIFY_STAGING_HOOK), never
+# committed: the repo is public, and anyone holding the URL can start builds.
+name: Deploy staging
+
+on:
+  push:
+    branches: [main-cig2ix]
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger the Netlify build hook
+        env:
+          HOOK: ${{ secrets.NETLIFY_STAGING_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::error::Add the NETLIFY_STAGING_HOOK secret (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+          curl --fail --silent --show-error -X POST -d '{}' "$HOOK"
+          echo "Staging build started. It's live in 1–3 minutes."
