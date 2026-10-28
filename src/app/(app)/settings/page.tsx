@@ -16,6 +16,7 @@ import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import pkg from "../../../../package.json";
 import { getMissionDef } from "@/content/missions";
+import { PRODUCT } from "@/content/product";
 import { shareLink } from "@/lib/share";
 import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
@@ -390,7 +391,7 @@ export default function SettingsPage() {
         {!profile.owns_set && (
           <LinkRow
             label="Get Mission Fragrances"
-            onClick={() => router.push("/shop")}
+            onClick={() => window.open(PRODUCT.url, "_blank", "noopener,noreferrer")}
           />
         )}
       </Group>
