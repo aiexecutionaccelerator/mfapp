@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, History, Info } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Suspense, use, useEffect, useState } from "react";
 import MissionTrack from "@/components/MissionTrack";
 import NavAction from "@/components/NavAction";
@@ -98,7 +98,11 @@ function MissionDetailInner({
 
   /* ---------- just saved ---------- */
 
-  if (justSaved) {
+  // Shown only for the Mission it belongs to. Continuing to the next Mission
+  // just navigates: the success screen stays up until the next Mission
+  // replaces it, instead of clearing first and flashing this Mission's saved
+  // view in between.
+  if (justSaved && justSaved.mission_number === def.number) {
     const done = completedMissionNumbers(missions);
     const allDone = done.size >= MISSION_COUNT;
     return (
@@ -132,10 +136,7 @@ function MissionDetailInner({
             </Button>
           ) : (
             <Button
-              onClick={() => {
-                setJustSaved(null);
-                router.push(next ? `/missions/${next}` : "/missions");
-              }}
+              onClick={() => router.push(next ? `/missions/${next}` : "/missions")}
             >
               {next ? `CONTINUE TO MISSION ${next}` : "BACK TO MISSIONS"}
             </Button>
@@ -406,9 +407,13 @@ function RevisedTaskPreview({ def }: { def: MissionDef }) {
 export default function MissionDetailPage(props: {
   params: Promise<{ number: string }>;
 }) {
+  // Keyed by Mission: moving to another Mission starts it fresh (no stale
+  // success screen or half-typed form carried over), and the swap happens
+  // only once the next Mission is ready to show.
+  const { number } = useParams<{ number: string }>();
   return (
     <Suspense fallback={null}>
-      <MissionDetailInner {...props} />
+      <MissionDetailInner key={number} {...props} />
     </Suspense>
   );
 }

@@ -150,8 +150,20 @@ await page.getByText("You acted with Honor.").waitFor();
 await shot("mission-1-complete");
 
 // E — Mission 2: change the scent, save a draft, come back, finish
+// Continue goes straight from the success screen to Mission 2: Mission 1's
+// saved-record view must never flash in between. Watch every DOM change.
+await page.evaluate(() => {
+  window.__flash = false;
+  new MutationObserver(() => {
+    const t = document.body.innerText;
+    if (t.includes("MISSION 1 OF 30") && !t.includes("MISSION COMPLETE")) window.__flash = true;
+  }).observe(document.body, { childList: true, subtree: true, characterData: true });
+});
 await page.getByRole("button", { name: "CONTINUE TO MISSION 2" }).click();
 await page.waitForURL("**/missions/2");
+await page.getByText("MISSION 2 OF 30").waitFor();
+if (await page.evaluate(() => window.__flash))
+  fail("Mission 1 flashed between the success screen and Mission 2");
 await page.getByText("Break the Avoidance Loop").first().waitFor();
 await page.getByText("Let's use the S.T.A.R. System.").waitFor();
 if ((await page.getByText("Let's get started with the S.T.A.R. System.").count()) > 0)
