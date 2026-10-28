@@ -1,5 +1,26 @@
-export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+/**
+ * Supabase settings, or "" when they aren't really set. Hosting dashboards
+ * often won't save an empty variable, so a placeholder ("-", "none", a
+ * space) is how people switch a deploy (e.g. staging) to demo mode. Treat
+ * anything that isn't a real https URL and a plausible key as unset, rather
+ * than handing it to the Supabase client, which throws on every request.
+ */
+function realUrl(value: string | undefined): string {
+  const v = value?.trim() ?? "";
+  try {
+    return new URL(v).protocol === "https:" ? v : "";
+  } catch {
+    return "";
+  }
+}
+
+function realKey(value: string | undefined): string {
+  const v = value?.trim() ?? "";
+  return v.length >= 20 ? v : "";
+}
+
+export const SUPABASE_URL = realUrl(process.env.NEXT_PUBLIC_SUPABASE_URL);
+export const SUPABASE_ANON_KEY = realKey(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
 export const SHOPIFY_STORE_DOMAIN =
   process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN ?? "";
