@@ -270,6 +270,10 @@ for (const path of ["/missions", "/log", "/progress", "/settings"]) {
   await page.goto(`${BASE}${path}`);
   if ((await page.getByText("Click here to claim your set").count()) === 0)
     fail(`no buy row on ${path}`);
+  // It goes straight to the live purchase page, not an in-app screen
+  const buy = page.getByRole("link").filter({ hasText: "Click here to claim your set" });
+  if ((await buy.getAttribute("href")) !== "https://www.missionfragrances.com/products/mf-special")
+    fail(`the buy row on ${path} doesn't go straight to the purchase page`);
 }
 
 // J — Proof Log: every proof, Missions and one-offs together
