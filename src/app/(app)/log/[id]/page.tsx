@@ -10,11 +10,12 @@ import Headline from "@/components/ui/Headline";
 import Sheet from "@/components/ui/Sheet";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
-import { getMissionDef } from "@/content/missions";
+import { recordTitle } from "@/components/MissionRow";
 import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
+import { KIND_LABELS, kindOf } from "@/lib/curriculum";
 import { store, useAppData } from "@/lib/data/store";
-import { PROOF_TEXT_MAX } from "@/lib/data/types";
+import { ConflictError, PROOF_TEXT_MAX, ValidationError } from "@/lib/data/types";
 import { formatDateTime } from "@/lib/utils";
 
 export default function LogDetailPage({
@@ -30,7 +31,7 @@ export default function LogDetailPage({
 
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState("");
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmRemove, setConfirmRemove] = useState(false);
   const [pending, setPending] = useState(false);
 
   useEffect(() => {
@@ -45,10 +46,7 @@ export default function LogDetailPage({
     );
   }
 
-  const def =
-    mission.mission_number !== null
-      ? getMissionDef(mission.mission_number)
-      : undefined;
+  const isMission = mission.mission_number !== null;
 
   // One entry, one sentence. Rows from the old declare-then-record flow kept
   // two, so the declared half is shown separately only when it differs.
@@ -62,8 +60,13 @@ export default function LogDetailPage({
       ? mission.question_answer
       : null;
 
+  /** A Mission record is edited on its Mission, with all its fields. */
   function startEditing() {
     if (!mission) return;
+    if (isMission && mission.status === "completed") {
+      router.push(`/missions/${mission.mission_number}`);
+      return;
+    }
     setText(proofText);
     setEditing(true);
   }
@@ -73,35 +76,39 @@ export default function LogDetailPage({
     const next = text.trim().slice(0, PROOF_TEXT_MAX);
     setPending(true);
     try {
-      await store.updateMission(mission.id, {
-        action_text: next,
-        ...(mission.status === "completed"
-          ? { reflection: next }
-          : {}),
-      });
+      await store.editRecord(mission, { text: next });
       track("proof_entry_edited", { missionNumber: mission.mission_number });
       setEditing(false);
-    } catch {
-      showToast("Couldn't save that. Please try again.", {
-        retry: () => void saveEdits(),
-      });
+    } catch (cause) {
+      showToast(
+        cause instanceof ValidationError || cause instanceof ConflictError
+          ? cause.message
+          : "Couldn't save that. Please try again.",
+      );
     } finally {
       setPending(false);
     }
   }
 
-  /** The row goes entirely — a Mission simply reads Not Started again. */
-  async function deleteEntry() {
+  /**
+   * Removing keeps the record, its words and its date; it just stops
+   * counting. Restore brings back the same record.
+   */
+  async function setRemoved(removed: boolean) {
     if (!mission) return;
     setPending(true);
     try {
-      await store.deleteMission(mission.id);
-      track("proof_entry_deleted", { missionNumber: mission.mission_number });
-      router.replace("/log");
+      await store.setRemoved(mission.id, removed);
+      track(removed ? "proof_entry_removed" : "proof_entry_restored", {
+        missionNumber: mission.mission_number,
+      });
+      setConfirmRemove(false);
+      setEditing(false);
+      showToast(removed ? "Removed. You can restore it from the Proof Log." : "Restored.");
     } catch {
+      showToast("Couldn't do that. Please try again.");
+    } finally {
       setPending(false);
-      setConfirmDelete(false);
-      showToast("Couldn't delete that. Please try again.");
     }
   }
 
@@ -118,9 +125,7 @@ export default function LogDetailPage({
         <Eyebrow accent={mission.trigger}>
           {TRIGGERS[mission.trigger].name}
         </Eyebrow>
-        <p className="eyebrow mt-2 text-gold-300">
-          {def ? `MISSION ${def.number} · ${def.title.toUpperCase()}` : "ONE-OFF ACTION"}
-        </p>
+        <p className="eyebrow mt-2 text-gold-300">{recordTitle(mission)}</p>
         {editing ? (
           <div className="mt-4">
             <Field
@@ -145,10 +150,22 @@ export default function LogDetailPage({
             {formatDateTime(mission.completed_at ?? mission.started_at)}
           </dd>
         </div>
+        {mission.status === "completed" && (
+          <div className="flex justify-between gap-4">
+            <dt className="text-ink-2">Type</dt>
+            <dd className="text-ink-0">{KIND_LABELS[kindOf(mission)]}</dd>
+          </div>
+        )}
         {mission.status !== "completed" && (
           <div className="flex justify-between gap-4">
             <dt className="text-ink-2">Status</dt>
             <dd className="text-gold-300">NOT LOGGED YET</dd>
+          </div>
+        )}
+        {mission.removed_at && (
+          <div className="flex justify-between gap-4">
+            <dt className="text-ink-2">Removed</dt>
+            <dd className="text-ink-0">{formatDateTime(mission.removed_at)}</dd>
           </div>
         )}
       </dl>
@@ -192,12 +209,14 @@ export default function LogDetailPage({
             >
               SAVE
             </Button>
-            {/* Deleting lives in here with the other edits — the entry you
-                are only reading has one button. */}
-            <Button variant="ghost" onClick={() => setConfirmDelete(true)}>
-              Delete entry
+            <Button variant="ghost" onClick={() => setEditing(false)}>
+              Cancel
             </Button>
           </>
+        ) : mission.removed_at ? (
+          <Button loading={pending} onClick={() => void setRemoved(false)}>
+            RESTORE
+          </Button>
         ) : (
           <>
             {mission.status === "active" && (
@@ -213,27 +232,34 @@ export default function LogDetailPage({
                 FINISH THIS ACTION
               </Button>
             )}
-            <Button variant="secondary" onClick={startEditing}>
-              Edit or delete this entry
-            </Button>
+            {mission.status === "completed" && (
+              <Button variant="secondary" onClick={startEditing}>
+                {isMission ? "Edit on its Mission" : "Edit this entry"}
+              </Button>
+            )}
+            {mission.status === "completed" && (
+              <Button variant="ghost" onClick={() => setConfirmRemove(true)}>
+                Remove this record
+              </Button>
+            )}
           </>
         )}
       </div>
 
       <Sheet
-        open={confirmDelete}
-        title="DELETE THIS ENTRY?"
+        open={confirmRemove}
+        title="REMOVE THIS RECORD?"
         note={
           mission.mission_number !== null
-            ? `This removes the proof and Mission ${mission.mission_number} reads Not Started again. This can't be undone.`
-            : "This removes the entry from your Proof Log. This can't be undone."
+            ? `It stops counting, and Mission ${mission.mission_number} reads Removed. Your words and date are kept. You can restore it any time.`
+            : "It stops counting. Your words and date are kept. You can restore it any time."
         }
-        onClose={() => setConfirmDelete(false)}
+        onClose={() => setConfirmRemove(false)}
       >
-        <Button variant="danger" loading={pending} onClick={() => void deleteEntry()}>
-          DELETE ENTRY
+        <Button variant="danger" loading={pending} onClick={() => void setRemoved(true)}>
+          REMOVE
         </Button>
-        <Button variant="ghost" onClick={() => setConfirmDelete(false)}>
+        <Button variant="ghost" onClick={() => setConfirmRemove(false)}>
           Cancel
         </Button>
       </Sheet>

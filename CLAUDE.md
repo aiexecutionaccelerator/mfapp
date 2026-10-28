@@ -1,9 +1,10 @@
 @AGENTS.md
 
-## Pending: curriculum revision 2 (Antonio, 28 Oct 2026)
+## Curriculum revision 2 (Antonio, 28 Oct 2026)
 
-The 30 Missions, record kinds, drafts, prerequisites and S.T.A.R. wording are
-being revised. Read `docs/specs/curriculum-v2-summary.md` before touching
+Implemented in v3.0.0. Read `docs/specs/curriculum-v2-summary.md` and the
+"Curriculum revision 2" section of `docs/HANDOFF.md` before touching
 Missions; exact copy is in `docs/specs/curriculum-v2-spec.txt` (source .docx
-alongside). The spec overrides earlier Mission copy and the tap-to-use /
-pre-fill example behavior.
+alongside). Rules: `src/lib/curriculum.ts` (client) and migration 0009
+(server), kept in step. Checks: `npm run check:copy`, `npm run test:db`,
+`scripts/acceptance.mjs`.

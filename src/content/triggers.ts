@@ -36,7 +36,7 @@ export const TRIGGER_ORDER = ["honor", "courage", "commitment"] as const;
 /**
  * The S.T.A.R. System — ONE definition, used everywhere it appears: the
  * onboarding slide, the reminder sheet on every Mission, Settings → How It
- * Works and Using Your Set. Antonio's wording (Oct 26): Trigger is the spray
+ * Works and Using Your Set. Wording from curriculum revision 2 (Oct 28): Trigger is the spray
  * itself; the recall lives in Act, because remembering a time you lived the
  * value works almost as well as doing something new.
  */
@@ -57,13 +57,15 @@ export const STAR_STEPS = [
   {
     letter: "R",
     name: "Record",
-    text: "Log what you did in the app. It's one piece of proof that you're becoming the man you know yourself to be.",
+    // Curriculum revision 2: Record covers reflections, code and plans too,
+    // and is honest about which of them are evidence.
+    text: "Log what you did, recalled, defined, or planned. Completed actions build your evidence; plans describe practice still ahead.",
   },
 ] as const;
 
 /** Under the four steps, wherever they appear. */
 export const STAR_CLOSER =
-  "Do this a dozen times and you start to associate the scent with the emotion and the memory. Do it 30 times and it becomes hardwired.";
+  "Repeat the practice. Let your scent remind you of the values you choose to live.";
 
 /**
  * Accents match the bottles: Honor = silver, Courage = gold, Commitment = black.

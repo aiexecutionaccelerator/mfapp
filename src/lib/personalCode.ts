@@ -1,88 +1,68 @@
-import type { LessonResponse, Profile } from "@/lib/data/types";
+import { CODE_LINES, liveRecordFor, recordText } from "@/lib/curriculum";
+import type { Mission, Profile } from "@/lib/data/types";
 
 /**
- * My Personal Code — compiled live from its sources, never stored as its own
- * record, so it can't drift. Each line points at where its answer lives:
- * the identity statement on the profile (refined by Mission 13), the rest in
- * Mission question answers.
+ * My Personal Code, compiled live from the records that write it, never
+ * stored as its own copy, so it can't drift:
+ *
+ *   identity  — Mission 13, the same sentence as the profile's identity
+ *   8–12      — the five code lines: honor, courage, commitment, boundary,
+ *               promise
+ *   practice  — the practice plan from Mission 30, else Mission 27
+ *
+ * Editing a line edits its record (same record, same date). Records that
+ * already used a line (Missions 14 and 29) keep the version they used.
  */
 
 export interface PersonalCodeLine {
   key: string;
-  /** The sentence opener, e.g. "Honor means…". */
   label: string;
-  /** Where the answer comes from, shown when the line is empty. */
+  /** Where it comes from, named when the line is still empty. */
   source: string;
-  /** Mission slug whose answer fills the line; null = identity statement. */
-  slug: string | null;
+  /** The record behind it; null for an identity with no Mission 13 yet. */
+  record: Mission | null;
   value: string | null;
 }
 
 export function compilePersonalCode(
   profile: Profile,
-  responses: LessonResponse[],
+  missions: Mission[],
 ): PersonalCodeLine[] {
-  const answer = (slug: string): string | null =>
-    responses.find((row) => row.lesson_id === slug && row.prompt_id === "q")
-      ?.answer ?? null;
+  const identityRecord = liveRecordFor(missions, 13);
+  const practice = liveRecordFor(missions, 30) ?? liveRecordFor(missions, 27);
 
   return [
     {
       key: "identity",
       label: "I am becoming a man who…",
       source: "Mission 13",
-      slug: "m13",
-      value: answer("m13") ?? profile.identity_statement,
+      record: identityRecord,
+      value:
+        profile.identity_statement ??
+        (identityRecord ? recordText(identityRecord) : null),
     },
+    ...CODE_LINES.map((line) => {
+      const record = liveRecordFor(missions, line.number);
+      return {
+        key: `m${line.number}`,
+        label: line.label,
+        source: `Mission ${line.number}`,
+        record,
+        value: record ? recordText(record) : null,
+      };
+    }),
     {
-      key: "honor",
-      label: "Honor means…",
-      source: "Mission 8",
-      slug: "m8",
-      value: answer("m8"),
-    },
-    {
-      key: "courage",
-      label: "Courage means…",
-      source: "Mission 9",
-      slug: "m9",
-      value: answer("m9"),
-    },
-    {
-      key: "commitment",
-      label: "Commitment means…",
-      source: "Mission 10",
-      slug: "m10",
-      value: answer("m10"),
-    },
-    {
-      key: "nonNegotiable",
-      label: "My non-negotiable is…",
-      source: "Mission 11",
-      slug: "m11",
-      value: answer("m11"),
-    },
-    {
-      key: "promise",
-      label: "The promise I am keeping is…",
-      source: "Mission 12",
-      slug: "m12",
-      value: answer("m12"),
-    },
-    {
-      key: "next",
-      label: "My next 30-day commitment is…",
-      source: "Mission 30",
-      slug: "m30",
-      value: answer("m30"),
+      key: "practice",
+      label: "My practice",
+      source: "Mission 27",
+      record: practice,
+      value: practice ? recordText(practice) : null,
     },
   ];
 }
 
-/** The current promise (Mission 12) — shown on the Progress screen. */
-export function currentPromise(responses: LessonResponse[]): string | null {
-  return (
-    responses.find((row) => row.lesson_id === "m12" && row.prompt_id === "q")
-      ?.answer ?? null
-  );
+/** The current promise (Mission 12). */
+export function currentPromise(missions: Mission[]): string | null {
+  const record = liveRecordFor(missions, 12);
+  return record ? recordText(record) : null;
 }

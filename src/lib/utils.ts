@@ -1,6 +1,5 @@
 import clsx, { type ClassValue } from "clsx";
-import { format, formatDistanceToNowStrict } from "date-fns";
-import type { MissionDraft } from "@/lib/data/types";
+import { addDays, format, formatDistanceToNowStrict, parseISO } from "date-fns";
 
 export function cn(...inputs: ClassValue[]): string {
   return clsx(inputs);
@@ -16,6 +15,11 @@ export function slugify(text: string): string {
 
 export function formatDate(iso: string): string {
   return format(new Date(iso), "MMM d");
+}
+
+/** A calendar day ("2026-11-05"), read in local time, not UTC. */
+export function formatDay(day: string): string {
+  return format(parseISO(day), "MMM d, yyyy");
 }
 
 export function formatTime(iso: string): string {
@@ -35,28 +39,8 @@ export function todayLocal(now: Date = new Date()): string {
   return format(now, "yyyy-MM-dd");
 }
 
-/* ---------- Mission draft (sessionStorage) ---------- */
-
-const DRAFT_KEY = "mission.draft";
-
-export function readDraft(): MissionDraft | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.sessionStorage.getItem(DRAFT_KEY);
-    return raw ? (JSON.parse(raw) as MissionDraft) : null;
-  } catch {
-    return null;
-  }
-}
-
-export function writeDraft(draft: MissionDraft): void {
-  if (typeof window === "undefined") return;
-  window.sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-}
-
-export function clearDraft(): void {
-  if (typeof window === "undefined") return;
-  window.sessionStorage.removeItem(DRAFT_KEY);
+export function tomorrowLocal(now: Date = new Date()): string {
+  return format(addDays(now, 1), "yyyy-MM-dd");
 }
 
 /* ---------- In-app reminder (localStorage) ---------- */

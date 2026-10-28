@@ -23,7 +23,10 @@ interface FieldProps {
   onBlur?: () => void;
   className?: string;
   inputClassName?: string;
+  /** Replaces the eyebrow style, e.g. for a question asked in full. */
+  labelClassName?: string;
   "aria-label"?: string;
+  "aria-describedby"?: string;
 }
 
 export default function Field({
@@ -42,6 +45,7 @@ export default function Field({
   onBlur,
   className,
   inputClassName,
+  labelClassName,
   ...rest
 }: FieldProps) {
   const id = useId();
@@ -60,10 +64,10 @@ export default function Field({
       {label && (
         <label
           htmlFor={id}
-          className={cn(
-            "eyebrow mb-2 block",
-            prominent ? "text-gold-300" : "text-ink-2",
-          )}
+          className={
+            labelClassName ??
+            cn("eyebrow mb-2 block", prominent ? "text-gold-300" : "text-ink-2")
+          }
         >
           {label}
         </label>
@@ -84,6 +88,7 @@ export default function Field({
           onBlur={onBlur}
           onChange={(event) => onChange(event.target.value)}
           aria-label={rest["aria-label"] ?? label}
+          aria-describedby={rest["aria-describedby"]}
         />
       ) : (
         <input
@@ -99,6 +104,7 @@ export default function Field({
           onBlur={onBlur}
           onChange={(event) => onChange(event.target.value)}
           aria-label={rest["aria-label"] ?? label}
+          aria-describedby={rest["aria-describedby"]}
         />
       )}
       {maxLength !== undefined && (

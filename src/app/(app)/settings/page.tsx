@@ -32,7 +32,7 @@ import {
   unsubscribeFromPush,
   usePushSupport,
 } from "@/lib/push";
-import { cn } from "@/lib/utils";
+import { cn, tomorrowLocal } from "@/lib/utils";
 
 /** "0.5.0-beta" → "Beta 0.5"; "1.2.0" → "v1.2.0". */
 function formatVersion(v: string): string {
@@ -127,7 +127,8 @@ export default function SettingsPage() {
     const trimmed = identity.trim();
     if (trimmed === (profile.identity_statement ?? "")) return;
     try {
-      await store.updateProfile({ identity_statement: trimmed || null });
+      // Same sentence as Mission 13: updates that record too, never a new one.
+      await store.updateIdentity(trimmed || null);
     } catch {
       showToast("Couldn't save that. Please try again.", {
         retry: () => void saveIdentity(),
@@ -224,11 +225,15 @@ export default function SettingsPage() {
           (m) => m.mission_number === n && m.status === "completed",
         );
         if (exists) continue;
-        await store.logProof({
-          trigger: def.recommendedTrigger,
-          action_text: `Seeded proof for Mission ${n}`,
-          action_category: "dev-seed",
+        await store.saveRecord({
           mission_number: n,
+          trigger: def.recommendedTrigger,
+          text: `Seeded record for Mission ${n}`,
+          confirmed: true,
+          context: null,
+          focus_area: n === 21 ? "Work" : null,
+          frequency: n === 27 ? "Daily" : null,
+          review_date: n === 27 ? tomorrowLocal() : null,
         });
       }
       showToast("Missions 1–29 completed.");

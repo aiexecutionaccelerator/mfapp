@@ -1,17 +1,35 @@
 import { createClient } from "@/lib/supabase/client";
-import type {
-  AppSnapshot,
-  DataBackend,
-  LessonResponse,
-  Mission,
-  Profile,
+import { recordFor, recordText } from "@/lib/curriculum";
+import {
+  ConflictError,
+  LESSON_ANSWER_MAX,
+  ValidationError,
+  type AppSnapshot,
+  type DataBackend,
+  type Draft,
+  type LessonResponse,
+  type Mission,
+  type Profile,
 } from "@/lib/data/types";
-import { LESSON_ANSWER_MAX } from "@/lib/data/types";
 
 /** Supabase backend — used whenever Supabase env vars are configured. */
 
 const MISSION_COLUMNS =
-  "id,user_id,trigger,action_text,action_category,status,started_at,completed_at,ended_at,reflection,mission_number,question_answer,photo_url";
+  "id,user_id,trigger,action_text,action_category,status,started_at,completed_at,ended_at,reflection,mission_number,question_answer,photo_url,kind,curriculum_version,confirmed,context,focus_area,frequency,review_date,updated_at,removed_at,history";
+
+const DRAFT_COLUMNS =
+  "mission_number,curriculum_version,text,trigger,focus_area,frequency,review_date,context,updated_at";
+
+/**
+ * The database enforces the Mission rules (migration 0009) and answers a
+ * broken one with a plain-language message (SQLSTATE P0001). Pass those on
+ * as ValidationError so the screen can show them beside the form.
+ */
+function asAppError(error: { code?: string; message?: string }): Error {
+  if (error.code === "P0001" || error.code === "23514")
+    return new ValidationError(error.message ?? "That can't be saved.");
+  return error instanceof Error ? error : new Error(error.message);
+}
 
 const RESPONSE_COLUMNS = "lesson_id,prompt_id,answer,updated_at";
 
@@ -42,24 +60,25 @@ export const supabaseBackend: DataBackend = {
         profile: Profile | null;
         missions: Mission[] | null;
         lesson_responses?: LessonResponse[] | null;
+        drafts?: Draft[] | null;
       };
-      if (payload.profile && "owns_set" in payload.profile) {
+      if (payload.profile && "owns_set" in payload.profile && payload.drafts) {
         return {
           profile: payload.profile,
           missions: payload.missions ?? [],
-          lessonResponses:
-            payload.lesson_responses ??
-            (await supabaseBackend.listLessonResponses().catch(() => [])),
+          lessonResponses: payload.lesson_responses ?? [],
+          drafts: payload.drafts,
         };
       }
     }
 
-    const [profile, missions, lessonResponses] = await Promise.all([
+    const [profile, missions, lessonResponses, drafts] = await Promise.all([
       supabaseBackend.getProfile(),
       supabaseBackend.listMissions(),
       supabaseBackend.listLessonResponses().catch(() => []),
+      supabaseBackend.listDrafts(),
     ]);
-    return { profile, missions, lessonResponses };
+    return { profile, missions, lessonResponses, drafts };
   },
 
   async getProfile(): Promise<Profile> {
@@ -228,6 +247,180 @@ export const supabaseBackend: DataBackend = {
       .single();
     if (error) throw error;
     return data as unknown as Mission;
+  },
+
+  async saveRecord(input): Promise<Mission> {
+    const { supabase, user } = await requireUser();
+    const text = input.text.trim();
+    // kind and curriculum_version are set by the database, not sent.
+    const fields = {
+      trigger: input.trigger,
+      action_text: text,
+      reflection: text,
+      status: "completed",
+      completed_at: new Date().toISOString(),
+      confirmed: input.confirmed,
+      context: input.context,
+      focus_area: input.focus_area ?? null,
+      frequency: input.frequency ?? null,
+      review_date: input.review_date ?? null,
+      photo_url: input.photo_url ?? null,
+    };
+
+    const resolve = async (): Promise<Mission> => {
+      const { data: rows, error } = await supabase
+        .from("missions")
+        .select(MISSION_COLUMNS)
+        .eq("user_id", user.id)
+        .eq("mission_number", input.mission_number);
+      if (error) throw error;
+      const existing = recordFor(
+        (rows ?? []) as unknown as Mission[],
+        input.mission_number,
+      );
+      if (!existing) throw new Error("Mission not found");
+      if (existing.status === "completed") {
+        // The same save again (double tap, retry) is not a conflict.
+        if (recordText(existing) === text && existing.trigger === input.trigger)
+          return existing;
+        throw new ConflictError(
+          "This Mission was already completed in another tab or device.",
+        );
+      }
+      // A row left in progress by the old two-step flow: finish it.
+      const { data, error: updateError } = await supabase
+        .from("missions")
+        .update(fields)
+        .eq("id", existing.id)
+        .eq("status", "active")
+        .select(MISSION_COLUMNS);
+      if (updateError) throw asAppError(updateError);
+      const updated = (data ?? [])[0] as unknown as Mission | undefined;
+      return updated ?? resolve();
+    };
+
+    const { data, error } = await supabase
+      .from("missions")
+      .insert({
+        user_id: user.id,
+        mission_number: input.mission_number,
+        action_category: "mission",
+        ...fields,
+      })
+      .select(MISSION_COLUMNS)
+      .single();
+
+    let saved: Mission;
+    if (error) {
+      // One record per Mission: a unique-index hit means it already exists.
+      if (error.code !== "23505") throw asAppError(error);
+      saved = await resolve();
+    } else saved = data as unknown as Mission;
+
+    await supabaseBackend.deleteDraft(input.mission_number).catch(() => {});
+    return saved;
+  },
+
+  async editRecord(id, patch, expectedUpdatedAt): Promise<Mission> {
+    const { supabase } = await requireUser();
+    const { text, ...rest } = patch;
+    const current = await supabaseBackend.getMission(id);
+    if (!current) throw new Error("Record not found");
+    const update: Record<string, unknown> = { ...rest };
+    if (text !== undefined) {
+      update.action_text = text.trim();
+      if (current.status === "completed") update.reflection = text.trim();
+    }
+    const { data, error } = await supabase
+      .from("missions")
+      .update(update)
+      .eq("id", id)
+      .eq("updated_at", expectedUpdatedAt)
+      .select(MISSION_COLUMNS);
+    if (error) throw asAppError(error);
+    const updated = (data ?? [])[0] as unknown as Mission | undefined;
+    if (!updated)
+      throw new ConflictError(
+        "This record changed in another tab or device. Reload to see the latest.",
+      );
+    return updated;
+  },
+
+  async reviseLegacy(id, input, expectedUpdatedAt): Promise<Mission> {
+    // The database moves the old wording into `history` itself when a
+    // revision 1 row is given curriculum_version 2 (migration 0009).
+    const { supabase } = await requireUser();
+    const text = input.text.trim();
+    const { data, error } = await supabase
+      .from("missions")
+      .update({
+        curriculum_version: 2,
+        trigger: input.trigger,
+        action_text: text,
+        reflection: text,
+        confirmed: input.confirmed,
+        context: input.context,
+        focus_area: input.focus_area ?? null,
+        frequency: input.frequency ?? null,
+        review_date: input.review_date ?? null,
+      })
+      .eq("id", id)
+      .eq("updated_at", expectedUpdatedAt)
+      .select(MISSION_COLUMNS);
+    if (error) throw asAppError(error);
+    const updated = (data ?? [])[0] as unknown as Mission | undefined;
+    if (!updated)
+      throw new ConflictError(
+        "This record changed in another tab or device. Reload to see the latest.",
+      );
+    await supabaseBackend.deleteDraft(input.mission_number).catch(() => {});
+    return updated;
+  },
+
+  async setRemoved(id, removed): Promise<Mission> {
+    const { supabase } = await requireUser();
+    const { data, error } = await supabase
+      .from("missions")
+      .update({ removed_at: removed ? new Date().toISOString() : null })
+      .eq("id", id)
+      .select(MISSION_COLUMNS)
+      .single();
+    if (error) throw asAppError(error);
+    return data as unknown as Mission;
+  },
+
+  async listDrafts(): Promise<Draft[]> {
+    const { supabase, user } = await requireUser();
+    const { data, error } = await supabase
+      .from("mission_drafts")
+      .select(DRAFT_COLUMNS)
+      .eq("user_id", user.id);
+    if (error) throw error;
+    return (data ?? []) as unknown as Draft[];
+  },
+
+  async saveDraft(draft): Promise<Draft> {
+    const { supabase, user } = await requireUser();
+    const { data, error } = await supabase
+      .from("mission_drafts")
+      .upsert(
+        { ...draft, user_id: user.id, updated_at: new Date().toISOString() },
+        { onConflict: "user_id,mission_number" },
+      )
+      .select(DRAFT_COLUMNS)
+      .single();
+    if (error) throw asAppError(error);
+    return data as unknown as Draft;
+  },
+
+  async deleteDraft(missionNumber): Promise<void> {
+    const { supabase, user } = await requireUser();
+    const { error } = await supabase
+      .from("mission_drafts")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("mission_number", missionNumber);
+    if (error) throw error;
   },
 
   async listLessonResponses(): Promise<LessonResponse[]> {

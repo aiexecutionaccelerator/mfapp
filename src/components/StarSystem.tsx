@@ -12,7 +12,7 @@ export default function StarSystem({
   closer = true,
 }: {
   className?: string;
-  /** The "a dozen times… 30 times" line under the cards. */
+  /** The "Repeat the practice" line under the cards. */
   closer?: boolean;
 }) {
   return (

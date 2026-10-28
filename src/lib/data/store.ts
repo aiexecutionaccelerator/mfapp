@@ -2,10 +2,13 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { data } from "@/lib/data";
+import { liveRecordFor } from "@/lib/curriculum";
 import type {
+  Draft,
   LessonResponse,
   Mission,
   Profile,
+  RecordInput,
   Trigger,
 } from "@/lib/data/types";
 
@@ -27,6 +30,7 @@ interface Cache {
   profile: Profile | null;
   missions: Mission[] | null;
   lessonResponses: LessonResponse[] | null;
+  drafts: Draft[] | null;
   error: Error | null;
 }
 
@@ -34,6 +38,7 @@ const EMPTY: Cache = {
   profile: null,
   missions: null,
   lessonResponses: null,
+  drafts: null,
   error: null,
 };
 
@@ -74,10 +79,10 @@ function load(): Promise<void> {
   const startedAt = Date.now();
   inFlight = data
     .loadAll()
-    .then(({ profile, missions, lessonResponses }) => {
+    .then(({ profile, missions, lessonResponses, drafts }) => {
       if (lastWriteAt > startedAt) return; // stale vs a newer write — drop
       loadedAt = Date.now();
-      publish({ profile, missions, lessonResponses, error: null });
+      publish({ profile, missions, lessonResponses, drafts, error: null });
     })
     .catch((cause: unknown) => {
       publish({
@@ -100,7 +105,8 @@ function ensureLoaded(): void {
   if (
     cache.profile === null ||
     cache.missions === null ||
-    cache.lessonResponses === null
+    cache.lessonResponses === null ||
+    cache.drafts === null
   ) {
     void load();
     return;
@@ -149,6 +155,14 @@ function putLessonResponse(
   publish({ ...cache, lessonResponses: row ? [...rest, row] : rest });
 }
 
+function putDraft(missionNumber: number, draft: Draft | null): void {
+  lastWriteAt = Date.now();
+  const current = cache.drafts;
+  if (!current) return;
+  const rest = current.filter((d) => d.mission_number !== missionNumber);
+  publish({ ...cache, drafts: draft ? [...rest, draft] : rest });
+}
+
 function clearCache(): void {
   loadedAt = 0;
   publish(EMPTY);
@@ -173,6 +187,66 @@ export const store = {
     const profile = await data.updateProfile(patch);
     putProfile(profile);
     return profile;
+  },
+
+  /**
+   * The identity statement has one home with two doors: the profile and
+   * Mission 13. Editing it in Settings updates the same Mission 13 record
+   * (never a second one), and saving 13 updates the profile.
+   */
+  async updateIdentity(statement: string | null): Promise<Profile> {
+    const profile = await store.updateProfile({ identity_statement: statement });
+    const record = cache.missions ? liveRecordFor(cache.missions, 13) : null;
+    if (record && statement && statement !== (record.reflection ?? record.action_text)) {
+      const updated = await data.editRecord(record.id, { text: statement }, record.updated_at);
+      putMission(updated);
+    }
+    return profile;
+  },
+
+  /** Completes a Mission (any kind). Clears its draft. */
+  async saveRecord(input: RecordInput): Promise<Mission> {
+    const record = await data.saveRecord(input);
+    putMission(record);
+    putDraft(input.mission_number, null);
+    if (input.mission_number === 13)
+      putProfile(await data.updateProfile({ identity_statement: record.reflection }));
+    return record;
+  },
+
+  async editRecord(
+    record: Mission,
+    patch: Parameters<typeof data.editRecord>[1],
+  ): Promise<Mission> {
+    const updated = await data.editRecord(record.id, patch, record.updated_at);
+    putMission(updated);
+    if (updated.mission_number === 13 && patch.text !== undefined)
+      putProfile(await data.updateProfile({ identity_statement: updated.reflection }));
+    return updated;
+  },
+
+  async reviseLegacy(record: Mission, input: RecordInput): Promise<Mission> {
+    const updated = await data.reviseLegacy(record.id, input, record.updated_at);
+    putMission(updated);
+    putDraft(input.mission_number, null);
+    return updated;
+  },
+
+  async setRemoved(id: string, removed: boolean): Promise<Mission> {
+    const updated = await data.setRemoved(id, removed);
+    putMission(updated);
+    return updated;
+  },
+
+  async saveDraft(draft: Omit<Draft, "updated_at">): Promise<Draft> {
+    const saved = await data.saveDraft(draft);
+    putDraft(draft.mission_number, saved);
+    return saved;
+  },
+
+  async deleteDraft(missionNumber: number): Promise<void> {
+    await data.deleteDraft(missionNumber);
+    putDraft(missionNumber, null);
   },
 
   async createMission(input: {
@@ -312,6 +386,7 @@ export interface AppData {
   profile: Profile | null;
   missions: Mission[] | null;
   lessonResponses: LessonResponse[] | null;
+  drafts: Draft[] | null;
   /** True only until the first successful load — never during a revalidate. */
   loading: boolean;
   error: Error | null;
@@ -333,10 +408,12 @@ export function useAppData(): AppData {
     profile: snapshot.profile,
     missions: snapshot.missions,
     lessonResponses: snapshot.lessonResponses,
+    drafts: snapshot.drafts,
     loading:
       snapshot.profile === null ||
       snapshot.missions === null ||
-      snapshot.lessonResponses === null,
+      snapshot.lessonResponses === null ||
+      snapshot.drafts === null,
     error: snapshot.error,
     refresh: refreshAppData,
   };

@@ -14,7 +14,8 @@ As soon as the URL and anon key are set, the app leaves demo mode.
 ## 2. Apply the migrations
 
 **Option A — SQL editor (fastest):** open the SQL editor in the Supabase
-dashboard and run every file in `migrations/` in order (`0001` … `0007`).
+dashboard and run every file in `migrations/` in order (`0001` … `0009`).
+Skip `0009_down.sql`: it is the rollback for 0009, run only by hand.
 
 **Option B — Supabase CLI:**
 
@@ -35,8 +36,18 @@ profile's `identity_statement`/`owns_set`/`set_status`, the missions table's
 Mission unique index, the insert-only `analytics_events` table, and the rewritten
 admin-notify trigger (fires on the 30th Mission proof, not the 30th lesson).
 Like `0006`, `0007` contains a `<NOTIFY_SECRET>` placeholder to substitute at
-apply time. `0002`, `0004`, `0005` and `0007` each replace
+apply time. `0008` adds the `none` set status. `0009` is curriculum revision 2:
+it backs up `missions`, adds record kinds, wording versions, confirmation,
+context snapshots, focus/frequency/review date, soft removal and history,
+the `mission_drafts` table, and the `missions_validate` trigger that enforces
+the Mission rules at the write boundary. It is idempotent and needs no
+secrets. `0002`, `0004`, `0005`, `0007` and `0009` each replace
 `get_app_data()`, so run them in order.
+
+**Test the migrations locally** (no Supabase needed): `npm run test:db` runs
+every migration on an in-process Postgres with first-curriculum data, then
+checks the revision 2 rules, the migration of old records, row-level
+security and the rollback.
 
 ## 3. Configure the OTP code email
 

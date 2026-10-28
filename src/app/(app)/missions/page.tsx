@@ -10,14 +10,14 @@ import Headline from "@/components/ui/Headline";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import Wordmark from "@/components/Wordmark";
-import { MISSIONS, type MissionDef } from "@/content/missions";
+import { MISSIONS, STAGES, type MissionDef } from "@/content/missions";
 import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
 import { useAppData } from "@/lib/data/store";
 import {
   MISSION_COUNT,
+  completedMissionNumbers,
   computeStats,
-  missionNumbersWithStatus,
   nextMissionNumber,
 } from "@/lib/stats";
 import { cn } from "@/lib/utils";
@@ -25,10 +25,12 @@ import { cn } from "@/lib/utils";
 function MissionCard({
   mission,
   complete,
+  drafted,
   next = false,
 }: {
   mission: MissionDef;
   complete: boolean;
+  drafted: boolean;
   next?: boolean;
 }) {
   return (
@@ -54,9 +56,12 @@ function MissionCard({
             </span>
             {complete ? (
               <span className="text-[var(--success)]">COMPLETE</span>
+            ) : drafted ? (
+              <span className="text-gold-300">DRAFT SAVED</span>
             ) : (
               <span>NOT STARTED</span>
             )}
+            <span>{mission.time}</span>
             {mission.youtubeId && (
               <span className="flex items-center gap-1">
                 <Play size={12} aria-hidden />
@@ -78,7 +83,7 @@ function MissionCard({
 /** The home of the app: the thirty Missions, and one door out to a one-off. */
 export default function MissionListPage() {
   const { showToast } = useToast();
-  const { profile, missions, error, refresh } = useAppData();
+  const { profile, missions, drafts, error, refresh } = useAppData();
 
   const [showAll, setShowAll] = useState(false);
 
@@ -100,7 +105,8 @@ export default function MissionListPage() {
   }
 
   const stats = computeStats(missions);
-  const completed = missionNumbersWithStatus(missions, "completed");
+  const completed = completedMissionNumbers(missions);
+  const drafted = new Set((drafts ?? []).map((d) => d.mission_number));
   const continueNumber = nextMissionNumber(missions);
   const continueMission = MISSIONS.find((m) => m.number === continueNumber);
 
@@ -127,7 +133,8 @@ export default function MissionListPage() {
 
       <Headline className="mt-6">YOUR 30-DAY MISSION</Headline>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        30 Missions. Each one takes about a minute.
+        30 Missions, one a day. Each builds on the last. Miss a day and nothing
+        resets. Pick up at the next one.
       </p>
 
       {profile.set_status === "ordered" && (
@@ -138,24 +145,53 @@ export default function MissionListPage() {
 
       {!continueMission && (
         <p className="mt-6 text-[17px] leading-relaxed text-ink-1">
-          30 Missions. 30 proofs. Your Proof Log stays open.
+          All 30 Missions done. Your Proof Log stays open.
         </p>
       )}
 
       {/* Progressive: what's next, not a wall of thirty. Everything stays one
           tap away; nothing is locked. */}
       <section className="mt-7">
-        <Eyebrow>{showAll ? "ALL MISSIONS" : "WHAT'S NEXT"}</Eyebrow>
-        <div className="mt-3 space-y-2.5">
-          {visible.map((mission) => (
-            <MissionCard
-              key={mission.number}
-              mission={mission}
-              complete={completed.has(mission.number)}
-              next={mission.number === continueNumber}
-            />
-          ))}
-        </div>
+        {showAll ? (
+          // All thirty, in their four stages. Nothing is locked.
+          Object.values(STAGES).map((stage) => (
+            <div key={stage.label} className="mb-6">
+              <Eyebrow>
+                {stage.label} · {stage.range[0]}–{stage.range[1]}
+              </Eyebrow>
+              <div className="mt-3 space-y-2.5">
+                {visible
+                  .filter(
+                    (m) => m.number >= stage.range[0] && m.number <= stage.range[1],
+                  )
+                  .map((mission) => (
+                    <MissionCard
+                      key={mission.number}
+                      mission={mission}
+                      complete={completed.has(mission.number)}
+                      drafted={drafted.has(mission.number)}
+                      next={mission.number === continueNumber}
+                    />
+                  ))}
+              </div>
+            </div>
+          ))
+        ) : (
+          <>
+            <Eyebrow>WHAT&apos;S NEXT</Eyebrow>
+            <div className="mt-3 space-y-2.5">
+              {visible.map((mission) => (
+                <MissionCard
+                  key={mission.number}
+                  mission={mission}
+                  complete={completed.has(mission.number)}
+                  drafted={drafted.has(mission.number)}
+                  next={mission.number === continueNumber}
+                />
+              ))}
+            </div>
+          </>
+        )}
         <Button
           variant="ghost"
           className="mt-4"

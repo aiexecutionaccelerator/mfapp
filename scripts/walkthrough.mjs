@@ -91,7 +91,7 @@ for (const step of ["Select", "Trigger", "Act", "Record"])
 await page.getByText("Select your Scent Trigger.").first().waitFor();
 if ((await page.getByText(/core value you need/).count()) > 0)
   fail("S still says 'core value'");
-await page.getByText("it becomes hardwired").waitFor();
+await page.getByText("Repeat the practice. Let your scent remind you").first().waitFor();
 await page.getByText("You condition yourself to a Scent Trigger").waitFor();
 await shot("onboarding-2-star");
 await page.getByRole("button", { name: "NEXT" }).click();
@@ -102,19 +102,17 @@ await page.getByText("You have everything you need").waitFor();
 await shot("onboarding-3");
 await page.getByRole("button", { name: "START MISSION 1" }).click();
 
-// D — Mission 1: one field, one click
+// D — Mission 1 (curriculum revision 2): the S.T.A.R. steps as a form
 await page.waitForURL("**/missions/1");
-await page.getByText("Prove It").first().waitFor();
-// The four steps, in order, with SELECT before any spray
+await page.getByText("Give Credit Where It Is Due").first().waitFor();
+await page.getByText("BUILD SELF-TRUST · MISSION 1").waitFor();
 for (const step of ["SELECT", "TRIGGER", "ACT", "RECORD"])
   await page.getByText(step, { exact: true }).first().waitFor();
-await page.getByText("Spray your selected fragrance.").waitFor();
-await page.getByText("This should take you less than 60 seconds.").waitFor();
+await page.getByText("Spray the fragrance and breathe it in. Then begin the assigned task.").waitFor();
+await page.getByText("About 2 minutes · Action").waitFor();
+await page.getByText("DONE WHEN").waitFor();
 await page.getByText("Let's get started with the S.T.A.R. System.").waitFor();
-if ((await page.getByText("Spray your Scent Trigger").count()) > 0)
-  fail("a spray instruction is back inside the Mission copy");
-// The reminder opens the same four cards — at the TOP, not scrolled down to
-// its button (focus used to land on GOT IT and drag the sheet with it)
+// The reminder opens the same four cards, at the TOP
 await page.getByRole("button", { name: /reminder of how the S.T.A.R. System works/ }).click();
 const starSheet = page.getByRole("dialog", { name: "THE S.T.A.R. SYSTEM" });
 await starSheet.waitFor();
@@ -123,126 +121,125 @@ if ((await starSheet.evaluate((el) => el.scrollTop)) !== 0)
   fail("the S.T.A.R. reminder opened scrolled down instead of at the top");
 await shot("star-reminder", { full: false });
 await page.getByRole("button", { name: "GOT IT" }).click();
-if ((await page.getByRole("button", { name: /DECLARE/ }).count()) > 0)
-  fail("declare step is back");
-if ((await page.getByText("Use a different fragrance").count()) > 0)
-  fail("fragrance picker is back");
-if ((await page.getByText("Private. Only you ever see this.").count()) > 0)
-  fail("private-question line is back");
 await shot("mission-1");
-// A commitment: the field opens on "I commit to", and that alone isn't enough
-const m1 = page.getByLabel("What are you going to do?");
-if ((await m1.inputValue()) !== "I commit to ")
-  fail("the commitment field did not open on 'I commit to'");
-if (!(await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).isDisabled()))
-  fail("the bare 'I commit to' was accepted as an answer");
-// Three examples to tap; one tap fills the field and they all go
-if ((await page.getByRole("button", { name: /Use this example/ }).count()) !== 3)
-  fail("Mission 1 should offer three examples");
-await page.getByRole("button", { name: /Use this example/ }).first().click();
-if (!(await m1.inputValue()).startsWith("I commit to telling someone"))
-  fail("tapping the example did not fill the field");
-if ((await page.getByRole("button", { name: /Use this example/ }).count()) > 0)
-  fail("the examples are still there once the field has an answer");
+// The field opens blank. Options and examples are help: opening them never
+// fills, ticks or saves anything (C03).
+const m1 = page.getByLabel("Who did you thank, and what did you tell them?");
+if ((await m1.inputValue()) !== "") fail("Mission 1's field should open blank");
+await page.getByRole("button", { name: "Choose one way to do it" }).click();
+await page.getByText("Give a coworker credit for something they made easier.").waitFor();
+await page.getByRole("button", { name: "Need an example?" }).click();
+await page.getByText("For inspiration. Write what is true for you.").waitFor();
+await page.getByText(/I thanked my brother for checking in/).waitFor();
+if ((await m1.inputValue()) !== "") fail("opening the examples filled the field");
+if (await page.getByLabel("I have taken this action.").isChecked())
+  fail("the action confirmation is ticked by default");
+await shot("mission-1-options-and-examples");
+// Honest completion: text AND confirmation (C04)
+await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).click();
+await page.getByText("Write your record first.").waitFor();
+await m1.fill("I thanked my brother for checking in on me during a rough week.");
+await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).click();
+await page.getByText(/Check “I have taken this action.”/).waitFor();
+await shot("mission-1-confirm-required");
+await page.getByLabel("I have taken this action.").check();
 await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).click();
 await page.getByText("MISSION COMPLETE.").waitFor();
 await page.getByText("You acted with Honor.").waitFor();
 await shot("mission-1-complete");
 
-// It must land as a Proof straight away, with the Mission marked complete
-await page.getByRole("button", { name: "CONTINUE TO THE NEXT MISSION" }).click();
+// E — Mission 2: change the scent, save a draft, come back, finish
+await page.getByRole("button", { name: "CONTINUE TO MISSION 2" }).click();
 await page.waitForURL("**/missions/2");
-await page.getByText("Stop Putting It Off").first().waitFor();
+await page.getByText("Break the Avoidance Loop").first().waitFor();
 await page.getByText("Let's use the S.T.A.R. System.").waitFor();
 if ((await page.getByText("Let's get started with the S.T.A.R. System.").count()) > 0)
   fail("'get started' belongs on Mission 1 only");
-// The fragrance cue carries the T of S.T.A.R. now the ritual screen is gone
 await page.getByText("Recommended", { exact: true }).waitFor();
-await shot("mission-2");
-// All three bottles are on screen under the Select step
-await page.getByText("Select your Scent Trigger.").waitFor();
-// One tap changes the one he is wearing
 await page.getByRole("radio", { name: "honor" }).click();
-// The recommendation stays marked on its own tile even once he overrides it
-await page.getByText("Recommended", { exact: true }).waitFor();
 if ((await page.getByRole("radio", { name: "honor" }).getAttribute("aria-checked")) !== "true")
   fail("switching fragrance did not stick");
+await page.getByText("Recommended", { exact: true }).waitFor();
 await shot("mission-2-fragrance-switched");
 await page.getByRole("radio", { name: "courage" }).click();
-await page.getByText("Recommended", { exact: true }).waitFor();
-
-// E — Mission 2, completed from the list side
-await page
-  .getByLabel("What are you done putting off?")
-  .fill("I commit to calling the insurance company about the claim.");
+const m2 = page.getByLabel("What were you avoiding, and what first step did you take?");
+await m2.fill("I was avoiding the insurance call.");
+await page.getByRole("button", { name: "SAVE DRAFT FOR LATER" }).click();
+await page.getByText(/Draft saved .* It doesn't count as complete./).waitFor();
+await page.goto(`${BASE}/missions/2`);
+await page.getByText("DRAFT SAVED", { exact: true }).waitFor();
+if ((await m2.inputValue()) !== "I was avoiding the insurance call.")
+  fail("the draft didn't survive a reload");
+await shot("mission-2-draft");
+await m2.fill("I was avoiding the insurance call. I called and opened the claim.");
+await page.getByLabel("I have taken this action.").check();
 await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 2" }).click();
-await page.getByText("MISSION COMPLETE.").waitFor();
-
+await page.getByText("You acted with Courage.").waitFor();
 await page.goto(`${BASE}/missions/2`);
 await page.getByText("COMPLETE", { exact: true }).first().waitFor();
-if ((await page.getByText("calling the insurance company").count()) === 0)
-  fail("the proof is not shown on the completed Mission");
+await page.getByText("opened the claim").waitFor();
 await shot("mission-2-complete");
 
-// F — Mission list: Complete / Not Started only, all 30 one tap away
+// F — Mission list: next by number, all 30 in their four stages
 await page.goto(`${BASE}/missions`);
 await page.getByText("YOUR 30-DAY MISSION").first().waitFor();
 await page.getByText("2/30 COMPLETE").waitFor();
-if ((await page.getByText("IN PROGRESS").count()) > 0)
-  fail("an in-progress state survived");
+await page.getByText("NEXT · MISSION 3").waitFor();
 await shot("mission-list");
 await page.getByRole("button", { name: /SHOW ALL 30 MISSIONS/ }).click();
-await page.getByText("ALL MISSIONS").waitFor();
-if ((await page.getByText("MISSION 30").count()) === 0)
-  fail("Mission 30 not reachable");
-
-// The three bottles at the foot of the list: side by side, tap to read
+for (const stage of ["Build self-trust · 1–7", "Set your standards · 8–14", "Put your values to work · 15–21", "Build lasting momentum · 22–30"])
+  await page.getByText(stage, { exact: true }).waitFor();
+await shot("mission-list-all", { full: true });
 await page.getByRole("button", { name: /SHOW LESS/ }).click();
 await page.getByText("YOUR THREE SCENT TRIGGERS").waitFor();
 await page.getByRole("button", { name: /What courage is for/i }).click();
-// The same words onboarding used — one description per value, everywhere
-if ((await page.getByText("You do what you know is right despite fear, danger, or pressure to do otherwise.").count()) === 0)
-  fail("the bottle doesn't show the onboarding definition");
-await page.getByText("Speak Honestly · Move First · Act Despite Fear").waitFor();
+await page.getByText("You do what you know is right despite fear, danger, or pressure to do otherwise.").first().waitFor();
 await shot("fragrance-trio");
 
-// G — A Mission that carries a photo (Mission 7)
+// G — Mission 7 carries the optional photo
 await page.goto(`${BASE}/missions/7`);
-await page.getByText("Build Your Shrine").first().waitFor();
+await page.getByText("Give Your Practice a Place").first().waitFor();
 await page
-  .getByLabel("Where did you put them?")
-  .fill("Top of the dresser — three bottles and my grandfather's watch.");
+  .getByLabel("Where did you put it, and after what everyday event will you begin?")
+  .fill("I put Honor beside my watch. After getting dressed, I will open the next mission.");
 await page.locator('input[type="file"]').setInputFiles(PHOTO);
 await page.getByLabel("Remove photo").waitFor();
+await page.getByLabel("I have taken this action.").check();
 await shot("mission-7-with-photo");
 await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 7" }).click();
 await page.getByText("MISSION COMPLETE.").waitFor();
 
-// H — A Personal Code Mission writes its answer through to the code
+// H — A code Mission saves to the Personal Code, and isn't praised as a deed
 await page.goto(`${BASE}/missions/8`);
-await page.getByLabel("For me, honor means…").fill("Doing what I said I'd do, even when it costs me.");
-await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 8" }).click();
-await page.getByText("MISSION COMPLETE.").waitFor();
+await page.getByText("3–5 minutes · Code").waitFor();
+if ((await page.getByLabel("I have taken this action.").count()) > 0)
+  fail("a code Mission asks for action confirmation");
+await page.getByLabel("For me, honor means…").fill("Telling the truth about my mistakes and fixing what I can.");
+await page.getByRole("button", { name: "SAVE TO MY CODE" }).click();
+await page.getByText("Your Personal Code is taking shape.").waitFor();
+await shot("mission-8-code-saved");
 await page.goto(`${BASE}/personal-code`);
 await page.getByText("MY PERSONAL CODE").first().waitFor();
-if ((await page.getByText("Doing what I said I'd do").count()) === 0)
-  fail("Mission 8's answer did not reach the Personal Code");
-// …and points him at One-Off Actions, to live the code between Missions
+await page.getByText("Telling the truth about my mistakes").waitFor();
 await page.getByText("LIVE IT EVERY DAY").waitFor();
 await shot("personal-code");
 
-// Mission 13: his onboarding sentence pre-filled, AND options to tap
+// Mission 13: his identity statement pre-filled; viewing doesn't complete it
 await page.goto(`${BASE}/missions/13`);
 const m13 = page.getByLabel("I am becoming a man who…");
 await m13.waitFor();
 if ((await m13.inputValue()) !== "Keeps his word, acts despite fear, and follows through.")
-  fail("Mission 13 didn't pre-fill the sentence from onboarding");
-if ((await page.getByRole("button", { name: /Use this example/ }).count()) !== 3)
-  fail("Mission 13 should offer three options alongside the pre-fill");
+  fail("Mission 13 didn't pre-fill his identity statement");
+await page.getByText("NOT STARTED", { exact: true }).waitFor();
 await shot("mission-13");
-await page.getByRole("button", { name: /Use this example/ }).first().click();
-if ((await m13.inputValue()) !== "Keeps his word, even when it costs him.")
-  fail("tapping a Mission 13 option didn't replace the pre-fill");
+await page.goto(`${BASE}/missions`);
+await page.getByText("4/30 COMPLETE").waitFor();
+
+// Mission 22 explains what it needs and links back to 21
+await page.goto(`${BASE}/missions/22`);
+await page.getByText("BEFORE YOU COMPLETE THIS MISSION").waitFor();
+await page.getByRole("link", { name: /GO TO MISSION 21/ }).waitFor();
+await shot("mission-22-needs-aim");
 
 // I — One-off Action: value, one field, one click
 await page.goto(`${BASE}/missions`);
@@ -272,46 +269,46 @@ for (const path of ["/missions", "/log", "/progress", "/settings"]) {
     fail(`no buy row on ${path}`);
 }
 
-// J — Proof Log: every proof, Missions and one-offs together
+// J — Proof Log: every record, labelled with what it is
 await page.goto(`${BASE}/log`);
-await page.getByText("5 proofs logged").waitFor();
-// The intro line mentions One-Off Actions too, so match the row itself
-const oneOffRow = page
-  .getByRole("link")
-  .filter({ hasText: "ONE-OFF ACTION" })
-  .first();
+await page.getByText("5 records · 4 actions").waitFor();
+const oneOffRow = page.getByRole("link").filter({ hasText: "ONE-OFF ACTION" }).first();
 if ((await oneOffRow.count()) === 0) fail("no one-off entry");
-if ((await page.getByText("MISSION 2 · STOP PUTTING IT OFF").count()) === 0)
-  fail("no Mission entry");
+await page.getByText("MISSION 2 · BREAK THE AVOIDANCE LOOP").waitFor();
+const codeRow = page.getByRole("link").filter({ hasText: "MISSION 8 · DEFINE YOUR HONOR" });
+if ((await codeRow.getByText("CODE", { exact: true }).count()) !== 1)
+  fail("Mission 8 isn't labelled as Code in the log");
 await shot("log");
 
-// Edit an entry
+// Edit a one-off entry
 await oneOffRow.click();
-await page.getByRole("button", { name: "Edit or delete this entry" }).click();
-if ((await page.getByText("ADD A PHOTO").count()) > 0)
-  fail("the photo option is back in the Proof Log editor");
+await page.getByRole("button", { name: "Edit this entry" }).click();
 await page.getByLabel("What you did").fill("Made the call I'd been dodging for a month.");
 await page.getByRole("button", { name: "SAVE", exact: true }).click();
 await page.getByText("Made the call I'd been dodging for a month.").first().waitFor();
 await shot("log-entry-edited");
 
-// Delete a Mission proof → that Mission reads Not Started again
+// Remove a record, then restore it: same record, same date (D09)
 await page.goto(`${BASE}/log`);
-await page.getByText("MISSION 8 · HONOR, IN YOUR WORDS").click();
-await page.getByRole("button", { name: "Edit or delete this entry" }).click();
-await page.getByRole("button", { name: "Delete entry" }).click();
-await page.getByText("reads Not Started again").waitFor();
-await shot("log-delete-confirm");
-await page.getByRole("button", { name: "DELETE ENTRY", exact: true }).click();
-await page.getByText("PROOF LOG").first().waitFor();
+await codeRow.click();
+await page.getByRole("button", { name: "Remove this record" }).click();
+await page.getByText("Your words and date are kept").waitFor();
+await shot("log-remove-confirm", { full: false });
+await page.getByRole("button", { name: "REMOVE", exact: true }).click();
+await page.getByRole("button", { name: "RESTORE" }).waitFor();
 await page.goto(`${BASE}/missions/8`);
-await page.getByText("NOT STARTED").first().waitFor();
-// Re-log it for the numbers below
-await page.getByLabel("For me, honor means…").fill("Doing what I said I'd do, even when it costs me.");
-await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 8" }).click();
-await page.getByText("MISSION COMPLETE.").waitFor();
+await page.getByText("REMOVED", { exact: true }).first().waitFor();
+await page.goto(`${BASE}/missions`);
+await page.getByText("3/30 COMPLETE").waitFor();
+await page.goto(`${BASE}/missions/8`);
+await page.getByRole("button", { name: "RESTORE" }).click();
+await page.getByText("Restored.").waitFor();
+await page.getByText("Telling the truth about my mistakes").waitFor();
+await page.goto(`${BASE}/missions`);
+await page.getByText("4/30 COMPLETE").waitFor();
 
-// K — Progress: the value tiles count Missions, not just one-offs
+// K — Progress: actions only (Missions 1, 2, 7 and the one-off); x/30 counts
+// the code Mission too
 await page.goto(`${BASE}/progress`);
 await page.getByText("YOUR PROGRESS").waitFor();
 const tile = (label) =>
@@ -324,11 +321,9 @@ const tile = (label) =>
 const honor = Number(await tile("Honor"));
 const courage = Number(await tile("Courage"));
 const commitment = Number(await tile("Commitment"));
-if (honor + courage + commitment !== 5)
-  fail(`value tiles sum to ${honor + courage + commitment}, expected 5`);
-if (honor === 0) fail("Honor is 0 though Mission 8 was logged with Honor");
-if ((await page.getByText("Actions In Progress").count()) > 0)
-  fail("the Actions In Progress tile survived");
+if (honor + courage + commitment !== 4)
+  fail(`action tiles sum to ${honor + courage + commitment}, expected 4 (code isn't an action)`);
+if ((await tile("Missions Completed")) !== "4/30") fail("Missions Completed should read 4/30");
 await shot("progress");
 
 // L — Settings and the guides
@@ -376,45 +371,55 @@ for (const path of ["/share-card.png", "/opengraph-image", "/twitter-image"]) {
     fail(`${path} is not a PNG (${res.status()} ${res.headers()["content-type"]})`);
 }
 
-// M — 30/30: seed the rest straight into demo storage, then finish 30 for real
+// M — 30/30: seed 1–29 as valid revision 2 records, then finish 30 for real
 await page.evaluate(() => {
   const read = JSON.parse(localStorage.getItem("mission.missions") ?? "[]");
   const now = Date.now();
   const triggers = ["honor", "courage", "commitment"];
+  const kind = (n) =>
+    n === 6 ? "reflection" : n >= 8 && n <= 13 ? "code" : [21, 27, 30].includes(n) ? "plan" : "action";
+  const tomorrow = new Date(now + 86400000).toISOString().slice(0, 10);
   for (let n = 1; n <= 29; n += 1) {
-    if (read.some((m) => m.mission_number === n && m.status === "completed"))
-      continue;
+    if (read.some((m) => m.mission_number === n && m.status === "completed")) continue;
+    const at = new Date(now - (30 - n) * 86400000).toISOString();
     read.push({
-      id: crypto.randomUUID(),
-      user_id: "demo-user",
-      trigger: triggers[n % 3],
-      action_text: `Seeded proof for Mission ${n}`,
-      action_category: "dev-seed",
-      status: "completed",
-      started_at: new Date(now - (30 - n) * 86400000).toISOString(),
-      completed_at: new Date(now - (30 - n) * 86400000 + 3600000).toISOString(),
-      ended_at: null,
-      reflection: `Seeded proof for Mission ${n}`,
-      mission_number: n,
-      question_answer: null,
-      photo_url: null,
+      id: crypto.randomUUID(), user_id: "demo-user", trigger: triggers[n % 3],
+      action_text: `Seeded record for Mission ${n}`, reflection: `Seeded record for Mission ${n}`,
+      action_category: "dev-seed", status: "completed", started_at: at, completed_at: at,
+      ended_at: null, mission_number: n, question_answer: null, photo_url: null,
+      kind: kind(n), curriculum_version: 2, confirmed: kind(n) === "action", context: {},
+      focus_area: n === 21 ? "Work" : null, frequency: n === 27 ? "Daily" : null,
+      review_date: n === 27 ? tomorrow : null, updated_at: at, removed_at: null, history: null,
     });
   }
   localStorage.setItem("mission.missions", JSON.stringify(read));
 });
 await page.goto(`${BASE}/missions/30`);
-await page.getByText("Choose the Next Mission").first().waitFor();
+await page.getByText("Carry Your Momentum Forward").first().waitFor();
+// 30 shows the practice from 27 and recent actions as context
+await page.getByText("YOUR PRACTICE · MISSION 27").waitFor();
+await page.getByText("YOUR RECENT ACTIONS").waitFor();
 await page
-  .getByLabel("What's next?")
-  .fill("Courage — one hard conversation a week, for thirty days.");
-await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 30" }).click();
+  .getByLabel("I learned ____. After ____, I will ____. If I miss, I will ____.")
+  .fill("I learned mornings work best. After breakfast, I will study ten minutes. If I miss, I will do one exercise at the next opportunity.");
+await page.getByText("Daily", { exact: true }).click();
+if (!(await page.getByRole("radio", { name: "Daily" }).isChecked())) fail("frequency did not select");
+await page.getByRole("button", { name: "SAVE PRACTICE PLAN" }).click();
+await page.getByText("Choose a review date.").waitFor();
+const inAWeek = new Date(Date.now() + 7 * 86400000);
+await page
+  .getByLabel("REVIEW DATE")
+  .fill(`${inAWeek.getFullYear()}-${String(inAWeek.getMonth() + 1).padStart(2, "0")}-${String(inAWeek.getDate()).padStart(2, "0")}`);
+await shot("mission-30-plan");
+await page.getByRole("button", { name: "SAVE PRACTICE PLAN" }).click();
 await page.getByText("30-DAY MISSION COMPLETE").waitFor();
+await page.getByText("Your practice plan is saved.").waitFor();
 await shot("mission-30-complete");
 await page.goto(`${BASE}/progress`);
 await page.getByText("30-DAY MISSION COMPLETE").waitFor();
 await shot("progress-30-of-30");
 await page.goto(`${BASE}/missions`);
-await page.getByText("30 Missions. 30 proofs. Your Proof Log stays open.").waitFor();
+await page.getByText("All 30 Missions done. Your Proof Log stays open.").waitFor();
 await shot("mission-list-complete");
 
 // N — Old routes still land somewhere real

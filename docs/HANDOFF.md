@@ -1,4 +1,4 @@
-# HANDOFF — Mission Fragrances app (state as of 2026-08-25, V2)
+# HANDOFF — Mission Fragrances app (state as of 2026-10-28, curriculum revision 2)
 
 Context summary for any new session (cloud or local) picking up this project.
 
@@ -19,7 +19,43 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 2.11.0 (share the app from Settings)
+- Version: 3.0.0 (curriculum revision 2, on branch `main-cig2ix` for review;
+  NOT on `main` until Antonio signs off and 0009 is applied)
+
+## Curriculum revision 2 (v3.0.0) — read this first
+
+Spec: `docs/specs/curriculum-v2-summary.md` (full text alongside). Review
+report: `docs/specs/review-report.md`. Results: `docs/specs/acceptance-results.md`.
+Where this section and older notes below disagree, this section wins.
+
+- **Content**: `src/content/missions.ts` holds the spec's exact wording for all
+  30 (stage, kind, time, hook, select, action, 3 choices, prompt, 2 examples,
+  done-when, note). `npm run check:copy` diffs it against the spec text.
+  The first curriculum is archived read-only in `src/content/missions-v1.ts`;
+  records with `curriculum_version` 1 keep showing it.
+- **Record kinds**: action (20) · reflection (6) · code (8–13) · plan (21, 27,
+  30). Only actions (and One-Off Actions) count as actions; all 30 count
+  toward x/30. The server derives the kind (`mission_kind()`).
+- **Rules** live in `src/lib/curriculum.ts` (client and demo backend) and in
+  `missions_validate()` in migration 0009 (server). Keep them in step.
+  Prerequisites: 14/29 need code lines 8–12; 22–25 need a revised 21 with a
+  focus area and aim; 28 needs a prior action. Plans 27/30 need a frequency
+  and a future review date. Actions need "I have taken this action."
+- **Drafts** (`mission_drafts`) are separate from records and never count.
+  Completed records freeze their context snapshot, wording version and
+  completion date; edits bump `updated_at` and are guarded against
+  overwriting another tab (`ConflictError`).
+- **Remove/restore** replaces delete: `removed_at` soft-removes; the record,
+  its words and date stay.
+- **Mission screen**: `src/components/mission/MissionForm.tsx` (the S.T.A.R.
+  form) inside `src/app/(app)/missions/[number]/page.tsx` (states: unfinished,
+  saved, legacy, removed, just saved).
+- **Tests**: `npm run test:db` (migrations on PGlite, 36 checks) and
+  `scripts/acceptance.mjs` (26 spec scenarios in demo mode) and
+  `scripts/walkthrough.mjs` (screenshots).
+- **Release order**: apply `0009_curriculum_v2.sql` to Supabase BEFORE the
+  v3 app goes live; the v3 app expects its columns. Rollback:
+  `0009_down.sql` (keeps all data) + redeploy the previous app.
 
 ## Architecture facts that matter
 
@@ -99,35 +135,12 @@ opens on the Missions themselves; `/home` redirects to `/missions`.
 
 ### Writing a Mission
 
-`src/content/missions.ts` is the whole content layer; its header holds the
-full rules. Every Mission screen IS the S.T.A.R. System, in order:
-`statement` (why, 1–2 lines) → a "reminder of how S.T.A.R. works" sheet →
-**S** Select (the shelf) → **T** Trigger ("Spray your selected fragrance.") →
-**A** Act (`action` + "This should take you less than 60 seconds.") →
-**R** Record (`inputLabel`, up to three tap-to-use `examples`, the field,
-`RECORD · COMPLETE MISSION N`).
-
-Antonio's writing rules — apply them to every word. His feedback in every
-review has been "too wordy" and "doesn't sound American", so the limits are
-now ENFORCED: `npm run check:copy` fails on any Mission statement over 16
-words, action over 12, question over 7, example over 12, or any em-dash,
-semicolon or British spelling. Run it before every push.
-
-- Native American English, his voice: visceral, cut to the core. Five words
-  beat ten. No walls of text.
-- Statement (why) and action (what) are never one paragraph, and neither
-  ever says "spray" — the T step owns that.
-- Every action takes under 60 seconds. Two minutes at most.
-- Actions out in the world are logged as commitments: the field opens on
-  "I commit to " (`inputPrefix`), and logging it completes the Mission.
-  Actions that happen on the screen (finish a sentence, recall a moment)
-  keep a plain question.
-- About three short, general examples. Exactly one → no example box; the
-  field is pre-filled with it.
-- Readers are men in their 40s and 50s; 90% don't own a business.
-- Recommended values rotate — never the same one twice in a row.
-- The S.T.A.R. wording lives once, in `STAR_STEPS` (`src/content/triggers.ts`),
-  rendered by `<StarSystem>` everywhere it appears.
+Curriculum revision 2 replaced the old rules here (60-second actions, "I
+commit to" prefixes, tap-to-use examples, word limits). Mission copy is now
+Antonio's spec, verbatim; change it in the spec first, then in
+`src/content/missions.ts`, as a whole Mission at a time, and run
+`npm run check:copy`. Examples are inspiration only and never fill the
+field; only Mission 13 opens pre-filled (his identity statement).
 
 ### Sharing (Settings → Share)
 

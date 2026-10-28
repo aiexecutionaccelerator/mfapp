@@ -1,17 +1,30 @@
-import type {
-  DataBackend,
-  LessonResponse,
-  Mission,
-  Profile,
-  Trigger,
+import { CURRICULUM_VERSION } from "@/content/missions";
+import {
+  isLegacy,
+  kindFor,
+  recordFor,
+  recordText,
+  textLimitFor,
+  validateRecord,
+} from "@/lib/curriculum";
+import {
+  ConflictError,
+  LESSON_ANSWER_MAX,
+  ValidationError,
+  type DataBackend,
+  type Draft,
+  type LessonResponse,
+  type Mission,
+  type Profile,
+  type Trigger,
 } from "@/lib/data/types";
-import { LESSON_ANSWER_MAX } from "@/lib/data/types";
 
 /** Demo backend — everything lives in localStorage on this device. */
 
 const PROFILE_KEY = "mission.profile";
 const MISSIONS_KEY = "mission.missions";
 const RESPONSES_KEY = "mission.lessonResponses";
+const DRAFTS_KEY = "mission.drafts";
 const DEMO_USER_ID = "demo-user";
 const DEMO_EMAIL = "demo@mission.local";
 
@@ -49,14 +62,50 @@ function readProfile(): Profile {
   return { ...EMPTY_PROFILE, ...read<Partial<Profile>>(PROFILE_KEY, {}) };
 }
 
-/** Pre-V2 rows have no mission_number/question_answer/photo_url — backfill. */
+/**
+ * Older rows lack the newer columns: backfill them the way migrations 0007
+ * and 0009 do. A row with no curriculum_version was made under the first
+ * curriculum's wording.
+ */
 function readMissions(): Mission[] {
-  return read<Partial<Mission>[]>(MISSIONS_KEY, []).map((m) => ({
-    mission_number: null,
-    question_answer: null,
-    photo_url: null,
-    ...m,
-  })) as Mission[];
+  return read<Partial<Mission>[]>(MISSIONS_KEY, []).map((m) => {
+    const mission_number = m.mission_number ?? null;
+    return {
+      question_answer: null,
+      photo_url: null,
+      kind: kindFor(mission_number),
+      curriculum_version: 1,
+      confirmed: false,
+      context: null,
+      focus_area: null,
+      frequency: null,
+      review_date: null,
+      updated_at: m.completed_at ?? m.started_at ?? new Date().toISOString(),
+      removed_at: null,
+      history: null,
+      ...m,
+      mission_number,
+    };
+  }) as Mission[];
+}
+
+/** Stamps every write, like the database's updated_at trigger. */
+function touch(mission: Mission): Mission {
+  // Strictly increasing, so two writes in the same millisecond still differ
+  // and the edit guard can tell them apart.
+  const now = Math.max(Date.now(), new Date(mission.updated_at).getTime() + 1);
+  return { ...mission, updated_at: new Date(now).toISOString() };
+}
+
+function readDrafts(): Draft[] {
+  return read<Draft[]>(DRAFTS_KEY, []);
+}
+
+function dropDraft(missionNumber: number): void {
+  write(
+    DRAFTS_KEY,
+    readDrafts().filter((d) => d.mission_number !== missionNumber),
+  );
 }
 
 function readResponses(): LessonResponse[] {
@@ -73,9 +122,10 @@ function sorted(missions: Mission[]): Mission[] {
 }
 
 function saveMission(next: Mission): Mission {
-  const missions = readMissions().map((m) => (m.id === next.id ? next : m));
+  const stamped = touch(next);
+  const missions = readMissions().map((m) => (m.id === next.id ? stamped : m));
   write(MISSIONS_KEY, missions);
-  return next;
+  return stamped;
 }
 
 function requireMission(id: string): Mission {
@@ -90,6 +140,7 @@ export const localBackend: DataBackend = {
       profile: readProfile(),
       missions: sorted(readMissions()),
       lessonResponses: readResponses(),
+      drafts: readDrafts(),
     };
   },
 
@@ -140,9 +191,179 @@ export const localBackend: DataBackend = {
       mission_number: input.mission_number ?? null,
       question_answer: input.question_answer ?? null,
       photo_url: null,
+      kind: kindFor(input.mission_number ?? null),
+      curriculum_version: CURRICULUM_VERSION,
+      confirmed: input.mission_number == null,
+      context: null,
+      focus_area: null,
+      frequency: null,
+      review_date: null,
+      updated_at: now,
+      removed_at: null,
+      history: null,
     };
     write(MISSIONS_KEY, [mission, ...missions]);
     return mission;
+  },
+
+  async saveRecord(input) {
+    const missions = readMissions();
+    const problem = validateRecord(input, missions);
+    if (problem) throw new ValidationError(problem);
+    const text = input.text.trim();
+    const existing = recordFor(missions, input.mission_number);
+
+    if (existing?.status === "completed") {
+      // The same save again (double tap, retry) is not a conflict.
+      if (recordText(existing) === text && existing.trigger === input.trigger)
+        return existing;
+      throw new ConflictError(
+        "This Mission was already completed in another tab or device.",
+      );
+    }
+
+    const now = new Date().toISOString();
+    const fields = {
+      trigger: input.trigger,
+      action_text: text,
+      reflection: text,
+      status: "completed" as const,
+      completed_at: now,
+      kind: kindFor(input.mission_number),
+      curriculum_version: CURRICULUM_VERSION,
+      confirmed: input.confirmed,
+      context: input.context,
+      focus_area: input.focus_area ?? null,
+      frequency: input.frequency ?? null,
+      review_date: input.review_date ?? null,
+      photo_url: input.photo_url ?? null,
+    };
+
+    let saved: Mission;
+    if (existing) {
+      // A row left in progress by the old two-step flow: finish it.
+      saved = saveMission({ ...existing, ...fields });
+    } else {
+      saved = {
+        id: crypto.randomUUID(),
+        user_id: DEMO_USER_ID,
+        action_category: "mission",
+        started_at: now,
+        ended_at: null,
+        mission_number: input.mission_number,
+        question_answer: null,
+        updated_at: now,
+        removed_at: null,
+        history: null,
+        ...fields,
+      };
+      write(MISSIONS_KEY, [saved, ...missions]);
+    }
+    dropDraft(input.mission_number);
+    return saved;
+  },
+
+  async editRecord(id, patch, expectedUpdatedAt) {
+    const missions = readMissions();
+    const existing = requireMission(id);
+    if (existing.updated_at !== expectedUpdatedAt)
+      throw new ConflictError(
+        "This record changed in another tab or device. Reload to see the latest.",
+      );
+    const { text: rawText, ...rest } = patch;
+    const text = rawText?.trim() ?? recordText(existing);
+    if (!text) throw new ValidationError("Write your record first.");
+    if (text.length > textLimitFor(existing.mission_number))
+      throw new ValidationError("That's too long.");
+
+    if (existing.mission_number !== null && !isLegacy(existing)) {
+      const problem = validateRecord(
+        {
+          mission_number: existing.mission_number,
+          trigger: rest.trigger ?? existing.trigger,
+          text,
+          confirmed: true,
+          context: existing.context,
+          focus_area: rest.focus_area ?? existing.focus_area,
+          frequency: rest.frequency ?? existing.frequency,
+          review_date: rest.review_date ?? existing.review_date,
+        },
+        missions,
+        { previousReviewDate: existing.review_date, skipPrerequisites: true },
+      );
+      if (problem) throw new ValidationError(problem);
+    }
+    // The completion date, kind, wording version and context never change.
+    return saveMission({
+      ...existing,
+      ...rest,
+      action_text: text,
+      reflection: existing.status === "completed" ? text : existing.reflection,
+    });
+  },
+
+  async reviseLegacy(id, input, expectedUpdatedAt) {
+    const missions = readMissions();
+    const existing = requireMission(id);
+    if (existing.updated_at !== expectedUpdatedAt)
+      throw new ConflictError(
+        "This record changed in another tab or device. Reload to see the latest.",
+      );
+    if (!isLegacy(existing))
+      throw new ValidationError("This record already uses the revised task.");
+    const problem = validateRecord(input, missions);
+    if (problem) throw new ValidationError(problem);
+    const text = input.text.trim();
+    const saved = saveMission({
+      ...existing,
+      history: [
+        ...(existing.history ?? []),
+        {
+          curriculum_version: existing.curriculum_version,
+          text: recordText(existing),
+          trigger: existing.trigger,
+          completed_at: existing.completed_at,
+        },
+      ],
+      trigger: input.trigger,
+      action_text: text,
+      reflection: text,
+      kind: kindFor(input.mission_number),
+      curriculum_version: CURRICULUM_VERSION,
+      confirmed: input.confirmed,
+      context: input.context,
+      focus_area: input.focus_area ?? null,
+      frequency: input.frequency ?? null,
+      review_date: input.review_date ?? null,
+      photo_url: input.photo_url ?? existing.photo_url,
+    });
+    dropDraft(input.mission_number);
+    return saved;
+  },
+
+  async setRemoved(id, removed) {
+    const existing = requireMission(id);
+    return saveMission({
+      ...existing,
+      removed_at: removed ? (existing.removed_at ?? new Date().toISOString()) : null,
+    });
+  },
+
+  async listDrafts() {
+    return readDrafts();
+  },
+
+  async saveDraft(draft) {
+    const saved: Draft = { ...draft, updated_at: new Date().toISOString() };
+    write(DRAFTS_KEY, [
+      ...readDrafts().filter((d) => d.mission_number !== draft.mission_number),
+      saved,
+    ]);
+    return saved;
+  },
+
+  async deleteDraft(missionNumber) {
+    dropDraft(missionNumber);
   },
 
   async completeMission(id, input) {
@@ -217,6 +438,7 @@ export const localBackend: DataBackend = {
     window.localStorage.removeItem(PROFILE_KEY);
     window.localStorage.removeItem(MISSIONS_KEY);
     window.localStorage.removeItem(RESPONSES_KEY);
+    window.localStorage.removeItem(DRAFTS_KEY);
     window.localStorage.removeItem("mission.course");
     window.localStorage.removeItem("mission.reminder");
     window.localStorage.removeItem("mission.devDayOverride");

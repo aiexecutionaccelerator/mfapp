@@ -47,15 +47,16 @@ export default function ProgressPage() {
     <main className="pt-4 pb-8">
       <Headline>YOUR PROGRESS</Headline>
 
-      {/* One number that only ever goes up: free-form actions + completed
-          Missions, every deed counted once. The cards below always sum to it.
-          The arc reads as a percentage — each proof is 1% of the circle,
-          full at one hundred. */}
+      {/* Actions only: things he did, from Missions and One-Off Actions.
+          Reflections, code and plans are saved work, not evidence of a deed,
+          so they count toward x/30 but never here (curriculum revision 2).
+          The three cards below always sum to this number. Each action is 1%
+          of the circle, full at one hundred. */}
       <div className="mt-8 flex justify-center">
         <ProgressRing
-          value={stats.totalDeeds}
+          value={stats.totalActions}
           max={100}
-          label="PROOFS LOGGED"
+          label="ACTIONS LOGGED"
           display="count"
         />
       </div>
@@ -68,7 +69,8 @@ export default function ProgressPage() {
         <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
           <Eyebrow tone="gold">30-DAY MISSION COMPLETE</Eyebrow>
           <p className="mt-3 text-[15px] leading-relaxed text-ink-1">
-            30 Missions. 30 proofs. Keep going.
+            Keep going. Log each repetition of your practice as a One-Off
+            Action.
           </p>
           <div className="mt-5">
             <Button onClick={() => router.push("/action/declare")}>
@@ -78,13 +80,12 @@ export default function ProgressPage() {
         </GlassCard>
       )}
 
-      {/* Every proof counted, Missions included — a Mission logged with
-          Courage is a Courage proof. Honor + Courage + Commitment always
-          equals the number in the ring. */}
+      {/* Actions by the Scent Trigger he used. Honor + Courage + Commitment
+          always equals the number in the ring. */}
       <div className="mt-6 grid grid-cols-2 gap-3">
-        <Stat label="Honor" value={stats.proofs.honor} />
-        <Stat label="Courage" value={stats.proofs.courage} />
-        <Stat label="Commitment" value={stats.proofs.commitment} />
+        <Stat label="Honor" value={stats.actions.honor} />
+        <Stat label="Courage" value={stats.actions.courage} />
+        <Stat label="Commitment" value={stats.actions.commitment} />
         <Stat
           label="Missions Completed"
           value={`${stats.missionsCompleted}/${MISSION_COUNT}`}

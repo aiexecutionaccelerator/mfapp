@@ -1,45 +1,47 @@
 "use client";
 
-import { Check, Info } from "lucide-react";
+import { Check, History, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Suspense, use, useEffect, useRef, useState } from "react";
+import { Suspense, use, useEffect, useState } from "react";
 import NavAction from "@/components/NavAction";
-import FragranceCue from "@/components/FragranceCue";
-import MissionVideo from "@/components/MissionVideo";
-import PhotoInput from "@/components/PhotoInput";
-import ExampleChips from "@/components/ExampleChips";
 import StarSystem from "@/components/StarSystem";
+import { ContextPanels } from "@/components/mission/ContextPanels";
+import MissionForm, { type FormMode } from "@/components/mission/MissionForm";
 import Button from "@/components/ui/Button";
+import Disclosure from "@/components/ui/Disclosure";
 import Eyebrow from "@/components/ui/Eyebrow";
-import Field from "@/components/ui/Field";
 import GlassCard from "@/components/ui/GlassCard";
 import Headline from "@/components/ui/Headline";
 import Sheet from "@/components/ui/Sheet";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
-import { PERSONAL_CODE_SLUGS, getMissionDef } from "@/content/missions";
+import { getMissionDef, stageOf, type MissionDef } from "@/content/missions";
+import { getMissionDefV1 } from "@/content/missions-v1";
 import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
-import { store, useAppData } from "@/lib/data/store";
-import { compilePersonalCode } from "@/lib/personalCode";
-import { PROOF_TEXT_MAX, type Trigger } from "@/lib/data/types";
 import {
-  MISSION_COUNT,
-  computeStats,
-  nextMissionNumber,
-  structuredMissionRow,
-} from "@/lib/stats";
-import { formatDate } from "@/lib/utils";
+  KIND_LABELS,
+  isLegacy,
+  isLive,
+  recordFor,
+  recordText,
+  successLine,
+} from "@/lib/curriculum";
+import { store, useAppData } from "@/lib/data/store";
+import type { Mission } from "@/lib/data/types";
+import { MISSION_COUNT, computeStats, nextMissionNumber } from "@/lib/stats";
+import { formatDate, formatDay } from "@/lib/utils";
 
 /**
- * The one reusable Mission Detail template — every Mission renders through
- * here, driven by `content/missions.ts` plus the user's state row.
+ * The one reusable Mission template: every Mission renders through here,
+ * driven by `content/missions.ts` (curriculum revision 2), the rules in
+ * `lib/curriculum.ts`, and his records.
  *
- * The screen IS the S.T.A.R. System, in order: why it matters, a reminder
- * of how S.T.A.R. works, then Select (the shelf), Trigger (spray), Act (the
- * sixty-second action) and Record (one field, one button). Recording
- * completes the Mission and writes the Proof — there is no declare step and
- * no in-progress state.
+ * Order (spec): back, N of 30 and saved state · stage, title, hook and the
+ * S.T.A.R. reminder · the S, T, A, R steps · the save.
+ *
+ * A saved record shows as itself (with SAVE CHANGES behind EDIT). A record
+ * made under the first curriculum keeps its original wording and says so.
  */
 function MissionDetailInner({
   params,
@@ -49,26 +51,17 @@ function MissionDetailInner({
   const { number } = use(params);
   const router = useRouter();
   const { showToast } = useToast();
-  const { profile, missions, lessonResponses, error, refresh } = useAppData();
+  const { profile, missions, drafts, error, refresh } = useAppData();
 
   const missionNumber = Number(number);
   const def = Number.isInteger(missionNumber)
     ? getMissionDef(missionNumber)
     : undefined;
 
-  const [text, setText] = useState("");
-  // The Mission recommends; he decides. Null means he has not overridden it.
-  const [chosenTrigger, setChosenTrigger] = useState<Trigger | null>(null);
-  const [photo, setPhoto] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
-  const [justLogged, setJustLogged] = useState(false);
+  const [mode, setMode] = useState<FormMode | null>(null);
+  const [justSaved, setJustSaved] = useState<Mission | null>(null);
   const [starOpen, setStarOpen] = useState(false);
-  // What the field opened with. Until he changes it, the examples stay up —
-  // Mission 13 opens on his own sentence AND offers options.
-  const [seed, setSeed] = useState<string | null>(null);
-  const submitting = useRef(false);
-  const seeded = useRef(false);
-  const openedAt = useRef(Date.now());
+  const [restoring, setRestoring] = useState(false);
 
   useEffect(() => {
     if (!def) router.replace("/missions");
@@ -83,27 +76,7 @@ function MissionDetailInner({
     showToast("Couldn't load this Mission.", { retry: () => void refresh() });
   }, [error, refresh, showToast]);
 
-  // The field never opens blank when it doesn't have to: Mission 13 opens on
-  // his identity statement, a Mission with exactly one example opens on that
-  // example, and a commitment opens on "I commit to ".
-  useEffect(() => {
-    if (seeded.current || !def || !profile) return;
-    seeded.current = true;
-    /* eslint-disable react-hooks/set-state-in-effect */
-    const initial =
-      def.prefillIdentity && profile.identity_statement
-        ? profile.identity_statement
-        : def.examples?.length === 1
-          ? def.examples[0]
-          : (def.inputPrefix ?? null);
-    if (initial !== null) {
-      setText(initial);
-      setSeed(initial);
-    }
-    /* eslint-enable react-hooks/set-state-in-effect */
-  }, [def, profile]);
-
-  if (!def || !profile || !missions || !lessonResponses) {
+  if (!def || !profile || !missions || !drafts) {
     return (
       <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
@@ -111,82 +84,27 @@ function MissionDetailInner({
     );
   }
 
-  const row = structuredMissionRow(missions, def.number);
-  const done = row?.status === "completed";
-  const trigger: Trigger =
-    row?.trigger ?? chosenTrigger ?? def.recommendedTrigger;
-  const valueName = TRIGGERS[trigger].name;
+  const record = recordFor(missions, def.number);
+  const live = record && isLive(record) ? record : null;
+  const removed = record?.status === "completed" && record.removed_at ? record : null;
+  const draft = drafts.find((d) => d.mission_number === def.number) ?? null;
+  const next = nextMissionNumber(missions);
 
-  const personalCode = def.showPersonalCode
-    ? compilePersonalCode(profile, lessonResponses)
-    : null;
+  /* ---------- just saved ---------- */
 
-  // "I commit to" on its own isn't a commitment yet.
-  const opener = def.inputPrefix?.trim() ?? "";
-  const hasAnswer = text.trim().length > 0 && text.trim() !== opener;
-  const showExamples =
-    (def.examples?.length ?? 0) > 1 &&
-    (text.trim() === "" || text.trim() === opener || text === seed);
-
-  async function logIt() {
-    const entry = text.trim();
-    if (submitting.current || !def || !hasAnswer) return;
-    submitting.current = true;
-    setPending(true);
-    try {
-      await store.logProof({
-        trigger,
-        action_text: entry.slice(0, PROOF_TEXT_MAX),
-        action_category: "mission",
-        mission_number: def.number,
-        photo_url: photo,
-        // Finishes a row declared under the old two-step flow.
-        existingId: row && row.status !== "completed" ? row.id : null,
-      });
-      // The Personal Code compiles from these answers, so the same sentence
-      // is written to the Mission's answer too — one input, two homes.
-      if (PERSONAL_CODE_SLUGS.has(def.slug)) {
-        await store.saveLessonResponse(def.slug, "q", entry);
-        if (def.prefillIdentity) {
-          await store.updateProfile({ identity_statement: entry });
-        }
-      }
-      track("mission_action_completed", {
-        missionNumber: def.number,
-        selectedTrigger: trigger,
-        timeSinceMissionOpened: Date.now() - openedAt.current,
-      });
-      if (photo) track("proof_photo_added", { missionNumber: def.number });
-      const after = computeStats(missions ?? []).missionsCompleted + 1;
-      if (after >= MISSION_COUNT) track("mission_30_completed");
-      setJustLogged(true);
-    } catch {
-      showToast("Couldn't log that. Please try again.", {
-        retry: () => void logIt(),
-      });
-    } finally {
-      submitting.current = false;
-      setPending(false);
-    }
-  }
-
-  /* ---------- just logged ---------- */
-
-  if (justLogged) {
-    const completedCount = computeStats(missions).missionsCompleted;
-    const allDone = completedCount >= MISSION_COUNT;
-    const next = nextMissionNumber(missions);
+  if (justSaved) {
+    const allDone = computeStats(missions).missionsCompleted >= MISSION_COUNT;
     return (
       <main className="fade-in flex flex-1 flex-col pt-10">
         <Headline className="text-center">
           {allDone ? "30-DAY MISSION COMPLETE" : "MISSION COMPLETE."}
         </Headline>
         <p className="font-display text-gold-gradient mt-4 text-center text-[24px] leading-snug">
-          You acted with {TRIGGERS[trigger].provedWith}.
+          {successLine(def, justSaved)}
         </p>
         <p className="mt-6 text-center text-[17px] text-ink-1">
           {allDone
-            ? "30 Missions. 30 proofs. Keep going."
+            ? "Keep going. Log what you practice next as One-Off Actions."
             : "It's in your Proof Log."}
         </p>
         <div className="mt-10">
@@ -196,9 +114,12 @@ function MissionDetailInner({
             </Button>
           ) : (
             <Button
-              onClick={() => router.push(next ? `/missions/${next}` : "/missions")}
+              onClick={() => {
+                setJustSaved(null);
+                router.push(next ? `/missions/${next}` : "/missions");
+              }}
             >
-              CONTINUE TO THE NEXT MISSION
+              {next ? `CONTINUE TO MISSION ${next}` : "BACK TO MISSIONS"}
             </Button>
           )}
         </div>
@@ -206,82 +127,38 @@ function MissionDetailInner({
     );
   }
 
-  const header = (
-    <div className="flex items-center justify-between">
-      <NavAction kind="back" href="/missions" />
-      <span className="eyebrow text-ink-2">
-        MISSION {def.number} OF {MISSION_COUNT}
-      </span>
-      <span className={done ? "eyebrow text-[var(--success)]" : "eyebrow text-ink-2"}>
-        {done ? "COMPLETE" : "NOT STARTED"}
-      </span>
-    </div>
-  );
+  const status = live
+    ? "COMPLETE"
+    : removed
+      ? "REMOVED"
+      : draft
+        ? "DRAFT SAVED"
+        : "NOT STARTED";
 
-  /* ---------- completed ---------- */
-
-  if (done && row) {
-    const next = nextMissionNumber(missions);
-    return (
-      <main className="pt-2 pb-8">
-        {header}
-        <Eyebrow tone="gold" className="mt-6">
-          MISSION {def.number}
-        </Eyebrow>
-        <Headline level={2} className="mt-2">
-          {def.title}
-        </Headline>
-
-        <GlassCard key={row.id} className="mt-6 border-[rgba(201,166,72,.35)]">
-          <div className="flex items-center gap-2">
-            <Check aria-hidden size={18} className="text-gold-300" />
-            <Eyebrow tone="gold">
-              {valueName}
-              {row.completed_at ? ` · ${formatDate(row.completed_at)}` : ""}
-            </Eyebrow>
-          </div>
-          <p className="mt-3 text-[19px] leading-relaxed whitespace-pre-wrap text-ink-0">
-            {row.reflection ?? row.action_text}
-          </p>
-          {row.photo_url && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={row.photo_url}
-              alt="Your proof photo"
-              className="mt-4 w-full rounded-[14px]"
-            />
-          )}
-        </GlassCard>
-
-        {next && (
-          <div className="mt-6">
-            <Button onClick={() => router.push(`/missions/${next}`)}>
-              CONTINUE TO THE NEXT MISSION
-            </Button>
-          </div>
-        )}
-      </main>
-    );
-  }
-
-  /* ---------- not started: the S.T.A.R. System, in order ---------- */
-
-  return (
-    <main className="pt-2 pb-8">
-      {header}
+  const intro = (
+    <>
+      <div className="flex items-center justify-between">
+        <NavAction kind="back" href="/missions" />
+        <span className="eyebrow text-ink-2">
+          MISSION {def.number} OF {MISSION_COUNT}
+        </span>
+        <span
+          className={
+            live ? "eyebrow text-[var(--success)]" : draft ? "eyebrow text-gold-300" : "eyebrow text-ink-2"
+          }
+        >
+          {status}
+        </span>
+      </div>
 
       <Eyebrow tone="gold" className="mt-6">
-        MISSION {def.number}
+        {stageOf(def).label} · Mission {def.number}
       </Eyebrow>
       <Headline level={2} className="mt-2">
         {def.title}
       </Headline>
+      <p className="mt-3 text-[19px] leading-snug text-ink-0">{def.hook}</p>
 
-      {/* Why it matters — on its own, before any instruction. */}
-      <p className="mt-4 text-[19px] leading-snug text-ink-0">{def.statement}</p>
-
-      {/* The reminder replaces the "spray your Scent Trigger, take a
-          breath…" lines that used to be written into every Mission. */}
       <button
         type="button"
         onClick={() => {
@@ -294,157 +171,217 @@ function MissionDetailInner({
         Click here for a reminder of how the S.T.A.R. System works.
       </button>
 
-      <div className="mt-6 border-t border-[var(--line)]" />
-
-      {/* The lead-in into the steps. "Get started" only makes sense once —
-          on Mission 1. Every Mission after that is using it again. */}
-      <p className="font-display mt-6 text-[20px] leading-snug text-ink-0">
-        {def.number === 1
-          ? "Let's get started with the S.T.A.R. System."
-          : "Let's use the S.T.A.R. System."}
-      </p>
-
-      <StarStep letter="S" name="Select">
-        <p className="text-[15px] text-ink-1">Select your Scent Trigger.</p>
-        <FragranceCue
-          label={null}
-          value={trigger}
-          recommended={def.recommendedTrigger}
-          onChange={setChosenTrigger}
-          className="mt-3"
-        />
-      </StarStep>
-
-      <StarStep letter="T" name="Trigger">
-        <p className="text-[17px] text-ink-0">Spray your selected fragrance.</p>
-      </StarStep>
-
-      <StarStep letter="A" name="Act">
-        <p className="text-[17px] leading-snug text-ink-0">{def.action}</p>
-        <p className="mt-2 text-[14px] text-ink-2">
-          This should take you less than 60 seconds.
-        </p>
-        {personalCode && (
-          <GlassCard className="mt-4">
-            <Eyebrow tone="gold">MY PERSONAL CODE</Eyebrow>
-            <dl className="mt-4 space-y-3">
-              {personalCode.map((line) => (
-                <div key={line.key}>
-                  <dt className="text-[13px] text-ink-2">{line.label}</dt>
-                  <dd className="mt-0.5 text-[15px] leading-snug text-ink-0">
-                    {line.value ?? (
-                      <span className="text-ink-2">
-                        Not written yet ({line.source}).
-                      </span>
-                    )}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </GlassCard>
-        )}
-        {def.youtubeId && (
-          <MissionVideo
-            youtubeId={def.youtubeId}
-            title={def.title}
-            missionNumber={def.number}
-          />
-        )}
-      </StarStep>
-
-      <StarStep letter="R" name="Record" last>
-        <p className="text-[17px] leading-snug text-ink-0">{def.inputLabel}</p>
-
-        {showExamples && def.examples && (
-          <ExampleChips
-            className="mt-3"
-            examples={def.examples}
-            onUse={(value) => {
-              setText(value);
-              track("mission_example_used", { missionNumber: def?.number });
-            }}
-          />
-        )}
-
-        <div className="mt-3">
-          <Field
-            variant="prominent"
-            aria-label={def.inputLabel}
-            value={text}
-            onChange={setText}
-            maxLength={PROOF_TEXT_MAX}
-            multiline
-            rows={4}
-            placeholder="Write it here."
-          />
-        </div>
-
-        {def.photoEncouraged && (
-          <div className="mt-4">
-            <PhotoInput value={photo} onChange={setPhoto} />
-          </div>
-        )}
-
-        {/* The page's one primary action spans the full width, out from
-            under the step indent, so it never wraps. */}
-        <div className="mt-4 -ml-12">
-          <Button
-            loading={pending}
-            disabled={!hasAnswer}
-            onClick={() => void logIt()}
-          >
-            RECORD · COMPLETE MISSION {def.number}
-          </Button>
-        </div>
-      </StarStep>
-
-      <Sheet
-        open={starOpen}
-        title="THE S.T.A.R. SYSTEM"
-        onClose={() => setStarOpen(false)}
-      >
+      <Sheet open={starOpen} title="THE S.T.A.R. SYSTEM" onClose={() => setStarOpen(false)}>
         <StarSystem />
         <Button variant="secondary" onClick={() => setStarOpen(false)}>
           GOT IT
         </Button>
       </Sheet>
+    </>
+  );
+
+  const form = (formMode: FormMode, against: Mission | null) => (
+    <>
+      <div className="mt-6 border-t border-[var(--line)]" />
+      <p className="font-display mt-6 text-[20px] leading-snug text-ink-0">
+        {def.number === 1
+          ? "Let's get started with the S.T.A.R. System."
+          : "Let's use the S.T.A.R. System."}
+      </p>
+      <MissionForm
+        key={`${formMode}-${against?.updated_at ?? "new"}`}
+        def={def}
+        mode={formMode}
+        record={against}
+        draft={formMode === "edit" ? null : draft}
+        missions={missions}
+        profile={profile}
+        onSaved={(saved) => {
+          if (formMode === "edit") {
+            setMode(null);
+            showToast("Changes saved.");
+          } else {
+            setMode(null);
+            setJustSaved(saved);
+            window.scrollTo({ top: 0 });
+          }
+        }}
+        onCancel={() => setMode(null)}
+      />
+    </>
+  );
+
+  /* ---------- a record that was removed ---------- */
+
+  if (removed) {
+    return (
+      <main className="pt-2 pb-8">
+        {intro}
+        <GlassCard className="mt-6">
+          <Eyebrow>REMOVED {removed.removed_at ? formatDate(removed.removed_at).toUpperCase() : ""}</Eyebrow>
+          <p className="mt-3 text-[17px] leading-relaxed whitespace-pre-wrap text-ink-1">
+            {recordText(removed)}
+          </p>
+          <p className="mt-3 text-[13px] text-ink-2">
+            Removed records don&apos;t count. Restore it to bring it back with its
+            original date.
+          </p>
+          <div className="mt-4">
+            <Button
+              variant="secondary"
+              loading={restoring}
+              onClick={async () => {
+                setRestoring(true);
+                try {
+                  await store.setRemoved(removed.id, false);
+                  showToast("Restored.");
+                } catch {
+                  showToast("Couldn't restore that. Please try again.");
+                } finally {
+                  setRestoring(false);
+                }
+              }}
+            >
+              RESTORE
+            </Button>
+          </div>
+        </GlassCard>
+      </main>
+    );
+  }
+
+  /* ---------- a saved record ---------- */
+
+  if (live && mode === null) {
+    const legacy = isLegacy(live);
+    const v1 = legacy ? getMissionDefV1(def.number) : undefined;
+    return (
+      <main className="pt-2 pb-8">
+        {intro}
+
+        {legacy && (
+          <div className="mt-6 rounded-[14px] border border-[var(--line)] p-4">
+            <p className="eyebrow flex items-center gap-2 text-ink-2">
+              <History aria-hidden size={14} />
+              SAVED UNDER EARLIER WORDING
+            </p>
+            <p className="mt-2 text-[14px] leading-snug text-ink-1">
+              You completed this Mission when it was{" "}
+              <span className="text-ink-0">“{v1?.title ?? "an earlier version"}”</span>
+              {v1?.action ? `: ${v1.action}` : "."} Your record stays attached to
+              that task, and it still counts.
+            </p>
+          </div>
+        )}
+
+        <RecordCard def={def} record={live} />
+
+        {legacy && def.number === 21 && (
+          <div className="mt-6">
+            <p className="text-[15px] leading-snug text-ink-1">
+              Missions 22–25 work on a seven-day aim. Your earlier record
+              didn&apos;t have one. Add a current aim; your earlier record is kept.
+            </p>
+            <div className="mt-3">
+              <Button onClick={() => setMode("revise")}>ADD A CURRENT AIM</Button>
+            </div>
+          </div>
+        )}
+
+        {legacy && def.number !== 21 && <RevisedTaskPreview def={def} />}
+
+        <div className="mt-6 space-y-2">
+          <Button variant="secondary" onClick={() => setMode("edit")}>
+            EDIT
+          </Button>
+          {next && next !== def.number && (
+            <Button onClick={() => router.push(`/missions/${next}`)}>
+              CONTINUE TO MISSION {next}
+            </Button>
+          )}
+        </div>
+      </main>
+    );
+  }
+
+  /* ---------- unfinished, or editing ---------- */
+
+  return (
+    <main className="pt-2 pb-8">
+      {intro}
+      {live && mode === "edit" && (
+        <p className="mt-4 text-[14px] text-ink-2">
+          Editing your saved record. Its original date stays.
+        </p>
+      )}
+      {form(mode ?? "new", live)}
     </main>
   );
 }
 
-/**
- * One step of S.T.A.R. on the Mission screen: the letter, the step's name,
- * and what belongs to it. A hairline runs down from each letter to the next
- * so the four read as one sequence rather than four boxes.
- */
-function StarStep({
-  letter,
-  name,
-  last = false,
-  children,
-}: {
-  letter: string;
-  name: string;
-  last?: boolean;
-  children: React.ReactNode;
-}) {
+/** The saved record: kind, value, date, his words, and what it worked toward. */
+function RecordCard({ def, record }: { def: MissionDef; record: Mission }) {
+  const legacy = isLegacy(record);
   return (
-    <section className="relative mt-7 pl-12">
-      <span
-        aria-hidden
-        className="font-display text-gold-gradient absolute top-0 left-0 w-8 text-center text-[30px] leading-none"
-      >
-        {letter}
-      </span>
-      {!last && (
-        <span
-          aria-hidden
-          className="absolute top-10 -bottom-5 left-4 w-px bg-[var(--line)]"
-        />
+    <GlassCard key={record.id} className="mt-6 border-[rgba(201,166,72,.35)]">
+      <div className="flex items-center gap-2">
+        <Check aria-hidden size={18} className="text-gold-300" />
+        <Eyebrow tone="gold">
+          {KIND_LABELS[record.kind ?? def.kind]} · {TRIGGERS[record.trigger].name}
+          {record.completed_at ? ` · ${formatDate(record.completed_at)}` : ""}
+        </Eyebrow>
+      </div>
+      {record.focus_area && (
+        <p className="eyebrow mt-3 text-ink-2">{record.focus_area.toUpperCase()}</p>
       )}
-      <p className="eyebrow pt-1.5 text-gold-300">{name.toUpperCase()}</p>
-      <div className="mt-2">{children}</div>
-    </section>
+      <p className="mt-3 text-[19px] leading-relaxed whitespace-pre-wrap text-ink-0">
+        {recordText(record)}
+      </p>
+      {(record.frequency || record.review_date) && (
+        <p className="mt-3 text-[14px] text-ink-1">
+          {[record.frequency, record.review_date && `Review ${formatDay(record.review_date)}`]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+      )}
+      {record.photo_url && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={record.photo_url} alt="Your photo" className="mt-4 w-full rounded-[14px]" />
+      )}
+      {record.updated_at &&
+        record.completed_at &&
+        new Date(record.updated_at).getTime() - new Date(record.completed_at).getTime() > 60_000 && (
+          <p className="mt-3 text-[13px] text-ink-2">Edited {formatDate(record.updated_at)}</p>
+        )}
+      {!legacy && record.context && Object.values(record.context).some(Boolean) && (
+        <div className="mt-2">
+          <p className="eyebrow mt-4 text-ink-2">WHAT IT WORKED WITH</p>
+          <ContextPanels context={record.context} missionNumber={def.number} />
+        </div>
+      )}
+      {record.history?.map((old) => (
+        <div key={old.completed_at ?? old.text} className="mt-4 border-t border-[var(--line)] pt-3">
+          <p className="eyebrow text-ink-2">
+            EARLIER RECORD{old.completed_at ? ` · ${formatDate(old.completed_at)}` : ""}
+          </p>
+          <p className="mt-1 text-[15px] whitespace-pre-wrap text-ink-1">{old.text}</p>
+        </div>
+      ))}
+    </GlassCard>
+  );
+}
+
+/** A first-curriculum record can show the revised task, separately. */
+function RevisedTaskPreview({ def }: { def: MissionDef }) {
+  return (
+    <Disclosure className="mt-6" label="See the revised task">
+      <p className="text-[15px] leading-snug text-ink-0">{def.action}</p>
+      <p className="eyebrow mt-3 text-gold-300">DONE WHEN</p>
+      <p className="mt-1 text-[14px] leading-snug text-ink-1">{def.doneWhen}</p>
+      <p className="mt-3 text-[13px] text-ink-2">
+        You don&apos;t need to redo it. Your earlier record still counts.
+      </p>
+    </Disclosure>
   );
 }
 

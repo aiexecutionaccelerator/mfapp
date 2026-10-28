@@ -12,17 +12,18 @@ import { useToast } from "@/components/ui/Toast";
 import Wordmark from "@/components/Wordmark";
 import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
-import { compilePersonalCode } from "@/lib/personalCode";
+import { ConflictError, ValidationError } from "@/lib/data/types";
+import { compilePersonalCode, type PersonalCodeLine } from "@/lib/personalCode";
 
 /**
  * My Personal Code — one page, printable with the browser's own print. Each
- * line is edited in place and written back to its source (the identity
- * statement on the profile, the rest to Mission answers), so the code, the
- * Missions, and Settings never disagree.
+ * line is edited in place and written back to its record (the identity to
+ * the profile and Mission 13 together), so the code, the Missions, and
+ * Settings never disagree.
  */
 export default function PersonalCodePage() {
   const { showToast } = useToast();
-  const { profile, lessonResponses, error, refresh } = useAppData();
+  const { profile, missions, error, refresh } = useAppData();
 
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
@@ -42,7 +43,7 @@ export default function PersonalCodePage() {
     });
   }, [error, refresh, showToast]);
 
-  if (!profile || !lessonResponses) {
+  if (!profile || !missions) {
     return (
       <main className="flex flex-1 items-center justify-center text-ink-2">
         <Spinner />
@@ -50,25 +51,28 @@ export default function PersonalCodePage() {
     );
   }
 
-  const lines = compilePersonalCode(profile, lessonResponses);
+  const lines = compilePersonalCode(profile, missions);
   // Only written lines are cards. The rest are one quiet sentence — six
   // tappable "not written yet" placeholders is a chore list, not a code.
   const written = lines.filter((line) => line.value);
   const unwritten = lines.filter((line) => !line.value);
 
-  async function saveLine(key: string, slug: string | null) {
-    setPending(true);
+  async function saveLine(line: PersonalCodeLine) {
     const value = draft.trim();
+    if (!value) return;
+    setPending(true);
     try {
-      if (slug) await store.saveLessonResponse(slug, "q", value);
       // The identity line is also the profile field Settings shows.
-      if (key === "identity") {
-        await store.updateProfile({ identity_statement: value || null });
-      }
-      track("personal_code_edited", { line: key });
+      if (line.key === "identity") await store.updateIdentity(value);
+      else if (line.record) await store.editRecord(line.record, { text: value });
+      track("personal_code_edited", { line: line.key });
       setEditingKey(null);
-    } catch {
-      showToast("Couldn't save that. Please try again.");
+    } catch (cause) {
+      showToast(
+        cause instanceof ValidationError || cause instanceof ConflictError
+          ? cause.message
+          : "Couldn't save that. Please try again.",
+      );
     } finally {
       setPending(false);
     }
@@ -107,7 +111,7 @@ export default function PersonalCodePage() {
                 <textarea
                   value={draft}
                   rows={3}
-                  maxLength={500}
+                  maxLength={line.key === "identity" ? 280 : 1000}
                   autoFocus
                   onChange={(event) => setDraft(event.target.value)}
                   aria-label={line.label}
@@ -115,7 +119,7 @@ export default function PersonalCodePage() {
                 />
                 <Button
                   loading={pending}
-                  onClick={() => void saveLine(line.key, line.slug)}
+                  onClick={() => void saveLine(line)}
                 >
                   SAVE
                 </Button>
