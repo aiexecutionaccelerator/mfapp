@@ -18,7 +18,7 @@ export default function GlassCard({
 
   return (
     <div
-      className={cn("glass relative overflow-hidden rounded-[20px] p-5", className)}
+      className={cn("glass edge-lit relative overflow-hidden rounded-[20px] p-5", className)}
       style={
         tone
           ? {

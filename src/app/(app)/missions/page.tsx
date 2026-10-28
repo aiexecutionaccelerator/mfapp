@@ -4,6 +4,7 @@ import { Check, ChevronRight, Play } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import FragranceTrio from "@/components/FragranceTrio";
+import MissionTrack from "@/components/MissionTrack";
 import Button from "@/components/ui/Button";
 import Eyebrow, { AccentDot } from "@/components/ui/Eyebrow";
 import Headline from "@/components/ui/Headline";
@@ -37,11 +38,20 @@ function MissionCard({
     <Link href={`/missions/${mission.number}`} className="block">
       <div
         className={cn(
-          "glass flex items-center gap-3 rounded-[14px] px-4 py-4",
-          next && "border-[var(--gold-500)]",
+          "glass card-hover flex items-center gap-3 rounded-[14px] px-4 py-4",
+          next && "card-next",
           complete && "border-[rgba(201,166,72,.35)]",
         )}
       >
+        <span
+          aria-hidden
+          className={cn(
+            "font-display w-9 shrink-0 text-center text-[34px] leading-none",
+            complete || next ? "text-gold-gradient" : "text-[rgba(245,241,232,.22)]",
+          )}
+        >
+          {String(mission.number).padStart(2, "0")}
+        </span>
         <span className="min-w-0 flex-1">
           <span className="eyebrow block text-gold-300">
             {next ? "NEXT · " : ""}MISSION {mission.number}
@@ -132,6 +142,11 @@ export default function MissionListPage() {
       </div>
 
       <Headline className="mt-6">YOUR 30-DAY MISSION</Headline>
+      <MissionTrack
+        className="mt-5"
+        completed={completed}
+        next={continueNumber}
+      />
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
         30 Missions, one a day. Each builds on the last. Miss a day and nothing
         resets. Pick up at the next one.
@@ -159,7 +174,7 @@ export default function MissionListPage() {
               <Eyebrow>
                 {stage.label} · {stage.range[0]}–{stage.range[1]}
               </Eyebrow>
-              <div className="mt-3 space-y-2.5">
+              <div className="stagger mt-3 space-y-2.5">
                 {visible
                   .filter(
                     (m) => m.number >= stage.range[0] && m.number <= stage.range[1],
@@ -179,7 +194,7 @@ export default function MissionListPage() {
         ) : (
           <>
             <Eyebrow>WHAT&apos;S NEXT</Eyebrow>
-            <div className="mt-3 space-y-2.5">
+            <div className="stagger mt-3 space-y-2.5">
               {visible.map((mission) => (
                 <MissionCard
                   key={mission.number}
@@ -203,7 +218,7 @@ export default function MissionListPage() {
 
       {/* The second door: something outside the thirty, any time. */}
       <Link href="/action/declare" className="mt-8 block">
-        <div className="glass flex items-center gap-3 rounded-[14px] px-4 py-4">
+        <div className="glass card-hover flex items-center gap-3 rounded-[14px] px-4 py-4">
           <span className="min-w-0 flex-1">
             <span className="eyebrow block text-gold-300">ONE-OFF ACTION</span>
             <span className="mt-1.5 block text-[15px] leading-snug text-ink-1">

@@ -42,7 +42,7 @@ export default function MissionRow({ mission }: { mission: Mission }) {
   const { label, className } = badge(mission);
 
   return (
-    <Link href={`/log/${mission.id}`} className="glass block rounded-[14px] p-4">
+    <Link href={`/log/${mission.id}`} className="glass card-hover block rounded-[14px] p-4">
       <div className="flex items-center justify-between gap-3">
         <p className="eyebrow flex items-center gap-2 text-ink-2">
           <AccentDot trigger={mission.trigger} />

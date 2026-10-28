@@ -3,6 +3,7 @@
 import { Info } from "lucide-react";
 import { useId, useRef, useState } from "react";
 import FragranceCue from "@/components/FragranceCue";
+import { useInView } from "@/components/motion/useInView";
 import MissionVideo from "@/components/MissionVideo";
 import PhotoInput from "@/components/PhotoInput";
 import { BlockerPanel, ContextPanels } from "@/components/mission/ContextPanels";
@@ -100,6 +101,7 @@ export default function MissionForm({
     editing ? record.photo_url : null,
   );
   const [confirmed, setConfirmed] = useState(false);
+  const [approach, setApproach] = useState<number | null>(null);
   const [aimChoice, setAimChoice] = useState<"current" | "previous">("current");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<"save" | "draft" | null>(null);
@@ -251,16 +253,41 @@ export default function MissionForm({
           helper="Pick the option that fits your life, or use your own version of the same task."
           onOpen={() => track("mission_options_opened", { missionNumber: def.number })}
         >
-          <ol className="space-y-2 text-[15px] leading-snug text-ink-1">
-            {def.choices.map((choice, i) => (
-              <li key={choice} className="flex gap-3">
-                <span className="font-display text-gold-gradient w-4 shrink-0 text-[17px] leading-tight">
-                  {i + 1}
-                </span>
-                <span>{choice}</span>
-              </li>
-            ))}
-          </ol>
+          {/* Tap one to mark the way you'll do it. Optional, one at a time,
+              tap again to clear. Never saved, never required (the spec: "not
+              a scored quiz, required radio buttons, or three tasks"). */}
+          <div className="space-y-2">
+            {def.choices.map((choice, i) => {
+              const picked = approach === i;
+              return (
+                <button
+                  key={choice}
+                  type="button"
+                  aria-pressed={picked}
+                  onClick={() => setApproach(picked ? null : i)}
+                  className={cn(
+                    "flex w-full items-start gap-3 rounded-[12px] border px-3 py-3 text-left text-[15px] leading-snug transition-all duration-200",
+                    picked
+                      ? "border-[var(--gold-500)] bg-[rgba(201,166,72,.1)] text-ink-0 shadow-[0_0_24px_rgba(201,166,72,.12)]"
+                      : "border-[var(--line)] text-ink-1 hover:border-[rgba(201,166,72,.4)]",
+                  )}
+                >
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "font-display flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[15px] leading-none transition-colors duration-200",
+                      picked
+                        ? "border-transparent bg-gold-gradient text-[#07090D]"
+                        : "border-[rgba(201,166,72,.45)] text-gold-300",
+                    )}
+                  >
+                    {picked ? "✓" : i + 1}
+                  </span>
+                  <span>{choice}</span>
+                </button>
+              );
+            })}
+          </div>
         </Disclosure>
 
         {previousAim && live.aim && (
@@ -510,18 +537,25 @@ export function StarStep({
   last?: boolean;
   children: React.ReactNode;
 }) {
+  // Each step lights its letter and fills the rail to the next one as it
+  // scrolls into view, so the four read as a path he's moving down.
+  const { ref, inView } = useInView<HTMLElement>();
   return (
-    <section className="relative mt-7 pl-12" aria-label={`${letter}: ${name}`}>
+    <section
+      ref={ref}
+      className={cn("reveal relative mt-7 pl-12", inView && "is-visible")}
+      aria-label={`${letter}: ${name}`}
+    >
       <span
         aria-hidden
-        className="font-display text-gold-gradient absolute top-0 left-0 w-8 text-center text-[30px] leading-none"
+        className="star-letter font-display text-gold-gradient absolute top-0 left-0 w-8 text-center text-[30px] leading-none"
       >
         {letter}
       </span>
       {!last && (
         <span
           aria-hidden
-          className="absolute top-10 -bottom-5 left-4 w-px bg-[var(--line)]"
+          className="star-rail absolute top-10 -bottom-5 left-4 w-px"
         />
       )}
       <p className="eyebrow pt-1.5 text-gold-300">{name.toUpperCase()}</p>

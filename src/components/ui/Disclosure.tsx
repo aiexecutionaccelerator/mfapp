@@ -43,9 +43,21 @@ export default function Disclosure({
           className={cn("shrink-0 transition-transform duration-200", open && "rotate-180")}
         />
       </button>
-      <div id={id} hidden={!open} className="px-4 pb-4">
-        {helper && <p className="text-[13px] leading-snug text-ink-2">{helper}</p>}
-        <div className={helper ? "mt-3" : undefined}>{children}</div>
+      {/* Height animates open (grid-rows); closed content is inert so it
+          can't be tabbed into or read out while hidden. */}
+      <div
+        id={id}
+        className="disclosure-body"
+        data-open={open}
+        inert={!open}
+        aria-hidden={!open}
+      >
+        <div>
+          <div className="px-4 pb-4">
+            {helper && <p className="text-[13px] leading-snug text-ink-2">{helper}</p>}
+            <div className={helper ? "mt-3" : undefined}>{children}</div>
+          </div>
+        </div>
       </div>
     </div>
   );

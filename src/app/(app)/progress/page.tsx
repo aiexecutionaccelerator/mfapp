@@ -9,13 +9,16 @@ import Headline from "@/components/ui/Headline";
 import ProgressRing from "@/components/ui/ProgressRing";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
+import CountUp from "@/components/motion/CountUp";
 import { useAppData } from "@/lib/data/store";
 import { MISSION_COUNT, computeStats } from "@/lib/stats";
 
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="glass rounded-[14px] p-4">
-      <p className="font-display text-[40px] leading-none text-ink-0">{value}</p>
+    <div className="glass edge-lit rounded-[14px] p-4">
+      <p className="font-display text-[40px] leading-none text-ink-0">
+        {typeof value === "number" ? <CountUp value={value} /> : value}
+      </p>
       <p className="eyebrow mt-2 text-ink-2">{label}</p>
     </div>
   );
@@ -82,7 +85,7 @@ export default function ProgressPage() {
 
       {/* Actions by the Scent Trigger he used. Honor + Courage + Commitment
           always equals the number in the ring. */}
-      <div className="mt-6 grid grid-cols-2 gap-3">
+      <div className="stagger mt-6 grid grid-cols-2 gap-3">
         <Stat label="Honor" value={stats.actions.honor} />
         <Stat label="Courage" value={stats.actions.courage} />
         <Stat label="Commitment" value={stats.actions.commitment} />

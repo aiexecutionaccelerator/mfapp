@@ -3,7 +3,9 @@
 import { Check, History, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Suspense, use, useEffect, useState } from "react";
+import MissionTrack from "@/components/MissionTrack";
 import NavAction from "@/components/NavAction";
+import CompletionMedal from "@/components/motion/CompletionMedal";
 import StarSystem from "@/components/StarSystem";
 import { ContextPanels } from "@/components/mission/ContextPanels";
 import MissionForm, { type FormMode } from "@/components/mission/MissionForm";
@@ -29,7 +31,11 @@ import {
 } from "@/lib/curriculum";
 import { store, useAppData } from "@/lib/data/store";
 import type { Mission } from "@/lib/data/types";
-import { MISSION_COUNT, computeStats, nextMissionNumber } from "@/lib/stats";
+import {
+  MISSION_COUNT,
+  completedMissionNumbers,
+  nextMissionNumber,
+} from "@/lib/stats";
 import { formatDate, formatDay } from "@/lib/utils";
 
 /**
@@ -93,20 +99,32 @@ function MissionDetailInner({
   /* ---------- just saved ---------- */
 
   if (justSaved) {
-    const allDone = computeStats(missions).missionsCompleted >= MISSION_COUNT;
+    const done = completedMissionNumbers(missions);
+    const allDone = done.size >= MISSION_COUNT;
     return (
       <main className="fade-in flex flex-1 flex-col pt-10">
-        <Headline className="text-center">
+        <CompletionMedal quiet={def.kind !== "action"} />
+        <Headline className="mt-8 text-center">
           {allDone ? "30-DAY MISSION COMPLETE" : "MISSION COMPLETE."}
         </Headline>
-        <p className="font-display text-gold-gradient mt-4 text-center text-[24px] leading-snug">
+        <p className="font-display gold-shimmer mt-4 text-center text-[26px] leading-snug">
           {successLine(def, justSaved)}
         </p>
-        <p className="mt-6 text-center text-[17px] text-ink-1">
+        <p className="mt-5 text-center text-[17px] text-ink-1">
           {allDone
             ? "Keep going. Log what you practice next as One-Off Actions."
             : "It's in your Proof Log."}
         </p>
+        <div className="mt-8 rise-in" style={{ animationDelay: "400ms" }}>
+          <div className="flex items-baseline justify-between">
+            <span className="eyebrow text-ink-2">YOUR 30</span>
+            <span className="font-display text-[20px] text-ink-0">
+              {done.size}
+              <span className="text-ink-2">/{MISSION_COUNT}</span>
+            </span>
+          </div>
+          <MissionTrack className="mt-2" completed={done} next={next} fresh={def.number} />
+        </div>
         <div className="mt-10">
           {allDone ? (
             <Button onClick={() => router.push("/personal-code")}>

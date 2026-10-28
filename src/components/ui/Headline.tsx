@@ -16,7 +16,7 @@ export default function Headline({
   return (
     <Tag
       className={cn(
-        "font-display uppercase text-ink-0",
+        "headline-reveal font-display uppercase text-ink-0",
         level === 1 ? "text-[40px] leading-[1.05]" : "text-[30px] leading-[1.1]",
         className,
       )}

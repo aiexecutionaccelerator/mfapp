@@ -102,9 +102,9 @@ export default function PersonalCodePage() {
         </p>
       )}
 
-      <div className="mt-8 space-y-5">
+      <div className="stagger mt-8 space-y-5">
         {written.map((line) => (
-          <div key={line.key} className="glass rounded-[20px] p-5">
+          <div key={line.key} className="glass edge-lit rounded-[20px] p-5">
             <Eyebrow tone="gold">{line.label}</Eyebrow>
             {editingKey === line.key ? (
               <div className="print-hide mt-3 space-y-3">

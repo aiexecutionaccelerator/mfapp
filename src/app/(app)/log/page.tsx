@@ -62,7 +62,7 @@ export default function LogPage() {
         </div>
       ) : (
         <>
-          <div className="mt-6 space-y-3">
+          <div className="stagger mt-6 space-y-3">
             {shown.map((mission) => (
               <MissionRow key={mission.id} mission={mission} />
             ))}

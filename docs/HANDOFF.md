@@ -19,8 +19,19 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 3.0.0 (curriculum revision 2, on branch `main-cig2ix` for review;
+- Version: 3.1.0 (curriculum revision 2 + motion pass, on branch `main-cig2ix` for review;
   NOT on `main` until Antonio signs off and 0009 is applied)
+
+## Motion and effects (v3.1.0)
+
+All in `src/app/globals.css` (one place) plus `src/components/motion/`:
+film grain + drifting gold light behind everything (body::before/::after),
+page entrance via `app/(app)/template.tsx`, staggered lists (`.stagger`),
+S.T.A.R. steps that light their letter and fill the rail on scroll
+(`useInView`), engraved headline reveal, animated disclosures, count-ups,
+the completion medal, the 30-segment `MissionTrack`, card lift/press, the
+tab bar's gold indicator. Everything honours prefers-reduced-motion. Never
+leave a transform/filter on a wrapper at rest: it traps `position: fixed`.
 
 ## Curriculum revision 2 (v3.0.0) — read this first
 

@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import CountUp from "@/components/motion/CountUp";
+
 export default function ProgressRing({
   value,
   max,
@@ -17,6 +22,12 @@ export default function ProgressRing({
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = Math.max(0, Math.min(value / max, 1));
+  // Draw from empty on first paint, so the arc sweeps to where he is.
+  const [drawn, setDrawn] = useState(0);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setDrawn(progress));
+    return () => cancelAnimationFrame(frame);
+  }, [progress]);
 
   return (
     <div
@@ -57,7 +68,9 @@ export default function ProgressRing({
           strokeWidth={stroke}
           strokeLinecap="butt"
           strokeDasharray={circumference}
-          strokeDashoffset={circumference * (1 - progress)}
+          strokeDashoffset={circumference * (1 - drawn)}
+          className="ring-fill"
+          style={{ filter: "drop-shadow(0 0 6px rgba(212,175,55,.45))" }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -65,7 +78,8 @@ export default function ProgressRing({
           className="font-display leading-none text-ink-0"
           style={{ fontSize: (size * (display === "count" ? 64 : 52)) / 180 }}
         >
-          {display === "count" ? value : `${value}/${max}`}
+          <CountUp value={value} />
+          {display === "count" ? "" : `/${max}`}
         </span>
         <span
           className="eyebrow mt-2 text-center text-ink-1"

@@ -36,11 +36,25 @@ export default function TabBar() {
                   href={href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex min-h-[60px] flex-col items-center justify-center gap-1",
-                    active ? "text-gold-300" : "text-ink-2",
+                    "relative flex min-h-[60px] flex-col items-center justify-center gap-1 transition-colors duration-200",
+                    active ? "text-gold-300" : "text-ink-2 hover:text-ink-1",
                   )}
                 >
-                  <Icon size={20} aria-hidden />
+                  {/* A short bar of gold light over the active tab. */}
+                  {active && (
+                    <span
+                      aria-hidden
+                      className="tab-active-bar absolute top-0 left-1/2 h-[2px] w-8 -translate-x-1/2 rounded-full bg-gold-gradient shadow-[0_0_12px_rgba(212,175,55,.8)]"
+                    />
+                  )}
+                  <Icon
+                    size={20}
+                    aria-hidden
+                    className={cn(
+                      "transition-transform duration-300",
+                      active && "-translate-y-px drop-shadow-[0_0_6px_rgba(212,175,55,.55)]",
+                    )}
+                  />
                   {/* 12px is the floor; the tracking gives way first. */}
                   <span className="text-[12px] tracking-[0.04em] whitespace-nowrap uppercase">
                     {label}

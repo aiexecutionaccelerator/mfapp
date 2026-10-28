@@ -29,8 +29,9 @@ let step = 0;
 // Full-page captures re-lay-out fixed elements, so anything modal (a sheet)
 // is shot at the viewport instead — that's what a man actually sees.
 async function shot(name, { full = true } = {}) {
-  // Sheets rise and fade in over 220ms; don't photograph them mid-fade.
-  if (!full) await page.waitForTimeout(400);
+  // Let entrances, reveals and count-ups settle (~1.4s at most) so the shot
+  // shows the screen as it rests, not mid-animation.
+  await page.waitForTimeout(1500);
   step += 1;
   const file = `${OUT}/${String(step).padStart(2, "0")}-${name}.png`;
   await page.screenshot({ path: file, fullPage: full });
@@ -311,6 +312,7 @@ await page.getByText("4/30 COMPLETE").waitFor();
 // the code Mission too
 await page.goto(`${BASE}/progress`);
 await page.getByText("YOUR PROGRESS").waitFor();
+await page.waitForTimeout(1500); // the numbers count up
 const tile = (label) =>
   page
     .locator("div.glass", { has: page.getByText(label, { exact: true }) })
