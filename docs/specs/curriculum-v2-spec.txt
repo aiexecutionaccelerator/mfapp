@@ -1,0 +1,921 @@
+
+Mission Fragrances mission revision specification
+Implementation handoff for Kai Hegde
+Prepared for Antonio Centeno  |  28 October 2026  |  Curriculum revision 2
+The change to make
+Revise the 30 missions into a deliberate progression that helps a man practice honor, courage, and commitment. Keep the original app structure and presentation. Each mission must have a distinct purpose, a manageable task, useful options, an honest completion rule, and a clear connection to the missions around it.
+The intended outcome is greater self-trust, confidence, focus, and follow-through: a man can look at his own actions and see evidence that he keeps his word, faces worthwhile discomfort, and returns to his priorities. These are product goals to evaluate with users, not guaranteed psychological outcomes.
+What Kai should implement
+Port the exact 30 mission definitions in this document into the existing Mission Fragrances app, preserving mission numbers and the original visual system.
+Use Select, Trigger, Act, Record throughout. Trigger is spraying the fragrance. Recalling a past experience belongs under Act and is recorded as a reflection.
+Carry the user’s own code, promise, aim, and practice into later missions. Keep examples as guidance; never save example text as the user’s evidence.
+Distinguish a completed action from a saved reflection, code statement, plan, and unfinished draft. Preserve existing user records and progress during the change.
+Implement and test on a reviewable branch or staging environment. Return a walkthrough, migration evidence, and the completed acceptance checklist before a live release.
+Scope and status
+The revised curriculum and supporting screens exist in a private prototype. This specification is the implementation contract for carrying that work into the existing app. The prototype is a reference, not a replacement production backend. Its source, known gaps, and prior checks are identified later in this document.
+Keep the original four tabs, narrow phone layout, scent selection, vertical STAR steps, full-width primary button, completion screen, Proof Log, and Personal Code. Preserve the existing STAR explanation and video section. Kai reported that section restored on 28 October; confirm it remains intact during this revision.
+No redesign of authentication, hosting, payments, push notifications, or the production database is requested. Do not introduce public journals, leaderboards, mandatory sharing, calendar locks, or a reset after a missed day.
+How to use this document
+Read the curriculum and interaction rules first. The 30 mission pages contain exact user-facing copy and mission-specific checks. The final sections define production migration, acceptance tests, and the implementation handoff. Where the prototype differs from the required production behavior, the difference is stated explicitly.
+The curriculum progression
+Stage
+Missions
+Purpose and result
+Build self-trust
+1–7
+Notice contribution, face avoidance, keep a promise, repair a mistake, ask for help, recall a real strength, and establish a cue.
+Set your standards
+8–14
+Write five practical Personal Code lines, choose an identity direction, then practice one code line.
+Put your values to work
+15–21
+Apply care, focus, honest review, preparation, and service; use the learning to choose a seven-day aim.
+Build lasting momentum
+22–30
+Advance the aim, protect time, remove friction, recover, design a repeatable practice, repeat, share selectively, and continue.
+
+The connections that make the sequence work
+Missions 1–5 create small experiences of the three values before the user is asked to define them. Mission 6 adds a specific remembered example. Mission 7 attaches the practice to an event already present in his day. Missions 8–12 convert this experience into standards and a meaningful promise.
+Mission 13 turns the code into an identity direction. Mission 14 immediately tests a code line through behavior. Missions 15–20 exercise distinct practical skills; the saved promise stays visible so the tasks have a personal reference point. They need not all advance the same work or financial goal: caring for relationships, capacity, and other people remains part of the curriculum.
+Mission 21 is the deliberate narrowing point. The user chooses an area and a specific seven-day aim. Missions 22–25 must use that saved aim: take an avoided step, prepare the next repetition, protect time, then remove a recurring distraction. Mission 26 teaches a repair or restart. Mission 27 uses experience to design a repeatable practice with a fallback.
+Mission 28 repeats something that worked. Mission 29 explains a selected standard and its practical behavior to a trusted person. Mission 30 reviews actual evidence, keeps or adjusts the practice, and defines how to continue for the next month.
+Why repetition remains purposeful
+Mission 2 practices starting; Mission 17 practices sustained attention; Mission 22 applies courage to a selected aim. Mission 7 establishes the fragrance cue; Mission 19 removes a physical obstacle; Mission 23 prepares a specific next repetition; Mission 25 changes a recurring distraction. Mission 3 keeps a promise now; Mission 12 defines a continuing promise; Mission 27 turns it into a repeatable plan. Preserve these differences in copy and examples.
+Pacing and agency
+Recommend one mission a day and always identify the next unfinished mission by number. Let the user browse all 30 and continue sooner if useful. Only genuine prerequisites block completion. A missed day does not remove progress, reset the sequence, or imply failure. Thirty missions are the program length, not a promise that a habit forms in 30 days.
+The STAR interaction contract
+Use one shared STAR definition in onboarding, mission reminders, Settings, and the existing explanatory section. Keep the spelling Select, Trigger, Act, Record. The mission pages supply the task-specific wording; the app supplies the shared interaction.
+Step
+Shared wording
+Required behavior
+S  Select
+Select your Scent Trigger.
+Show Honor, Courage, Commitment. Default to the mission’s suggested fragrance, explain its value, and allow another of the three.
+T  Trigger
+Spray the fragrance and breathe it in.
+The spray is the cue. Do not redefine Trigger as a memory exercise. No timer, sensor, or proof of spraying is required.
+A  Act
+Take one small action that’s aligned with the value, or recall a time you lived it.
+Show the specific assignment, time estimate, three approaches, relevant saved context, note, and Done when rule.
+R  Record
+Log what you did, recalled, defined, or planned. Completed actions build your evidence; plans describe practice still ahead.
+Provide the mission prompt and blank own-words field, with examples separate and optional. Save with the correct record type.
+
+Shared closer: “Repeat the practice. Let your scent remind you of the values you choose to live.”
+How to interpret Act
+The general STAR explanation includes reflection, but individual missions still have a defined assignment. Remembering a past action does not complete an action mission. Mission 6 is explicitly a reflection. Missions 8–13 define code or identity. Missions 21, 27, and 30 save plans. Completion wording must identify the actual outcome.
+Options and examples
+Under Act, use the expandable label “Choose one way to do it” and helper “Pick the option that fits your life, or use your own version of the same task.” The three options are equivalent approaches to one objective. They are not a scored quiz, required radio buttons, or three tasks to complete.
+Under Record, use the expandable label “Need an example?” and helper “For inspiration. Write what is true for you.” Examples are explanatory text. Tapping or expanding them must never populate the record, check the completion box, or save anything.
+Mission 13 is the intentional exception to a blank starting field: show the current identity statement, or “Keeps his word, acts despite fear, and follows through.” The user must deliberately keep or edit it and save. Merely visiting the screen never completes the mission.
+Suggested value definitions
+Honor: “You live by a moral code, tell the truth, keep promises, and own your actions.” Courage: “You do what you know is right despite fear, danger, or pressure to do otherwise.” Commitment: “You fulfill your responsibilities through consistent effort and perseverance.” Keep these shared definitions consistent; the mission rationale explains their particular application.
+Screen structure and truthful completion
+Mission screen order
+Back navigation, mission number out of 30, and saved state.
+Stage label, title, short hook, and existing STAR reminder link.
+Vertical S, T, A, R steps using the original visual pattern.
+In Act: task, time and type, optional approaches, relevant saved context, note, and Done when.
+In Record: prompt, own-words text, optional examples, mission-specific fields, optional photo where supported, and action confirmation when applicable.
+Primary save or completion button, Save draft for later, and clear pending or error feedback.
+Record types and counts
+Type
+Missions
+Save outcome
+Counts as action
+Action
+1–5, 7, 14–20, 22–26, 28–29
+Actual task performed and record saved
+Yes
+Reflection
+6
+Specific past experience recorded
+No
+Code
+8–13
+Standard or identity saved
+No
+Plan
+21, 27, 30
+Direction or practice plan saved
+No
+Draft
+Any unfinished mission
+Work saved for later
+No; not a completed mission
+
+All 30 assigned exercises can count toward mission completion. Action totals count only saved action entries, including valid One-Off Actions. A One-Off Action never advances the 30-mission completion count. A fragrance choice, written intention, copied code, or viewed example does not count as an action.
+Labels and confirmation
+Action missions require the unchecked-by-default confirmation “I have taken this action.” Primary labels are “RECORD · COMPLETE MISSION N”, “SAVE REFLECTION”, “SAVE TO MY CODE”, “SAVE FOCUS & AIM” for Mission 21, and “SAVE PRACTICE PLAN” for Missions 27 and 30. Existing records use “SAVE CHANGES”. All unfinished missions offer “SAVE DRAFT FOR LATER”.
+The shared success headline may say “MISSION COMPLETE.” The supporting line must remain type-specific: “You acted with [selected value].”, “Your reflection is saved.”, “Your Personal Code is taking shape.”, “Your focus and aim are saved.”, or “Your practice plan is saved.” A code or plan must never be praised as a completed external behavior.
+Layout and accessibility
+Preserve the original 430-pixel maximum shell, roughly 20-pixel mobile gutters, Inter and Bebas typography, black-and-gold treatment, fragrance assets, four bottom tabs, and full-width buttons. Fit smaller screens without horizontal scrolling. Retain the original completion and record views. Use visible field labels, accessible expandable controls, keyboard focus, readable contrast, and status text alongside color. The keyboard and bottom navigation must not cover the record field or save controls.
+Dependencies and saved context
+Source
+Where used
+Rule
+Code lines 8–12
+14 and 29
+All five saved, nonremoved lines required before completion. Show the code and link to missing work.
+Promise 12
+15–21
+Show the saved promise when available. It guides the task but does not block completion.
+Aim 21
+22–25
+Require a saved focus and seven-day aim. Display both; provide a direct return to 21 when absent.
+Aim 21
+26–30
+Show when available. No extra hard prerequisite; 27 can choose a priority now.
+Practice 27
+28–30
+Show the saved practice when available, independently of whether 21 exists.
+Completed actions
+21, 28, 30
+Offer recent action evidence. Mission 28 requires at least one prior action other than itself.
+Identity 13
+Profile and Personal Code
+Saving 13 updates identity. Later profile edits update the same completed 13 entry without creating another.
+
+Context rules for production
+Use the user’s own saved wording. Display promise, focus, aim, and practice as contextual information under Act, not as suggested answers. The focus areas are Relationships, Health, Work, Money, Home, and Service. A focus area alone is not a seven-day aim: Mission 21 also requires the user’s own result and reason in the text field.
+Capture the task version and the relevant context used for each completed record. Editing a later goal must never rewrite what an older action was attempting. Preserve the original completion date; use a separate update timestamp for edits. Completed context is historical and remains frozen.
+Unfinished drafts need different handling. If the prerequisite was absent when the draft began, show the newly saved context when it becomes available. If the user changes an aim while a later draft exists, show that the aim changed and let him keep the previous aim or switch to the current one. Keep his draft text in either case. Persist the chosen context on completion.
+Known prototype differences to resolve
+The prototype currently freezes context at the first draft save, including an empty context. A Mission 22 draft created before Mission 21 can therefore miss the subsequently saved aim. Its practice panel is also nested under the aim panel, so a valid Mission 27 practice can be hidden when no Mission 21 aim exists. Fix both conditions when implementing this spec.
+The prototype derives the five code lines live. Production should additionally snapshot the code context used by Missions 14 and 29, so a later code edit does not change the meaning of the original action. Show current standards for unfinished work and the historical version for completed records.
+Removal and exceptions
+Removing a prerequisite blocks future completion but preserves downstream history. Restore reinstates the same record. Explain missing prerequisites without destroying text. Browsing, drafts, and completed records remain available; do not lock every mission behind all earlier missions.
+Data and persistence requirements
+Adapt these logical fields to the production schema. The prototype’s field names clarify intent; they do not require replacing the current database or APIs.
+Object
+Required information
+Mission definition
+Stable number 1–30; title; kind; value; hook; action; prompt; two examples; time; optional note; phase; why; three choices; finish; curriculumVersion 2.
+Saved record
+Owner; stable record ID; mission number or One-Off Action; kind; selected scent; own-words text; confirmation; original completion date; update date; removal state; mission snapshot; context snapshot.
+Mission 21
+One allowed focus area plus seven-day aim and reason in the text record.
+Missions 27 and 30
+Practice text, selected fragrance, allowed frequency, and review date. Cue, behavior, fallback or restart remain in the own-words text.
+Draft
+Unfinished form values and task version, saved separately from completed records; context refresh or selection state as specified.
+Profile
+Name and identity; one canonical identity synchronized with a completed Mission 13.
+
+Validation at the trusted write boundary
+Derive kind and task definition from the server’s approved mission version. Reject a client attempting to reclassify a plan or reflection as an action, or replace its mission snapshot.
+Require Honor, Courage, or Commitment as the selected fragrance. Require trimmed, nonempty record text; maximum 1,000 characters, or 280 for Mission 13. Profile name maximum is 60 characters.
+Require action confirmation on completed action saves. Validate prerequisites on the server as well as in the interface. Incomplete fields may be saved in drafts without progress credit.
+For 27 and 30 require Daily, Weekly, or Three times a week, plus a real future review date in the user’s timezone. Reject impossible dates and new dates today or earlier. Allow an unchanged historical review date when editing a previously saved plan.
+Optional photos are supported only on 7 and 19. Preserve production upload limits and authorization; do not fetch arbitrary external photo URLs. Photo upload failure must not erase text or falsely show a successful save.
+Save integrity
+Use one canonical completed record per mission per user. Repeated save clicks and network retries must update that record, not duplicate it. One-Off Actions need unique independent IDs. The prototype uses mission-N and extra-UUID within its single-owner journal; production IDs or uniqueness constraints must also include the user boundary.
+Use the existing conflict or revision mechanism to prevent lost writes. Show success only after confirmed persistence. On validation or network failure, keep text and explain the error beside the form. Save draft, complete, edit, remove, restore, and reload must produce consistent progress, log, code, and identity views.
+The app cannot prove that an offline action happened or judge whether a personal standard is sincere. Clear instructions, honest labels, and explicit user confirmation are the intended safeguards. Do not add automatic tense grading or AI scoring as a release requirement.
+Migration and production release
+Preserve the meaning of old records
+Before replacing production mission definitions, capture the actual live definitions and their version mapping. Archive or snapshot each historical task so an old record continues to show the instructions under which it was created. Do not assume the prototype’s legacy-missions.json represents every production version.
+For example, earlier Mission 4 was a gratitude task. A record saying “I thanked my partner” must remain attached to that original task. It must not be relabeled “Own Your Part” or presented as evidence of an apology. Show an earlier-wording notice and allow the revised task to be viewed separately.
+Keep mission numbers stable and existing completion credit intact. Existing users are not required to redo revised missions. Preserve old drafts under their original wording, with an explicit choice if offering a switch to the revised task. Never silently replace the task associated with an existing draft or completion.
+Classify legacy Mission 21 records carefully: the old focus choice may lack a seven-day aim. Keep the old completion, but ask the user to add a current aim before starting revised Missions 22–25. Do not invent an aim from a category or relabel a historical record as if it already contained one.
+Implementation order
+Inventory the current production branch, schema, mission definitions, STAR/video placements, and existing behavior. Record the baseline and differences from this spec.
+Create a reviewable branch. Add versioned curriculum data and migration support before changing displayed instructions.
+Implement the shared mission renderer, truthful type labels, context propagation, draft refresh, prerequisites, and validation. Preserve the existing visual system and account architecture.
+Run the acceptance scenarios on clean accounts and representative legacy accounts, including interrupted and conflicting saves. Verify original and revised task histories side by side.
+Provide staging access or a walkthrough, a changed-files summary, test results, migration counts, known issues, and a rollback plan. Antonio reviews wording and experience before live rollout.
+Safe rollback behavior
+Back up relevant production records before migration. Make the migration idempotent and report counts for mapped, unchanged, and unresolved records. Unresolved version mapping must remain visible for review, not silently assigned. A release toggle or rollback must preserve newly written revision 2 records and snapshots; rolling back UI code must not discard or mislabel their data.
+Production boundary
+The Sites prototype is an owner-private journal using a single-owner storage pattern. Do not grant team-wide or public access to that journal or reuse its account boundary for customers. Kai should use the existing production authentication, user isolation, storage, and notification services. Review copies and synthetic test accounts should contain no private journal content.
+What has and has not been checked
+The prototype has passed TypeScript checks, a production build, 18 state checks, and browser inspection of all 30 mission screens, drafts, action confirmation, and the Mission 21 to 22 handoff. These are reference checks, not a substitute for testing the production port. They do not establish a completed 30-day study, improved confidence, retention, real-device reliability, or a completed production migration.
+The 30 mission specifications
+The following pages contain the exact curriculum revision 2 wording. Each page identifies the assigned task, three valid approaches, two illustrative records, and the point at which it is complete. Preserve the wording as a unit; changing only a title while leaving an old prompt or example would reintroduce contradictions.
+Every mission uses the shared Select and Trigger interaction described earlier. The suggested scent can be changed. Every record is the user’s own account. The implementation notes and sequence connections on these pages are for Kai; they are not additional screens or instructional paragraphs to add to the product.
+Mission directory
+Missions
+Titles
+1–7
+1 Give Credit Where It Is Due2 Break the Avoidance Loop3 Keep One Small Promise4 Own Your Part5 Ask Instead of Pretending6 Remember Your Own Strength7 Give Your Practice a Place
+8–14
+8 Define Your Honor9 Define Your Courage10 Define Your Commitment11 Draw One Honest Boundary12 Choose the Promise That Matters13 Name the Man You Are Becoming14 Put Your Code to Work
+15–21
+15 Make Room for Someone16 Support the Man Doing the Work17 Finish One Focused Block18 Face One Useful Fact19 Make Your Priority Easier20 Be Useful on Purpose21 Choose One Direction
+22–30
+22 Take the Step You Are Avoiding23 Make Tomorrow Easier24 Protect Your Yes25 Remove One Recurring Distraction26 Recover Without Excuses27 Build a Practice You Can Keep28 Repeat What Worked29 Let Someone Support Your Standard30 Carry Your Momentum Forward
+
+Mission 1 Give Credit Where It Is Due
+Build self-trust  |  Honor  |  Action  |  About 2 minutes
+Hook Start by noticing what someone else has done for you.
+Select Honor means recognizing other people’s contributions and treating them with respect.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Tell one person exactly what they did that you appreciate and why it mattered. Send the message or say it to them today.
+Choose one way to do it
+1. Thank someone close to you for a specific way they supported you.
+2. Give a coworker credit for something they made easier.
+3. Thank someone whose everyday effort you usually take for granted.
+Record
+Who did you thank, and what did you tell them?
+Example 1 I thanked my brother for checking in while I was having a rough week.
+Example 2 I told my coworker her careful handover helped me finish the job.
+Done when You have expressed the appreciation. Thinking it or drafting it is preparation.
+Implementation and sequence
+Opens with an achievable act of respect. Supplies a concrete experience for the Honor line in Mission 8.
+Revision rationale Previous title: Prove It. Keeps the quick first win, but makes respect and giving credit its explicit purpose.
+Mission 2 Break the Avoidance Loop
+Build self-trust  |  Courage  |  Action  |  2–5 minutes
+Hook Make the thing you are avoiding smaller than the excuse.
+Select Courage means moving toward a worthwhile task while discomfort is still there.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Choose one useful task you have delayed because it feels uncomfortable. Take its first concrete step now. Keep the step small enough to finish in five minutes.
+Choose one way to do it
+1. Send the straightforward email you have been putting off.
+2. Request an appointment you have delayed.
+3. Complete the first section of a necessary form.
+Record
+What were you avoiding, and what first step did you take?
+Example 1 I was avoiding the repair call. I called and requested an estimate.
+Example 2 I was dreading the application. I completed the contact section.
+Done when One real step is finished. The whole task does not have to be.
+User note Choose an ordinary, manageable task. This mission is about useful discomfort, not taking unnecessary risks.
+Implementation and sequence
+Adds useful discomfort after the first win. Later Missions 17 and 22 develop sustained focus and goal-directed courage.
+Revision rationale Previous title: Stop Putting It Off. Defines a manageable avoided task and requires a real first step.
+Mission 3 Keep One Small Promise
+Build self-trust  |  Commitment  |  Action  |  Time varies
+Hook Give yourself a reason to trust your own word.
+Select Commitment turns an intention into something another person—or you—can rely on.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Keep one small promise you have made to yourself or someone else. Choose one you can fulfill today; if you have none, make a small promise and carry it out now.
+Choose one way to do it
+1. Return a call or message when you said you would.
+2. Finish a small responsibility you agreed to handle.
+3. Keep a modest promise to yourself, such as five minutes on a neglected task.
+Record
+What did you promise, and how did you follow through?
+Example 1 I promised to return the borrowed drill today, and I dropped it off.
+Example 2 I promised myself five minutes on the paperwork, and I completed that time.
+Done when The promise has been kept. A promise for later stays a draft.
+Implementation and sequence
+Adds follow-through to the first two values. Prepares the continuing promise in Mission 12.
+Revision rationale Previous title: Keep Your Word. Distinguishes making a promise from fulfilling it; offers a route when no promise is pending.
+Mission 4 Own Your Part
+Build self-trust  |  Honor  |  Action  |  5–10 minutes
+Hook Self-respect includes admitting when you got something wrong.
+Select Honor means owning your conduct without passing blame or demanding forgiveness.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Choose one small mistake or overlooked responsibility that is yours. Acknowledge it plainly and take a practical step to put it right.
+Choose one way to do it
+1. Correct inaccurate information you gave someone and tell them what changed.
+2. Acknowledge a missed responsibility and complete a useful part of it.
+3. Apologize for a specific inconsiderate act and make a small repair.
+Record
+What did you take responsibility for, and what did you do to repair it?
+Example 1 I told my coworker I had sent the wrong date and sent the corrected details.
+Example 2 I owned leaving the kitchen for someone else and cleaned it.
+Done when You have acknowledged your part and made a repair within your control.
+User note Choose an everyday situation that is safe to address. You do not need to disclose private details in your log or obtain anyone’s forgiveness.
+Implementation and sequence
+Extends respect into accountability. Supplies a practical repair model for Missions 8, 11, and 26.
+Revision rationale Previous title: Honor Someone Who Matters. Replaces the second gratitude task with accountability and a practical repair.
+Mission 5 Ask Instead of Pretending
+Build self-trust  |  Courage  |  Action  |  2–5 minutes
+Hook You do not need every answer to take the next step.
+Select Courage includes letting yourself be a beginner and admitting what you need.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Ask one clear question or request one specific piece of help with something that matters to you.
+Choose one way to do it
+1. Ask someone to explain a part of a task you do not understand.
+2. Request feedback on one specific piece of work.
+3. Ask a trusted person for a manageable piece of practical help.
+Record
+What did you ask, and what uncertainty did you face?
+Example 1 I asked my colleague to explain the step I had been pretending to understand.
+Example 2 I asked a friend to look over the opening of my presentation.
+Done when You have made the request. A reply or a yes is not required.
+Implementation and sequence
+Makes asking for help a legitimate expression of courage. Informs the Courage line and later goal work.
+Revision rationale Previous title: Act Before You Are Ready. Replaces another generic start with the distinct skill of asking for help or feedback.
+Mission 6 Remember Your Own Strength
+Build self-trust  |  Honor  |  Reflection  |  3–5 minutes
+Hook Use something real when doubt tells you who you are.
+Select An honest memory gives you a concrete example of a value you have already practiced.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Recall one specific time you acted with honor, courage, or commitment. Name the difficulty, what you actually did, and the quality you want to use again.
+Choose one way to do it
+1. Recall telling the truth when hiding it would have been easier.
+2. Recall taking a worthwhile step while you were nervous.
+3. Recall continuing a responsibility during a difficult period.
+Record
+What happened, what did you do, and what does it remind you you can do?
+Example 1 I admitted a missed deadline and helped fix the problem. I can own my part when I feel embarrassed.
+Example 2 I kept visiting my dad during a hard month. I can keep showing up.
+Done when You have recorded one specific memory and the quality you want to use again.
+User note Select the fragrance that matches the memory. This is a reflection on the past, recorded separately from a new action today.
+Implementation and sequence
+Uses one real memory as evidence before writing standards. It does not increase the action count.
+Revision rationale Previous title: Remember Who You Have Been. Keeps reflection, but asks for a specific event, behavior, and reusable quality.
+Mission 7 Give Your Practice a Place
+Build self-trust  |  Commitment  |  Action  |  About 2 minutes
+Hook A useful reminder belongs where your day already happens.
+Select Commitment is easier to practice when you have a dependable place and starting cue.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Place your fragrance where it can remind you to practice, away from heat and direct sunlight. Choose the everyday event that will prompt you to open your next mission.
+Choose one way to do it
+1. Put it by your watch and begin after getting dressed.
+2. Put it on a shaded bedroom shelf and begin before leaving the room.
+3. Put it with your morning essentials and begin after making your bed.
+Record
+Where did you put it, and after what everyday event will you begin?
+Example 1 I put Honor beside my watch. After getting dressed, I will open the next mission.
+Example 2 I put the set on my bedroom shelf. After making my bed, I will begin.
+Done when The bottle is in place and you have named your starting cue.
+User note Use a safe, appropriate place. One bottle is enough to set up your reminder. A photo is optional; setting up the cue does not mean future practice is complete.
+Implementation and sequence
+Completes the first stage with a physical cue and daily starting event. Mission 27 later adds a repeatable practice.
+Revision rationale Previous title: Put Your Reminder Where You Will See It. Links a visible fragrance cue to an existing daily event, rather than merely arranging a bottle.
+Mission 8 Define Your Honor
+Set your standards  |  Honor  |  Code  |  3–5 minutes
+Hook Write a standard you can recognize in your own behavior.
+Select Your Personal Code begins with a practical standard for integrity and respect.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Finish “For me, honor means…” with one behavior you want to stand by. Make it specific enough that you could tell whether you lived it today.
+Choose one way to do it
+1. Use honesty: describe how you will tell the truth.
+2. Use responsibility: describe how you will own your part.
+3. Use respect: describe how you will treat someone who cannot benefit you.
+Record
+For me, honor means…
+Example 1 Telling the truth about my mistakes and taking responsibility for repairing them.
+Example 2 Giving people credit for their work, even when I could take it myself.
+Done when One clear Honor line is saved to your Personal Code.
+User note This defines your standard. You will practice a code line in Mission 14; saving words does not prove you have lived them.
+Implementation and sequence
+Uses early experience to define Honor. Creates code line 1, required with lines 9–12 for Missions 14 and 29.
+Revision rationale Previous title: Honor in Your Words. Turns an abstract value definition into an observable standard.
+Mission 9 Define Your Courage
+Set your standards  |  Courage  |  Code  |  3–5 minutes
+Hook Name the useful action fear tends to stop.
+Select A concrete Courage line gives you direction when avoidance becomes tempting.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Finish “For me, courage means…” with a worthwhile behavior you want to practice even when you feel uncomfortable.
+Choose one way to do it
+1. Name a respectful conversation you tend to avoid.
+2. Name a situation where you need to ask for help.
+3. Name a useful first step you delay because you might be judged.
+Record
+For me, courage means…
+Example 1 Asking for help when I am stuck instead of pretending I understand.
+Example 2 Speaking honestly and respectfully when I disagree.
+Done when One clear Courage line is saved to your Personal Code.
+User note Courage serves a worthwhile purpose. Your line should not require danger, hostility, or ignoring sound judgment.
+Implementation and sequence
+Turns earlier avoidance and asking exercises into a standard. Creates code line 2.
+Revision rationale Previous title: Courage in Your Words. Names worthwhile discomfort and a behavior, with no encouragement to take reckless risks.
+Mission 10 Define Your Commitment
+Set your standards  |  Commitment  |  Code  |  3–5 minutes
+Hook Decide what showing up looks like on an ordinary day.
+Select Commitment is consistent effort with a way back when life interrupts.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Finish “For me, commitment means…” with a repeatable behavior and how you will return to it after a missed opportunity.
+Choose one way to do it
+1. Describe showing up for a person who relies on you.
+2. Describe giving a priority regular, protected attention.
+3. Describe returning to a useful practice after missing it.
+Record
+For me, commitment means…
+Example 1 Giving my important work ten focused minutes and returning at the next opportunity if I miss.
+Example 2 Keeping regular time with my family and honestly rescheduling when a real conflict arises.
+Done when One clear Commitment line is saved to your Personal Code.
+User note Choose a standard you can practice. “Never fail” gives you no useful way to recover.
+Implementation and sequence
+Turns follow-through into a repeatable standard with recovery. Creates code line 3.
+Revision rationale Previous title: Commitment in Your Words. Builds returning after a miss into the definition of commitment.
+Mission 11 Draw One Honest Boundary
+Set your standards  |  Honor  |  Code  |  3–5 minutes
+Hook Decide what you will do when a shortcut tests your values.
+Select Honor becomes easier to apply when you have decided how to handle pressure.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Name one line you will not cross and the response you will use instead. Keep the boundary about your own behavior.
+Choose one way to do it
+1. Replace hiding a mistake with acknowledging it and making a repair.
+2. Replace taking undeserved credit with naming the person who contributed.
+3. Replace agreeing to something you cannot deliver with stating what you can do.
+Record
+I will not ____. Instead, I will ____.
+Example 1 I will not hide a mistake to protect my image. Instead, I will acknowledge it and correct what I can.
+Example 2 I will not promise time I cannot give. Instead, I will offer a realistic commitment.
+Done when Your boundary and the alternative you will use are saved.
+Implementation and sequence
+Adds a usable response to pressure. Creates code line 4 and prepares the boundary practiced in Mission 24.
+Revision rationale Previous title: The Line You Will Not Cross. Adds the behavior to use instead of only naming a prohibition.
+Mission 12 Choose the Promise That Matters
+Set your standards  |  Commitment  |  Code  |  3–5 minutes
+Hook Put one meaningful priority ahead of a list of good intentions.
+Select Commitment needs a direction. This promise will guide the practice you build later.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Choose one area of your life that matters to you. Define a small, repeatable action in your control that would move it forward, and say why it matters.
+Choose one way to do it
+1. Choose connection: give someone you care about regular, undivided attention.
+2. Choose a personal goal: spend a small block of time doing its next useful task.
+3. Choose daily care: repeat one manageable action that supports your wellbeing.
+Record
+My promise is to ____, because ____.
+Example 1 My promise is ten focused minutes on my qualification after breakfast, because I want more options.
+Example 2 My promise is to put my phone away during dinner, because I want to be present with the people I love.
+Done when One meaningful promise is saved, with a behavior you control and a reason.
+User note Define the promise today. Future repetitions are still ahead. You can refine the promise as you learn what works.
+Implementation and sequence
+Creates code line 5 and the promise shown in Missions 15–21. This supplies direction for later planning.
+Revision rationale Previous title: The Promise That Matters Most. Establishes a meaningful promise early so later work has a direction.
+Mission 13 Name the Man You Are Becoming
+Set your standards  |  Courage  |  Code  |  About 3 minutes
+Hook Let your identity point to something you can do.
+Select Courage includes choosing how you will act before confidence catches up.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Read the statement below. Keep it if it fits, or make it more specific using your code and promise.
+Choose one way to do it
+1. Describe a man who takes responsibility for his conduct.
+2. Describe a man who faces worthwhile discomfort.
+3. Describe a man who follows through and returns after setbacks.
+Record
+I am becoming a man who…
+Example 1 Keeps his word, admits his mistakes, and makes repairs.
+Example 2 Takes the next useful step even when he feels unsure.
+Done when You have deliberately kept or updated your identity statement.
+User note You do not need to claim perfection. Your statement is a direction you are choosing, not a verdict on your worth.
+Implementation and sequence
+Summarizes the code and promise as an identity direction. Save updates profile identity; opening the page does not.
+Revision rationale Previous title: The Man You Are Becoming. Connects identity to the code and promise; keeping the existing statement is valid.
+Mission 14 Put Your Code to Work
+Set your standards  |  Honor  |  Action  |  5–10 minutes
+Hook Give one of your standards a real example.
+Select Honor connects the standard you wrote with the way you actually behave.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Read your Personal Code below. Choose one line and take one small action today that puts it into practice.
+Choose one way to do it
+1. Practice your Honor line through an honest correction or a fair decision.
+2. Practice your Courage line by making a useful request or speaking respectfully.
+3. Practice your Commitment line by completing a small promised action.
+Record
+Which code line did you practice, and what did you do?
+Example 1 My line is to own mistakes. I corrected an inaccurate update I had sent.
+Example 2 My line is to follow through. I completed the call I had promised.
+Done when You can name the code line and the action you have completed.
+User note Choose the fragrance that best matches the line you are practicing. If the action is later today, save a draft and return after it happens.
+Implementation and sequence
+Requires all five saved code lines from Missions 8–12. Practices one line before the wider application stage.
+Revision rationale Previous title: Your Personal Code. Requires the record to name both the code line and the action that practiced it.
+Mission 15 Make Room for Someone
+Put your values to work  |  Commitment  |  Action  |  3–5 minutes
+Hook A person who matters deserves a real place in your week.
+Select Commitment makes care practical by giving it time and follow-through.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Arrange one specific time to give someone your attention. Ask what works for them and reserve a time you can keep.
+Choose one way to do it
+1. Propose a call with a friend and hold the time in your calendar.
+2. Agree on a short walk or conversation with someone close to you.
+3. Ask a family member when you can spend some uninterrupted time together.
+Record
+Who did you contact, and what time did you arrange or propose?
+Example 1 I asked my brother about a Thursday call and held 7 PM while I wait for his reply.
+Example 2 My partner and I agreed on a Sunday walk, and I added it to my calendar.
+Done when You have contacted the person and reserved or agreed on a time.
+User note Label a proposal as a proposal. This records arranging time; it does not claim the visit or call has happened.
+Implementation and sequence
+Show the saved promise when available. Completion is contacting someone and reserving time, not attending the event.
+Revision rationale Previous title: Make Time for Them. Adds contact with the other person and distinguishes proposed time from an agreed meeting.
+Mission 16 Support the Man Doing the Work
+Put your values to work  |  Commitment  |  Action  |  2–10 minutes
+Hook Your goals need a person with the capacity to pursue them.
+Select Commitment includes maintaining your capacity to keep showing up.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Notice one basic need you have neglected today. Take one small, appropriate step to care for yourself before your next demanding task.
+Choose one way to do it
+1. Take a brief movement break that suits your abilities.
+2. Step away for a quiet screen-free break.
+3. Prepare and have the meal or drink you have been putting off.
+Record
+What did you need, and what did you do to support yourself?
+Example 1 I had worked without a break. I stepped outside for five quiet minutes.
+Example 2 I had skipped lunch. I stopped and ate before returning to the task.
+Done when You have taken the care step, rather than only planning it.
+User note Choose what suits your needs and abilities. The goal is sustainable effort, not pushing through exhaustion.
+Implementation and sequence
+Show the promise when available. Builds capacity for focus without prescribing a universal fitness or health target.
+Revision rationale Previous title: Respect Your Body. Connects basic self-care to capacity for sustained effort; offers accessible alternatives.
+Mission 17 Finish One Focused Block
+Put your values to work  |  Commitment  |  Action  |  10 minutes
+Hook Busy is easy. Give your priority uninterrupted attention.
+Select Commitment means giving your chosen goal real time, even without finishing the whole project.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Choose one small task that serves your promise or another important goal. Set a ten-minute timer, remove a distraction, and work on that task until the timer ends.
+Choose one way to do it
+1. Write or make one small part of an important project.
+2. Work through one section of material for a skill you are learning.
+3. Complete a practical task that supports a responsibility you value.
+Record
+What did you work on, and what progress did you make?
+Example 1 I spent ten minutes drafting the introduction to my proposal and finished one paragraph.
+Example 2 I practiced the first exercise in my course for ten uninterrupted minutes.
+Done when You have completed the focused block and can name what you worked on.
+User note If ten minutes is unrealistic today, use two deliberate minutes and record that honestly. This practices staying with a task; Mission 2 practiced starting it.
+Implementation and sequence
+Show the promise when available. Requires doing the timed work; planning a work block does not complete it.
+Revision rationale Previous title: Do the Important Thing. Replaces another start with a focused work interval and a concrete progress record.
+Mission 18 Face One Useful Fact
+Put your values to work  |  Courage  |  Action  |  5–10 minutes
+Hook You can make a better decision when you know what is true.
+Select Courage includes looking at reality before deciding what to do.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Check one source of information you have avoided about something that matters to you. Identify one fact and the next question or step it suggests.
+Choose one way to do it
+1. Review a statement or subscription list you have avoided.
+2. Compare your calendar with the priority you say matters.
+3. Read feedback or check the actual status of an unfinished project.
+Record
+What did you review, and what useful fact or next step did you identify?
+Example 1 I checked my calendar and found no time for my course. I need to reserve a short study block.
+Example 2 I reviewed my subscriptions and found one I no longer use. I will check its cancellation terms.
+Done when You have reviewed the information and named what it tells you.
+User note Record the lesson, not private balances, account numbers, or other sensitive details. Reviewing a fact does not require making a major decision today.
+Implementation and sequence
+Show the promise when available. Makes the next decision better informed without requiring a major decision now.
+Revision rationale Previous title: Face the Numbers. Broadens money avoidance into checking useful facts about the user’s actual priority.
+Mission 19 Make Your Priority Easier
+Put your values to work  |  Commitment  |  Action  |  2–5 minutes
+Hook Arrange your space to support the action you want to take.
+Select Commitment includes preparing the conditions for follow-through.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Remove one practical obstacle from the place where you will carry out your promise or important task. Make the next useful action easier to begin.
+Choose one way to do it
+1. Clear just enough workspace for the task you need to do.
+2. Put the materials for your next practice within reach.
+3. Prepare a place for an undistracted conversation or shared activity.
+Record
+What did you change, and which action will it make easier?
+Example 1 I cleared my work surface and put my course notes there so I can study after breakfast.
+Example 2 I put the borrowed items by the door so I can return them on my next trip.
+Done when One obstacle is removed or one useful setup is ready.
+User note The task is to support a priority, not tidy your whole house. An optional photo can show the change.
+Implementation and sequence
+Show the promise when available. Connect the setup to a priority; an optional photo never substitutes for the action.
+Revision rationale Previous title: Fix Your Space. Replaces random tidying with removing an obstacle to a chosen action.
+Mission 20 Be Useful on Purpose
+Put your values to work  |  Honor  |  Action  |  3–10 minutes
+Hook Respect becomes visible when you make a real contribution.
+Select Honor includes contributing in a way that respects the other person’s needs and choices.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Notice a specific need someone has expressed. Give one small, appropriate piece of help you can complete today, without taking over.
+Choose one way to do it
+1. Send a useful resource in response to a question someone asked.
+2. Complete a small shared responsibility that you can legitimately take on.
+3. Offer a brief practical hand and help if the person accepts.
+Record
+Who did you help, and what need did your action address?
+Example 1 My colleague asked for a template, so I found and sent the relevant one.
+Example 2 My neighbor accepted help carrying a box, and I carried it inside.
+Done when You have provided useful help. An offer to help later is still an intention.
+User note Keep the help welcome and manageable. If one person declines, respect that and choose another suitable action.
+Implementation and sequence
+Show the promise when available. Adds a useful contribution before reviewing what the user wants to pursue next.
+Revision rationale Previous title: Be Useful. Makes service specific, useful, welcome, and complete within the user’s control.
+Mission 21 Choose One Direction
+Put your values to work  |  Commitment  |  Plan  |  3–5 minutes
+Hook Use what you have learned to choose where your effort goes next.
+Select Commitment concentrates your effort on a goal you chose for a reason.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Review your promise and recent actions. Choose one focus area and one visible result you want to work toward over the next seven days.
+Choose one way to do it
+1. Continue the promise you already chose in Mission 12.
+2. Narrow an important goal to one realistic seven-day result.
+3. Adjust your direction using something your recent actions taught you.
+Record
+In the next seven days, I want to ____. This matters because ____.
+Example 1 I want to complete the first lesson of my course this week because it moves my qualification forward.
+Example 2 I want to have two unhurried conversations with people close to me because I have been distracted.
+Done when Your area and a specific seven-day aim are saved.
+User note Your focus and aim will appear in the next missions. Saving this plan does not claim the result has happened.
+Implementation and sequence
+Show promise and recent actions. Require one of the six focus areas plus a seven-day aim; this feeds Missions 22–25.
+Revision rationale Previous title: Pick Your One Area. Adds a visible seven-day aim and a reason to the existing six-area focus choice.
+Mission 22 Take the Step You Are Avoiding
+Build lasting momentum  |  Courage  |  Action  |  2–10 minutes
+Hook Bring courage to the direction you chose.
+Select Courage helps your chosen goal survive the first moment of resistance.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Read your seven-day aim below. Identify the small step you are most tempted to avoid, and take a manageable version of it now.
+Choose one way to do it
+1. Ask for information or help you need to move your aim forward.
+2. Begin the small part you keep postponing.
+3. Make a clear, respectful request connected to your aim.
+Record
+What step served your aim, and what discomfort did you act through?
+Example 1 For my course aim, I asked the tutor about an exercise I did not understand.
+Example 2 For my connection aim, I called the friend I felt awkward about neglecting.
+Done when You have taken a useful step toward the aim, even if the wider result is still ahead.
+User note Choose ordinary, worthwhile discomfort. If the step is too large, shrink it until you can take it safely today.
+Implementation and sequence
+Require Mission 21 with a usable aim. Show the saved focus and aim. Complete a step that actually serves that direction.
+Revision rationale Previous title: One Thing Beats Nothing. Uses the saved aim and asks for the uncomfortable step that advances it.
+Mission 23 Make Tomorrow Easier
+Build lasting momentum  |  Commitment  |  Action  |  2–5 minutes
+Hook Prepare the next repetition while today’s lesson is fresh.
+Select Commitment is strengthened by reducing the effort needed to begin again.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Using the same seven-day aim, prepare one thing now that will make your next useful action easier. Name when you will use that setup.
+Choose one way to do it
+1. Open the exact materials you will need for your next work block.
+2. Reserve a small time slot and put the needed materials beside your usual cue.
+3. Prepare the place or equipment for your next manageable practice.
+Record
+What did you prepare, and when will you use it?
+Example 1 I opened lesson two and left my notebook ready. I will use them after breakfast.
+Example 2 I reserved tomorrow’s call time and wrote down the question I want to ask.
+Done when The setup is ready and the next starting moment is named.
+User note This records preparation. Record the next practice separately when you carry it out.
+Implementation and sequence
+Require the same saved aim from 21. Distinguish completed preparation from the future practice it supports.
+Revision rationale Previous title: Get 1 Percent Better. Replaces the unmeasured 1% claim with preparing the next repetition of the same aim.
+Mission 24 Protect Your Yes
+Build lasting momentum  |  Courage  |  Action  |  2–10 minutes
+Hook A meaningful yes sometimes needs a respectful no.
+Select Courage includes tolerating a little discomfort to honor a considered priority.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Identify one optional demand or distraction that competes with your seven-day aim. Decline, defer, or limit it today so you can protect time for that aim.
+Choose one way to do it
+1. Respectfully decline an optional request you do not have capacity for.
+2. Offer a later time for something that can reasonably wait.
+3. Stop a chosen distraction and use the protected time for your aim.
+Record
+What did you decline or limit, and what priority did that protect?
+Example 1 I declined an optional meeting so I could complete my study block.
+Example 2 I stopped scrolling and used ten minutes to arrange a call with my brother.
+Done when You have made the decision and acted on it.
+User note Protect your priority while respecting existing responsibilities. The mission is not to refuse everything or control someone else.
+Implementation and sequence
+Require the same saved aim from 21. Make an actual decision today; writing a hypothetical boundary is insufficient.
+Revision rationale Previous title: Protect What Matters. Practices a respectful boundary or decision in the moment, tied to a chosen aim.
+Mission 25 Remove One Recurring Distraction
+Build lasting momentum  |  Commitment  |  Action  |  About 3 minutes
+Hook Fix the interruption that keeps stealing the same time.
+Select Commitment includes changing a repeated obstacle instead of relying only on willpower.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Choose a recurring distraction that interferes with your seven-day aim. Change one setting or part of your environment so it is less likely to interrupt your next practice.
+Choose one way to do it
+1. Silence nonessential notifications during your practice time.
+2. Move your phone out of reach for a focused block or conversation.
+3. Close unrelated tabs and leave only the materials for the next task.
+Record
+Which distraction did you reduce, and what did you change?
+Example 1 I muted social notifications during my study period and kept important calls enabled.
+Example 2 I moved my phone charger away from the dinner table to support being present.
+Done when A specific change is in place. You are not claiming the habit is permanently gone.
+User note Mission 24 practiced a decision in the moment. Today you change a recurring interruption at its source.
+Implementation and sequence
+Require the same saved aim from 21. Change a recurring condition, rather than repeating only today’s decision in 24.
+Revision rationale Previous title: Cut the Dead Weight. Distinguishes redesigning a recurring distraction from making today’s boundary decision.
+Mission 26 Recover Without Excuses
+Build lasting momentum  |  Honor  |  Action  |  2–10 minutes
+Hook A setback calls for an honest next step.
+Select Honor means honest responsibility; returning to the work rebuilds trust.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Identify one recent lapse in a promise or priority. Name your part without attacking yourself, then take the smallest useful action to repair or resume it today.
+Choose one way to do it
+1. Resume a missed practice for a manageable amount of time.
+2. Acknowledge a missed commitment and complete a useful repair now.
+3. If you have had no recent lapse, finish a small responsibility you left incomplete.
+Record
+What slipped, and what did you do to repair or restart?
+Example 1 I missed my study block yesterday. I completed five focused minutes today.
+Example 2 I had not returned a promised call. I acknowledged the delay and made the call.
+Done when You have taken a repair or restart action. Explaining the lapse alone is not enough.
+User note Keep your existing progress. A missed day does not require starting the 30 missions over.
+Implementation and sequence
+Show aim if available. Preserve all prior progress. A completed repair or restart is required, not a self-judgment.
+Revision rationale Previous title: What Would He Do. Replaces another broad identity prompt with honest recovery and a completed repair or restart.
+Mission 27 Build a Practice You Can Keep
+Build lasting momentum  |  Commitment  |  Plan  |  5 minutes
+Hook Make the next repetition clear before motivation changes.
+Select Commitment becomes practical when the cue, action, and recovery option are clear.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Turn your seven-day aim—or a priority you choose now—into one repeatable practice. Write when you will start, what you will do, and a smaller fallback for a difficult day.
+Choose one way to do it
+1. Use a familiar daily event to start a short practice.
+2. Use a regular weekly time to follow through with someone.
+3. Use a recurring work block to move an important project forward.
+Record
+After ____, I will ____. If that is not possible, I will ____.
+Example 1 After breakfast, I will study for ten minutes. On a difficult day, I will complete one exercise.
+Example 2 After Sunday lunch, I will call my brother. If we cannot talk, I will send a message and arrange another time.
+Done when The practice, starting cue, fallback, frequency, and future review date are saved.
+User note Choose the fragrance you intend to use as your cue. The frequency and review date are below. This saves a plan; repetitions are recorded as actions.
+Implementation and sequence
+Show aim if available, or choose a priority now. Require frequency and future review date. This creates the later practice context.
+Revision rationale Previous title: Make One Real Commitment. Adds a starting cue and fallback to the existing action, frequency, and review-date plan.
+Mission 28 Repeat What Worked
+Build lasting momentum  |  Courage  |  Action  |  Time varies
+Hook Build confidence from something you can actually repeat.
+Select Courage grows through practicing useful actions even when you still feel uncertain.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Read a completed action in your Proof Log below. Choose one that helped you live your code or move a priority forward, then repeat a manageable version today.
+Choose one way to do it
+1. Repeat a useful request or conversation you previously found uncomfortable.
+2. Repeat a focused block that moved an important goal forward.
+3. Repeat a small act of follow-through that made you more dependable.
+Record
+What useful action did you repeat, and what did you notice this time?
+Example 1 I asked another clarifying question in my course. I still felt awkward, but I got the answer I needed.
+Example 2 I completed another ten-minute study block. Having the materials ready helped.
+Done when You have repeated a useful action and recorded what happened.
+User note Use your log as evidence, not as a comparison with other men. Choose the fragrance that matches the action.
+Implementation and sequence
+Require a prior completed action other than 28. Show recent actions and available aim/practice. Selecting a record is not repeating it.
+Revision rationale Previous title: Review the Evidence. Repeats a useful action from the log and records what the user noticed, rather than claiming confidence.
+Mission 29 Let Someone Support Your Standard
+Build lasting momentum  |  Honor  |  Action  |  3–10 minutes
+Hook Make it easier for someone you trust to understand what you are practicing.
+Select Honor includes being clear about the standards you want your behavior to reflect.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Choose one or more lines from your Personal Code. Share them with someone you trust and explain one behavior you are working on.
+Choose one way to do it
+1. Tell a trusted friend which code line you are practicing and why.
+2. Read a chosen line to someone close to you and explain the action behind it.
+3. Send a selected line to a trusted mentor and name your current practice.
+Record
+Who did you share with, and what practice did you explain?
+Example 1 I told my brother my Commitment line and explained my ten-minute study practice.
+Example 2 I shared my Honor line with a close friend and said I am working on owning mistakes promptly.
+Done when You have actually communicated the selected line and practice.
+User note Share only what you are comfortable sharing, with a safe and trusted person. Copying text alone does not complete the mission. If the conversation must wait, save a draft.
+Implementation and sequence
+Require all five saved code lines. Show the code and a way to select lines for sharing. Do not automatically send or publish anything.
+Revision rationale Previous title: Share Your Personal Code. Explains a selected standard and its practical behavior to a trusted person; no public disclosure is required.
+Mission 30 Carry Your Momentum Forward
+Build lasting momentum  |  Commitment  |  Plan  |  5–10 minutes
+Hook Take what worked with you into the next month.
+Select Commitment is the ongoing practice of returning to a worthwhile direction.
+Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Act
+Review your saved actions and any practice plan. Keep or adjust one practice for the next 30 days. Write what you learned, the action you will repeat, its starting cue, and how you will restart after a miss.
+Choose one way to do it
+1. Keep a practice that worked and make its next month realistic.
+2. Shrink an overambitious practice so you can repeat it more reliably.
+3. Apply a lesson from your log to a different priority that now matters more.
+Record
+I learned ____. After ____, I will ____. If I miss, I will ____.
+Example 1 I learned mornings work best. After breakfast, I will study ten minutes. If I miss, I will do one exercise at the next opportunity.
+Example 2 I learned short calls are easier to keep. After Sunday lunch, I will call someone close to me. If we cannot connect, I will arrange another time.
+Done when Your next practice, fragrance, frequency, and future review date are saved.
+User note Use One-Off Actions to record future repetitions. Your code, missions, and Proof Log stay with you. Thirty missions are a starting practice, not a guarantee that a habit is permanent.
+Implementation and sequence
+Show recent actions and any aim/practice. Require frequency and future review date. Future repetitions go into One-Off Actions.
+Revision rationale Previous title: Choose the Next Mission. Uses evidence and the earlier plan to choose what to keep or adjust for the next month.
+Acceptance tests for content and interaction
+Kai should return a pass or fail result for each scenario, with evidence for failures and a link to the build tested. Use synthetic accounts. Tests below are production requirements; their presence here does not mean the prototype has already passed them.
+ID
+Scenario
+Expected result
+C01
+Compare all 30 mission records with the specification.
+Exactly 30 stable numbers; 20 action, 6 code, 3 plan, 1 reflection; correct field copy, 3 approaches and 2 examples per mission.
+C02
+Open each mission at narrow mobile width.
+Original visual hierarchy remains; title, STAR, context, options, notes, record and CTA fit without clipping or navigation overlap.
+C03
+Expand examples and approaches; choose another scent.
+No automatic answer or completion; record remains untouched; selected scent is saved and used in the outcome line.
+C04
+Attempt action completion with blank text or without confirmation.
+Both UI and server block completion; draft remains possible; no progress or action increment.
+C05
+Save 6, one code mission, and one plan.
+Each completes its assigned mission with its true type and success message; none increases action count.
+C06
+Save a draft, reload, then complete it.
+Draft contents survive; draft has no completion credit; successful completion clears it and creates one canonical record.
+C07
+View 13 without saving; then save and edit profile identity.
+Viewing does not complete 13. Save updates identity; subsequent edit synchronizes that same record, without duplication.
+C08
+Use 15 with a proposed time; use 20 with an offer only.
+15 permits actual contact plus held time while labeling proposal honestly. 20 explains that an offer alone is not completed help.
+C09
+Use 17 for two minutes; use 23 to prepare.
+Honest fallback allowed; record captures actual duration. 23 is evidence of preparation, not the later task.
+C10
+Copy code in 29 without communicating it.
+No automatic completion or action credit. The record and confirmation remain user-controlled.
+C11
+Return after missed days; finish all 30; add a One-Off Action.
+Progress remains; next unfinished selected by number; after 30 log stays open; One-Off Action changes action count only.
+C12
+Keyboard and screen-reader traversal.
+Labels, selection state, expansion, errors, and save feedback are available; focus remains usable after validation and navigation.
+
+Acceptance tests for state and migration
+ID
+Scenario
+Expected result
+D01
+Try 14 or 29 with one missing or removed code line.
+Completion blocked with a useful route back. Restore the line and completion becomes available.
+D02
+Try 22–25 without 21, then save 21 with area and aim.
+Completion blocked until a usable aim exists; each later mission shows the same chosen direction.
+D03
+Draft 22 before 21; save 21; reopen 22.
+Newly available aim appears and is captured when completed. Existing draft text is retained.
+D04
+Change 21 while a 22 draft and a completed 23 exist.
+Draft offers explicit context choice; completed 23 retains the old aim and original date.
+D05
+Save 27 without 21; open 28–30.
+Practice displays independently of aim. 28 still requires a prior action. No invented focus is added.
+D06
+Try 28 with only code and plans; then add an action.
+First completion blocked; after an actual saved action it is available. Viewing the prior action does not complete 28.
+D07
+Try invalid, past, today, and valid future review dates in two timezones.
+Only a real future date accepted for a new plan. Unchanged past review date allowed when editing a historical plan.
+D08
+Double click, retry a save, interrupt network, or write from two tabs.
+No duplicates or false success; no silent lost write; entered text remains recoverable with clear conflict feedback.
+D09
+Edit, remove, restore and reload records.
+One record retained with original date; updated date changes; all counters, code, log and next mission agree.
+D10
+Migrate old Mission 4 and old drafts.
+Original gratitude instructions and text retained; no relabeling as repair; existing progress preserved; rerun creates no duplicates.
+D11
+Migrate a focus-only legacy 21.
+Old history preserved; user supplies a current aim before revised dependent work; no fabricated goal.
+D12
+Edit code after 14 or 29; remove a prerequisite.
+Historical code context and downstream records remain intact; future completion eligibility updates correctly.
+D13
+Attempt cross-user reads/writes and invalid photo access.
+Production user isolation and upload authorization hold. No prototype single-owner assumption reaches production.
+D14
+Rollback with revision 2 records present.
+New records and snapshots remain readable and intact; rollback does not erase or misclassify them.
+
+Handoff evidence and source references
+What Kai should return
+A branch or pull request with the final 30 mission data and the shared interaction changes, plus a concise summary of any intentional differences from this specification.
+A staging walkthrough of a new user and a returning user, including 12 to 21 to 22, 27 to 30, the restored STAR/video section, and an earlier-version record.
+Pass/fail results for C01–C12 and D01–D14, relevant automated checks, and remaining issues. Include the context-refresh cases; they are not covered by the existing 18 prototype state checks.
+Migration mapping, before/after record counts, backup and rollback procedure, and the production commit proposed for release. Keep real journal text out of screenshots and shared test evidence.
+A proposed release sequence and any genuine product decisions still needed from Antonio. Do not silently change mission goals, add prerequisites, or remove the record-type distinctions.
+Source of the proposed content
+The attached wording is the complete implementation handoff; Kai does not need access to Antonio’s private journal to read it. The reviewed prototype source is Mission Fragrances Original Layout, commit 6d76e793d3962bfb22a806b4ecfb9e4f8d7d684d. It is separate from the original production repository.
+Reference file
+Purpose
+app/mission-details.json
+Exact revision 2 curriculum, reproduced on the 30 mission pages.
+app/client.tsx and content/triggers.ts
+Shared screens, STAR wording, scent definitions, context display and save labels.
+app/model.ts
+Prototype record types, prerequisites, validation, snapshots, and identity synchronization.
+app/legacy-missions.json
+Earlier prototype definitions only; not authoritative production migration data.
+tests/state.test.cjs
+Existing 18 prototype state checks; extend coverage for the production requirements.
+public/mission-review.html
+Editorial comparison and rationale for all 30 revisions.
+
+Original repository reference: https://github.com/aiexecutionaccelerator/mfapp . Earlier rebuild baseline: 24220fa111347ddbeb72702eb67b2d2fa6e91c86. Kai should inspect the current production branch before implementing; that historical commit is not asserted to be current.
+Private prototype reference: https://mission-fragrances-original.antonio649210.chatgpt.site . Owner access is required; do not use it as team staging.
+Design background and limits
+Specific starting cues and planned responses are informed by Gollwitzer and Sheeran, Implementation Intentions and Goal Achievement, 2006: https://doi.org/10.1016/S0065-2601(06)38002-1 . Repetition in context and a practical return after missed opportunities are informed by Lally and colleagues, How Are Habits Formed, 2010: https://doi.org/10.1002/ejsp.674 .
+These sources inform the design; they do not validate this curriculum or a special fragrance effect. Evaluate task clarity, meaningful action, return after interruptions, and usefulness. Completion counts alone do not establish confidence or habit formation.
