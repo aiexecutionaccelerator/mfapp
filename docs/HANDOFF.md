@@ -19,8 +19,9 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
 
 - Owner: Antonio Centeno (product decisions). Team contact: Yuri.
 - Repo: https://github.com/aiexecutionaccelerator/mfapp (branch `main`)
-- Version: 3.1.0 (curriculum revision 2 + motion pass, on branch `main-cig2ix` for review;
-  NOT on `main` until Antonio signs off and 0009 is applied)
+- Version: 3.1.0 (curriculum revision 2 + motion pass). Migration 0009 was
+  applied to production Supabase on 2026-10-28, then this went to `main`.
+  Staging: branch `main-cig2ix` → https://main-cig2ix--missionfragrances.netlify.app
 
 ## Motion and effects (v3.1.0)
 
