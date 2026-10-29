@@ -105,7 +105,7 @@ await page.getByRole("button", { name: "START MISSION 1" }).click();
 
 // D — Mission 1 (curriculum revision 2): the S.T.A.R. steps as a form
 await page.waitForURL("**/missions/1");
-await page.getByText("Give Credit Where It Is Due").first().waitFor();
+await page.getByText("Give Credit Where Credit Is Due").first().waitFor();
 await page.getByText("BUILD SELF-TRUST · MISSION 1").waitFor();
 for (const step of ["SELECT", "TRIGGER", "ACT", "RECORD"])
   await page.getByText(step, { exact: true }).first().waitFor();
