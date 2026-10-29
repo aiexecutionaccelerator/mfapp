@@ -18,7 +18,7 @@ and the S.T.A.R. explainer + video.
 | Put your values to work | 15–21 | Care, self-care, focus, honest review, environment, service; 21 picks a focus area + 7-day aim |
 | Build lasting momentum | 22–30 | Use the aim (22–25), recover (26), practice plan (27), repeat (28), share a code line (29), plan the next month (30) |
 
-New titles: 1 Give Credit Where It Is Due · 2 Break the Avoidance Loop ·
+New titles: 1 Give Credit Where Credit Is Due · 2 Break the Avoidance Loop ·
 3 Keep One Small Promise · 4 Own Your Part · 5 Ask Instead of Pretending ·
 6 Remember Your Own Strength · 7 Give Your Practice a Place · 8 Define Your
 Honor · 9 Define Your Courage · 10 Define Your Commitment · 11 Draw One

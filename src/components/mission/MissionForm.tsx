@@ -409,7 +409,8 @@ export default function MissionForm({
                 className="min-h-14 w-full rounded-[14px] border border-[var(--line)] bg-[rgba(18,23,34,.6)] px-4 text-[17px] text-ink-0 [color-scheme:dark] focus:border-[var(--gold-500)] focus:outline-none"
               />
               <p className="mt-1 text-[13px] text-ink-2">
-                A day after today, when you&apos;ll look back at how it went.
+                Choose a future date to review your progress after several
+                repetitions.
               </p>
             </div>
           </>
