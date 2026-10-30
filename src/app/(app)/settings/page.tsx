@@ -16,6 +16,7 @@ import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import pkg from "../../../../package.json";
 import { getMissionDef } from "@/content/missions";
+import { ConflictError, ValidationError } from "@/lib/data/types";
 import { PRODUCT } from "@/content/product";
 import { shareLink } from "@/lib/share";
 import { track } from "@/lib/analytics";
@@ -130,7 +131,13 @@ export default function SettingsPage() {
     try {
       // Same sentence as Mission 13: updates that record too, never a new one.
       await store.updateIdentity(trimmed || null);
-    } catch {
+    } catch (cause) {
+      if (cause instanceof ValidationError || cause instanceof ConflictError) {
+        // Put the saved sentence back rather than leave a field that lies.
+        setIdentity(profile.identity_statement ?? "");
+        showToast(cause.message);
+        return;
+      }
       showToast("Couldn't save that. Please try again.", {
         retry: () => void saveIdentity(),
       });

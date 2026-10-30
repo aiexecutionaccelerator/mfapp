@@ -44,7 +44,7 @@ export default function Wordmark({
     <div className={cn("flex items-center gap-2", className)}>
       {logo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={logo} alt="Mission Fragrances" className={size === "lg" ? "h-9 w-auto" : "h-[22px] w-auto"} />
+        <img src={logo} alt="Mission Fragrances" width={520} height={84} className={size === "lg" ? "h-9 w-auto" : "h-[22px] w-auto"} />
       ) : (
         <>
           <span

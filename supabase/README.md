@@ -14,7 +14,7 @@ As soon as the URL and anon key are set, the app leaves demo mode.
 ## 2. Apply the migrations
 
 **Option A — SQL editor (fastest):** open the SQL editor in the Supabase
-dashboard and run every file in `migrations/` in order (`0001` … `0009`).
+dashboard and run every file in `migrations/` in order (`0001` … `0010`).
 Skip `0009_down.sql`: it is the rollback for 0009, run only by hand.
 
 **Option B — Supabase CLI:**
@@ -42,7 +42,10 @@ context snapshots, focus/frequency/review date, soft removal and history,
 the `mission_drafts` table, and the `missions_validate` trigger that enforces
 the Mission rules at the write boundary. It is idempotent and needs no
 secrets. `0002`, `0004`, `0005`, `0007` and `0009` each replace
-`get_app_data()`, so run them in order.
+`get_app_data()`, so run them in order. `0010` hardens the database (once-only
+admin emails, profile and reminder guards, size caps) and moves the notify
+secret out of trigger code into `private.app_secrets`, reading it from the
+live triggers, so it needs no secret substituted either.
 
 **Test the migrations locally** (no Supabase needed): `npm run test:db` runs
 every migration on an in-process Postgres with first-curriculum data, then

@@ -53,6 +53,7 @@ export default function OnboardingScreens({
         )}
         <div
           className="flex gap-2"
+          role="img"
           aria-label={`Screen ${screen + 1} of ${ONBOARDING_SCREEN_COUNT}`}
         >
           {Array.from({ length: ONBOARDING_SCREEN_COUNT }, (_, index) => (

@@ -43,6 +43,9 @@ export default function FinishActionPage({
 
   useEffect(() => {
     if (row?.status === "completed") router.replace(`/log/${row.id}`);
+    // A numbered Mission is finished on its own screen, under the current
+    // rules (confirmation, prerequisites), never here.
+    else if (row?.mission_number != null) router.replace(`/missions/${row.mission_number}`);
   }, [row, router]);
 
   if (!missions || !row) {

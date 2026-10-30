@@ -23,6 +23,14 @@ states. The Vivid Vision is archived; its replacement is the compiled, printable
   applied to production Supabase on 2026-10-28, then this went to `main`.
   Staging: branch `main-cig2ix` → https://main-cig2ix--missionfragrances.netlify.app
 
+## Audit, 30 Oct 2026 (v3.2.0)
+
+See `docs/audit-2026-10-30.md`. Next 16.4.3 (security), security headers in
+`next.config.ts`, WebP art (`scripts/optimize-images.mjs`, `src/lib/art.ts`),
+store and identity fixes, and **migration `0010_hardening.sql`: must be
+applied in Supabase** (safe before or after the deploy). Its tests:
+`supabase/tests/hardening.test.mjs`, run by `npm run test:db`.
+
 ## Motion and effects (v3.1.0)
 
 All in `src/app/globals.css` (one place) plus `src/components/motion/`:

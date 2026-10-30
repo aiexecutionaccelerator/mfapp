@@ -23,6 +23,7 @@ import {
   SHOWS_RECENT_ACTIONS,
   blockersFor,
   contextFor,
+  isLegacy,
   primaryLabel,
   recentActions,
   recordText,
@@ -159,6 +160,7 @@ export default function MissionForm({
     const problem = validateRecord(values, missions, {
       previousReviewDate: editing ? record.review_date : null,
       skipPrerequisites: editing,
+      textOnly: editing && isLegacy(record),
     });
     if (problem) return fail(problem);
 

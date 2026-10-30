@@ -77,10 +77,13 @@ function MissionDetailInner({
     if (def) track("mission_opened", { missionNumber: def.number });
   }, [def]);
 
+  // Only when there is nothing to show. A failed background refresh over
+  // data already on screen isn't worth interrupting him for.
+  const nothingLoaded = !missions;
   useEffect(() => {
-    if (!error) return;
+    if (!error || !nothingLoaded) return;
     showToast("Couldn't load this Mission.", { retry: () => void refresh() });
-  }, [error, refresh, showToast]);
+  }, [error, nothingLoaded, refresh, showToast]);
 
   if (!def || !profile || !missions || !drafts) {
     return (
@@ -367,11 +370,6 @@ function RecordCard({ def, record }: { def: MissionDef; record: Mission }) {
         // eslint-disable-next-line @next/next/no-img-element
         <img src={record.photo_url} alt="Your photo" className="mt-4 w-full rounded-[14px]" />
       )}
-      {record.updated_at &&
-        record.completed_at &&
-        new Date(record.updated_at).getTime() - new Date(record.completed_at).getTime() > 60_000 && (
-          <p className="mt-3 text-[13px] text-ink-2">Edited {formatDate(record.updated_at)}</p>
-        )}
       {!legacy && record.context && Object.values(record.context).some(Boolean) && (
         <div className="mt-2">
           <p className="eyebrow mt-4 text-ink-2">WHAT IT WORKED WITH</p>

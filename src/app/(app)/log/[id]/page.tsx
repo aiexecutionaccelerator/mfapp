@@ -34,8 +34,10 @@ export default function LogDetailPage({
   const [confirmRemove, setConfirmRemove] = useState(false);
   const [pending, setPending] = useState(false);
 
+  // Leave only when the record really isn't there. A failed background
+  // refresh with the record still in hand is no reason to bounce him out.
   useEffect(() => {
-    if (error || (missions && !mission)) router.replace("/log");
+    if ((error && !missions) || (missions && !mission)) router.replace("/log");
   }, [error, missions, mission, router]);
 
   if (!mission) {

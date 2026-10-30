@@ -93,7 +93,7 @@ await page.getByText("Select your Scent Trigger.").first().waitFor();
 if ((await page.getByText(/core value you need/).count()) > 0)
   fail("S still says 'core value'");
 await page.getByText("Repeat the practice. Let your scent remind you").first().waitFor();
-await page.getByText("You condition yourself to a Scent Trigger").waitFor();
+await page.getByText("Use the S.T.A.R. System to condition yourself").waitFor();
 await shot("onboarding-2-star");
 await page.getByRole("button", { name: "NEXT" }).click();
 await page.getByText("MEET YOUR SCENT TRIGGERS").waitFor();

@@ -272,11 +272,18 @@ export function validateRecord(
     previousReviewDate = null,
     today = todayLocal(),
     skipPrerequisites = false,
+    textOnly = false,
   }: {
     previousReviewDate?: string | null;
     today?: string;
     /** Editing a saved record: prerequisites gate completing, not editing. */
     skipPrerequisites?: boolean;
+    /**
+     * Editing a first-curriculum record: only its words are checked. Its
+     * task never had the revised fields (focus, frequency, review date), and
+     * the server checks only the text too.
+     */
+    textOnly?: boolean;
   } = {},
 ): string | null {
   const def = getMissionDef(input.mission_number);
@@ -287,6 +294,7 @@ export function validateRecord(
   if (!text) return "Write your record first.";
   const limit = textLimitFor(def.number);
   if (text.length > limit) return `Keep it under ${limit.toLocaleString()} characters.`;
+  if (textOnly) return null;
 
   if (def.kind === "action" && !input.confirmed)
     return "Check “I have taken this action.” once you've done it.";

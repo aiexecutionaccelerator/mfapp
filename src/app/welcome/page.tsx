@@ -122,8 +122,13 @@ export default function WelcomePage() {
             <img
               src={HERO_COMPOSITE_URL}
               alt=""
+              // The first thing on screen: fetch it first, and reserve its
+              // box so nothing jumps when it lands.
+              width={680}
+              height={438}
+              fetchPriority="high"
               onError={() => setCompositeMissing(true)}
-              className="relative w-[320px] max-w-[85vw]"
+              className="relative h-auto w-[320px] max-w-[85vw]"
               style={{ filter: "drop-shadow(0 14px 22px rgba(0,0,0,.5))" }}
             />
             <GroundShadow width={280} />

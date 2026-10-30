@@ -86,7 +86,11 @@ export async function updateSession(request: NextRequest) {
         const url = request.nextUrl.clone();
         url.pathname = "/onboarding";
         url.search = "";
-        return NextResponse.redirect(url);
+        // getUser() may have refreshed the session above; a fresh redirect
+        // would drop those cookies and leave the browser on a retired token.
+        const redirect = NextResponse.redirect(url);
+        for (const cookie of response.cookies.getAll()) redirect.cookies.set(cookie);
+        return redirect;
       }
 
       response.cookies.set(ONBOARDED_COOKIE, user.id, {

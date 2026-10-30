@@ -1,6 +1,6 @@
 {
   "name": "mfapp",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,7 +11,7 @@
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "opennextjs-cloudflare deploy",
-    "test:db": "node supabase/tests/curriculum_v2.test.mjs",
+    "test:db": "node supabase/tests/curriculum_v2.test.mjs && node supabase/tests/hardening.test.mjs",
     "test:acceptance": "node scripts/acceptance.mjs"
   },
   "dependencies": {
@@ -22,7 +22,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "lucide-react": "^1.31.0",
-    "next": "16.3.1",
+    "next": "^16.4.3",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
@@ -34,7 +34,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.1",
+    "eslint-config-next": "^16.4.3",
     "tailwindcss": "^4",
     "typescript": "^5",
     "wrangler": "^4.123.0"

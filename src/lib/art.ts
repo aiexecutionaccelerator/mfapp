@@ -20,11 +20,26 @@ const AVAILABLE = new Set<string>([
  * falls back to composing the trio from the individual cutouts if the file
  * isn't in public/images/ yet.
  */
-export const HERO_COMPOSITE_URL = "/images/3bottleswhite.png";
+export const HERO_COMPOSITE_URL = "/images/3bottleswhite.webp";
 
-/** `/images/{file}` when that file exists, otherwise null. */
+/**
+ * PNGs that have a smaller .webp twin (made by scripts/optimize-images.mjs).
+ * The screens get the .webp; the PNG stays for the share-card renderer.
+ */
+const WEBP = new Set([
+  "3bottleswhite.png",
+  "logo.png",
+  "honor.png",
+  "courage.png",
+  "commitment.png",
+  "mainpage.png",
+  "mfset.png",
+]);
+
+/** `/images/{file}` (as .webp when there is one) if it exists, else null. */
 export function artUrl(file: string): string | null {
-  return AVAILABLE.has(file) ? `/images/${file}` : null;
+  if (!AVAILABLE.has(file)) return null;
+  return `/images/${WEBP.has(file) ? file.replace(/\.png$/, ".webp") : file}`;
 }
 
 export const ART = {

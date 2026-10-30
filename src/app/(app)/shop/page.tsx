@@ -50,6 +50,8 @@ function Hero() {
         <img
           src={hero}
           alt="Mission Fragrances, the complete set, Black Edition"
+          width={640}
+          height={772}
           className="max-h-[300px] w-full object-contain"
           style={{ filter: "drop-shadow(0 16px 28px rgba(0,0,0,.5))" }}
         />

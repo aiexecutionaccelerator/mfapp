@@ -3,13 +3,14 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { data } from "@/lib/data";
 import { liveRecordFor } from "@/lib/curriculum";
-import type {
-  Draft,
-  LessonResponse,
-  Mission,
-  Profile,
-  RecordInput,
-  Trigger,
+import {
+  ValidationError,
+  type Draft,
+  type LessonResponse,
+  type Mission,
+  type Profile,
+  type RecordInput,
+  type Trigger,
 } from "@/lib/data/types";
 
 /**
@@ -74,13 +75,23 @@ function getServerSnapshot(): Cache {
   return EMPTY;
 }
 
+const incomplete = (c: Cache) =>
+  c.profile === null ||
+  c.missions === null ||
+  c.lessonResponses === null ||
+  c.drafts === null;
+
 function load(): Promise<void> {
   if (inFlight) return inFlight;
   const startedAt = Date.now();
+  let dropped = false;
   inFlight = data
     .loadAll()
     .then(({ profile, missions, lessonResponses, drafts }) => {
-      if (lastWriteAt > startedAt) return; // stale vs a newer write — drop
+      if (lastWriteAt > startedAt) {
+        dropped = true; // stale vs a newer write — drop
+        return;
+      }
       loadedAt = Date.now();
       publish({ profile, missions, lessonResponses, drafts, error: null });
     })
@@ -92,6 +103,10 @@ function load(): Promise<void> {
     })
     .finally(() => {
       inFlight = null;
+      // A dropped load must not strand a screen that is still waiting for
+      // its first data (a write landed mid-load, e.g. finishing onboarding):
+      // fetch again, now that the write is in.
+      if (dropped && incomplete(cache)) void load();
     });
   return inFlight;
 }
@@ -102,12 +117,7 @@ export function refreshAppData(): Promise<void> {
 }
 
 function ensureLoaded(): void {
-  if (
-    cache.profile === null ||
-    cache.missions === null ||
-    cache.lessonResponses === null ||
-    cache.drafts === null
-  ) {
+  if (incomplete(cache)) {
     void load();
     return;
   }
@@ -116,9 +126,12 @@ function ensureLoaded(): void {
 
 /* ---------- cache patches (applied only after a write succeeds) ---------- */
 
+/* A confirmed write proves the backend is reachable again, so each patch
+   also clears a stale load error (screens redirect or nag while it is set). */
+
 function putProfile(profile: Profile): void {
   lastWriteAt = Date.now();
-  publish({ ...cache, profile });
+  publish({ ...cache, profile, error: null });
 }
 
 function putMission(mission: Mission): void {
@@ -131,14 +144,14 @@ function putMission(mission: Mission): void {
   next.sort(
     (a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime(),
   );
-  publish({ ...cache, missions: next });
+  publish({ ...cache, missions: next, error: null });
 }
 
 function dropMission(id: string): void {
   lastWriteAt = Date.now();
   const current = cache.missions;
   if (!current) return;
-  publish({ ...cache, missions: current.filter((m) => m.id !== id) });
+  publish({ ...cache, missions: current.filter((m) => m.id !== id), error: null });
 }
 
 function putLessonResponse(
@@ -152,7 +165,7 @@ function putLessonResponse(
   const rest = current.filter(
     (item) => !(item.lesson_id === lessonId && item.prompt_id === promptId),
   );
-  publish({ ...cache, lessonResponses: row ? [...rest, row] : rest });
+  publish({ ...cache, lessonResponses: row ? [...rest, row] : rest, error: null });
 }
 
 function putDraft(missionNumber: number, draft: Draft | null): void {
@@ -160,7 +173,7 @@ function putDraft(missionNumber: number, draft: Draft | null): void {
   const current = cache.drafts;
   if (!current) return;
   const rest = current.filter((d) => d.mission_number !== missionNumber);
-  publish({ ...cache, drafts: draft ? [...rest, draft] : rest });
+  publish({ ...cache, drafts: draft ? [...rest, draft] : rest, error: null });
 }
 
 function clearCache(): void {
@@ -195,13 +208,18 @@ export const store = {
    * (never a second one), and saving 13 updates the profile.
    */
   async updateIdentity(statement: string | null): Promise<Profile> {
-    const profile = await store.updateProfile({ identity_statement: statement });
     const record = cache.missions ? liveRecordFor(cache.missions, 13) : null;
+    if (record && !statement)
+      throw new ValidationError(
+        "Your statement is saved in Mission 13. Edit it there or here, but it can't be blank.",
+      );
+    // The record first: if it fails, the profile is untouched, so the two
+    // never drift and a retry still sees a change to make.
     if (record && statement && statement !== (record.reflection ?? record.action_text)) {
       const updated = await data.editRecord(record.id, { text: statement }, record.updated_at);
       putMission(updated);
     }
-    return profile;
+    return store.updateProfile({ identity_statement: statement });
   },
 
   /** Completes a Mission (any kind). Clears its draft. */
@@ -279,7 +297,8 @@ export const store = {
     const { existingId, photo_url = null, action_text, trigger } = input;
 
     if (existingId) {
-      await data.updateMission(existingId, { action_text, trigger });
+      // Keep what was declared (action_text); the proof is the reflection.
+      await data.updateMission(existingId, { trigger });
       const done = await data.completeMission(existingId, {
         reflection: action_text,
         photo_url,
