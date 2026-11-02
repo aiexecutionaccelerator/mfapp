@@ -32,6 +32,9 @@ create table if not exists private.app_secrets (
   value text not null
 );
 revoke all on private.app_secrets from public;
+-- RLS on with no policies: no API role can read it. The notify function
+-- still can, because it runs as the table's owner.
+alter table private.app_secrets enable row level security;
 
 do $$
 declare
