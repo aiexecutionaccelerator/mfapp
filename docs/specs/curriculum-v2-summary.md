@@ -4,6 +4,31 @@ Source: `curriculum-v2-spec.docx` (full text in `curriculum-v2-spec.txt`).
 Prepared for Antonio Centeno, 28 Oct 2026. **This is the implementation
 contract. The exact copy for all 30 Missions is in the .txt, not here.**
 
+## Revision 2.1 (Antonio, 18 Nov 2026)
+
+After watching a first-time user, Antonio simplified the Mission screen.
+These override the rules below where they conflict.
+
+- Top: more space between the stage label and the title, with a faded gold
+  rule. No S.T.A.R. reminder link, no "Let's use the S.T.A.R. System" line.
+- Select: "SELECT" then grey "YOUR SCENT TRIGGER". The line under the
+  shelf follows the chosen bottle (the Mission's own line for the suggested
+  one, the value's definition otherwise). The chosen bottle has a gold
+  outline; the other two dim.
+- Trigger: "Spray the fragrance. Then begin the assigned task." No
+  "breathe it in" anywhere.
+- Act shows only the task (plus saved context and blockers where a Mission
+  needs them). Time and kind, "Choose one way to do it", the note and Done
+  when are no longer shown. The data stays in `missions.ts`.
+- Mission 3's task: "...Choose one you can keep today, in less than five
+  minutes."
+- Record: three tap-to-start openings per Mission (`starters` in
+  `missions.ts`, drawn from the three ways to do it). Tapping one **fills
+  the start of the answer** and puts the cursor after it; this replaces
+  "Examples must never fill the field" and the "Need an example?" panel.
+- No SAVE DRAFT FOR LATER. Drafts save themselves about a second after a
+  change and when the page is left; a line under the button says "Saved".
+
 ## What changes
 
 Rewrite the 30 Missions into a deliberate progression in four stages. Keep
@@ -54,7 +79,7 @@ toward 30/30.
 ## Screen and interaction rules
 
 - S.T.A.R. shared wording. S: "Select your Scent Trigger." T: "Spray the
-  fragrance and breathe it in." A: "Take one small action that's aligned
+  fragrance." (was "...and breathe it in", changed 18 Nov) A: "Take one small action that's aligned
   with the value, or recall a time you lived it." R: **"Log what you did,
   recalled, defined, or planned. Completed actions build your evidence;
   plans describe practice still ahead."**

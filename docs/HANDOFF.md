@@ -48,6 +48,11 @@ Spec: `docs/specs/curriculum-v2-summary.md` (full text alongside). Review
 report: `docs/specs/review-report.md`. Results: `docs/specs/acceptance-results.md`.
 Where this section and older notes below disagree, this section wins.
 
+**Revision 2.1 (18 Nov 2026)** simplified the Mission screen: no S.T.A.R.
+reminder link, a lean Act step, tap-to-start `starters` on Record that fill
+the answer, and drafts that save themselves (no SAVE DRAFT button). Details
+at the top of the spec summary. Client only; the server rules are unchanged.
+
 - **Content**: `src/content/missions.ts` holds the spec's exact wording for all
   30 (stage, kind, time, hook, select, action, 3 choices, prompt, 2 examples,
   done-when, note). `npm run check:copy` diffs it against the spec text.

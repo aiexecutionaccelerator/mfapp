@@ -107,35 +107,31 @@ await page.getByRole("button", { name: "START MISSION 1" }).click();
 await page.waitForURL("**/missions/1");
 await page.getByText("Give Credit Where Credit Is Due").first().waitFor();
 await page.getByText("BUILD SELF-TRUST · MISSION 1").waitFor();
-for (const step of ["SELECT", "TRIGGER", "ACT", "RECORD"])
+for (const step of [/^SELECT YOUR SCENT TRIGGER$/, "TRIGGER", "ACT", "RECORD"])
   await page.getByText(step, { exact: true }).first().waitFor();
-await page.getByText("Spray the fragrance and breathe it in. Then begin the assigned task.").waitFor();
-await page.getByText("About 2 minutes · Action").waitFor();
-await page.getByText("DONE WHEN").waitFor();
-await page.getByText("Let's get started with the S.T.A.R. System.").waitFor();
-// The reminder opens the same four cards, at the TOP
-await page.getByRole("button", { name: /reminder of how the S.T.A.R. System works/ }).click();
-const starSheet = page.getByRole("dialog", { name: "THE S.T.A.R. SYSTEM" });
-await starSheet.waitFor();
-await page.waitForTimeout(400);
-if ((await starSheet.evaluate((el) => el.scrollTop)) !== 0)
-  fail("the S.T.A.R. reminder opened scrolled down instead of at the top");
-await shot("star-reminder", { full: false });
-await page.getByRole("button", { name: "GOT IT" }).click();
+await page.getByText("Spray the fragrance. Then begin the assigned task.").waitFor();
+// Revision 2.1 (18 Nov): the Mission screen lost its extras.
+for (const gone of [
+  "About 2 minutes · Action",
+  "DONE WHEN",
+  "Let's get started with the S.T.A.R. System.",
+  "Choose one way to do it",
+  "Need an example?",
+  "SAVE DRAFT FOR LATER",
+])
+  if ((await page.getByText(gone, { exact: true }).count()) > 0) fail(`"${gone}" should be gone`);
+if ((await page.getByRole("button", { name: /reminder of how the S.T.A.R. System works/ }).count()) > 0)
+  fail("the S.T.A.R. reminder link should be gone");
 await shot("mission-1");
-// The field opens blank. Options and examples are help: opening them never
-// fills, ticks or saves anything (C03).
+// The field opens blank. A starter fills only the start of the answer.
 const m1 = page.getByLabel("Who did you thank, and what did you tell them?");
 if ((await m1.inputValue()) !== "") fail("Mission 1's field should open blank");
-await page.getByRole("button", { name: "Choose one way to do it" }).click();
-await page.getByText("Give a coworker credit for something they made easier.").waitFor();
-await page.getByRole("button", { name: "Need an example?" }).click();
-await page.getByText("For inspiration. Write what is true for you.").waitFor();
-await page.getByText(/I thanked my brother for checking in/).waitFor();
-if ((await m1.inputValue()) !== "") fail("opening the examples filled the field");
+await page.getByRole("button", { name: "I thanked my…" }).click();
+if ((await m1.inputValue()) !== "I thanked my ") fail("the starter didn't fill the start");
 if (await page.getByLabel("I have taken this action.").isChecked())
   fail("the action confirmation is ticked by default");
-await shot("mission-1-options-and-examples");
+await shot("mission-1-starter");
+await m1.fill("");
 // Honest completion: text AND confirmation (C04)
 await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).click();
 await page.getByText("Write your record first.").waitFor();
@@ -149,7 +145,7 @@ await page.getByText("MISSION COMPLETE.").waitFor();
 await page.getByText("You acted with Honor.").waitFor();
 await shot("mission-1-complete");
 
-// E — Mission 2: change the scent, save a draft, come back, finish
+// E — Mission 2: change the scent, the draft saves itself, come back, finish
 // Continue goes straight from the success screen to Mission 2: Mission 1's
 // saved-record view must never flash in between. Watch every DOM change.
 await page.evaluate(() => {
@@ -165,9 +161,6 @@ await page.getByText("MISSION 2 OF 30").waitFor();
 if (await page.evaluate(() => window.__flash))
   fail("Mission 1 flashed between the success screen and Mission 2");
 await page.getByText("Break the Avoidance Loop").first().waitFor();
-await page.getByText("Let's use the S.T.A.R. System.").waitFor();
-if ((await page.getByText("Let's get started with the S.T.A.R. System.").count()) > 0)
-  fail("'get started' belongs on Mission 1 only");
 await page.getByText("Recommended", { exact: true }).waitFor();
 await page.getByRole("radio", { name: "honor" }).click();
 if ((await page.getByRole("radio", { name: "honor" }).getAttribute("aria-checked")) !== "true")
@@ -177,8 +170,8 @@ await shot("mission-2-fragrance-switched");
 await page.getByRole("radio", { name: "courage" }).click();
 const m2 = page.getByLabel("What were you avoiding, and what first step did you take?");
 await m2.fill("I was avoiding the insurance call.");
-await page.getByRole("button", { name: "SAVE DRAFT FOR LATER" }).click();
-await page.getByText(/Draft saved .* It doesn't count as complete./).waitFor();
+// No draft button: it saves itself.
+await page.getByText(/Saved\. Come back any time/).waitFor();
 await page.goto(`${BASE}/missions/2`);
 await page.getByText("DRAFT SAVED", { exact: true }).waitFor();
 if ((await m2.inputValue()) !== "I was avoiding the insurance call.")
@@ -224,7 +217,7 @@ await page.getByText("MISSION COMPLETE.").waitFor();
 
 // H — A code Mission saves to the Personal Code, and isn't praised as a deed
 await page.goto(`${BASE}/missions/8`);
-await page.getByText("3–5 minutes · Code").waitFor();
+await page.getByText("Define Your Honor").first().waitFor();
 if ((await page.getByLabel("I have taken this action.").count()) > 0)
   fail("a code Mission asks for action confirmation");
 await page.getByLabel("For me, honor means…").fill("Telling the truth about my mistakes and fixing what I can.");

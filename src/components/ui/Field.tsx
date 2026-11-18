@@ -20,6 +20,8 @@ interface FieldProps {
   inputMode?: "text" | "email" | "numeric";
   autoComplete?: string;
   autoFocus?: boolean;
+  /** The textarea itself, e.g. to put the cursor after a tapped starter. */
+  textareaRef?: React.Ref<HTMLTextAreaElement>;
   onBlur?: () => void;
   className?: string;
   inputClassName?: string;
@@ -42,6 +44,7 @@ export default function Field({
   inputMode,
   autoComplete,
   autoFocus,
+  textareaRef,
   onBlur,
   className,
   inputClassName,
@@ -75,6 +78,8 @@ export default function Field({
       {multiline ? (
         <textarea
           id={id}
+          ref={textareaRef}
+          autoComplete={autoComplete}
           className={cn(
             shared,
             "resize-none",

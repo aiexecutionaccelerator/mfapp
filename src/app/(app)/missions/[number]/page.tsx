@@ -1,12 +1,11 @@
 "use client";
 
-import { Check, History, Info } from "lucide-react";
+import { Check, History } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, use, useEffect, useState } from "react";
 import MissionTrack from "@/components/MissionTrack";
 import NavAction from "@/components/NavAction";
 import CompletionMedal from "@/components/motion/CompletionMedal";
-import StarSystem from "@/components/StarSystem";
 import { ContextPanels } from "@/components/mission/ContextPanels";
 import MissionForm, { type FormMode } from "@/components/mission/MissionForm";
 import Button from "@/components/ui/Button";
@@ -14,7 +13,6 @@ import Disclosure from "@/components/ui/Disclosure";
 import Eyebrow from "@/components/ui/Eyebrow";
 import GlassCard from "@/components/ui/GlassCard";
 import Headline from "@/components/ui/Headline";
-import Sheet from "@/components/ui/Sheet";
 import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import { getMissionDef, stageOf, type MissionDef } from "@/content/missions";
@@ -43,8 +41,10 @@ import { formatDate, formatDay } from "@/lib/utils";
  * driven by `content/missions.ts` (curriculum revision 2), the rules in
  * `lib/curriculum.ts`, and his records.
  *
- * Order (spec): back, N of 30 and saved state · stage, title, hook and the
- * S.T.A.R. reminder · the S, T, A, R steps · the save.
+ * Order: back, N of 30 and saved state · stage, a faded rule, title and
+ * hook · the S, T, A, R steps · the save. (The S.T.A.R. reminder link and
+ * the "Let's use the S.T.A.R. System" line were removed, 18 Nov: the four
+ * steps explain themselves.)
  *
  * A saved record shows as itself (with SAVE CHANGES behind EDIT). A record
  * made under the first curriculum keeps its original wording and says so.
@@ -66,7 +66,6 @@ function MissionDetailInner({
 
   const [mode, setMode] = useState<FormMode | null>(null);
   const [justSaved, setJustSaved] = useState<Mission | null>(null);
-  const [starOpen, setStarOpen] = useState(false);
   const [restoring, setRestoring] = useState(false);
 
   useEffect(() => {
@@ -176,40 +175,19 @@ function MissionDetailInner({
       <Eyebrow tone="gold" className="mt-6">
         {stageOf(def).label} · Mission {def.number}
       </Eyebrow>
-      <Headline level={2} className="mt-2">
+      {/* A faded gold rule between the stage and the title, so the two
+          don't read as one block (Antonio, 18 Nov). */}
+      <div aria-hidden className="rule-fade mt-4" />
+      <Headline level={2} className="mt-4">
         {def.title}
       </Headline>
       <p className="mt-3 text-[19px] leading-snug text-ink-0">{def.hook}</p>
-
-      <button
-        type="button"
-        onClick={() => {
-          setStarOpen(true);
-          track("star_reminder_opened", { missionNumber: def.number });
-        }}
-        className="mt-4 flex min-h-11 items-center gap-2 text-left text-[14px] text-gold-300"
-      >
-        <Info aria-hidden size={16} className="shrink-0" />
-        Click here for a reminder of how the S.T.A.R. System works.
-      </button>
-
-      <Sheet open={starOpen} title="THE S.T.A.R. SYSTEM" onClose={() => setStarOpen(false)}>
-        <StarSystem />
-        <Button variant="secondary" onClick={() => setStarOpen(false)}>
-          GOT IT
-        </Button>
-      </Sheet>
     </>
   );
 
   const form = (formMode: FormMode, against: Mission | null) => (
     <>
-      <div className="mt-6 border-t border-[var(--line)]" />
-      <p className="font-display mt-6 text-[20px] leading-snug text-ink-0">
-        {def.number === 1
-          ? "Let's get started with the S.T.A.R. System."
-          : "Let's use the S.T.A.R. System."}
-      </p>
+      <div aria-hidden className="mt-7 border-t border-[var(--line)]" />
       <MissionForm
         key={`${formMode}-${against?.updated_at ?? "new"}`}
         def={def}

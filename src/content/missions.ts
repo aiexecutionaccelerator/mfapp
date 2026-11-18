@@ -46,12 +46,18 @@ export interface MissionDef {
   select: string;
   /** The Act step: the assignment. */
   action: string;
-  /** "Choose one way to do it": three equal approaches, not a quiz. */
+  /** The spec's three ways to do it. Not shown; the starters come from them. */
   choices: [string, string, string];
   /** The Record step's question. */
   prompt: string;
-  /** "Need an example?": inspiration only. Never fills the field. */
+  /** The spec's two examples. Kept for the record; the screen shows `starters`. */
   examples: [string, string];
+  /**
+   * Tap-to-start openings on the Record step (Antonio, 18 Nov 2026): each
+   * fills the start of his answer, and he finishes it in his own words.
+   * They come from the three ways to do it. Never a finished answer.
+   */
+  starters: string[];
   doneWhen: string;
   note?: string;
   /** Optional photo (Missions 7 and 19 only). */
@@ -120,6 +126,11 @@ export const MISSIONS: MissionDef[] = [
       "I thanked my brother for checking in while I was having a rough week.",
       "I told my coworker her careful handover helped me finish the job.",
     ],
+    starters: [
+      "I thanked my ",
+      "I gave my coworker credit for ",
+      "I told someone I usually take for granted that ",
+    ],
     doneWhen: "You have expressed the appreciation. Thinking it or drafting it is preparation.",
     youtubeId: null,
     implementation: "Opens with an achievable act of respect. Supplies a concrete experience for the Honor line in Mission 8.",
@@ -146,6 +157,11 @@ export const MISSIONS: MissionDef[] = [
       "I was avoiding the repair call. I called and requested an estimate.",
       "I was dreading the application. I completed the contact section.",
     ],
+    starters: [
+      "I was avoiding the email to ",
+      "I was putting off booking ",
+      "I was dreading the form for ",
+    ],
     doneWhen: "One real step is finished. The whole task does not have to be.",
     note: "Choose an ordinary, manageable task. This mission is about useful discomfort, not taking unnecessary risks.",
     youtubeId: null,
@@ -162,7 +178,7 @@ export const MISSIONS: MissionDef[] = [
     time: "Time varies",
     hook: "Give yourself a reason to trust your own word.",
     select: "Commitment turns an intention into something another person—or you—can rely on.",
-    action: "Keep one small promise you have made to yourself or someone else. Choose one you can fulfill today; if you have none, make a small promise and carry it out now.",
+    action: "Keep one small promise you have made to yourself or someone else. Choose one you can keep today, in less than five minutes.",
     choices: [
       "Return a call or message when you said you would.",
       "Finish a small responsibility you agreed to handle.",
@@ -172,6 +188,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I promised to return the borrowed drill today, and I dropped it off.",
       "I promised myself five minutes on the paperwork, and I completed that time.",
+    ],
+    starters: [
+      "I promised to get back to ",
+      "I said I would ",
+      "I promised myself five minutes on ",
     ],
     doneWhen: "The promise has been kept. A promise for later stays a draft.",
     youtubeId: null,
@@ -198,6 +219,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I told my coworker I had sent the wrong date and sent the corrected details.",
       "I owned leaving the kitchen for someone else and cleaned it.",
+    ],
+    starters: [
+      "I gave the wrong information about ",
+      "I owned that I had not ",
+      "I apologized to ",
     ],
     doneWhen: "You have acknowledged your part and made a repair within your control.",
     note: "Choose an everyday situation that is safe to address. You do not need to disclose private details in your log or obtain anyone’s forgiveness.",
@@ -226,6 +252,11 @@ export const MISSIONS: MissionDef[] = [
       "I asked my colleague to explain the step I had been pretending to understand.",
       "I asked a friend to look over the opening of my presentation.",
     ],
+    starters: [
+      "I asked my colleague to explain ",
+      "I asked for feedback on ",
+      "I asked a friend to help me with ",
+    ],
     doneWhen: "You have made the request. A reply or a yes is not required.",
     youtubeId: null,
     implementation: "Makes asking for help a legitimate expression of courage. Informs the Courage line and later goal work.",
@@ -251,6 +282,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I admitted a missed deadline and helped fix the problem. I can own my part when I feel embarrassed.",
       "I kept visiting my dad during a hard month. I can keep showing up.",
+    ],
+    starters: [
+      "I told the truth when ",
+      "I was nervous, but I still ",
+      "I kept showing up for ",
     ],
     doneWhen: "You have recorded one specific memory and the quality you want to use again.",
     note: "Select the fragrance that matches the memory. This is a reflection on the past, recorded separately from a new action today.",
@@ -278,6 +314,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I put Honor beside my watch. After getting dressed, I will open the next mission.",
       "I put the set on my bedroom shelf. After making my bed, I will begin.",
+    ],
+    starters: [
+      "I put it beside my watch. After getting dressed, I will ",
+      "I put it on my bedroom shelf. After ",
+      "I put it with my morning essentials. After ",
     ],
     doneWhen: "The bottle is in place and you have named your starting cue.",
     note: "Use a safe, appropriate place. One bottle is enough to set up your reminder. A photo is optional. Setting up your reminder completes this mission, but you'll still need to practice regularly.",
@@ -307,6 +348,11 @@ export const MISSIONS: MissionDef[] = [
       "Telling the truth about my mistakes and taking responsibility for repairing them.",
       "Giving people credit for their work, even when I could take it myself.",
     ],
+    starters: [
+      "Telling the truth about ",
+      "Owning my part when ",
+      "Treating people with respect even when ",
+    ],
     doneWhen: "One clear Honor line is saved to your Personal Code.",
     note: "This defines your standard. You will practice a code line in Mission 14; saving words does not prove you have lived them.",
     youtubeId: "a9yG3pylUKY",
@@ -333,6 +379,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "Asking for help when I am stuck instead of pretending I understand.",
       "Speaking honestly and respectfully when I disagree.",
+    ],
+    starters: [
+      "Having the honest conversation with ",
+      "Asking for help when ",
+      "Taking the first step on ",
     ],
     doneWhen: "One clear Courage line is saved to your Personal Code.",
     note: "Courage serves a worthwhile purpose. Your line should not require danger, hostility, or ignoring sound judgment.",
@@ -361,6 +412,11 @@ export const MISSIONS: MissionDef[] = [
       "Giving my important work ten focused minutes and returning at the next opportunity if I miss.",
       "Keeping regular time with my family and honestly rescheduling when a real conflict arises.",
     ],
+    starters: [
+      "Showing up for ",
+      "Protecting time for ",
+      "Getting back to ",
+    ],
     doneWhen: "One clear Commitment line is saved to your Personal Code.",
     note: "Choose a standard you can practice. “Never fail” gives you no useful way to recover.",
     youtubeId: "ihWgFp5H0DU",
@@ -388,6 +444,11 @@ export const MISSIONS: MissionDef[] = [
       "I will not hide a mistake to protect my image. Instead, I will acknowledge it and correct what I can.",
       "I will not promise time I cannot give. Instead, I will offer a realistic commitment.",
     ],
+    starters: [
+      "I will not hide a mistake. Instead, I will ",
+      "I will not take credit for someone else’s work. Instead, I will ",
+      "I will not promise what I cannot deliver. Instead, I will ",
+    ],
     doneWhen: "Your boundary and the alternative you will use are saved.",
     youtubeId: null,
     implementation: "Adds a usable response to pressure. Creates code line 4 and prepares the boundary practiced in Mission 24.",
@@ -413,6 +474,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "My promise is ten focused minutes on my qualification after breakfast, because I want more options.",
       "My promise is to put my phone away during dinner, because I want to be present with the people I love.",
+    ],
+    starters: [
+      "My promise is to give ",
+      "My promise is to spend ten minutes on ",
+      "My promise is to take care of myself by ",
     ],
     doneWhen: "One meaningful promise is saved, with a behavior you control and a reason.",
     note: "Define the promise today. Future repetitions are still ahead. You can refine the promise as you learn what works.",
@@ -441,6 +507,11 @@ export const MISSIONS: MissionDef[] = [
       "Keeps his word, admits his mistakes, and makes repairs.",
       "Takes the next useful step even when he feels unsure.",
     ],
+    starters: [
+      "Takes responsibility for ",
+      "Faces ",
+      "Follows through on ",
+    ],
     doneWhen: "You have deliberately kept or updated your identity statement.",
     note: "You do not need to claim perfection. Your statement is a direction you are choosing, not a verdict on your worth.",
     youtubeId: null,
@@ -467,6 +538,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "My line is to own mistakes. I corrected an inaccurate update I had sent.",
       "My line is to follow through. I completed the call I had promised.",
+    ],
+    starters: [
+      "I practiced my Honor line by ",
+      "I practiced my Courage line by ",
+      "I practiced my Commitment line by ",
     ],
     doneWhen: "You can name the code line and the action you have completed.",
     note: "If the action is later today, save a draft and return after it happens.",
@@ -495,6 +571,11 @@ export const MISSIONS: MissionDef[] = [
       "I asked my brother about a Thursday call and held 7 PM while I wait for his reply.",
       "My partner and I agreed on a Sunday walk, and I added it to my calendar.",
     ],
+    starters: [
+      "I asked my ",
+      "I set up a call with ",
+      "I agreed on a walk with ",
+    ],
     doneWhen: "You have contacted the person and reserved or agreed on a time.",
     note: "Label a proposal as a proposal. This records arranging time; it does not claim the visit or call has happened.",
     youtubeId: "NGi4l1rNc50",
@@ -521,6 +602,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I had worked without a break. I stepped outside for five quiet minutes.",
       "I had skipped lunch. I stopped and ate before returning to the task.",
+    ],
+    starters: [
+      "I had worked without a break, so I ",
+      "I had skipped a meal, so I ",
+      "I needed time away from screens, so I ",
     ],
     doneWhen: "You have taken the care step, rather than only planning it.",
     note: "Choose what suits your needs and abilities. The goal is sustainable effort, not pushing through exhaustion.",
@@ -549,6 +635,11 @@ export const MISSIONS: MissionDef[] = [
       "I spent ten minutes drafting the introduction to my proposal and finished one paragraph.",
       "I practiced the first exercise in my course for ten uninterrupted minutes.",
     ],
+    starters: [
+      "I worked on ",
+      "I spent ten minutes learning ",
+      "I finished part of ",
+    ],
     doneWhen: "You have completed the focused block and can name what you worked on.",
     note: "If ten minutes is unrealistic today, use two deliberate minutes and record that honestly. This mission helps you practice staying with a task; Mission 2 focused on getting started.",
     youtubeId: "8UbE1PcGqC0",
@@ -576,6 +667,11 @@ export const MISSIONS: MissionDef[] = [
       "I checked my calendar and found no time for my course. I need to reserve a short study block.",
       "I reviewed my subscriptions and found one I no longer use. I will check its cancellation terms.",
     ],
+    starters: [
+      "I reviewed my ",
+      "I checked my calendar and found ",
+      "I checked the status of ",
+    ],
     doneWhen: "You have reviewed the information and named what it tells you.",
     note: "Record the lesson, not private balances, account numbers, or other sensitive details. Reviewing a fact does not require making a major decision today.",
     youtubeId: "GqQmxeLr6GI",
@@ -602,6 +698,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I cleared my work surface and put my course notes there so I can study after breakfast.",
       "I put the borrowed items by the door so I can return them on my next trip.",
+    ],
+    starters: [
+      "I cleared ",
+      "I put my ",
+      "I set up a place for ",
     ],
     doneWhen: "One obstacle is removed or one useful setup is ready.",
     note: "The task is to support a priority, not tidy your whole house. An optional photo can show the change.",
@@ -631,6 +732,11 @@ export const MISSIONS: MissionDef[] = [
       "My colleague asked for a template, so I found and sent the relevant one.",
       "My neighbor accepted help carrying a box, and I carried it inside.",
     ],
+    starters: [
+      "I sent ",
+      "I took on ",
+      "I helped ",
+    ],
     doneWhen: "You have provided useful help. An offer to help later is still an intention.",
     note: "Keep the help welcome and manageable. If one person declines, respect that and choose another suitable action.",
     youtubeId: "oU7fHhMoXoY",
@@ -657,6 +763,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I want to complete the first lesson of my course this week because it moves my qualification forward.",
       "I want to have two unhurried conversations with people close to me because I have been distracted.",
+    ],
+    starters: [
+      "In the next seven days, I want to keep my promise to ",
+      "In the next seven days, I want to finish ",
+      "In the next seven days, I want to ",
     ],
     doneWhen: "Your focus area and a specific seven-day aim are saved.",
     note: "Your focus and aim will appear in the next missions. Saving this plan does not claim the result has happened.",
@@ -685,6 +796,11 @@ export const MISSIONS: MissionDef[] = [
       "For my course aim, I asked the tutor about an exercise I did not understand.",
       "For my connection aim, I called the friend I felt awkward about neglecting.",
     ],
+    starters: [
+      "For my aim, I asked ",
+      "For my aim, I finally started ",
+      "For my aim, I made a request to ",
+    ],
     doneWhen: "You have taken a useful step toward the aim, even if the wider result is still ahead.",
     note: "Choose ordinary, worthwhile discomfort. If the step is too large, shrink it until you can take it safely today.",
     youtubeId: null,
@@ -711,6 +827,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I opened lesson two and left my notebook ready. I will use them after breakfast.",
       "I reserved tomorrow’s call time and wrote down the question I want to ask.",
+    ],
+    starters: [
+      "I opened ",
+      "I reserved time for ",
+      "I got ready for ",
     ],
     doneWhen: "The setup is ready and the next starting moment is named.",
     note: "This records preparation. Record the next practice separately when you carry it out.",
@@ -739,6 +860,11 @@ export const MISSIONS: MissionDef[] = [
       "I declined an optional meeting so I could complete my study block.",
       "I stopped scrolling and used ten minutes to arrange a call with my brother.",
     ],
+    starters: [
+      "I declined ",
+      "I moved ",
+      "I stopped ",
+    ],
     doneWhen: "You have made the decision and acted on it.",
     note: "Protect your priority while respecting existing responsibilities. The mission is not to refuse everything or control someone else.",
     youtubeId: "VkA4H2mZNII",
@@ -765,6 +891,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I muted social notifications during my study period and kept important calls enabled.",
       "I moved my phone charger away from the dinner table to support being present.",
+    ],
+    starters: [
+      "I silenced ",
+      "I moved my phone ",
+      "I closed ",
     ],
     doneWhen: "A specific change is in place. You are not claiming the habit is permanently gone.",
     note: "Mission 24 practiced a decision in the moment. Today you change a recurring interruption at its source.",
@@ -793,6 +924,11 @@ export const MISSIONS: MissionDef[] = [
       "I missed my study block yesterday. I completed five focused minutes today.",
       "I had not returned a promised call. I acknowledged the delay and made the call.",
     ],
+    starters: [
+      "I missed ",
+      "I had not ",
+      "I left ",
+    ],
     doneWhen: "You have taken a repair or restart action. Explaining the lapse alone is not enough.",
     note: "Keep your existing progress. A missed day does not require starting the 30 missions over.",
     youtubeId: null,
@@ -819,6 +955,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "After breakfast, I will study for ten minutes. On a difficult day, I will complete one exercise.",
       "After Sunday lunch, I will call my brother. If we cannot talk, I will send a message and arrange another time.",
+    ],
+    starters: [
+      "After breakfast, I will ",
+      "After dinner, I will ",
+      "Every Sunday, I will ",
     ],
     doneWhen: "The practice, starting cue, fallback, frequency, and future review date are saved.",
     note: "The frequency and review date are below. This saves a plan; repetitions are recorded as actions.",
@@ -847,6 +988,11 @@ export const MISSIONS: MissionDef[] = [
       "I asked another clarifying question in my course. I still felt awkward, but I got the answer I needed.",
       "I completed another ten-minute study block. Having the materials ready helped.",
     ],
+    starters: [
+      "I asked another ",
+      "I did another ten-minute block on ",
+      "I followed through again on ",
+    ],
     doneWhen: "You have repeated a useful action and recorded what happened.",
     note: "Use your log as evidence, not as a comparison with other men. Choose the fragrance that matches the action.",
     youtubeId: null,
@@ -874,6 +1020,11 @@ export const MISSIONS: MissionDef[] = [
       "I told my brother my Commitment line and explained my ten-minute study practice.",
       "I shared my Honor line with a close friend and said I am working on owning mistakes promptly.",
     ],
+    starters: [
+      "I told ",
+      "I read my ",
+      "I sent my ",
+    ],
     doneWhen: "You have actually communicated the selected line and practice.",
     note: "Share only what you are comfortable sharing, with a safe and trusted person. Copying text alone does not complete the mission. If the conversation must wait, save a draft.",
     youtubeId: null,
@@ -900,6 +1051,11 @@ export const MISSIONS: MissionDef[] = [
     examples: [
       "I learned mornings work best. After breakfast, I will study ten minutes. If I miss, I will do one exercise at the next opportunity.",
       "I learned short calls are easier to keep. After Sunday lunch, I will call someone close to me. If we cannot connect, I will arrange another time.",
+    ],
+    starters: [
+      "I learned ",
+      "I learned mornings work best. After breakfast, I will ",
+      "I learned I took on too much. After ",
     ],
     doneWhen: "Your next practice, fragrance, frequency, and future review date are saved.",
     note: "Use One-Off Actions to record future repetitions. Your code, missions, and Proof Log stay with you. Thirty missions are a starting practice, not a guarantee that a habit is permanent.",

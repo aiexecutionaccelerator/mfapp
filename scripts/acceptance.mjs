@@ -9,7 +9,7 @@
    this report folds in its results. Synthetic data only. */
 import { chromium } from "playwright";
 import { execFileSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const BASE = "http://localhost:3100";
 const browser = await chromium.launch(
@@ -103,7 +103,7 @@ const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
 
 /* ---------- content and interaction ---------- */
 
-await scenario("C01", "30 Missions match the spec: 20 action, 6 code, 3 plan, 1 reflection; 3 approaches and 2 examples each", async (note) => {
+await scenario("C01", "30 Missions match the spec: 20 action, 6 code, 3 plan, 1 reflection; 3 approaches, 2 examples and starters each", async (note) => {
   const out = execFileSync("node", ["scripts/check-copy.mjs"], { encoding: "utf8" });
   assert(out.includes("all 30 Missions match"), out);
   note("`npm run check:copy` compares every field of all 30 with docs/specs/curriculum-v2-spec.txt.");
@@ -118,9 +118,10 @@ await scenario("C02", "every Mission fits a 375px phone: no horizontal scroll, s
       client: document.documentElement.clientWidth,
     }));
     assert(scroll <= client, `Mission ${n} scrolls sideways (${scroll} > ${client})`);
-    for (const step of ["SELECT", "TRIGGER", "ACT", "RECORD"])
+    for (const step of [/^SELECT YOUR SCENT TRIGGER$/, "TRIGGER", "ACT", "RECORD"])
       assert((await page.getByText(step, { exact: true }).count()) > 0, `Mission ${n} missing ${step}`);
-    const save = page.getByRole("button", { name: "SAVE DRAFT FOR LATER" });
+    // The page's one primary action (drafts save themselves since 18 Nov).
+    const save = page.locator("main button").filter({ hasText: /^(RECORD · |SAVE )/ }).last();
     await save.scrollIntoViewIfNeeded();
     const box = await save.boundingBox();
     const bar = await page.locator("nav").last().boundingBox();
@@ -129,21 +130,21 @@ await scenario("C02", "every Mission fits a 375px phone: no horizontal scroll, s
   note("Checked all 30 at 375×812.");
 });
 
-await scenario("C03", "opening approaches and examples, or changing scent, never fills, ticks or saves; the chosen scent is saved and used", async () => {
+await scenario("C03", "a starter fills only the start of the answer; changing scent never ticks or completes; the chosen scent is saved and used", async () => {
   await reset([]);
   await open(1);
-  await page.getByRole("button", { name: "Choose one way to do it" }).click();
-  await page.getByRole("button", { name: "Need an example?" }).click();
-  await page.getByText(/I thanked my brother/).click();
-  assert((await field().inputValue()) === "", "an example filled the field");
+  await page.getByRole("group", { name: "Start with" }).getByRole("button", { name: "I thanked my…" }).click();
+  assert((await field().inputValue()) === "I thanked my ", "the starter didn't fill the start of the answer");
   assert(!(await confirmBox().isChecked()), "the confirmation got ticked");
-  assert((await stored()).length === 0 && (await storedDrafts()).length === 0, "something was saved");
+  assert((await stored()).length === 0, "a record was saved");
   await page.getByRole("radio", { name: "commitment" }).click();
+  await page.getByText("You fulfill your responsibilities through consistent effort and perseverance.").waitFor();
   await field().fill("I thanked my neighbor for watching the house.");
   await confirmBox().check();
   await button("RECORD · COMPLETE MISSION 1").click();
   await page.getByText("You acted with Commitment.").waitFor();
   assert((await stored())[0].trigger === "commitment", "chosen scent not saved");
+  assert((await storedDrafts()).length === 0, "the autosaved draft outlived the record");
 });
 
 await scenario("C04", "blank text or no confirmation blocks completion in the UI; a draft is still possible; no progress or action credit", async (note) => {
@@ -155,8 +156,7 @@ await scenario("C04", "blank text or no confirmation blocks completion in the UI
   await button("RECORD · COMPLETE MISSION 2").click();
   await page.getByText(/I have taken this action/).first().waitFor();
   assert((await stored()).length === 0, "a record was created");
-  await button("SAVE DRAFT FOR LATER").click();
-  await page.getByText(/Draft saved/).waitFor();
+  await page.getByText(/Saved\. Come back any time/).waitFor();
   assert((await storedDrafts()).length === 1, "draft not saved");
   await page.goto(`${BASE}/progress`);
   assert((await page.getByText("0/30", { exact: true }).count()) === 1, "progress moved");
@@ -191,8 +191,7 @@ await scenario("C06", "a draft survives reload without credit; completing it cle
   await reset([]);
   await open(3);
   await field().fill("I promised to return the drill.");
-  await button("SAVE DRAFT FOR LATER").click();
-  await page.getByText(/Draft saved/).waitFor();
+  await page.getByText(/Saved\. Come back any time/).waitFor();
   await page.reload();
   await page.getByText("DRAFT SAVED", { exact: true }).waitFor();
   assert((await field().inputValue()) === "I promised to return the drill.", "draft text lost");
@@ -226,21 +225,28 @@ await scenario("C07", "viewing 13 doesn't complete it; saving updates identity; 
   assert(rows[0].reflection === "Keeps his word and follows through after setbacks.", "13 not synced");
 });
 
-await scenario("C08", "15 labels a proposal honestly; 20 says an offer alone is not completed help", async () => {
-  await reset([]);
-  await open(15);
-  await page.getByText("Label a proposal as a proposal.", { exact: false }).waitFor();
-  await page.getByText("You have contacted the person and reserved or agreed on a time.").waitFor();
-  await open(20);
-  await page.getByText("An offer to help later is still an intention.", { exact: false }).waitFor();
+// Revision 2.1 (18 Nov): notes and Done when are no longer shown on the
+// Mission screen. The honesty wording is still kept in the content, so these
+// two now check it there; the screen half no longer applies.
+const missionsSource = readFileSync(new URL("../src/content/missions.ts", import.meta.url), "utf8");
+
+await scenario("C08", "15 labels a proposal honestly; 20 says an offer alone is not completed help (content; not shown since 2.1)", async (note) => {
+  for (const text of [
+    "Label a proposal as a proposal.",
+    "You have contacted the person and reserved or agreed on a time.",
+    "An offer to help later is still an intention.",
+  ])
+    assert(missionsSource.includes(text), `missing from missions.ts: ${text}`);
+  note("Revision 2.1 removed notes and Done when from the screen; the wording is kept in the content.");
 });
 
-await scenario("C09", "17 allows an honest two-minute fallback; 23 records preparation, not the later task", async () => {
-  await reset([record(21, { focus_area: "Work", reflection: "Finish lesson one this week." })]);
-  await open(17);
-  await page.getByText("use two deliberate minutes and record that honestly", { exact: false }).waitFor();
-  await open(23);
-  await page.getByText("This records preparation. Record the next practice separately", { exact: false }).waitFor();
+await scenario("C09", "17 allows an honest two-minute fallback; 23 records preparation, not the later task (content; not shown since 2.1)", async (note) => {
+  for (const text of [
+    "use two deliberate minutes and record that honestly",
+    "This records preparation. Record the next practice separately",
+  ])
+    assert(missionsSource.includes(text), `missing from missions.ts: ${text}`);
+  note("Revision 2.1 removed notes from the screen; the wording is kept in the content.");
 });
 
 await scenario("C10", "copying code lines in 29 doesn't complete it or give credit", async () => {
@@ -273,14 +279,10 @@ await scenario("C11", "missed days keep progress; next is chosen by number; afte
   assert((await page.getByText("30/30", { exact: true }).count()) === 1, "x/30 changed");
 });
 
-await scenario("C12", "keyboard and screen reader: labelled fields, expand state, selection state, errors announced and focused", async (note) => {
+await scenario("C12", "keyboard and screen reader: labelled fields, starters grouped, selection state, errors announced and focused", async (note) => {
   await reset([]);
   await open(27);
-  const disclosure = page.getByRole("button", { name: "Choose one way to do it" });
-  assert((await disclosure.getAttribute("aria-expanded")) === "false", "no aria-expanded");
-  await disclosure.focus();
-  await page.keyboard.press("Enter");
-  assert((await disclosure.getAttribute("aria-expanded")) === "true", "Enter didn't expand");
+  await page.getByRole("group", { name: "Start with" }).waitFor();
   assert((await page.getByRole("radio", { name: "courage" }).getAttribute("aria-checked")) === "false", "no selection state");
   assert((await page.getByLabel("After ____, I will ____. If that is not possible, I will ____.").count()) === 1, "Record field has no label");
   assert((await page.getByLabel("REVIEW DATE").count()) === 1, "date has no label");
@@ -336,8 +338,7 @@ await scenario("D03", "a 22 draft made before 21 picks up the newly saved aim, k
   await reset([]);
   await open(22);
   await field().fill("I asked the tutor about the exercise I didn't understand.");
-  await button("SAVE DRAFT FOR LATER").click();
-  await page.getByText(/Draft saved/).waitFor();
+  await page.getByText(/Saved\. Come back any time/).waitFor();
   await open(21);
   await field().fill("Finish lesson one this week, because it moves my qualification forward.");
   await page.getByText("Work", { exact: true }).click();

@@ -238,7 +238,8 @@ body::after {
     transition:
       border-color 180ms ease,
       box-shadow 180ms ease,
-      transform 180ms ease;
+      transform 180ms ease,
+      outline-color 180ms ease;
   }
 
   .bottle-tile .bottle-pool {
@@ -274,6 +275,44 @@ body::after {
       0 0 34px var(--cue-glow);
   }
 
+  /* Once a bottle is chosen it carries a clear gold outline, whichever it
+     is, and the other two step back: dimmed and desaturated, still
+     tappable (Antonio, 18 Nov). The shelf always has a choice. */
+  .bottle-tile[data-open="true"] {
+    outline: 1.5px solid var(--gold-300);
+    outline-offset: 2px;
+  }
+
+  /* The bottle and its light dim; the name stays readable (a control
+     still has to say what it is). */
+  .bottle-tile .bottle-shot {
+    transition:
+      opacity 220ms ease,
+      filter 220ms ease;
+  }
+
+  .bottle-tile[data-open="false"] .bottle-shot {
+    opacity: 0.4;
+    filter: grayscale(0.75);
+  }
+
+  .bottle-tile[data-open="false"]:hover .bottle-shot {
+    opacity: 0.85;
+    filter: none;
+  }
+
+  /* A faded gold hairline: bright at the start, gone by the end. */
+  .rule-fade {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(232, 210, 138, 0.75),
+      rgba(201, 166, 72, 0.18) 60%,
+      transparent
+    );
+  }
+
   /* A finger is not a cursor: never leave a tile stuck in its hover state. */
   @media (hover: none) {
     .bottle-tile:hover {
@@ -289,6 +328,11 @@ body::after {
 
     .bottle-tile:hover .bottle-pool {
       opacity: 0.35;
+    }
+
+    .bottle-tile[data-open="false"]:hover .bottle-shot {
+      opacity: 0.4;
+      filter: grayscale(0.75);
     }
 
     .bottle-tile[data-open="true"] {

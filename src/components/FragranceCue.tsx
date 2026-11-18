@@ -12,7 +12,8 @@ import { cn } from "@/lib/utils";
  * one box too many. Each is labelled so a man who doesn't know the set by
  * sight can see what he would be switching to. The one the Mission asks for
  * carries an inner gold light and its own RECOMMENDED pill, which stays put
- * once he has chosen something else.
+ * once he has chosen something else. The chosen bottle takes a gold outline;
+ * the others' bottles dim while their names stay readable (18 Nov).
  *
  * Tinting uses the accent's `ui` colour, not its fill: Commitment's bottle is
  * black and has no colour to glow with, so it takes an ivory rim instead.
@@ -66,7 +67,7 @@ export default function FragranceCue({
                 } as React.CSSProperties
               }
             >
-              <span className="relative flex h-[74px] items-end justify-center">
+              <span className="bottle-shot relative flex h-[74px] items-end justify-center">
                 <BottleVisual trigger={trigger} size={chosen ? 50 : 38} />
                 {/* The pool of light it stands in — brightens with the tile. */}
                 <span
@@ -79,7 +80,7 @@ export default function FragranceCue({
               </span>
               <span
                 className={cn(
-                  "mt-2 block text-[10px] tracking-[0.1em] uppercase",
+                  "mt-2 block text-[11px] tracking-[0.06em] uppercase",
                   chosen ? "text-ink-0" : "text-ink-2",
                 )}
               >
@@ -88,11 +89,11 @@ export default function FragranceCue({
               {/* Which one the Mission asks for, whatever he picks. The
                   spacer keeps all three tiles the same height. */}
               {trigger === recommended ? (
-                <span className="mt-2 block rounded-full border border-[rgba(201,166,72,.45)] px-1.5 py-[2px] text-[8px] leading-none tracking-[0.1em] text-gold-300 uppercase">
+                <span className="mt-2 block rounded-full border border-[rgba(201,166,72,.45)] px-2 py-[3px] text-[11px] leading-none text-gold-300">
                   Recommended
                 </span>
               ) : (
-                <span aria-hidden className="mt-2 block h-[14px]" />
+                <span aria-hidden className="mt-2 block h-[19px]" />
               )}
             </button>
           );

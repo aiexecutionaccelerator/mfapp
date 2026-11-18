@@ -46,7 +46,7 @@ export const STAR_STEPS = [
   {
     letter: "T",
     name: "Trigger",
-    text: "Spray the fragrance and breathe it in.",
+    text: "Spray the fragrance.",
   },
   {
     letter: "A",

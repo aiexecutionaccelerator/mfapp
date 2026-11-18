@@ -52,7 +52,7 @@ S  Select
 Select your Scent Trigger.
 Show Honor, Courage, Commitment. Default to the mission’s suggested fragrance, explain its value, and allow another of the three.
 T  Trigger
-Spray the fragrance and breathe it in.
+Spray the fragrance.
 The spray is the cue. Do not redefine Trigger as a memory exercise. No timer, sensor, or proof of spraying is required.
 A  Act
 Take one small action that’s aligned with the value, or recall a time you lived it.
@@ -209,7 +209,7 @@ Mission 1 Give Credit Where Credit Is Due
 Build self-trust  |  Honor  |  Action  |  About 2 minutes
 Hook Start by noticing what someone else has done for you.
 Select Honor means recognizing other people’s contributions and treating them with respect.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Tell one person exactly what they did that you appreciate and why it mattered. Send the message or say it to them today.
 Choose one way to do it
@@ -228,7 +228,7 @@ Mission 2 Break the Avoidance Loop
 Build self-trust  |  Courage  |  Action  |  2–5 minutes
 Hook Break the task you're avoiding into one small, manageable step.
 Select Courage means moving toward a worthwhile task while discomfort is still there.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Choose one useful task you have delayed because it feels uncomfortable. Take its first concrete step now. Keep the step small enough to finish in five minutes.
 Choose one way to do it
@@ -248,9 +248,9 @@ Mission 3 Keep One Small Promise
 Build self-trust  |  Commitment  |  Action  |  Time varies
 Hook Give yourself a reason to trust your own word.
 Select Commitment turns an intention into something another person—or you—can rely on.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
-Keep one small promise you have made to yourself or someone else. Choose one you can fulfill today; if you have none, make a small promise and carry it out now.
+Keep one small promise you have made to yourself or someone else. Choose one you can keep today, in less than five minutes.
 Choose one way to do it
 1. Return a call or message when you said you would.
 2. Finish a small responsibility you agreed to handle.
@@ -267,7 +267,7 @@ Mission 4 Own Your Part
 Build self-trust  |  Honor  |  Action  |  5–10 minutes
 Hook Self-respect includes admitting when you got something wrong.
 Select Honor means owning your conduct without passing blame or demanding forgiveness.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Choose one small mistake or overlooked responsibility that is yours. Acknowledge it plainly and take a practical step to put it right.
 Choose one way to do it
@@ -287,7 +287,7 @@ Mission 5 Ask Instead of Pretending
 Build self-trust  |  Courage  |  Action  |  2–5 minutes
 Hook You do not need every answer to take the next step.
 Select Courage includes letting yourself be a beginner and admitting what you need.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Ask one clear question or request one specific piece of help with something that matters to you.
 Choose one way to do it
@@ -306,7 +306,7 @@ Mission 6 Remember Your Own Strength
 Build self-trust  |  Honor  |  Reflection  |  3–5 minutes
 Hook When self-doubt sets in, remind yourself of something you've already done well.
 Select An honest memory gives you a concrete example of a value you have already practiced.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Recall one specific time you acted with honor, courage, or commitment. Name the difficulty, what you actually did, and the quality you want to use again.
 Choose one way to do it
@@ -326,7 +326,7 @@ Mission 7 Give Your Practice a Place
 Build self-trust  |  Commitment  |  Action  |  About 2 minutes
 Hook A useful reminder belongs where your day already happens.
 Select Commitment is easier to practice when you have a dependable place and starting cue.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Place your fragrance where it can remind you to practice, away from heat and direct sunlight. Choose the everyday event that will prompt you to open your next mission.
 Choose one way to do it
@@ -346,7 +346,7 @@ Mission 8 Define Your Honor
 Set your standards  |  Honor  |  Code  |  3–5 minutes
 Hook Write a standard you can recognize in your own behavior.
 Select Your Personal Code begins with a practical standard for integrity and respect.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Finish “For me, honor means…” with one behavior you want to stand by. Make it specific enough that you could tell whether you lived it today.
 Choose one way to do it
@@ -366,7 +366,7 @@ Mission 9 Define Your Courage
 Set your standards  |  Courage  |  Code  |  3–5 minutes
 Hook Name the useful action fear tends to stop.
 Select A concrete Courage line gives you direction when avoidance becomes tempting.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Finish “For me, courage means…” with a worthwhile behavior you want to practice even when you feel uncomfortable.
 Choose one way to do it
@@ -386,7 +386,7 @@ Mission 10 Define Your Commitment
 Set your standards  |  Commitment  |  Code  |  3–5 minutes
 Hook Decide what showing up looks like on an ordinary day.
 Select Commitment is consistent effort with a way back when life interrupts.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Finish “For me, commitment means…” with a repeatable behavior and how you will return to it after a missed opportunity.
 Choose one way to do it
@@ -406,7 +406,7 @@ Mission 11 Draw One Honest Boundary
 Set your standards  |  Honor  |  Code  |  3–5 minutes
 Hook Decide what you will do when a shortcut tests your values.
 Select Honor becomes easier to apply when you have decided how to handle pressure.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Name one line you will not cross and the response you will use instead. Keep the boundary about your own behavior.
 Choose one way to do it
@@ -425,7 +425,7 @@ Mission 12 Choose the Promise That Matters
 Set your standards  |  Commitment  |  Code  |  3–5 minutes
 Hook Put one meaningful priority ahead of a list of good intentions.
 Select Commitment needs a direction. This promise will guide the practice you build later.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Choose one area of your life that matters to you. Define a small, repeatable action in your control that would move it forward, and say why it matters.
 Choose one way to do it
@@ -445,7 +445,7 @@ Mission 13 Name the Man You Are Becoming
 Set your standards  |  Courage  |  Code  |  About 3 minutes
 Hook Let your identity point to something you can do.
 Select Courage includes choosing how you will act before confidence catches up.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Read the statement below. Keep it if it fits, or make it more specific using your code and promise.
 Choose one way to do it
@@ -465,7 +465,7 @@ Mission 14 Put Your Code to Work
 Set your standards  |  Honor  |  Action  |  5–10 minutes
 Hook Give one of your standards a real example.
 Select Putting your Personal Code into action connects your standards with how you actually behave. Choose the fragrance that best matches the line you are practicing.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Read your Personal Code below. Choose one line and take one small action today that puts it into practice.
 Choose one way to do it
@@ -485,7 +485,7 @@ Mission 15 Make Room for Someone
 Put your values to work  |  Commitment  |  Action  |  3–5 minutes
 Hook A person who matters deserves a real place in your week.
 Select Commitment makes care practical by giving it time and follow-through.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Arrange one specific time to give someone your attention. Ask what works for them and reserve a time you can keep.
 Choose one way to do it
@@ -505,7 +505,7 @@ Mission 16 Support the Man Doing the Work
 Put your values to work  |  Commitment  |  Action  |  2–10 minutes
 Hook Your goals need a person with the capacity to pursue them.
 Select Commitment includes maintaining your capacity to keep showing up.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Notice one basic need you have neglected today. Take one small, appropriate step to care for yourself before your next demanding task.
 Choose one way to do it
@@ -525,7 +525,7 @@ Mission 17 Finish One Focused Block
 Put your values to work  |  Commitment  |  Action  |  2–10 minutes
 Hook Busy is easy. Give your priority uninterrupted attention.
 Select Commitment means giving your chosen goal real time, even without finishing the whole project.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Choose one small task that serves your promise or another important goal. Set a ten-minute timer, remove a distraction, and work on that task until the timer ends.
 Choose one way to do it
@@ -545,7 +545,7 @@ Mission 18 Face One Useful Fact
 Put your values to work  |  Courage  |  Action  |  5–10 minutes
 Hook You can make a better decision when you know what is true.
 Select Courage includes looking at reality before deciding what to do.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Check one source of information you have avoided about something that matters to you. Identify one fact and the next question or step it suggests.
 Choose one way to do it
@@ -565,7 +565,7 @@ Mission 19 Make Your Priority Easier
 Put your values to work  |  Commitment  |  Action  |  2–5 minutes
 Hook Arrange your space to support the action you want to take.
 Select Commitment includes preparing the conditions for follow-through.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Remove one practical obstacle from the place where you will carry out your promise or important task. Make the next useful action easier to begin.
 Choose one way to do it
@@ -585,7 +585,7 @@ Mission 20 Be Useful on Purpose
 Put your values to work  |  Honor  |  Action  |  3–10 minutes
 Hook Respect becomes visible when you make a real contribution.
 Select Honor includes contributing in a way that respects the other person’s needs and choices.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Notice a specific need someone has expressed. Give one small, appropriate piece of help you can complete today, without taking over.
 Choose one way to do it
@@ -605,7 +605,7 @@ Mission 21 Choose One Direction
 Put your values to work  |  Commitment  |  Plan  |  3–5 minutes
 Hook Use what you have learned to choose where your effort goes next.
 Select Commitment concentrates your effort on a goal you chose for a reason.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Review your promise and recent actions. Choose one focus area and one visible result you want to work toward over the next seven days.
 Choose one way to do it
@@ -625,7 +625,7 @@ Mission 22 Take the Step You Are Avoiding
 Build lasting momentum  |  Courage  |  Action  |  2–10 minutes
 Hook Bring courage to the direction you chose.
 Select Courage helps your chosen goal survive the first moment of resistance.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Read your seven-day aim below. Identify the small step you are most tempted to avoid, and take a manageable version of it now.
 Choose one way to do it
@@ -645,7 +645,7 @@ Mission 23 Make Tomorrow Easier
 Build lasting momentum  |  Commitment  |  Action  |  2–5 minutes
 Hook Prepare the next repetition while today’s lesson is fresh.
 Select Commitment is strengthened by reducing the effort needed to begin again.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Using the same seven-day aim, prepare one thing now that will make your next useful action easier. Decide when you will use what you've prepared.
 Choose one way to do it
@@ -665,7 +665,7 @@ Mission 24 Protect Your Yes
 Build lasting momentum  |  Courage  |  Action  |  2–10 minutes
 Hook A meaningful yes sometimes needs a respectful no.
 Select Courage includes tolerating a little discomfort to honor a considered priority.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Identify one optional demand or distraction that competes with your seven-day aim. Decline, defer, or limit it today so you can protect time for that aim.
 Choose one way to do it
@@ -685,7 +685,7 @@ Mission 25 Remove One Recurring Distraction
 Build lasting momentum  |  Commitment  |  Action  |  About 3 minutes
 Hook Fix the interruption that keeps stealing the same time.
 Select Commitment includes changing a repeated obstacle instead of relying only on willpower.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Choose a recurring distraction that interferes with your seven-day aim. Change one setting or part of your environment so it is less likely to interrupt your next practice.
 Choose one way to do it
@@ -705,7 +705,7 @@ Mission 26 Recover Without Excuses
 Build lasting momentum  |  Honor  |  Action  |  2–10 minutes
 Hook A setback calls for an honest next step.
 Select Honor means honest responsibility; returning to the work rebuilds trust.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Identify one recent lapse in a promise or priority. Name your part without attacking yourself, then take the smallest useful action to repair or resume it today.
 Choose one way to do it
@@ -725,7 +725,7 @@ Mission 27 Build a Practice You Can Keep
 Build lasting momentum  |  Commitment  |  Plan  |  5 minutes
 Hook Make the next repetition clear before motivation changes.
 Select Commitment becomes practical when the cue, action, and recovery option are clear. Choose the fragrance you intend to use as your cue.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Turn your seven-day aim—or a priority you choose now—into one repeatable practice. Write when you will start, what you will do, and a smaller fallback for a difficult day.
 Choose one way to do it
@@ -745,7 +745,7 @@ Mission 28 Repeat What Worked
 Build lasting momentum  |  Courage  |  Action  |  Time varies
 Hook Build confidence from something you can actually repeat.
 Select Courage grows through practicing useful actions even when you still feel uncertain.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Read a completed action in your Proof Log below. Choose one that helped you live your code or move a priority forward, then repeat a manageable version today.
 Choose one way to do it
@@ -765,7 +765,7 @@ Mission 29 Let Someone Support Your Standard
 Build lasting momentum  |  Honor  |  Action  |  3–10 minutes
 Hook Make it easier for someone you trust to understand what you are practicing.
 Select Honor includes being clear about the standards you want your behavior to reflect.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Choose one or more lines from your Personal Code. Share them with someone you trust and explain one behavior you are working on. Ask how they might support or encourage you as you practice.
 Choose one way to do it
@@ -785,7 +785,7 @@ Mission 30 Carry Your Momentum Forward
 Build lasting momentum  |  Commitment  |  Plan  |  5–10 minutes
 Hook Take what worked with you into the next month.
 Select Commitment is the ongoing practice of returning to a worthwhile direction.
-Trigger Spray the fragrance and breathe it in. Then begin the assigned task.
+Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Review your saved actions and any practice plan. Keep or adjust one practice for the next 30 days. Write what you learned, the action you will repeat, its starting cue, and how you will restart after a miss.
 Choose one way to do it
