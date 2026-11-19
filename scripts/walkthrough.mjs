@@ -130,6 +130,8 @@ const m1 = page.getByLabel("Where is your shrine, and what moment will cue your 
 if ((await m1.inputValue()) !== "") fail("Mission 1's field should open blank");
 await page.getByRole("button", { name: "I set my bottles on…" }).click();
 if ((await m1.inputValue()) !== "I set my bottles on ") fail("the starter didn't fill the start");
+// A starter moves the cursor to the end one frame later; let it land before typing.
+await page.waitForFunction(() => document.activeElement?.tagName === "TEXTAREA");
 await m1.fill("I set my bottles on my dresser, next to my watch. After I get dressed, I'll open the next mission.");
 await page.locator('input[type="file"]').setInputFiles(PHOTO);
 await page.getByLabel("Remove photo").waitFor();
@@ -175,6 +177,7 @@ const m3 = page.getByLabel("Who did you thank, and what did you tell them?");
 if ((await m3.inputValue()) !== "") fail("Mission 3's field should open blank");
 await page.getByRole("button", { name: "I thanked my…" }).click();
 if ((await m3.inputValue()) !== "I thanked my ") fail("the starter didn't fill the start");
+await page.waitForFunction(() => document.activeElement?.tagName === "TEXTAREA");
 if (await page.getByLabel("I have taken this action.").isChecked())
   fail("the action confirmation is ticked by default");
 await shot("mission-3-starter");

@@ -145,6 +145,8 @@ await scenario("C03", "a starter fills only the start of the answer; changing sc
   await confirmBox().uncheck();
   await page.getByRole("group", { name: "Start with" }).getByRole("button", { name: "I gave my coworker credit for…" }).click();
   assert((await field().inputValue()) === "I thanked my\nI gave my coworker credit for ", "the second chip replaced the first");
+  // A starter moves the cursor to the end one frame later; let it land before typing.
+  await page.waitForFunction(() => document.activeElement?.tagName === "TEXTAREA");
   await field().fill("I thanked my brother for the lift.\nI gave my coworker credit for staying late with");
   await button("RECORD · COMPLETE MISSION 3").click();
   await page.getByText("Finish your sentence. It stops at “…staying late with”.").waitFor();
