@@ -5,13 +5,13 @@ production build in demo mode (on-device storage), plus `npm run test:db`
 (every migration on an in-process Postgres with first-curriculum data, then
 0009). Synthetic data only.
 
-**App scenarios: 26/26 pass. Database checks: 36/36 pass.**
+**App scenarios: 25/26 pass. Database checks: 36/36 pass.**
 
 | ID | Scenario | Result | Notes |
 |---|---|---|---|
 | C01 | 30 Missions match the spec: 20 action, 6 code, 3 plan, 1 reflection; 3 approaches, 2 examples and starters each | PASS | `npm run check:copy` compares every field of all 30 with docs/specs/curriculum-v2-spec.txt. |
 | C02 | every Mission fits a 375px phone: no horizontal scroll, steps and save visible, nothing under the tab bar at the end | PASS | Checked all 30 at 375×812. |
-| C03 | a starter fills only the start of the answer; changing scent never ticks or completes; the chosen scent is saved and used | PASS |  |
+| C03 | a starter fills only the start of the answer; changing scent never ticks or completes; the chosen scent is saved and used | **FAIL** | locator.waitFor: Timeout 10000ms exceeded. |
 | C04 | blank text or no confirmation blocks completion in the UI; a draft is still possible; no progress or action credit | PASS | Server half: test:db C04 checks. |
 | C05 | Mission 10, a code Mission and a plan complete with their true type and message; none counts as an action | PASS |  |
 | C06 | a draft survives reload without credit; completing it clears it and creates one record | PASS |  |

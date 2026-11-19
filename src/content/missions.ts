@@ -159,7 +159,7 @@ export const MISSIONS: MissionDef[] = [
     time: "3–5 minutes",
     hook: "Decide what honor means to you, in one sentence.",
     idea: "Honor is your word and your actions matching. A clear definition gives you something to measure yourself against every day.",
-    select: "Your Personal Code begins with a practical standard for integrity and respect.",
+    select: "Honor means your word and your actions match.",
     action: "Pick the definition that fits you best, then make it yours. Change any word that doesn’t sound like you.",
     choices: [
       "Use honesty: describe how you will tell the truth.",
@@ -225,7 +225,7 @@ export const MISSIONS: MissionDef[] = [
     time: "3–5 minutes",
     hook: "Courage is acting while you’re still afraid.",
     idea: "Courage isn’t the absence of fear. It’s doing the right thing while the fear is still there.",
-    select: "A concrete Courage line gives you direction when avoidance becomes tempting.",
+    select: "Courage means doing what’s right while you’re still afraid.",
     action: "Pick the definition that fits you best, then make it yours. Change any word that doesn’t sound like you.",
     choices: [
       "Name a respectful conversation you tend to avoid.",
@@ -292,7 +292,7 @@ export const MISSIONS: MissionDef[] = [
     time: "3–5 minutes",
     hook: "Decide what showing up looks like on an ordinary day.",
     idea: "Commitment is what you do on an ordinary day, when no one is checking. Small and steady beats big and rare.",
-    select: "Commitment is consistent effort with a way back when life interrupts.",
+    select: "Commitment means showing up and doing the work, especially on ordinary days.",
     action: "Pick the definition that fits you best, then make it yours. Change any word that doesn’t sound like you.",
     choices: [
       "Describe showing up for a person who relies on you.",
@@ -556,8 +556,8 @@ export const MISSIONS: MissionDef[] = [
     time: "5–10 minutes",
     hook: "Choose one line of your code and act on it today.",
     idea: "A code you don’t use is just words. Acting on one line today is how it becomes who you are.",
-    select: "Putting your Personal Code into action connects your standards with how you actually behave. Choose the fragrance that best matches the line you are practicing.",
-    action: "Read your Personal Code below. Choose one line and take one small action today that puts it into practice.",
+    select: "Acting on your Personal Code connects your standards with how you actually behave. Choose the fragrance that matches the line you act on.",
+    action: "Read your Personal Code below. Choose one line and take one small action today that puts it to work.",
     choices: [
       "Practice your Honor line through an honest correction or a fair decision.",
       "Practice your Courage line by making a useful request or speaking respectfully.",
