@@ -631,15 +631,16 @@ body::after {
 
 /* Every screen arrives the same way: up from below, out of a soft blur.
    Applied by app/(app)/template.tsx, which remounts on each navigation. */
+/* Short, and never from nothing: starting at 0 opacity under a blur read
+   as a blank screen between pages (Antonio's walkthrough, 19 Nov). */
 .page-enter {
-  animation: page-enter 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: page-enter 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes page-enter {
   from {
-    opacity: 0;
-    transform: translateY(14px);
-    filter: blur(4px);
+    opacity: 0.35;
+    transform: translateY(6px);
   }
   /* "none", not blur(0): any filter or transform left on the wrapper would
      trap position: fixed children inside it. */
@@ -662,6 +663,29 @@ body::after {
 .stagger > *:nth-child(6) { animation-delay: 290ms; }
 .stagger > *:nth-child(n + 7) { animation-delay: 330ms; }
 
+/* ---------- Loading placeholder ---------- */
+
+/* A soft shimmer where content is about to land. */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(245, 241, 232, 0.05) 0%,
+    rgba(245, 241, 232, 0.1) 50%,
+    rgba(245, 241, 232, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sheen 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-sheen {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
 /* ---------- Scroll reveal ---------- */
 
 /* Set by <Reveal>: hidden until it scrolls into view, then rises in once. */
@@ -680,17 +704,19 @@ body::after {
 
 /* ---------- Headline: an engraved reveal ---------- */
 
+/* The title arrives with the rest of the page. The letter-by-letter wipe
+   (900ms) left the subtitle on screen with no title above it (19 Nov). */
 .headline-reveal {
-  animation: headline-reveal 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: headline-reveal 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes headline-reveal {
   from {
-    clip-path: inset(0 100% 0 0);
-    letter-spacing: 0.12em;
+    opacity: 0.6;
+    letter-spacing: 0.04em;
   }
   to {
-    clip-path: inset(0 -2% 0 0);
+    opacity: 1;
   }
 }
 
@@ -918,7 +944,7 @@ body::after {
     transform: none;
   }
   .headline-reveal {
-    clip-path: none;
+    animation: none;
   }
 }
 

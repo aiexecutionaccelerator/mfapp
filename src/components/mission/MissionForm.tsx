@@ -219,6 +219,8 @@ export default function MissionForm({
 
   async function writeDraft() {
     if (finished.current || !dirty.current) return;
+    // Choosing a bottle alone isn't a draft: wait for words (19 Nov).
+    if (!text.trim() && !draft) return;
     dirty.current = false;
     setDraftState("saving");
     const job = store
@@ -281,17 +283,19 @@ export default function MissionForm({
 
   /**
    * A starter fills the start of his answer and puts the cursor after it.
-   * It replaces an empty box or another untouched starter; once he has
-   * written something of his own, it goes on a new line instead.
+   * An empty box takes it as is; anything already there is kept and the
+   * starter goes on a new line (19 Nov: a tap used to wipe Mission 13's
+   * prefilled statement, and a second chip replaced the first).
+   *
+   * "I acted on my Courage line by…" also sets the Scent Trigger to that
+   * value, so the credit follows the code line he acted on (Mission 14).
    */
   function applyStarter(starter: string) {
-    const current = text.trim();
-    const untouched =
-      !current ||
-      def.starters.some((s) => s.trim() === current) ||
-      (def.number === 13 && current === (profile.identity_statement ?? DEFAULT_IDENTITY));
-    const next = untouched ? starter : `${text.replace(/\s+$/, "")}\n${starter}`;
+    const kept = text.replace(/\s+$/, "");
+    const next = kept ? `${kept}\n${starter}` : starter;
     touch(setText)(next.slice(0, textLimitFor(def.number)));
+    const value = starter.match(/\bmy (Honor|Courage|Commitment) line\b/)?.[1];
+    if (value) touch(setTrigger)(value.toLowerCase() as Trigger);
     track("mission_starter_used", { missionNumber: def.number });
     requestAnimationFrame(() => {
       const el = textRef.current;
@@ -408,7 +412,7 @@ export default function MissionForm({
           maxLength={textLimitFor(def.number)}
           multiline
           rows={4}
-          placeholder="Tap a start above, or write your own."
+          placeholder="Tap a starter above, or write your own."
           aria-describedby={error ? errorId : undefined}
         />
 
@@ -585,7 +589,10 @@ export function StarStep({
   return (
     <section
       ref={ref}
-      className={cn("reveal relative mt-7 pl-12", inView && "is-visible")}
+      // Always visible; scrolling in only lights the letter and the rail.
+      // (Hiding the steps until a scroll observer fired left mission
+      // pages showing a subtitle with no body, 19 Nov.)
+      className={cn("relative mt-7 pl-12", inView && "is-visible")}
       aria-label={`${letter}: ${name}`}
     >
       <span

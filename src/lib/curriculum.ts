@@ -292,6 +292,8 @@ export function validateRecord(
 
   const text = input.text.trim();
   if (!text) return "Write your record first.";
+  const unfinished = unfinishedLine(text, def.starters);
+  if (unfinished) return unfinished;
   const limit = textLimitFor(def.number);
   if (text.length > limit) return `Keep it under ${limit.toLocaleString()} characters.`;
   if (textOnly) return null;
@@ -314,6 +316,45 @@ export function validateRecord(
     if (!isRealDate(date)) return "Choose a review date.";
     const unchanged = previousReviewDate !== null && date === previousReviewDate;
     if (!unchanged && date <= today) return "Choose a review date after today.";
+  }
+  return null;
+}
+
+/* ---------- unfinished sentences ---------- */
+
+/**
+ * Words a finished sentence doesn't end on: what a tapped starter leaves
+ * behind ("…respect even when", "…Instead, I will"). The server's
+ * `missions_unfinished` trigger (migration 0011) holds the same list.
+ */
+export const DANGLING_WORDS = [
+  "a", "about", "after", "an", "and", "at", "because", "before", "but", "by",
+  "for", "from", "i", "in", "into", "is", "my", "of", "on", "or", "that",
+  "the", "their", "to", "was", "when", "while", "will", "with", "your",
+] as const;
+
+const DANGLING = new Set<string>(DANGLING_WORDS);
+const squash = (s: string) =>
+  s.toLowerCase().replace(/[…."“”'’!?,;:\s]+$/u, "").replace(/\s+/g, " ").trim();
+
+/**
+ * Null when every line reads as finished; otherwise the message to show.
+ * Catches a starter saved on its own and any line stopping mid-sentence on
+ * a word like "with" or "I will" (a line he ends with . ! or ? counts as
+ * finished, so "…checking in." is fine)
+ * (Antonio's test run saved eight of fourteen like that, 19 Nov).
+ */
+export function unfinishedLine(text: string, starters: readonly string[] = []): string | null {
+  const lines = text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+  const bare = new Set(starters.map(squash));
+  for (const line of lines) {
+    const plain = squash(line);
+    if (bare.has(plain)) return "Finish the sentence you started, in your own words.";
+    // He closed it himself ("…checking in."): starters never end that way.
+    if (/[.!?]["”’']?$/u.test(line)) continue;
+    const last = plain.split(" ").at(-1) ?? "";
+    if (DANGLING.has(last.replace(/[^a-z’']/g, "")))
+      return `Finish your sentence. It stops at “…${line.replace(/[….\s]+$/u, "").split(/\s+/).slice(-3).join(" ")}”.`;
   }
   return null;
 }

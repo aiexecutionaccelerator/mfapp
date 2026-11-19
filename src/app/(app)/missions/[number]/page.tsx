@@ -85,9 +85,42 @@ function MissionDetailInner({
   }, [error, nothingLoaded, refresh, showToast]);
 
   if (!def || !profile || !missions || !drafts) {
+    // The wording is built in, so the Mission shows at once; only his
+    // records are on their way. (A bare spinner read as a blank page.)
+    if (!def)
+      return (
+        <main className="flex flex-1 items-center justify-center text-ink-2">
+          <Spinner />
+        </main>
+      );
     return (
-      <main className="flex flex-1 items-center justify-center text-ink-2">
-        <Spinner />
+      <main className="pt-2 pb-8" aria-busy="true">
+        <div className="flex items-center justify-between">
+          <NavAction kind="back" href="/missions" />
+          <span className="eyebrow text-ink-2">
+            MISSION {def.number} OF {MISSION_COUNT}
+          </span>
+          <span className="w-10" />
+        </div>
+        <Eyebrow tone="gold" className="mt-6">
+          {stageOf(def).label} · Mission {def.number}
+        </Eyebrow>
+        <div aria-hidden className="rule-fade mt-4" />
+        <Headline level={2} className="mt-4">
+          {def.title}
+        </Headline>
+        <p className="mt-3 text-[19px] leading-snug text-ink-0">{def.hook}</p>
+        <div aria-hidden className="mt-7 border-t border-[var(--line)]" />
+        <div aria-hidden className="mt-7 space-y-4 pl-12">
+          <div className="skeleton h-4 w-40 rounded-full" />
+          <div className="grid grid-cols-3 gap-2">
+            <div className="skeleton h-[128px] rounded-[14px]" />
+            <div className="skeleton h-[128px] rounded-[14px]" />
+            <div className="skeleton h-[128px] rounded-[14px]" />
+          </div>
+          <div className="skeleton h-4 w-3/4 rounded-full" />
+        </div>
+        <span className="sr-only">Loading your records…</span>
       </main>
     );
   }

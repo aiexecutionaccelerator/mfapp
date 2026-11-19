@@ -53,6 +53,16 @@ reminder link, a lean Act step, tap-to-start `starters` on Record that fill
 the answer, and drafts that save themselves (no SAVE DRAFT button). Details
 at the top of the spec summary. Client only; the server rules are unchanged.
 
+**19 Nov fixes (Antonio's Loom of Missions 1–14):** a starter on its own, or
+any line stopping on a word like "with" / "I will", can't be saved
+(`unfinishedLine` in `lib/curriculum.ts`, and migration **0011** at the write
+boundary; keep their word lists in step). Starters add to the box, never
+replace. Mission 14's "I acted on my X line by" sets the Scent Trigger, so the
+credit follows the line. Progress labels its ring "Real-world actions" and
+explains the gap. Pages no longer fade from blank, titles no longer wipe in,
+and S.T.A.R. steps are visible before scrolling. Videos keep a branded poster
+until YouTube's player has loaded. Run 0011 in the Supabase SQL editor.
+
 - **Content**: `src/content/missions.ts` holds the spec's exact wording for all
   30 (stage, kind, time, hook, select, action, 3 choices, prompt, 2 examples,
   done-when, note). `npm run check:copy` diffs it against the spec text.

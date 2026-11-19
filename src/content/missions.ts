@@ -278,7 +278,7 @@ export const MISSIONS: MissionDef[] = [
       "Recall taking a worthwhile step while you were nervous.",
       "Recall continuing a responsibility during a difficult period.",
     ],
-    prompt: "What happened, what did you do, and what does it remind you you can do?",
+    prompt: "What happened, what did you do, and what does it remind you that you can do?",
     examples: [
       "I admitted a missed deadline and helped fix the problem. I can own my part when I feel embarrassed.",
       "I kept visiting my dad during a hard month. I can keep showing up.",
@@ -526,7 +526,7 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "honor",
     kind: "action",
     time: "5–10 minutes",
-    hook: "Give one of your standards a real example.",
+    hook: "Choose one line of your code and act on it today.",
     select: "Putting your Personal Code into action connects your standards with how you actually behave. Choose the fragrance that best matches the line you are practicing.",
     action: "Read your Personal Code below. Choose one line and take one small action today that puts it into practice.",
     choices: [
@@ -534,15 +534,15 @@ export const MISSIONS: MissionDef[] = [
       "Practice your Courage line by making a useful request or speaking respectfully.",
       "Practice your Commitment line by completing a small promised action.",
     ],
-    prompt: "Which code line did you practice, and what did you do?",
+    prompt: "Which code line did you act on today, and what did you do?",
     examples: [
       "My line is to own mistakes. I corrected an inaccurate update I had sent.",
       "My line is to follow through. I completed the call I had promised.",
     ],
     starters: [
-      "I practiced my Honor line by ",
-      "I practiced my Courage line by ",
-      "I practiced my Commitment line by ",
+      "I acted on my Honor line by ",
+      "I acted on my Courage line by ",
+      "I acted on my Commitment line by ",
     ],
     doneWhen: "You can name the code line and the action you have completed.",
     note: "If the action is later today, save a draft and return after it happens.",

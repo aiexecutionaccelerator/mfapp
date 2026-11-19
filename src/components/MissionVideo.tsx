@@ -10,6 +10,11 @@ import { cn } from "@/lib/utils";
  * never required. Expanding shows a click-to-load YouTube facade (a poster and
  * a play button), so nothing loads until the man asks for it.
  * Privacy-enhanced host, no cookies until playback starts.
+ *
+ * 19 Nov: the poster carries our own title, and it stays up (with a
+ * spinner) until YouTube's frame has loaded, so tapping play never opens
+ * on a black box. YouTube still draws its own controls and, when paused,
+ * its title; an embed can't remove those.
  */
 export default function MissionVideo({
   youtubeId,
@@ -27,6 +32,7 @@ export default function MissionVideo({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const [playing, setPlaying] = useState(false);
+  const [ready, setReady] = useState(false);
 
   return (
     <div className="mt-5">
@@ -47,18 +53,23 @@ export default function MissionVideo({
 
       {open && (
         <div className="glass relative mt-3 aspect-video w-full overflow-hidden rounded-[20px]">
-          {playing ? (
+          {playing && (
             <iframe
-              className="absolute inset-0 h-full w-full"
-              src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&modestbranding=1&playsinline=1&autoplay=1`}
+              className={cn(
+                "absolute inset-0 h-full w-full transition-opacity duration-300",
+                ready ? "opacity-100" : "opacity-0",
+              )}
+              src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&modestbranding=1&playsinline=1&autoplay=1&iv_load_policy=3&color=white`}
               title={title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-              loading="lazy"
+              onLoad={() => setReady(true)}
             />
-          ) : (
+          )}
+          {!(playing && ready) && (
             <button
               type="button"
+              disabled={playing}
               onClick={() => {
                 setPlaying(true);
                 track("mission_video_played", {
@@ -67,23 +78,37 @@ export default function MissionVideo({
                 });
               }}
               aria-label={`Play the video: ${title}`}
-              className="group absolute inset-0 h-full w-full"
+              className="group absolute inset-0 h-full w-full text-left"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`}
                 alt=""
-                className="absolute inset-0 h-full w-full object-cover opacity-70 transition-opacity duration-200 group-hover:opacity-85"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+                className="absolute inset-0 h-full w-full scale-[1.02] object-cover opacity-60 transition-opacity duration-200 group-hover:opacity-75"
               />
               <span
                 aria-hidden
-                className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,9,13,.15),rgba(7,9,13,.65))]"
+                className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,9,13,.05)_30%,rgba(7,9,13,.85))]"
               />
               <span
                 aria-hidden
-                className="bg-gold-gradient absolute top-1/2 left-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-[0_8px_24px_rgba(0,0,0,.45)]"
+                className={cn(
+                  "bg-gold-gradient absolute top-[42%] left-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-[0_8px_24px_rgba(0,0,0,.45)] transition-transform duration-200 group-hover:scale-105",
+                  playing && "animate-pulse",
+                )}
               >
                 <Play size={26} className="ml-1 text-[#07090D]" fill="#07090D" />
+              </span>
+              <span className="absolute right-4 bottom-3 left-4">
+                <span className="eyebrow block text-gold-300">
+                  {playing ? "Loading…" : "Antonio explains"}
+                </span>
+                <span className="font-display mt-0.5 block truncate text-[22px] leading-tight text-ink-0 uppercase">
+                  {title}
+                </span>
               </span>
             </button>
           )}

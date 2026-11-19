@@ -173,6 +173,35 @@ await asAdmin();
 const events = await one(`select count(*)::int as n from public.analytics_events where user_id = $1`, [A]);
 check("S6", "analytics capped at 300 an hour per user, silently", events.n === 300, `${events.n} rows`);
 
+/* ---------- 0011: unfinished sentences ---------- */
+// A fresh user, so every Mission number is free.
+const C = "00000000-0000-0000-0000-00000000000c";
+await db.exec(`insert into auth.users values ('${C}', 'c@example.com') on conflict do nothing`);
+await as(C);
+const free = 9;
+const half = (text) =>
+  expectError(
+    `insert into public.missions (user_id, trigger, action_text, reflection, status, completed_at, mission_number, confirmed)
+     values ($1, 'honor', $2, $2, 'completed', now(), $3, true)`,
+    [C, text, free],
+    /Finish your sentence/,
+  );
+for (const text of ["Having the honest conversation with", "Some words.\nInstead, I will"]) {
+  r = await half(text);
+  check("U1", `a half-sentence can't complete a Mission: "${text.split("\n").at(-1)}"`, r.ok, r.detail);
+}
+const whole = await db.query(
+  `insert into public.missions (user_id, trigger, action_text, reflection, status, completed_at, mission_number, confirmed)
+   values ($1, 'honor', 'I thanked my brother for checking in.', 'I thanked my brother for checking in.', 'completed', now(), $2, true) returning id`,
+  [C, free],
+);
+check("U2", "a sentence he closed himself saves, even ending on a word like 'in'", whole.rows.length === 1);
+r = await expectError(`update public.missions set reflection = 'Getting back to', action_text = 'Getting back to' where id = $1`, [whole.rows[0].id], /Finish your sentence/);
+check("U3", "editing a record into a half-sentence is refused", r.ok, r.detail);
+const removal = await db.query(`update public.missions set removed_at = now() where id = $1 returning id`, [whole.rows[0].id]);
+check("U4", "removing a record never trips the check", removal.rows.length === 1);
+await asAdmin();
+
 /* ---------- the app's normal writes still work ---------- */
 await as(A);
 await db.query(`update public.profiles set display_name = 'Antonio', identity_statement = 'Keeps his word.', set_status = 'ordered' where id = $1`, [A]);

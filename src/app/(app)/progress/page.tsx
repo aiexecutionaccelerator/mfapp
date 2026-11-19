@@ -59,13 +59,18 @@ export default function ProgressPage() {
         <ProgressRing
           value={stats.totalActions}
           max={100}
-          label="ACTIONS LOGGED"
+          label="REAL-WORLD ACTIONS"
           display="count"
         />
       </div>
 
-      <p className="mt-6 text-center text-[15px] text-ink-1">
-        Proof you did it, not that you meant to.
+      {/* Why the ring can be lower than the missions count (Antonio,
+          19 Nov: "Only seven. That's really weird."). */}
+      <p className="mt-6 text-center text-[15px] leading-snug text-ink-1">
+        {stats.missionsCompleted} of {MISSION_COUNT} missions done.{" "}
+        {stats.missionsCompleted > stats.totalActions - stats.oneOffs
+          ? "Reflections, code and plans count toward your 30. Only things you went out and did count as actions."
+          : "Proof you did it, not that you meant to."}
       </p>
 
       {complete && (
@@ -85,7 +90,8 @@ export default function ProgressPage() {
 
       {/* Actions by the Scent Trigger he used. Honor + Courage + Commitment
           always equals the number in the ring. */}
-      <div className="stagger mt-6 grid grid-cols-2 gap-3">
+      <p className="eyebrow mt-8 text-ink-2">Actions by scent</p>
+      <div className="stagger mt-3 grid grid-cols-2 gap-3">
         <Stat label="Honor" value={stats.actions.honor} />
         <Stat label="Courage" value={stats.actions.courage} />
         <Stat label="Commitment" value={stats.actions.commitment} />

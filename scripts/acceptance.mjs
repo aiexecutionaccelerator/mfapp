@@ -135,8 +135,21 @@ await scenario("C03", "a starter fills only the start of the answer; changing sc
   await open(1);
   await page.getByRole("group", { name: "Start with" }).getByRole("button", { name: "I thanked my…" }).click();
   assert((await field().inputValue()) === "I thanked my ", "the starter didn't fill the start of the answer");
+  // 19 Nov: a bare starter can't be saved, and a second chip adds, never replaces.
+  await confirmBox().check();
+  await button("RECORD · COMPLETE MISSION 1").click();
+  await page.getByText("Finish the sentence you started, in your own words.").waitFor();
+  assert((await stored()).length === 0, "a bare starter was saved");
+  await confirmBox().uncheck();
+  await page.getByRole("group", { name: "Start with" }).getByRole("button", { name: "I gave my coworker credit for…" }).click();
+  assert((await field().inputValue()) === "I thanked my\nI gave my coworker credit for ", "the second chip replaced the first");
+  await field().fill("I thanked my brother for the lift.\nI gave my coworker credit for staying late with");
+  await button("RECORD · COMPLETE MISSION 1").click();
+  await page.getByText("Finish your sentence. It stops at “…staying late with”.").waitFor();
+  assert((await storedDrafts()).length === 0 || (await storedDrafts())[0].trigger === "honor", "draft state off");
   assert(!(await confirmBox().isChecked()), "the confirmation got ticked");
   assert((await stored()).length === 0, "a record was saved");
+  await field().fill("");
   await page.getByRole("radio", { name: "commitment" }).click();
   await page.getByText("You fulfill your responsibilities through consistent effort and perseverance.").waitFor();
   await field().fill("I thanked my neighbor for watching the house.");
