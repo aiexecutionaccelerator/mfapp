@@ -489,7 +489,7 @@ export const MISSIONS: MissionDef[] = [
     time: "3–5 minutes",
     hook: "Pick one meaningful thing you want to accomplish.",
     idea: "A man with ten priorities has none. Naming one meaningful thing gives your next weeks a direction.",
-    select: "Commitment needs a direction. This promise will guide the practice you build later.",
+    select: "Commitment needs a direction. What matters most will guide the practice you build later.",
     action: "Choose one thing that matters to you and that you can make real progress on in the next few weeks. Say why it matters.",
     choices: [
       "Choose connection: give someone you care about regular, undivided attention.",
@@ -656,7 +656,7 @@ export const MISSIONS: MissionDef[] = [
     hook: "Busy is easy. Give your priority uninterrupted attention.",
     idea: "Busy feels like progress. Ten undistracted minutes on what matters usually beats an hour of half-attention.",
     select: "Commitment means giving your chosen goal real time, even without finishing the whole project.",
-    action: "Choose one small task that serves your promise or another important goal. Set a ten-minute timer, remove a distraction, and work on that task until the timer ends.",
+    action: "Choose one small task that serves what matters most to you, or another important goal. Set a ten-minute timer, remove a distraction, and work on that task until the timer ends.",
     choices: [
       "Write or make one small part of an important project.",
       "Work through one section of material for a skill you are learning.",
@@ -722,7 +722,7 @@ export const MISSIONS: MissionDef[] = [
     hook: "Arrange your space to support the action you want to take.",
     idea: "Willpower runs out; your surroundings don’t. Make the right action the easy one.",
     select: "Commitment includes preparing the conditions for follow-through.",
-    action: "Remove one practical obstacle from the place where you will carry out your promise or important task. Make the next useful action easier to begin.",
+    action: "Remove one practical obstacle from the place where you work on what matters most, or another important task. Make the next useful action easier to begin.",
     choices: [
       "Clear just enough workspace for the task you need to do.",
       "Put the materials for your next practice within reach.",
@@ -789,7 +789,7 @@ export const MISSIONS: MissionDef[] = [
     hook: "Use what you have learned to choose where your effort goes next.",
     idea: "Effort spread everywhere moves nothing. Seven days pointed at one result shows you what you can do.",
     select: "Commitment concentrates your effort on a goal you chose for a reason.",
-    action: "Review your promise and recent actions. Choose one focus area and one visible result you want to work toward over the next seven days.",
+    action: "Review what matters most to you and your recent actions. Choose one focus area and one visible result you want to work toward over the next seven days.",
     choices: [
       "Keep working on what you chose in Mission 12.",
       "Narrow an important goal to one realistic seven-day result.",
@@ -801,7 +801,7 @@ export const MISSIONS: MissionDef[] = [
       "I want to have two unhurried conversations with people close to me because I have been distracted.",
     ],
     starters: [
-      "In the next seven days, I want to keep my promise to ",
+      "In the next seven days, I want to keep working on ",
       "In the next seven days, I want to finish ",
       "In the next seven days, I want to ",
     ],
