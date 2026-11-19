@@ -63,6 +63,21 @@ explains the gap. Pages no longer fade from blank, titles no longer wipe in,
 and S.T.A.R. steps are visible before scrolling. Videos keep a branded poster
 until YouTube's player has loaded. Run 0011 in the Supabase SQL editor.
 
+**Revision 2.2 (19 Nov 2026), the course re-order:** each value is defined,
+then acted on the next day. Part 1 "Know your code" = 1 shrine, 2 Define
+Honor, 3 Give Credit, 4 Define Courage, 5 Avoidance, 6 Define Commitment,
+7 Keep a Promise. Part 2 "Build self-trust" = 8 Own Your Part, 9 Ask, 10
+Remember Your Strength (reflection), 11 Draw Your Line, 12 Choose What
+Matters Most, 13 identity, 14 Put Your Code to Work. 15 to 30 unchanged.
+Code lines are now 2, 4, 6, 11, 12 (`CODE_LINES`); photos 1 and 19. Every
+Mission has an `idea` line; 1, 2, 4, 6 show their video first; 2, 4, 6, 11
+and 13 offer complete statements to pick. After 7, 14 and 21 the success
+screen adds a "What you've learned" recap; 30 adds the graduation recap
+(also on its saved page). Server: migration **0012** (kinds, photo and
+code-line rules). Records saved under the old order keep their numbers, so
+clear test accounts before running 0012. Review doc for Antonio and Kai:
+https://claude.ai/artifact/GSVAd35V9oNK7o47v26wbe
+
 - **Content**: `src/content/missions.ts` holds the spec's exact wording for all
   30 (stage, kind, time, hook, select, action, 3 choices, prompt, 2 examples,
   done-when, note). `npm run check:copy` diffs it against the spec text.

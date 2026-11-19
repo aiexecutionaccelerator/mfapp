@@ -4,6 +4,14 @@ Source: `curriculum-v2-spec.docx` (full text in `curriculum-v2-spec.txt`).
 Prepared for Antonio Centeno, 28 Oct 2026. **This is the implementation
 contract. The exact copy for all 30 Missions is in the .txt, not here.**
 
+## Revision 2.2 (Antonio, 19 Nov 2026)
+
+The course is re-ordered so he defines each value and then acts on it the
+next day, and every Mission teaches one idea. See docs/HANDOFF.md for the new
+order and the review doc linked there. The mission pages in
+curriculum-v2-spec.txt are regenerated to match; the stage table and title
+list below predate it.
+
 ## Revision 2.1 (Antonio, 18 Nov 2026)
 
 After watching a first-time user, Antonio simplified the Mission screen.

@@ -18,6 +18,7 @@ const source = readFileSync(
 );
 
 const STAGES = {
+  "Know your code": "standards",
   "Build self-trust": "self-trust",
   "Set your standards": "standards",
   "Put your values to work": "values",
@@ -27,7 +28,7 @@ const STAGES = {
 /* ---------- the spec's 30 Mission pages ---------- */
 
 const lines = spec.split("\n");
-const start = lines.findIndex((l) => l.startsWith("Mission 1 Give Credit"));
+const start = lines.findIndex((l) => l.startsWith("Mission 1 "));
 const end = lines.findIndex((l) => l.startsWith("Acceptance tests for content"));
 const pages = [];
 for (const line of lines.slice(start, end)) {

@@ -38,7 +38,9 @@ const assert = (ok, msg) => {
 /* ---------- state helpers (demo storage) ---------- */
 
 const KIND = (n) =>
-  n === null ? "action" : n === 6 ? "reflection" : n >= 8 && n <= 13 ? "code" : [21, 27, 30].includes(n) ? "plan" : "action";
+  n === null ? "action" : n === 10 ? "reflection" : [2, 4, 6, 11, 12, 13].includes(n) ? "code" : [21, 27, 30].includes(n) ? "plan" : "action";
+// The five Personal Code lines in the revision 2.2 order.
+const CODE = [2, 4, 6, 11, 12];
 const TRIGGERS = ["honor", "courage", "commitment"];
 const day = (offset) => {
   const d = new Date(Date.now() + offset * 86400000);
@@ -132,19 +134,19 @@ await scenario("C02", "every Mission fits a 375px phone: no horizontal scroll, s
 
 await scenario("C03", "a starter fills only the start of the answer; changing scent never ticks or completes; the chosen scent is saved and used", async () => {
   await reset([]);
-  await open(1);
+  await open(3);
   await page.getByRole("group", { name: "Start with" }).getByRole("button", { name: "I thanked my…" }).click();
   assert((await field().inputValue()) === "I thanked my ", "the starter didn't fill the start of the answer");
   // 19 Nov: a bare starter can't be saved, and a second chip adds, never replaces.
   await confirmBox().check();
-  await button("RECORD · COMPLETE MISSION 1").click();
+  await button("RECORD · COMPLETE MISSION 3").click();
   await page.getByText("Finish the sentence you started, in your own words.").waitFor();
   assert((await stored()).length === 0, "a bare starter was saved");
   await confirmBox().uncheck();
   await page.getByRole("group", { name: "Start with" }).getByRole("button", { name: "I gave my coworker credit for…" }).click();
   assert((await field().inputValue()) === "I thanked my\nI gave my coworker credit for ", "the second chip replaced the first");
   await field().fill("I thanked my brother for the lift.\nI gave my coworker credit for staying late with");
-  await button("RECORD · COMPLETE MISSION 1").click();
+  await button("RECORD · COMPLETE MISSION 3").click();
   await page.getByText("Finish your sentence. It stops at “…staying late with”.").waitFor();
   assert((await storedDrafts()).length === 0 || (await storedDrafts())[0].trigger === "honor", "draft state off");
   assert(!(await confirmBox().isChecked()), "the confirmation got ticked");
@@ -154,7 +156,7 @@ await scenario("C03", "a starter fills only the start of the answer; changing sc
   await page.getByText("You fulfill your responsibilities through consistent effort and perseverance.").waitFor();
   await field().fill("I thanked my neighbor for watching the house.");
   await confirmBox().check();
-  await button("RECORD · COMPLETE MISSION 1").click();
+  await button("RECORD · COMPLETE MISSION 3").click();
   await page.getByText("You acted with Commitment.").waitFor();
   assert((await stored())[0].trigger === "commitment", "chosen scent not saved");
   assert((await storedDrafts()).length === 0, "the autosaved draft outlived the record");
@@ -162,11 +164,11 @@ await scenario("C03", "a starter fills only the start of the answer; changing sc
 
 await scenario("C04", "blank text or no confirmation blocks completion in the UI; a draft is still possible; no progress or action credit", async (note) => {
   await reset([]);
-  await open(2);
-  await button("RECORD · COMPLETE MISSION 2").click();
+  await open(5);
+  await button("RECORD · COMPLETE MISSION 5").click();
   await page.getByText("Write your record first.").waitFor();
   await field().fill("I was avoiding the dentist. I booked the visit.");
-  await button("RECORD · COMPLETE MISSION 2").click();
+  await button("RECORD · COMPLETE MISSION 5").click();
   await page.getByText(/I have taken this action/).first().waitFor();
   assert((await stored()).length === 0, "a record was created");
   await page.getByText(/Saved\. Come back any time/).waitFor();
@@ -176,14 +178,14 @@ await scenario("C04", "blank text or no confirmation blocks completion in the UI
   note("Server half: test:db C04 checks.");
 });
 
-await scenario("C05", "Mission 6, a code Mission and a plan complete with their true type and message; none counts as an action", async () => {
+await scenario("C05", "Mission 10, a code Mission and a plan complete with their true type and message; none counts as an action", async () => {
   await reset([]);
-  await open(6);
+  await open(10);
   await field().fill("I admitted a missed deadline and helped fix it. I can own my part.");
   assert((await confirmBox().count()) === 0, "reflection asks for action confirmation");
   await button("SAVE REFLECTION").click();
   await page.getByText("Your reflection is saved.").waitFor();
-  await open(9);
+  await open(4);
   await field().fill("Asking for help when I am stuck.");
   await button("SAVE TO MY CODE").click();
   await page.getByText("Your Personal Code is taking shape.").waitFor();
@@ -202,7 +204,7 @@ await scenario("C05", "Mission 6, a code Mission and a plan complete with their 
 
 await scenario("C06", "a draft survives reload without credit; completing it clears it and creates one record", async () => {
   await reset([]);
-  await open(3);
+  await open(7);
   await field().fill("I promised to return the drill.");
   await page.getByText(/Saved\. Come back any time/).waitFor();
   await page.reload();
@@ -211,7 +213,7 @@ await scenario("C06", "a draft survives reload without credit; completing it cle
   assert((await stored()).length === 0, "draft earned a record");
   await field().fill("I promised to return the drill today, and I dropped it off.");
   await confirmBox().check();
-  await button("RECORD · COMPLETE MISSION 3").click();
+  await button("RECORD · COMPLETE MISSION 7").click();
   await page.getByText("MISSION COMPLETE.").waitFor();
   assert((await stored()).length === 1 && (await storedDrafts()).length === 0, "not one record / draft not cleared");
 });
@@ -264,7 +266,7 @@ await scenario("C09", "17 allows an honest two-minute fallback; 23 records prepa
 
 await scenario("C10", "copying code lines in 29 doesn't complete it or give credit", async () => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"], { origin: BASE });
-  await reset(range(8, 12).map((n) => record(n)));
+  await reset(CODE.map((n) => record(n)));
   await open(29);
   await page.getByRole("checkbox").first().check();
   await button("COPY SELECTED LINES").click();
@@ -311,17 +313,17 @@ await scenario("C12", "keyboard and screen reader: labelled fields, starters gro
 /* ---------- state ---------- */
 
 await scenario("D01", "14 or 29 blocked with a code line missing or removed, with a route back; restoring makes it available", async () => {
-  const lines = range(8, 12).map((n) => record(n));
+  const lines = CODE.map((n) => record(n));
   lines[2].removed_at = new Date().toISOString();
   await reset(lines);
   await open(14);
-  await page.getByText("Your code line from Mission 10 isn't saved yet.").waitFor();
-  await page.getByRole("link", { name: /GO TO MISSION 10/ }).waitFor();
+  await page.getByText("Your code line from Mission 6 isn't saved yet.").waitFor();
+  await page.getByRole("link", { name: /GO TO MISSION 6/ }).waitFor();
   await field().fill("My line is to own mistakes. I corrected an update I had sent.");
   await confirmBox().check();
   await button("RECORD · COMPLETE MISSION 14").click();
-  await page.getByText("Your code line from Mission 10 isn't saved yet.").nth(1).waitFor();
-  await open(10);
+  await page.getByText("Your code line from Mission 6 isn't saved yet.").nth(1).waitFor();
+  await open(6);
   await button("RESTORE").click();
   await page.getByText("Restored.").waitFor();
   await open(14);
@@ -403,10 +405,10 @@ await scenario("D05", "27 saved without 21: 28–30 show the practice; 28 still 
 });
 
 await scenario("D06", "28 blocked with only code and plans; available after a real action; viewing doesn't complete it", async () => {
-  await reset([record(8), record(21), record(27)]);
+  await reset([record(2), record(21), record(27)]);
   await open(28);
   await page.getByText("BEFORE YOU COMPLETE THIS MISSION").waitFor();
-  await reset([record(8), record(21), record(27), record(null)]);
+  await reset([record(2), record(21), record(27), record(null)]);
   await open(28);
   assert((await page.getByText("BEFORE YOU COMPLETE THIS MISSION").count()) === 0, "still blocked");
   await page.getByText("FROM YOUR PROOF LOG").waitFor();
@@ -446,19 +448,19 @@ await scenario("D08", "double click and a second tab: one record, no false succe
   await page.getByText("MISSION COMPLETE.").waitFor();
   assert((await stored()).filter((r) => r.mission_number === 3).length === 1, "double click duplicated");
   const tab = await context.newPage();
-  await open(4);
-  await tab.goto(`${BASE}/missions/4`);
-  await tab.getByText("MISSION 4 OF 30").waitFor();
+  await open(8);
+  await tab.goto(`${BASE}/missions/8`);
+  await tab.getByText("MISSION 8 OF 30").waitFor();
   await field().fill("I corrected the wrong date I sent.");
   await confirmBox().check();
-  await button("RECORD · COMPLETE MISSION 4").click();
+  await button("RECORD · COMPLETE MISSION 8").click();
   await page.getByText("MISSION COMPLETE.").waitFor();
   await tab.locator("textarea").first().fill("I apologized and cleaned the kitchen.");
   await tab.getByLabel("I have taken this action.").check();
-  await tab.getByRole("button", { name: "RECORD · COMPLETE MISSION 4", exact: true }).click();
+  await tab.getByRole("button", { name: "RECORD · COMPLETE MISSION 8", exact: true }).click();
   await tab.getByText("already completed in another tab or device", { exact: false }).waitFor();
   assert((await tab.locator("textarea").first().inputValue()) === "I apologized and cleaned the kitchen.", "text lost");
-  assert((await stored()).filter((r) => r.mission_number === 4).length === 1, "second tab duplicated");
+  assert((await stored()).filter((r) => r.mission_number === 8).length === 1, "second tab duplicated");
   await tab.close();
 });
 
@@ -518,25 +520,25 @@ await scenario("D11", "a focus-only legacy 21 keeps its history; he adds a curre
 });
 
 await scenario("D12", "editing code after 14 or 29 keeps their historical code; future eligibility updates", async () => {
-  const code = range(8, 12).map((n) => record(n));
-  const r14 = record(14, { context: { code: [{ label: "For me, honor means…", value: "Record for Mission 8" }] } });
+  const code = CODE.map((n) => record(n));
+  const r14 = record(14, { context: { code: [{ label: "For me, honor means…", value: "Record for Mission 2" }] } });
   await reset([...code, r14]);
   await page.goto(`${BASE}/personal-code`);
-  await page.getByRole("button", { name: "Record for Mission 8" }).click();
+  await page.getByRole("button", { name: "Record for Mission 2" }).click();
   await page.getByLabel("For me, honor means…").fill("Owning my mistakes quickly.");
   await button("SAVE").click();
   await page.getByText("Owning my mistakes quickly.").waitFor();
   await open(14);
   await page.getByText("WHAT IT WORKED WITH").waitFor();
-  await page.getByText("Record for Mission 8").waitFor();
+  await page.getByText("Record for Mission 2").waitFor();
   await page.goto(`${BASE}/log/${code[0].id}`);
   await button("Remove this record").click();
   await button("REMOVE").click();
   await button("RESTORE").waitFor();
   await open(29);
-  await page.getByText("Your code line from Mission 8 isn't saved yet.").waitFor();
+  await page.getByText("Your code line from Mission 2 isn't saved yet.").waitFor();
   await open(14);
-  await page.getByText("Record for Mission 8").waitFor();
+  await page.getByText("Record for Mission 2").waitFor();
 });
 
 for (const [id, name] of [

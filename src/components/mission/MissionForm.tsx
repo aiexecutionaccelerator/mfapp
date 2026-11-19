@@ -373,7 +373,7 @@ export default function MissionForm({
         />
         <BlockerPanel blockers={blockers} />
 
-        {def.youtubeId && (
+        {def.youtubeId && !def.videoFirst && (
           <MissionVideo
             youtubeId={def.youtubeId}
             title={def.title}
@@ -396,7 +396,7 @@ export default function MissionForm({
               onClick={() => applyStarter(starter)}
               className="press min-h-11 rounded-full border border-[var(--line-strong)] bg-[rgba(18,23,34,.6)] px-3.5 py-2 text-left text-[14px] leading-snug text-ink-1 transition-colors duration-200 hover:border-[var(--gold-500)] hover:text-ink-0 active:border-[var(--gold-500)]"
             >
-              {starter.trim()}…
+              {/[.!?]$/.test(starter.trim()) ? starter.trim() : `${starter.trim()}…`}
             </button>
           ))}
         </div>
@@ -412,7 +412,11 @@ export default function MissionForm({
           maxLength={textLimitFor(def.number)}
           multiline
           rows={4}
-          placeholder="Tap a starter above, or write your own."
+          placeholder={
+            def.starters.every((x) => /[.!?]$/.test(x.trim()))
+              ? "Pick one above, or write your own."
+              : "Tap a starter above, or write your own."
+          }
           aria-describedby={error ? errorId : undefined}
         />
 

@@ -78,13 +78,17 @@ export const isLegacy = (record: Mission): boolean =>
 
 /* ---------- saved context ---------- */
 
-/** The five Personal Code lines, Missions 8–12. */
+/**
+ * The five Personal Code lines (revision 2.2): the three definitions, each
+ * paired with an action the next day (2, 4, 6), then his line and what
+ * matters most (11, 12). Migration 0012 holds the same numbers.
+ */
 export const CODE_LINES = [
-  { number: 8, label: "For me, honor means…" },
-  { number: 9, label: "For me, courage means…" },
-  { number: 10, label: "For me, commitment means…" },
-  { number: 11, label: "My boundary" },
-  { number: 12, label: "My promise" },
+  { number: 2, label: "For me, honor means…" },
+  { number: 4, label: "For me, courage means…" },
+  { number: 6, label: "For me, commitment means…" },
+  { number: 11, label: "My line" },
+  { number: 12, label: "What matters most" },
 ] as const;
 
 export function codeLines(missions: Mission[]) {
@@ -94,7 +98,7 @@ export function codeLines(missions: Mission[]) {
   });
 }
 
-/** Mission 12. */
+/** Mission 12: what matters most (shown on 15–21). */
 export function promiseOf(missions: Mission[]): string | null {
   const record = liveRecordFor(missions, 12);
   return record ? recordText(record) : null;
@@ -348,10 +352,11 @@ export function unfinishedLine(text: string, starters: readonly string[] = []): 
   const lines = text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
   const bare = new Set(starters.map(squash));
   for (const line of lines) {
+    // A closed sentence is finished: one he ended himself ("…checking in."),
+    // or a complete option he picked as is (a definition on Missions 2, 4, 6).
+    if (/[.!?]["”’']?$/u.test(line)) continue;
     const plain = squash(line);
     if (bare.has(plain)) return "Finish the sentence you started, in your own words.";
-    // He closed it himself ("…checking in."): starters never end that way.
-    if (/[.!?]["”’']?$/u.test(line)) continue;
     const last = plain.split(" ").at(-1) ?? "";
     if (DANGLING.has(last.replace(/[^a-z’']/g, "")))
       return `Finish your sentence. It stops at “…${line.replace(/[….\s]+$/u, "").split(/\s+/).slice(-3).join(" ")}”.`;

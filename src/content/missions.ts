@@ -23,8 +23,8 @@ export type Stage = "self-trust" | "standards" | "values" | "momentum";
 
 export const STAGES: Record<Stage, { label: string; range: [number, number] }> =
   {
-    "self-trust": { label: "Build self-trust", range: [1, 7] },
-    standards: { label: "Set your standards", range: [8, 14] },
+    standards: { label: "Know your code", range: [1, 7] },
+    "self-trust": { label: "Build self-trust", range: [8, 14] },
     values: { label: "Put your values to work", range: [15, 21] },
     momentum: { label: "Build lasting momentum", range: [22, 30] },
   };
@@ -42,6 +42,13 @@ export interface MissionDef {
   time: string;
   /** One line under the title. */
   hook: string;
+  /**
+   * "The idea": the one principle this Mission teaches, shown above the
+   * S.T.A.R. steps (revision 2.2, 19 Nov). What he should leave knowing.
+   */
+  idea: string;
+  /** A short plain explanation under the idea, where the task needs one. */
+  intro?: string;
   /** The Select step: why this value fits this Mission. */
   select: string;
   /** The Act step: the assignment. */
@@ -60,10 +67,12 @@ export interface MissionDef {
   starters: string[];
   doneWhen: string;
   note?: string;
-  /** Optional photo (Missions 7 and 19 only). */
+  /** Optional photo (Missions 1 and 19 only). */
   photo?: boolean;
-  /** Optional, collapsed, never required. */
+  /** Optional, never required. */
   youtubeId: string | null;
+  /** Show the video open at the top of the page instead of collapsed under Act. */
+  videoFirst?: boolean;
   /** For us: how it connects to the Missions around it. Not shown. */
   implementation: string;
   /** For us: why it changed from the first curriculum. Not shown. */
@@ -78,7 +87,7 @@ export const INTRO_VIDEOS = {
 } as const;
 
 /** Antonio explaining each value: under Meet Your Scent Triggers, and on
-    Missions 8–10. */
+    Missions 2, 4 and 6. */
 export const TRIGGER_VIDEOS: Record<Trigger, string> = {
   honor: "a9yG3pylUKY",
   courage: "NCeKnEezPWs",
@@ -107,13 +116,83 @@ export type Frequency = (typeof FREQUENCIES)[number];
 export const MISSIONS: MissionDef[] = [
   {
     number: 1,
+    slug: "m7",
+    title: "Give Your Practice a Place",
+    stage: "standards",
+    recommendedTrigger: "commitment",
+    kind: "action",
+    time: "About 2 minutes",
+    hook: "Build a small shrine to the man you’re becoming.",
+    idea: "A habit sticks when it has a place. Give your fragrance a spot you pass every day, and the bottle itself becomes the reminder.",
+    select: "Commitment is easier to practice when you have a dependable place and starting cue.",
+    action: "Choose one spot you see every morning, away from heat and direct sunlight. Set your bottles there. Decide which everyday moment will cue you to open your next mission.",
+    choices: [
+      "Put it by your watch and begin after getting dressed.",
+      "Put it on a shaded bedroom shelf and begin before leaving the room.",
+      "Put it with your morning essentials and begin after making your bed.",
+    ],
+    prompt: "Where is your shrine, and what moment will cue your next mission?",
+    examples: [
+      "I put Honor beside my watch. After getting dressed, I will open the next mission.",
+      "I put the set on my bedroom shelf. After making my bed, I will begin.",
+    ],
+    starters: [
+      "I set my bottles on ",
+      "I cleared a spot on my dresser for ",
+      "After I get dressed each morning, I’ll ",
+    ],
+    doneWhen: "The bottle is in place and you have named your starting cue.",
+    note: "Use a safe, appropriate place. One bottle is enough to set up your reminder. A photo is optional. Setting up your reminder completes this mission, but you'll still need to practice regularly.",
+    photo: true,
+    videoFirst: true,
+    youtubeId: "GCpsEfFp_E8",
+    implementation: "Completes the first stage with a physical cue and daily starting event. Mission 27 later adds a repeatable practice.",
+    rationale: "Previous title: Put Your Reminder Where You Will See It. Links a visible fragrance cue to an existing daily event, rather than merely arranging a bottle.",
+  },
+  {
+    number: 2,
+    slug: "m8",
+    title: "Define Your Honor",
+    stage: "standards",
+    recommendedTrigger: "honor",
+    kind: "code",
+    time: "3–5 minutes",
+    hook: "Decide what honor means to you, in one sentence.",
+    idea: "Honor is your word and your actions matching. A clear definition gives you something to measure yourself against every day.",
+    select: "Your Personal Code begins with a practical standard for integrity and respect.",
+    action: "Pick the definition that fits you best, then make it yours. Change any word that doesn’t sound like you.",
+    choices: [
+      "Use honesty: describe how you will tell the truth.",
+      "Use responsibility: describe how you will own your part.",
+      "Use respect: describe how you will treat someone who cannot benefit you.",
+    ],
+    prompt: "For me, honor means…",
+    examples: [
+      "Telling the truth about my mistakes and taking responsibility for repairing them.",
+      "Giving people credit for their work, even when I could take it myself.",
+    ],
+    starters: [
+      "Doing what I say I will do, and telling the truth even when it costs me.",
+      "Owning my mistakes and making them right, without excuses or blame.",
+      "Treating people with respect, especially those who can do nothing for me.",
+    ],
+    doneWhen: "One clear Honor line is saved to your Personal Code.",
+    note: "This defines your standard. You will practice a code line in Mission 14; saving words does not prove you have lived them.",
+    videoFirst: true,
+    youtubeId: "a9yG3pylUKY",
+    implementation: "Uses early experience to define Honor. Creates code line 1, required with lines 9–12 for Missions 14 and 29.",
+    rationale: "Previous title: Honor in Your Words. Turns an abstract value definition into an observable standard.",
+  },
+  {
+    number: 3,
     slug: "m1",
     title: "Give Credit Where Credit Is Due",
-    stage: "self-trust",
+    stage: "standards",
     recommendedTrigger: "honor",
     kind: "action",
     time: "About 2 minutes",
     hook: "Start by noticing what someone else has done for you.",
+    idea: "Honor starts with seeing people clearly. Naming exactly what someone did, and why it mattered, is respect made specific.",
     select: "Honor means recognizing other people’s contributions and treating them with respect.",
     action: "Tell one person exactly what they did that you appreciate and why it mattered. Send the message or say it to them today.",
     choices: [
@@ -133,18 +212,53 @@ export const MISSIONS: MissionDef[] = [
     ],
     doneWhen: "You have expressed the appreciation. Thinking it or drafting it is preparation.",
     youtubeId: null,
-    implementation: "Opens with an achievable act of respect. Supplies a concrete experience for the Honor line in Mission 8.",
+    implementation: "Opens with an achievable act of respect. Supplies a concrete experience for the Honor line in Mission 2.",
     rationale: "Previous title: Prove It. Keeps the quick first win, but makes respect and giving credit its explicit purpose.",
   },
   {
-    number: 2,
+    number: 4,
+    slug: "m9",
+    title: "Define Your Courage",
+    stage: "standards",
+    recommendedTrigger: "courage",
+    kind: "code",
+    time: "3–5 minutes",
+    hook: "Courage is acting while you’re still afraid.",
+    idea: "Courage isn’t the absence of fear. It’s doing the right thing while the fear is still there.",
+    select: "A concrete Courage line gives you direction when avoidance becomes tempting.",
+    action: "Pick the definition that fits you best, then make it yours. Change any word that doesn’t sound like you.",
+    choices: [
+      "Name a respectful conversation you tend to avoid.",
+      "Name a situation where you need to ask for help.",
+      "Name a useful first step you delay because you might be judged.",
+    ],
+    prompt: "For me, courage means…",
+    examples: [
+      "Asking for help when I am stuck instead of pretending I understand.",
+      "Speaking honestly and respectfully when I disagree.",
+    ],
+    starters: [
+      "Doing the right thing even when I’m afraid of how it will go.",
+      "Speaking up honestly and respectfully when staying quiet would be easier.",
+      "Taking the first step on hard things instead of waiting to feel ready.",
+    ],
+    doneWhen: "One clear Courage line is saved to your Personal Code.",
+    note: "Courage serves a worthwhile purpose. Your line should not require danger, hostility, or ignoring sound judgment.",
+    videoFirst: true,
+    youtubeId: "NCeKnEezPWs",
+    implementation: "Turns earlier avoidance and asking exercises into a standard. Creates code line 2.",
+    rationale: "Previous title: Courage in Your Words. Names worthwhile discomfort and a behavior, with no encouragement to take reckless risks.",
+  },
+  {
+    number: 5,
     slug: "m2",
     title: "Break the Avoidance Loop",
-    stage: "self-trust",
+    stage: "standards",
     recommendedTrigger: "courage",
     kind: "action",
     time: "2–5 minutes",
     hook: "Break the task you're avoiding into one small, manageable step.",
+    idea: "Avoidance grows when a task feels big. Shrink the first step until it’s too small to argue with.",
     select: "Courage means moving toward a worthwhile task while discomfort is still there.",
     action: "Choose one useful task you have delayed because it feels uncomfortable. Take its first concrete step now. Keep the step small enough to finish in five minutes.",
     choices: [
@@ -169,14 +283,49 @@ export const MISSIONS: MissionDef[] = [
     rationale: "Previous title: Stop Putting It Off. Defines a manageable avoided task and requires a real first step.",
   },
   {
-    number: 3,
+    number: 6,
+    slug: "m10",
+    title: "Define Your Commitment",
+    stage: "standards",
+    recommendedTrigger: "commitment",
+    kind: "code",
+    time: "3–5 minutes",
+    hook: "Decide what showing up looks like on an ordinary day.",
+    idea: "Commitment is what you do on an ordinary day, when no one is checking. Small and steady beats big and rare.",
+    select: "Commitment is consistent effort with a way back when life interrupts.",
+    action: "Pick the definition that fits you best, then make it yours. Change any word that doesn’t sound like you.",
+    choices: [
+      "Describe showing up for a person who relies on you.",
+      "Describe giving a priority regular, protected attention.",
+      "Describe returning to a useful practice after missing it.",
+    ],
+    prompt: "For me, commitment means…",
+    examples: [
+      "Giving my important work ten focused minutes and returning at the next opportunity if I miss.",
+      "Keeping regular time with my family and honestly rescheduling when a real conflict arises.",
+    ],
+    starters: [
+      "Showing up for the people who count on me, every time I said I would.",
+      "Doing the small, important work every day, even when I don’t feel like it.",
+      "Finishing what I start, and getting back on track quickly when I slip.",
+    ],
+    doneWhen: "One clear Commitment line is saved to your Personal Code.",
+    note: "Choose a standard you can practice. “Never fail” gives you no useful way to recover.",
+    videoFirst: true,
+    youtubeId: "ihWgFp5H0DU",
+    implementation: "Turns follow-through into a repeatable standard with recovery. Creates code line 3.",
+    rationale: "Previous title: Commitment in Your Words. Builds returning after a miss into the definition of commitment.",
+  },
+  {
+    number: 7,
     slug: "m3",
     title: "Keep One Small Promise",
-    stage: "self-trust",
+    stage: "standards",
     recommendedTrigger: "commitment",
     kind: "action",
     time: "Time varies",
     hook: "Give yourself a reason to trust your own word.",
+    idea: "Every promise you keep is a vote for trusting your own word. Start small enough that you can’t miss.",
     select: "Commitment turns an intention into something another person—or you—can rely on.",
     action: "Keep one small promise you have made to yourself or someone else. Choose one you can keep today, in less than five minutes.",
     choices: [
@@ -200,7 +349,7 @@ export const MISSIONS: MissionDef[] = [
     rationale: "Previous title: Keep Your Word. Distinguishes making a promise from fulfilling it; offers a route when no promise is pending.",
   },
   {
-    number: 4,
+    number: 8,
     slug: "m4",
     title: "Own Your Part",
     stage: "self-trust",
@@ -208,6 +357,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "5–10 minutes",
     hook: "Self-respect includes admitting when you got something wrong.",
+    idea: "Owning a mistake out loud builds more trust than never making one. Name it plainly, then fix what you can.",
     select: "Honor means owning your conduct without passing blame or demanding forgiveness.",
     action: "Choose one small mistake or overlooked responsibility that is yours. Acknowledge it plainly and take a practical step to put it right.",
     choices: [
@@ -232,7 +382,7 @@ export const MISSIONS: MissionDef[] = [
     rationale: "Previous title: Honor Someone Who Matters. Replaces the second gratitude task with accountability and a practical repair.",
   },
   {
-    number: 5,
+    number: 9,
     slug: "m5",
     title: "Ask Instead of Pretending",
     stage: "self-trust",
@@ -240,6 +390,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–5 minutes",
     hook: "You do not need every answer to take the next step.",
+    idea: "Pretending to know costs more than asking. A clear question is courage in its smallest, most useful form.",
     select: "Courage includes letting yourself be a beginner and admitting what you need.",
     action: "Ask one clear question or request one specific piece of help with something that matters to you.",
     choices: [
@@ -263,7 +414,7 @@ export const MISSIONS: MissionDef[] = [
     rationale: "Previous title: Act Before You Are Ready. Replaces another generic start with the distinct skill of asking for help or feedback.",
   },
   {
-    number: 6,
+    number: 10,
     slug: "m6",
     title: "Remember Your Own Strength",
     stage: "self-trust",
@@ -271,6 +422,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "reflection",
     time: "3–5 minutes",
     hook: "When self-doubt sets in, remind yourself of something you've already done well.",
+    idea: "Self-doubt forgets what you’ve already done. Recalling one real moment of strength reminds you it’s still in you.",
     select: "An honest memory gives you a concrete example of a value you have already practiced.",
     action: "Recall one specific time you acted with honor, courage, or commitment. Name the difficulty, what you actually did, and the quality you want to use again.",
     choices: [
@@ -295,159 +447,32 @@ export const MISSIONS: MissionDef[] = [
     rationale: "Previous title: Remember Who You Have Been. Keeps reflection, but asks for a specific event, behavior, and reusable quality.",
   },
   {
-    number: 7,
-    slug: "m7",
-    title: "Give Your Practice a Place",
-    stage: "self-trust",
-    recommendedTrigger: "commitment",
-    kind: "action",
-    time: "About 2 minutes",
-    hook: "A useful reminder belongs where your day already happens.",
-    select: "Commitment is easier to practice when you have a dependable place and starting cue.",
-    action: "Place your fragrance where it can remind you to practice, away from heat and direct sunlight. Choose the everyday event that will prompt you to open your next mission.",
-    choices: [
-      "Put it by your watch and begin after getting dressed.",
-      "Put it on a shaded bedroom shelf and begin before leaving the room.",
-      "Put it with your morning essentials and begin after making your bed.",
-    ],
-    prompt: "Where did you put it, and after what everyday event will you begin?",
-    examples: [
-      "I put Honor beside my watch. After getting dressed, I will open the next mission.",
-      "I put the set on my bedroom shelf. After making my bed, I will begin.",
-    ],
-    starters: [
-      "I put it beside my watch. After getting dressed, I will ",
-      "I put it on my bedroom shelf. After ",
-      "I put it with my morning essentials. After ",
-    ],
-    doneWhen: "The bottle is in place and you have named your starting cue.",
-    note: "Use a safe, appropriate place. One bottle is enough to set up your reminder. A photo is optional. Setting up your reminder completes this mission, but you'll still need to practice regularly.",
-    photo: true,
-    youtubeId: "GCpsEfFp_E8",
-    implementation: "Completes the first stage with a physical cue and daily starting event. Mission 27 later adds a repeatable practice.",
-    rationale: "Previous title: Put Your Reminder Where You Will See It. Links a visible fragrance cue to an existing daily event, rather than merely arranging a bottle.",
-  },
-  {
-    number: 8,
-    slug: "m8",
-    title: "Define Your Honor",
-    stage: "standards",
-    recommendedTrigger: "honor",
-    kind: "code",
-    time: "3–5 minutes",
-    hook: "Write a standard you can recognize in your own behavior.",
-    select: "Your Personal Code begins with a practical standard for integrity and respect.",
-    action: "Finish “For me, honor means…” with one behavior you want to stand by. Make it specific enough that you could tell whether you lived it today.",
-    choices: [
-      "Use honesty: describe how you will tell the truth.",
-      "Use responsibility: describe how you will own your part.",
-      "Use respect: describe how you will treat someone who cannot benefit you.",
-    ],
-    prompt: "For me, honor means…",
-    examples: [
-      "Telling the truth about my mistakes and taking responsibility for repairing them.",
-      "Giving people credit for their work, even when I could take it myself.",
-    ],
-    starters: [
-      "Telling the truth about ",
-      "Owning my part when ",
-      "Treating people with respect even when ",
-    ],
-    doneWhen: "One clear Honor line is saved to your Personal Code.",
-    note: "This defines your standard. You will practice a code line in Mission 14; saving words does not prove you have lived them.",
-    youtubeId: "a9yG3pylUKY",
-    implementation: "Uses early experience to define Honor. Creates code line 1, required with lines 9–12 for Missions 14 and 29.",
-    rationale: "Previous title: Honor in Your Words. Turns an abstract value definition into an observable standard.",
-  },
-  {
-    number: 9,
-    slug: "m9",
-    title: "Define Your Courage",
-    stage: "standards",
-    recommendedTrigger: "courage",
-    kind: "code",
-    time: "3–5 minutes",
-    hook: "Name the useful action fear tends to stop.",
-    select: "A concrete Courage line gives you direction when avoidance becomes tempting.",
-    action: "Finish “For me, courage means…” with a worthwhile behavior you want to practice even when you feel uncomfortable.",
-    choices: [
-      "Name a respectful conversation you tend to avoid.",
-      "Name a situation where you need to ask for help.",
-      "Name a useful first step you delay because you might be judged.",
-    ],
-    prompt: "For me, courage means…",
-    examples: [
-      "Asking for help when I am stuck instead of pretending I understand.",
-      "Speaking honestly and respectfully when I disagree.",
-    ],
-    starters: [
-      "Having the honest conversation with ",
-      "Asking for help when ",
-      "Taking the first step on ",
-    ],
-    doneWhen: "One clear Courage line is saved to your Personal Code.",
-    note: "Courage serves a worthwhile purpose. Your line should not require danger, hostility, or ignoring sound judgment.",
-    youtubeId: "NCeKnEezPWs",
-    implementation: "Turns earlier avoidance and asking exercises into a standard. Creates code line 2.",
-    rationale: "Previous title: Courage in Your Words. Names worthwhile discomfort and a behavior, with no encouragement to take reckless risks.",
-  },
-  {
-    number: 10,
-    slug: "m10",
-    title: "Define Your Commitment",
-    stage: "standards",
-    recommendedTrigger: "commitment",
-    kind: "code",
-    time: "3–5 minutes",
-    hook: "Decide what showing up looks like on an ordinary day.",
-    select: "Commitment is consistent effort with a way back when life interrupts.",
-    action: "Finish “For me, commitment means…” with a repeatable behavior and how you will return to it after a missed opportunity.",
-    choices: [
-      "Describe showing up for a person who relies on you.",
-      "Describe giving a priority regular, protected attention.",
-      "Describe returning to a useful practice after missing it.",
-    ],
-    prompt: "For me, commitment means…",
-    examples: [
-      "Giving my important work ten focused minutes and returning at the next opportunity if I miss.",
-      "Keeping regular time with my family and honestly rescheduling when a real conflict arises.",
-    ],
-    starters: [
-      "Showing up for ",
-      "Protecting time for ",
-      "Getting back to ",
-    ],
-    doneWhen: "One clear Commitment line is saved to your Personal Code.",
-    note: "Choose a standard you can practice. “Never fail” gives you no useful way to recover.",
-    youtubeId: "ihWgFp5H0DU",
-    implementation: "Turns follow-through into a repeatable standard with recovery. Creates code line 3.",
-    rationale: "Previous title: Commitment in Your Words. Builds returning after a miss into the definition of commitment.",
-  },
-  {
     number: 11,
     slug: "m11",
-    title: "Draw One Honest Boundary",
-    stage: "standards",
+    title: "Draw Your Line",
+    stage: "self-trust",
     recommendedTrigger: "honor",
     kind: "code",
     time: "3–5 minutes",
-    hook: "Decide what you will do when a shortcut tests your values.",
+    hook: "Name one thing you stand for and won’t bend on.",
+    idea: "A line you decide in advance is easier to hold under pressure. You don’t debate it in the moment; you just keep it.",
+    intro: "A line is about your own behavior: what you will always do, or never do, no matter who is watching.",
     select: "Honor becomes easier to apply when you have decided how to handle pressure.",
-    action: "Name one line you will not cross and the response you will use instead. Keep the boundary about your own behavior.",
+    action: "Write one line you stand for and won’t bend on. Keep it about what you do, not what others do.",
     choices: [
       "Replace hiding a mistake with acknowledging it and making a repair.",
       "Replace taking undeserved credit with naming the person who contributed.",
       "Replace agreeing to something you cannot deliver with stating what you can do.",
     ],
-    prompt: "I will not ____. Instead, I will ____.",
+    prompt: "What do you stand for that you won’t bend on?",
     examples: [
       "I will not hide a mistake to protect my image. Instead, I will acknowledge it and correct what I can.",
       "I will not promise time I cannot give. Instead, I will offer a realistic commitment.",
     ],
     starters: [
-      "I will not hide a mistake. Instead, I will ",
-      "I will not take credit for someone else’s work. Instead, I will ",
-      "I will not promise what I cannot deliver. Instead, I will ",
+      "I do not lie. My word is my bond.",
+      "I do what I say I’m going to do.",
+      "I will not stand by while people are bullied.",
     ],
     doneWhen: "Your boundary and the alternative you will use are saved.",
     youtubeId: null,
@@ -457,28 +482,29 @@ export const MISSIONS: MissionDef[] = [
   {
     number: 12,
     slug: "m12",
-    title: "Choose the Promise That Matters",
-    stage: "standards",
+    title: "Choose What Matters Most",
+    stage: "self-trust",
     recommendedTrigger: "commitment",
     kind: "code",
     time: "3–5 minutes",
-    hook: "Put one meaningful priority ahead of a list of good intentions.",
+    hook: "Pick one meaningful thing you want to accomplish.",
+    idea: "A man with ten priorities has none. Naming one meaningful thing gives your next weeks a direction.",
     select: "Commitment needs a direction. This promise will guide the practice you build later.",
-    action: "Choose one area of your life that matters to you. Define a small, repeatable action in your control that would move it forward, and say why it matters.",
+    action: "Choose one thing that matters to you and that you can make real progress on in the next few weeks. Say why it matters.",
     choices: [
       "Choose connection: give someone you care about regular, undivided attention.",
       "Choose a personal goal: spend a small block of time doing its next useful task.",
       "Choose daily care: repeat one manageable action that supports your wellbeing.",
     ],
-    prompt: "My promise is to ____, because ____.",
+    prompt: "What’s one meaningful thing you want to accomplish, and why?",
     examples: [
       "My promise is ten focused minutes on my qualification after breakfast, because I want more options.",
       "My promise is to put my phone away during dinner, because I want to be present with the people I love.",
     ],
     starters: [
-      "My promise is to give ",
-      "My promise is to spend ten minutes on ",
-      "My promise is to take care of myself by ",
+      "I want to finish ",
+      "I want to get back in shape by ",
+      "I want to spend more time with ",
     ],
     doneWhen: "One meaningful promise is saved, with a behavior you control and a reason.",
     note: "Define the promise today. Future repetitions are still ahead. You can refine the promise as you learn what works.",
@@ -490,13 +516,15 @@ export const MISSIONS: MissionDef[] = [
     number: 13,
     slug: "m13",
     title: "Name the Man You Are Becoming",
-    stage: "standards",
+    stage: "self-trust",
     recommendedTrigger: "courage",
     kind: "code",
     time: "About 3 minutes",
-    hook: "Let your identity point to something you can do.",
+    hook: "Define the man you are working to become.",
+    idea: "You act like the man you believe you are. Describing who you’re becoming, in plain words, gives every choice a direction.",
+    intro: "Look back at your three definitions, your line and what matters most. Put them into one description of the man you are becoming. Keep it about how he acts, not how he feels.",
     select: "Courage includes choosing how you will act before confidence catches up.",
-    action: "Read the statement below. Keep it if it fits, or make it more specific using your code and promise.",
+    action: "Read the statement below. Keep it, add any of the statements that fit, or make it your own.",
     choices: [
       "Describe a man who takes responsibility for his conduct.",
       "Describe a man who faces worthwhile discomfort.",
@@ -508,9 +536,9 @@ export const MISSIONS: MissionDef[] = [
       "Takes the next useful step even when he feels unsure.",
     ],
     starters: [
-      "Takes responsibility for ",
-      "Faces ",
-      "Follows through on ",
+      "Keeps his word and owns his mistakes.",
+      "Acts despite fear and speaks up when it matters.",
+      "Shows up every day and finishes what he starts.",
     ],
     doneWhen: "You have deliberately kept or updated your identity statement.",
     note: "You do not need to claim perfection. Your statement is a direction you are choosing, not a verdict on your worth.",
@@ -522,11 +550,12 @@ export const MISSIONS: MissionDef[] = [
     number: 14,
     slug: "m14",
     title: "Put Your Code to Work",
-    stage: "standards",
+    stage: "self-trust",
     recommendedTrigger: "honor",
     kind: "action",
     time: "5–10 minutes",
     hook: "Choose one line of your code and act on it today.",
+    idea: "A code you don’t use is just words. Acting on one line today is how it becomes who you are.",
     select: "Putting your Personal Code into action connects your standards with how you actually behave. Choose the fragrance that best matches the line you are practicing.",
     action: "Read your Personal Code below. Choose one line and take one small action today that puts it into practice.",
     choices: [
@@ -559,6 +588,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "3–5 minutes",
     hook: "A person who matters deserves a real place in your week.",
+    idea: "The people who matter get what’s left of your week unless you give them a real place in it first.",
     select: "Commitment makes care practical by giving it time and follow-through.",
     action: "Arrange one specific time to give someone your attention. Ask what works for them and reserve a time you can keep.",
     choices: [
@@ -590,7 +620,8 @@ export const MISSIONS: MissionDef[] = [
     recommendedTrigger: "commitment",
     kind: "action",
     time: "2–10 minutes",
-    hook: "Your goals need a person with the capacity to pursue them.",
+    hook: "You can’t lead well running on empty. Take care of the man doing the work.",
+    idea: "You can’t lead well running on empty. Looking after yourself is part of the work, not a break from it.",
     select: "Commitment includes maintaining your capacity to keep showing up.",
     action: "Notice one basic need you have neglected today. Take one small, appropriate step to care for yourself before your next demanding task.",
     choices: [
@@ -623,6 +654,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–10 minutes",
     hook: "Busy is easy. Give your priority uninterrupted attention.",
+    idea: "Busy feels like progress. Ten undistracted minutes on what matters usually beats an hour of half-attention.",
     select: "Commitment means giving your chosen goal real time, even without finishing the whole project.",
     action: "Choose one small task that serves your promise or another important goal. Set a ten-minute timer, remove a distraction, and work on that task until the timer ends.",
     choices: [
@@ -641,7 +673,7 @@ export const MISSIONS: MissionDef[] = [
       "I finished part of ",
     ],
     doneWhen: "You have completed the focused block and can name what you worked on.",
-    note: "If ten minutes is unrealistic today, use two deliberate minutes and record that honestly. This mission helps you practice staying with a task; Mission 2 focused on getting started.",
+    note: "If ten minutes is unrealistic today, use two deliberate minutes and record that honestly. This mission helps you practice staying with a task; Mission 5 focused on getting started.",
     youtubeId: "8UbE1PcGqC0",
     implementation: "Show the promise when available. Requires doing the timed work; planning a work block does not complete it.",
     rationale: "Previous title: Do the Important Thing. Replaces another start with a focused work interval and a concrete progress record.",
@@ -655,6 +687,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "5–10 minutes",
     hook: "You can make a better decision when you know what is true.",
+    idea: "You can’t fix what you won’t look at. One honest fact beats a week of vague worry.",
     select: "Courage includes looking at reality before deciding what to do.",
     action: "Check one source of information you have avoided about something that matters to you. Identify one fact and the next question or step it suggests.",
     choices: [
@@ -687,6 +720,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–5 minutes",
     hook: "Arrange your space to support the action you want to take.",
+    idea: "Willpower runs out; your surroundings don’t. Make the right action the easy one.",
     select: "Commitment includes preparing the conditions for follow-through.",
     action: "Remove one practical obstacle from the place where you will carry out your promise or important task. Make the next useful action easier to begin.",
     choices: [
@@ -720,6 +754,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "3–10 minutes",
     hook: "Respect becomes visible when you make a real contribution.",
+    idea: "Respect shows in what you contribute. Small, real help beats a big offer you never deliver.",
     select: "Honor includes contributing in a way that respects the other person’s needs and choices.",
     action: "Notice a specific need someone has expressed. Give one small, appropriate piece of help you can complete today, without taking over.",
     choices: [
@@ -752,10 +787,11 @@ export const MISSIONS: MissionDef[] = [
     kind: "plan",
     time: "3–5 minutes",
     hook: "Use what you have learned to choose where your effort goes next.",
+    idea: "Effort spread everywhere moves nothing. Seven days pointed at one result shows you what you can do.",
     select: "Commitment concentrates your effort on a goal you chose for a reason.",
     action: "Review your promise and recent actions. Choose one focus area and one visible result you want to work toward over the next seven days.",
     choices: [
-      "Continue the promise you already chose in Mission 12.",
+      "Keep working on what you chose in Mission 12.",
       "Narrow an important goal to one realistic seven-day result.",
       "Adjust your direction using something your recent actions taught you.",
     ],
@@ -784,6 +820,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–10 minutes",
     hook: "Bring courage to the direction you chose.",
+    idea: "The step you keep putting off is usually the one that matters most. Taking it is where courage pays off.",
     select: "Courage helps your chosen goal survive the first moment of resistance.",
     action: "Read your seven-day aim below. Identify the small step you are most tempted to avoid, and take a manageable version of it now.",
     choices: [
@@ -816,6 +853,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–5 minutes",
     hook: "Prepare the next repetition while today’s lesson is fresh.",
+    idea: "The best time to prepare the next step is right after this one, while you still remember what got in the way.",
     select: "Commitment is strengthened by reducing the effort needed to begin again.",
     action: "Using the same seven-day aim, prepare one thing now that will make your next useful action easier. Decide when you will use what you've prepared.",
     choices: [
@@ -848,6 +886,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–10 minutes",
     hook: "A meaningful yes sometimes needs a respectful no.",
+    idea: "Every yes spends time you can’t get back. A respectful no is how you keep your word to what matters.",
     select: "Courage includes tolerating a little discomfort to honor a considered priority.",
     action: "Identify one optional demand or distraction that competes with your seven-day aim. Decline, defer, or limit it today so you can protect time for that aim.",
     choices: [
@@ -880,6 +919,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "About 3 minutes",
     hook: "Fix the interruption that keeps stealing the same time.",
+    idea: "The same distraction, every day, adds up to hours. Fix it once at the source instead of fighting it daily.",
     select: "Commitment includes changing a repeated obstacle instead of relying only on willpower.",
     action: "Choose a recurring distraction that interferes with your seven-day aim. Change one setting or part of your environment so it is less likely to interrupt your next practice.",
     choices: [
@@ -912,6 +952,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–10 minutes",
     hook: "A setback calls for an honest next step.",
+    idea: "Everyone slips. What builds trust is how fast and how honestly you get back on track.",
     select: "Honor means honest responsibility; returning to the work rebuilds trust.",
     action: "Identify one recent lapse in a promise or priority. Name your part without attacking yourself, then take the smallest useful action to repair or resume it today.",
     choices: [
@@ -944,6 +985,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "plan",
     time: "5 minutes",
     hook: "Make the next repetition clear before motivation changes.",
+    idea: "A practice tied to something you already do, with a smaller backup for bad days, survives when motivation doesn’t.",
     select: "Commitment becomes practical when the cue, action, and recovery option are clear. Choose the fragrance you intend to use as your cue.",
     action: "Turn your seven-day aim—or a priority you choose now—into one repeatable practice. Write when you will start, what you will do, and a smaller fallback for a difficult day.",
     choices: [
@@ -976,6 +1018,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "Time varies",
     hook: "Build confidence from something you can actually repeat.",
+    idea: "Confidence comes from doing it again. The second time proves the first wasn’t luck.",
     select: "Courage grows through practicing useful actions even when you still feel uncertain.",
     action: "Read a completed action in your Proof Log below. Choose one that helped you live your code or move a priority forward, then repeat a manageable version today.",
     choices: [
@@ -1008,6 +1051,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "3–10 minutes",
     hook: "Make it easier for someone you trust to understand what you are practicing.",
+    idea: "A standard someone else knows about is easier to keep. Sharing it invites support, not judgment.",
     select: "Honor includes being clear about the standards you want your behavior to reflect.",
     action: "Choose one or more lines from your Personal Code. Share them with someone you trust and explain one behavior you are working on. Ask how they might support or encourage you as you practice.",
     choices: [
@@ -1040,6 +1084,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "plan",
     time: "5–10 minutes",
     hook: "Take what worked with you into the next month.",
+    idea: "Thirty missions are a start, not a finish. What you keep doing next month is what makes you the man you described.",
     select: "Commitment is the ongoing practice of returning to a worthwhile direction.",
     action: "Review your saved actions and any practice plan. Keep or adjust one practice for the next 30 days. Write what you learned, the action you will repeat, its starting cue, and how you will restart after a miss.",
     choices: [

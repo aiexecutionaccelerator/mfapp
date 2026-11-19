@@ -7,6 +7,8 @@ import MissionTrack from "@/components/MissionTrack";
 import NavAction from "@/components/NavAction";
 import CompletionMedal from "@/components/motion/CompletionMedal";
 import { ContextPanels } from "@/components/mission/ContextPanels";
+import PartRecap, { RECAP_AFTER } from "@/components/mission/PartRecap";
+import MissionVideo from "@/components/MissionVideo";
 import MissionForm, { type FormMode } from "@/components/mission/MissionForm";
 import Button from "@/components/ui/Button";
 import Disclosure from "@/components/ui/Disclosure";
@@ -164,6 +166,9 @@ function MissionDetailInner({
           </div>
           <MissionTrack className="mt-2" completed={done} next={next} fresh={def.number} />
         </div>
+        {RECAP_AFTER.has(def.number) && (
+          <PartRecap after={def.number} missions={missions} profile={profile} />
+        )}
         <div className="mt-10">
           {allDone ? (
             <Button onClick={() => router.push("/personal-code")}>
@@ -215,6 +220,25 @@ function MissionDetailInner({
         {def.title}
       </Headline>
       <p className="mt-3 text-[19px] leading-snug text-ink-0">{def.hook}</p>
+
+      {/* The one idea this Mission teaches (revision 2.2). */}
+      <div className="mt-6 rounded-[16px] border border-[rgba(201,166,72,.3)] bg-[rgba(201,166,72,.06)] px-4 py-4">
+        <p className="eyebrow text-gold-300">The idea</p>
+        <p className="mt-2 text-[17px] leading-snug text-ink-0">{def.idea}</p>
+        {def.intro && (
+          <p className="mt-3 text-[15px] leading-snug text-ink-1">{def.intro}</p>
+        )}
+      </div>
+
+      {def.videoFirst && def.youtubeId && (
+        <MissionVideo
+          youtubeId={def.youtubeId}
+          title={def.title}
+          missionNumber={def.number}
+          label="Watch Antonio explain this first"
+          defaultOpen
+        />
+      )}
     </>
   );
 
@@ -308,6 +332,10 @@ function MissionDetailInner({
         )}
 
         <RecordCard def={def} record={live} />
+
+        {def.number === 30 && (
+          <PartRecap after={30} missions={missions} profile={profile} />
+        )}
 
         {legacy && def.number === 21 && (
           <div className="mt-6">

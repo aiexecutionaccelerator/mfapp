@@ -6,8 +6,8 @@ import type { Mission, Profile } from "@/lib/data/types";
  * stored as its own copy, so it can't drift:
  *
  *   identity  — Mission 13, the same sentence as the profile's identity
- *   8–12      — the five code lines: honor, courage, commitment, boundary,
- *               promise
+ *   2, 4, 6   — the three definitions: honor, courage, commitment
+ *   11, 12    — his line and what matters most
  *   practice  — the practice plan from Mission 30, else Mission 27
  *
  * Editing a line edits its record (same record, same date). Records that

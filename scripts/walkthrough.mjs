@@ -76,7 +76,7 @@ if ((await page.getByRole("button", { name: /Keeps his word/ }).count()) > 0)
 await shot("profile-setup");
 await page.getByRole("button", { name: "CONTINUE" }).click();
 
-// C — How It Works: three screens, then straight into Mission 1
+// C — How It Works: three screens, then straight into Mission 1 (the shrine)
 await page.getByText("MORE THAN COLOGNE").first().waitFor();
 await page.getByText("Spray before you act. Do the hard thing. Log it.").waitFor();
 await page.getByText("It becomes the signal for the man you're about to be.").waitFor();
@@ -103,10 +103,13 @@ await page.getByText("You have everything you need").waitFor();
 await shot("onboarding-3");
 await page.getByRole("button", { name: "START MISSION 1" }).click();
 
-// D — Mission 1 (curriculum revision 2): the S.T.A.R. steps as a form
+// D — Mission 1 (revision 2.2): the shrine, with the idea and the video first
 await page.waitForURL("**/missions/1");
-await page.getByText("Give Credit Where Credit Is Due").first().waitFor();
-await page.getByText("BUILD SELF-TRUST · MISSION 1").waitFor();
+await page.getByText("Give Your Practice a Place").first().waitFor();
+await page.getByText("KNOW YOUR CODE · MISSION 1").waitFor();
+await page.getByText("The idea", { exact: true }).waitFor();
+await page.getByText("A habit sticks when it has a place.", { exact: false }).waitFor();
+await page.getByRole("button", { name: /Play the video/ }).waitFor();
 for (const step of [/^SELECT YOUR SCENT TRIGGER$/, "TRIGGER", "ACT", "RECORD"])
   await page.getByText(step, { exact: true }).first().waitFor();
 await page.getByText("Spray the fragrance. Then begin the assigned task.").waitFor();
@@ -123,29 +126,21 @@ for (const gone of [
 if ((await page.getByRole("button", { name: /reminder of how the S.T.A.R. System works/ }).count()) > 0)
   fail("the S.T.A.R. reminder link should be gone");
 await shot("mission-1");
-// The field opens blank. A starter fills only the start of the answer.
-const m1 = page.getByLabel("Who did you thank, and what did you tell them?");
+const m1 = page.getByLabel("Where is your shrine, and what moment will cue your next mission?");
 if ((await m1.inputValue()) !== "") fail("Mission 1's field should open blank");
-await page.getByRole("button", { name: "I thanked my…" }).click();
-if ((await m1.inputValue()) !== "I thanked my ") fail("the starter didn't fill the start");
-if (await page.getByLabel("I have taken this action.").isChecked())
-  fail("the action confirmation is ticked by default");
-await shot("mission-1-starter");
-await m1.fill("");
-// Honest completion: text AND confirmation (C04)
-await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).click();
-await page.getByText("Write your record first.").waitFor();
-await m1.fill("I thanked my brother for checking in on me during a rough week.");
-await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).click();
-await page.getByText(/Check “I have taken this action.”/).waitFor();
-await shot("mission-1-confirm-required");
+await page.getByRole("button", { name: "I set my bottles on…" }).click();
+if ((await m1.inputValue()) !== "I set my bottles on ") fail("the starter didn't fill the start");
+await m1.fill("I set my bottles on my dresser, next to my watch. After I get dressed, I'll open the next mission.");
+await page.locator('input[type="file"]').setInputFiles(PHOTO);
+await page.getByLabel("Remove photo").waitFor();
 await page.getByLabel("I have taken this action.").check();
+await shot("mission-1-with-photo");
 await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 1" }).click();
 await page.getByText("MISSION COMPLETE.").waitFor();
-await page.getByText("You acted with Honor.").waitFor();
+await page.getByText("You acted with Commitment.").waitFor();
 await shot("mission-1-complete");
 
-// E — Mission 2: change the scent, the draft saves itself, come back, finish
+// E — Mission 2: define Honor by picking a ready-made definition
 // Continue goes straight from the success screen to Mission 2: Mission 1's
 // saved-record view must never flash in between. Watch every DOM change.
 await page.evaluate(() => {
@@ -160,40 +155,79 @@ await page.waitForURL("**/missions/2");
 await page.getByText("MISSION 2 OF 30").waitFor();
 if (await page.evaluate(() => window.__flash))
   fail("Mission 1 flashed between the success screen and Mission 2");
+await page.getByText("Define Your Honor").first().waitFor();
+if ((await page.getByLabel("I have taken this action.").count()) > 0)
+  fail("a code Mission asks for action confirmation");
+const honorLine = "Doing what I say I will do, and telling the truth even when it costs me.";
+await page.getByRole("button", { name: honorLine }).click();
+if ((await page.getByLabel("For me, honor means…").inputValue()) !== honorLine)
+  fail("picking a definition didn't fill it in");
+await shot("mission-2-definition");
+await page.getByRole("button", { name: "SAVE TO MY CODE" }).click();
+await page.getByText("Your Personal Code is taking shape.").waitFor();
+await shot("mission-2-code-saved");
+
+// F — Mission 3: Honor in action. A starter fills only the start; honest completion
+await page.getByRole("button", { name: "CONTINUE TO MISSION 3" }).click();
+await page.waitForURL("**/missions/3");
+await page.getByText("Give Credit Where Credit Is Due").first().waitFor();
+const m3 = page.getByLabel("Who did you thank, and what did you tell them?");
+if ((await m3.inputValue()) !== "") fail("Mission 3's field should open blank");
+await page.getByRole("button", { name: "I thanked my…" }).click();
+if ((await m3.inputValue()) !== "I thanked my ") fail("the starter didn't fill the start");
+if (await page.getByLabel("I have taken this action.").isChecked())
+  fail("the action confirmation is ticked by default");
+await shot("mission-3-starter");
+await m3.fill("");
+await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 3" }).click();
+await page.getByText("Write your record first.").waitFor();
+await m3.fill("I thanked my brother for checking in on me during a rough week.");
+await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 3" }).click();
+await page.getByText(/Check “I have taken this action.”/).waitFor();
+await shot("mission-3-confirm-required");
+await page.getByLabel("I have taken this action.").check();
+await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 3" }).click();
+await page.getByText("MISSION COMPLETE.").waitFor();
+await page.getByText("You acted with Honor.").waitFor();
+await shot("mission-3-complete");
+
+// G — Mission 5: change the scent, the draft saves itself, come back, finish
+await page.goto(`${BASE}/missions/5`);
+await page.getByText("MISSION 5 OF 30").waitFor();
 await page.getByText("Break the Avoidance Loop").first().waitFor();
 await page.getByText("Recommended", { exact: true }).waitFor();
 await page.getByRole("radio", { name: "honor" }).click();
 if ((await page.getByRole("radio", { name: "honor" }).getAttribute("aria-checked")) !== "true")
   fail("switching fragrance did not stick");
 await page.getByText("Recommended", { exact: true }).waitFor();
-await shot("mission-2-fragrance-switched");
+await shot("mission-5-fragrance-switched");
 await page.getByRole("radio", { name: "courage" }).click();
-const m2 = page.getByLabel("What were you avoiding, and what first step did you take?");
-await m2.fill("I was avoiding the insurance call.");
+const m5 = page.getByLabel("What were you avoiding, and what first step did you take?");
+await m5.fill("I was avoiding the insurance call.");
 // No draft button: it saves itself.
 await page.getByText(/Saved\. Come back any time/).waitFor();
-await page.goto(`${BASE}/missions/2`);
+await page.goto(`${BASE}/missions/5`);
 await page.getByText("DRAFT SAVED", { exact: true }).waitFor();
-if ((await m2.inputValue()) !== "I was avoiding the insurance call.")
+if ((await m5.inputValue()) !== "I was avoiding the insurance call.")
   fail("the draft didn't survive a reload");
-await shot("mission-2-draft");
-await m2.fill("I was avoiding the insurance call. I called and opened the claim.");
+await shot("mission-5-draft");
+await m5.fill("I was avoiding the insurance call. I called and opened the claim.");
 await page.getByLabel("I have taken this action.").check();
-await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 2" }).click();
+await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 5" }).click();
 await page.getByText("You acted with Courage.").waitFor();
-await page.goto(`${BASE}/missions/2`);
+await page.goto(`${BASE}/missions/5`);
 await page.getByText("COMPLETE", { exact: true }).first().waitFor();
 await page.getByText("opened the claim").waitFor();
-await shot("mission-2-complete");
+await shot("mission-5-complete");
 
-// F — Mission list: next by number, all 30 in their four stages
+// H — Mission list: next by number, all 30 in their four parts
 await page.goto(`${BASE}/missions`);
 await page.getByText("YOUR 30-DAY MISSION").first().waitFor();
-await page.getByText("2/30 COMPLETE").waitFor();
-await page.getByText("NEXT · MISSION 3").waitFor();
+await page.getByText("4/30 COMPLETE").waitFor();
+await page.getByText("NEXT · MISSION 4").waitFor();
 await shot("mission-list");
 await page.getByRole("button", { name: /SHOW ALL 30 MISSIONS/ }).click();
-for (const stage of ["Build self-trust · 1–7", "Set your standards · 8–14", "Put your values to work · 15–21", "Build lasting momentum · 22–30"])
+for (const stage of ["Know your code · 1–7", "Build self-trust · 8–14", "Put your values to work · 15–21", "Build lasting momentum · 22–30"])
   await page.getByText(stage, { exact: true }).waitFor();
 await shot("mission-list-all", { full: true });
 await page.getByRole("button", { name: /SHOW LESS/ }).click();
@@ -202,31 +236,10 @@ await page.getByRole("button", { name: /What courage is for/i }).click();
 await page.getByText("You do what you know is right despite fear, danger, or pressure to do otherwise.").first().waitFor();
 await shot("fragrance-trio");
 
-// G — Mission 7 carries the optional photo
-await page.goto(`${BASE}/missions/7`);
-await page.getByText("Give Your Practice a Place").first().waitFor();
-await page
-  .getByLabel("Where did you put it, and after what everyday event will you begin?")
-  .fill("I put Honor beside my watch. After getting dressed, I will open the next mission.");
-await page.locator('input[type="file"]').setInputFiles(PHOTO);
-await page.getByLabel("Remove photo").waitFor();
-await page.getByLabel("I have taken this action.").check();
-await shot("mission-7-with-photo");
-await page.getByRole("button", { name: "RECORD · COMPLETE MISSION 7" }).click();
-await page.getByText("MISSION COMPLETE.").waitFor();
-
-// H — A code Mission saves to the Personal Code, and isn't praised as a deed
-await page.goto(`${BASE}/missions/8`);
-await page.getByText("Define Your Honor").first().waitFor();
-if ((await page.getByLabel("I have taken this action.").count()) > 0)
-  fail("a code Mission asks for action confirmation");
-await page.getByLabel("For me, honor means…").fill("Telling the truth about my mistakes and fixing what I can.");
-await page.getByRole("button", { name: "SAVE TO MY CODE" }).click();
-await page.getByText("Your Personal Code is taking shape.").waitFor();
-await shot("mission-8-code-saved");
+// The definition he picked is the first line of his Personal Code
 await page.goto(`${BASE}/personal-code`);
 await page.getByText("MY PERSONAL CODE").first().waitFor();
-await page.getByText("Telling the truth about my mistakes").waitFor();
+await page.getByText("Doing what I say I will do").waitFor();
 await page.getByText("LIVE IT EVERY DAY").waitFor();
 await shot("personal-code");
 
@@ -284,10 +297,10 @@ await page.goto(`${BASE}/log`);
 await page.getByText("5 records · 4 actions").waitFor();
 const oneOffRow = page.getByRole("link").filter({ hasText: "ONE-OFF ACTION" }).first();
 if ((await oneOffRow.count()) === 0) fail("no one-off entry");
-await page.getByText("MISSION 2 · BREAK THE AVOIDANCE LOOP").waitFor();
-const codeRow = page.getByRole("link").filter({ hasText: "MISSION 8 · DEFINE YOUR HONOR" });
+await page.getByText("MISSION 5 · BREAK THE AVOIDANCE LOOP").waitFor();
+const codeRow = page.getByRole("link").filter({ hasText: "MISSION 2 · DEFINE YOUR HONOR" });
 if ((await codeRow.getByText("CODE", { exact: true }).count()) !== 1)
-  fail("Mission 8 isn't labelled as Code in the log");
+  fail("Mission 2 isn't labelled as Code in the log");
 await shot("log");
 
 // Edit a one-off entry
@@ -306,18 +319,18 @@ await page.getByText("Your words and date are kept").waitFor();
 await shot("log-remove-confirm", { full: false });
 await page.getByRole("button", { name: "REMOVE", exact: true }).click();
 await page.getByRole("button", { name: "RESTORE" }).waitFor();
-await page.goto(`${BASE}/missions/8`);
+await page.goto(`${BASE}/missions/2`);
 await page.getByText("REMOVED", { exact: true }).first().waitFor();
 await page.goto(`${BASE}/missions`);
 await page.getByText("3/30 COMPLETE").waitFor();
-await page.goto(`${BASE}/missions/8`);
+await page.goto(`${BASE}/missions/2`);
 await page.getByRole("button", { name: "RESTORE" }).click();
 await page.getByText("Restored.").waitFor();
-await page.getByText("Telling the truth about my mistakes").waitFor();
+await page.getByText("Doing what I say I will do").waitFor();
 await page.goto(`${BASE}/missions`);
 await page.getByText("4/30 COMPLETE").waitFor();
 
-// K — Progress: actions only (Missions 1, 2, 7 and the one-off); x/30 counts
+// K — Progress: actions only (Missions 1, 3, 5 and the one-off); x/30 counts
 // the code Mission too
 await page.goto(`${BASE}/progress`);
 await page.getByText("YOUR PROGRESS").waitFor();

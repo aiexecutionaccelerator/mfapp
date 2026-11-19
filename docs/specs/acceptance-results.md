@@ -13,7 +13,7 @@ production build in demo mode (on-device storage), plus `npm run test:db`
 | C02 | every Mission fits a 375px phone: no horizontal scroll, steps and save visible, nothing under the tab bar at the end | PASS | Checked all 30 at 375×812. |
 | C03 | a starter fills only the start of the answer; changing scent never ticks or completes; the chosen scent is saved and used | PASS |  |
 | C04 | blank text or no confirmation blocks completion in the UI; a draft is still possible; no progress or action credit | PASS | Server half: test:db C04 checks. |
-| C05 | Mission 6, a code Mission and a plan complete with their true type and message; none counts as an action | PASS |  |
+| C05 | Mission 10, a code Mission and a plan complete with their true type and message; none counts as an action | PASS |  |
 | C06 | a draft survives reload without credit; completing it clears it and creates one record | PASS |  |
 | C07 | viewing 13 doesn't complete it; saving updates identity; a later Settings edit updates the same record | PASS |  |
 | C08 | 15 labels a proposal honestly; 20 says an offer alone is not completed help (content; not shown since 2.1) | PASS | Revision 2.1 removed notes and Done when from the screen; the wording is kept in the content. |

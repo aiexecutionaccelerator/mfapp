@@ -54,7 +54,7 @@ export function ContextPanels({
         <CodePanel lines={context.code} selectable={selectableCode} />
       )}
       {context.promise && (
-        <Panel title="YOUR PROMISE · MISSION 12">
+        <Panel title="WHAT MATTERS MOST · MISSION 12">
           <p className="whitespace-pre-wrap">{context.promise}</p>
         </Panel>
       )}
