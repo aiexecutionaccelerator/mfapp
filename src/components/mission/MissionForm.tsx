@@ -4,7 +4,6 @@ import { Check } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import FragranceCue from "@/components/FragranceCue";
 import { useInView } from "@/components/motion/useInView";
-import MissionVideo from "@/components/MissionVideo";
 import PhotoInput from "@/components/PhotoInput";
 import { BlockerPanel, ContextPanels } from "@/components/mission/ContextPanels";
 import Button from "@/components/ui/Button";
@@ -372,14 +371,6 @@ export default function MissionForm({
           selectableCode={def.number === 29 && !editing}
         />
         <BlockerPanel blockers={blockers} />
-
-        {def.youtubeId && !def.videoFirst && (
-          <MissionVideo
-            youtubeId={def.youtubeId}
-            title={def.title}
-            missionNumber={def.number}
-          />
-        )}
       </StarStep>
 
       <StarStep letter="R" name="Record" last>

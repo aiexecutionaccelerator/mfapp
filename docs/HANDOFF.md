@@ -70,7 +70,8 @@ Honor, 3 Give Credit, 4 Define Courage, 5 Avoidance, 6 Define Commitment,
 Remember Your Strength (reflection), 11 Draw Your Line, 12 Choose What
 Matters Most, 13 identity, 14 Put Your Code to Work. 15 to 30 unchanged.
 Code lines are now 2, 4, 6, 11, 12 (`CODE_LINES`); photos 1 and 19. Every
-Mission has an `idea` line; 1, 2, 4, 6 show their video first; 2, 4, 6, 11
+Mission has an `idea` line; every Mission with a video shows it at the top,
+under the idea (no video, nothing shown); 2, 4, 6, 11
 and 13 offer complete statements to pick. After 7, 14 and 21 the success
 screen adds a "What you've learned" recap; 30 adds the graduation recap
 (also on its saved page). Server: migration **0012** (kinds, photo and
@@ -248,6 +249,9 @@ seed-Missions-1–29 helpers in Settings.
     (confirmed). The Shopify product page needs the same $597 compare-at
     price set in Shopify admin to strike it through there too — that can't
     be done from this repo.
+- **Decided by Antonio, 19 Nov:** no pacing. Missions unlock as people do
+  them; nobody waits a day. Videos go at the top of every Mission that has
+  one.
 
 ## Working conventions
 

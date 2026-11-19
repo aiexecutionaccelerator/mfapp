@@ -71,8 +71,6 @@ export interface MissionDef {
   photo?: boolean;
   /** Optional, never required. */
   youtubeId: string | null;
-  /** Show the video open at the top of the page instead of collapsed under Act. */
-  videoFirst?: boolean;
   /** For us: how it connects to the Missions around it. Not shown. */
   implementation: string;
   /** For us: why it changed from the first curriculum. Not shown. */
@@ -144,7 +142,6 @@ export const MISSIONS: MissionDef[] = [
     doneWhen: "The bottle is in place and you have named your starting cue.",
     note: "Use a safe, appropriate place. One bottle is enough to set up your reminder. A photo is optional. Setting up your reminder completes this mission, but you'll still need to practice regularly.",
     photo: true,
-    videoFirst: true,
     youtubeId: "GCpsEfFp_E8",
     implementation: "Completes the first stage with a physical cue and daily starting event. Mission 27 later adds a repeatable practice.",
     rationale: "Previous title: Put Your Reminder Where You Will See It. Links a visible fragrance cue to an existing daily event, rather than merely arranging a bottle.",
@@ -178,7 +175,6 @@ export const MISSIONS: MissionDef[] = [
     ],
     doneWhen: "One clear Honor line is saved to your Personal Code.",
     note: "This defines your standard. You will practice a code line in Mission 14; saving words does not prove you have lived them.",
-    videoFirst: true,
     youtubeId: "a9yG3pylUKY",
     implementation: "Uses early experience to define Honor. Creates code line 1, required with lines 9–12 for Missions 14 and 29.",
     rationale: "Previous title: Honor in Your Words. Turns an abstract value definition into an observable standard.",
@@ -244,7 +240,6 @@ export const MISSIONS: MissionDef[] = [
     ],
     doneWhen: "One clear Courage line is saved to your Personal Code.",
     note: "Courage serves a worthwhile purpose. Your line should not require danger, hostility, or ignoring sound judgment.",
-    videoFirst: true,
     youtubeId: "NCeKnEezPWs",
     implementation: "Turns earlier avoidance and asking exercises into a standard. Creates code line 2.",
     rationale: "Previous title: Courage in Your Words. Names worthwhile discomfort and a behavior, with no encouragement to take reckless risks.",
@@ -311,7 +306,6 @@ export const MISSIONS: MissionDef[] = [
     ],
     doneWhen: "One clear Commitment line is saved to your Personal Code.",
     note: "Choose a standard you can practice. “Never fail” gives you no useful way to recover.",
-    videoFirst: true,
     youtubeId: "ihWgFp5H0DU",
     implementation: "Turns follow-through into a repeatable standard with recovery. Creates code line 3.",
     rationale: "Previous title: Commitment in Your Words. Builds returning after a miss into the definition of commitment.",

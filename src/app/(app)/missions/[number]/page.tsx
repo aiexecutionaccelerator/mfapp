@@ -68,6 +68,9 @@ function MissionDetailInner({
 
   const [mode, setMode] = useState<FormMode | null>(null);
   const [justSaved, setJustSaved] = useState<Mission | null>(null);
+  // When the success screen appeared. A double tap on Record must not land
+  // its second tap on "Continue" and skip the screen.
+  const [savedAt, setSavedAt] = useState(0);
   const [restoring, setRestoring] = useState(false);
 
   useEffect(() => {
@@ -171,12 +174,20 @@ function MissionDetailInner({
         )}
         <div className="mt-10">
           {allDone ? (
-            <Button onClick={() => router.push("/personal-code")}>
+            <Button
+              onClick={() => {
+                if (performance.now() - savedAt < 700) return;
+                router.push("/personal-code");
+              }}
+            >
               VIEW MY PERSONAL CODE
             </Button>
           ) : (
             <Button
-              onClick={() => router.push(next ? `/missions/${next}` : "/missions")}
+              onClick={() => {
+                if (performance.now() - savedAt < 700) return;
+                router.push(next ? `/missions/${next}` : "/missions");
+              }}
             >
               {next ? `CONTINUE TO MISSION ${next}` : "BACK TO MISSIONS"}
             </Button>
@@ -230,7 +241,9 @@ function MissionDetailInner({
         )}
       </div>
 
-      {def.videoFirst && def.youtubeId && (
+      {/* Antonio's answer (19 Nov): the video sits at the top of every
+          Mission that has one. No video, nothing here. */}
+      {def.youtubeId && (
         <MissionVideo
           youtubeId={def.youtubeId}
           title={def.title}
@@ -260,6 +273,7 @@ function MissionDetailInner({
           } else {
             setMode(null);
             setJustSaved(saved);
+            setSavedAt(performance.now());
             window.scrollTo({ top: 0 });
           }
         }}
