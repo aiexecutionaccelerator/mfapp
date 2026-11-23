@@ -143,6 +143,18 @@ export class ConflictError extends Error {
   }
 }
 
+/**
+ * No signed-in user: the session is missing or was rejected. Only this sends
+ * him back to /welcome; a network failure never does (Antonio kept being
+ * "logged out" when the saved app reopened without a connection, 23 Nov).
+ */
+export class SignedOutError extends Error {
+  constructor() {
+    super("Not signed in");
+    this.name = "SignedOutError";
+  }
+}
+
 /** A save the rules refuse (missing prerequisite, no confirmation…). */
 export class ValidationError extends Error {
   constructor(message: string) {

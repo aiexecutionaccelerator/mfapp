@@ -236,7 +236,7 @@ export default function LogDetailPage({
             )}
             {mission.status === "completed" && (
               <Button variant="secondary" onClick={startEditing}>
-                {isMission ? "Edit on its Mission" : "Edit this entry"}
+                {isMission ? `Edit in Mission ${mission.mission_number}` : "Edit this entry"}
               </Button>
             )}
             {mission.status === "completed" && (

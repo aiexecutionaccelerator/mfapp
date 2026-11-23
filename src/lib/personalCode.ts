@@ -6,7 +6,7 @@ import type { Mission, Profile } from "@/lib/data/types";
  * stored as its own copy, so it can't drift:
  *
  *   identity  — Mission 13, the same sentence as the profile's identity
- *   2, 4, 6   — the three definitions: honor, courage, commitment
+ *   2, 3, 4   — the three definitions: honor, courage, commitment
  *   11, 12    — his line and what matters most
  *   practice  — the practice plan from Mission 30, else Mission 27
  *

@@ -1,8 +1,10 @@
+import { isAuthRetryableFetchError } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import { recordFor, recordText } from "@/lib/curriculum";
 import {
   ConflictError,
   LESSON_ANSWER_MAX,
+  SignedOutError,
   ValidationError,
   type AppSnapshot,
   type DataBackend,
@@ -42,8 +44,10 @@ async function requireUser() {
     data: { user },
     error,
   } = await supabase.auth.getUser();
-  if (error || !user) throw new Error("Not signed in");
-  return { supabase, user };
+  if (user) return { supabase, user };
+  // Offline or a timeout is not a sign-out: keep the session, retry later.
+  if (isAuthRetryableFetchError(error)) throw error;
+  throw new SignedOutError();
 }
 
 export const supabaseBackend: DataBackend = {

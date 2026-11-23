@@ -58,7 +58,7 @@ A  Act
 Take one small action that’s aligned with the value, or recall a time you lived it.
 Show the specific assignment, time estimate, three approaches, relevant saved context, note, and Done when rule.
 R  Record
-Log what you did, recalled, defined, or planned. Completed actions build your evidence; plans describe practice still ahead.
+Log what you did. Every completed action is proof that you are becoming the man you know yourself to be.
 Provide the mission prompt and blank own-words field, with examples separate and optional. Save with the correct record type.
 
 Shared closer: “Repeat the practice. Let your scent remind you of the values you choose to live.”
@@ -205,32 +205,34 @@ Titles
 22–30
 22 Take the Step You Are Avoiding23 Make Tomorrow Easier24 Protect Your Yes25 Remove One Recurring Distraction26 Recover Without Excuses27 Build a Practice You Can Keep28 Repeat What Worked29 Let Someone Support Your Standard30 Carry Your Momentum Forward
 
+Revision 2.3 (23 Nov 2026, Antonio's second Loom): Define Courage and Define Commitment follow Define Honor (3 and 4); Give Credit moves to 5 and Break the Avoidance Loop to 6, so each definition is put into action in 5, 6 and 7. The recommended fragrances rotate so no fragrance repeats two Missions in a row: 11 Courage, 10 Honor, 9 Commitment, opening on Courage and wearing Commitment first at Mission 4 (1, 10, 15, 16, 24, 25 and 30 changed value). Mission 1 is now Build Your Shrine, with one question; the three Define Missions use the onboarding definitions. One-Off Actions are now Live It, the center tab. The S.T.A.R. Act example and Record line were reworded (below).
+
 Revision 2.2 (19 Nov 2026): Missions 1 to 10 re-ordered so each value is defined and then acted on; Missions 1, 2, 4, 6, 11, 12, 13 and 16 rewritten. The Mission pages below are current; the overview above them predates the re-order. Each Mission also has an idea line, starters and, for 11 and 13, an intro: see src/content/missions.ts.
 
-Mission 1 Give Your Practice a Place
-Know your code  |  Commitment  |  Action  |  About 2 minutes
-Hook Build a small shrine to the man you’re becoming.
-Select Commitment is easier to practice when you have a dependable place and starting cue.
+Mission 1 Build Your Shrine
+Know your code  |  Courage  |  Action  |  About 2 minutes
+Hook Build a small shrine to self-improvement: one place that reminds you every day who you’re becoming.
+Select Courage starts in plain sight. A shrine says, every day, who you are working to become.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
-Choose one spot you see every morning, away from heat and direct sunlight. Set your bottles there. Decide which everyday moment will cue you to open your next mission.
+Choose one spot you pass every morning, away from heat and direct sunlight, and set your bottles there.
 Choose one way to do it
-1. Put it by your watch and begin after getting dressed.
-2. Put it on a shaded bedroom shelf and begin before leaving the room.
-3. Put it with your morning essentials and begin after making your bed.
+1. Put them beside your watch, where you get ready each morning.
+2. Put them on a shaded shelf in your bedroom.
+3. Put them on your dresser, next to your wallet and keys.
 Record
-Where is your shrine, and what moment will cue your next mission?
-Example 1 I put Honor beside my watch. After getting dressed, I will open the next mission.
-Example 2 I put the set on my bedroom shelf. After making my bed, I will begin.
-Done when The bottle is in place and you have named your starting cue.
-User note Use a safe, appropriate place. One bottle is enough to set up your reminder. A photo is optional. Setting up your reminder completes this mission, but you'll still need to practice regularly.
+Where is your shrine?
+Example 1 I set my bottles on the shelf beside my watch.
+Example 2 I cleared a spot on my dresser, next to my wallet and keys.
+Done when Your bottles are in place, somewhere you will see them every day.
+User note Use a safe, appropriate place. One bottle is enough to start. A photo is optional. Setting up your shrine completes this mission; the practice comes next.
 Implementation and sequence
-Completes the first stage with a physical cue and daily starting event. Mission 27 later adds a repeatable practice.
-Revision rationale Previous title: Put Your Reminder Where You Will See It. Links a visible fragrance cue to an existing daily event, rather than merely arranging a bottle.
+Opens the course with a physical reminder, on Courage, the fragrance most men like best. Mission 27 later adds a repeatable practice.
+Revision rationale Previous titles: Put Your Reminder Where You Will See It; Give Your Practice a Place. A shrine to self-improvement, explained through trophy cases and Stoic busts (Antonio, 23 Nov). One question, not two.
 Mission 2 Define Your Honor
 Know your code  |  Honor  |  Code  |  3–5 minutes
 Hook Decide what honor means to you, in one sentence.
-Select Honor means your word and your actions match.
+Select You live by a moral code, tell the truth, keep promises, and own your actions. Integrity · Responsibility · Respect.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Pick the definition that fits you best, then make it yours. Change any word that doesn’t sound like you.
@@ -245,31 +247,12 @@ Example 2 Giving people credit for their work, even when I could take it myself.
 Done when One clear Honor line is saved to your Personal Code.
 User note This defines your standard. You will practice a code line in Mission 14; saving words does not prove you have lived them.
 Implementation and sequence
-Uses early experience to define Honor. Creates code line 1, required with lines 9–12 for Missions 14 and 29.
+Defines Honor first. Creates code line 1, required with lines 3, 4, 11 and 12 for Missions 14 and 29.
 Revision rationale Previous title: Honor in Your Words. Turns an abstract value definition into an observable standard.
-Mission 3 Give Credit Where Credit Is Due
-Know your code  |  Honor  |  Action  |  About 2 minutes
-Hook Start by noticing what someone else has done for you.
-Select Honor means recognizing other people’s contributions and treating them with respect.
-Trigger Spray the fragrance. Then begin the assigned task.
-Act
-Tell one person exactly what they did that you appreciate and why it mattered. Send the message or say it to them today.
-Choose one way to do it
-1. Thank someone close to you for a specific way they supported you.
-2. Give a coworker credit for something they made easier.
-3. Thank someone whose everyday effort you usually take for granted.
-Record
-Who did you thank, and what did you tell them?
-Example 1 I thanked my brother for checking in while I was having a rough week.
-Example 2 I told my coworker her careful handover helped me finish the job.
-Done when You have expressed the appreciation. Thinking it or drafting it is preparation.
-Implementation and sequence
-Opens with an achievable act of respect. Supplies a concrete experience for the Honor line in Mission 2.
-Revision rationale Previous title: Prove It. Keeps the quick first win, but makes respect and giving credit its explicit purpose.
-Mission 4 Define Your Courage
+Mission 3 Define Your Courage
 Know your code  |  Courage  |  Code  |  3–5 minutes
 Hook Courage is acting while you’re still afraid.
-Select Courage means doing what’s right while you’re still afraid.
+Select You do what you know is right despite fear, danger, or pressure to do otherwise. Speak Honestly · Move First · Act Despite Fear.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Pick the definition that fits you best, then make it yours. Change any word that doesn’t sound like you.
@@ -284,9 +267,48 @@ Example 2 Speaking honestly and respectfully when I disagree.
 Done when One clear Courage line is saved to your Personal Code.
 User note Courage serves a worthwhile purpose. Your line should not require danger, hostility, or ignoring sound judgment.
 Implementation and sequence
-Turns earlier avoidance and asking exercises into a standard. Creates code line 2.
+Defines Courage straight after Honor. Creates code line 2; Mission 6 puts it into action.
 Revision rationale Previous title: Courage in Your Words. Names worthwhile discomfort and a behavior, with no encouragement to take reckless risks.
-Mission 5 Break the Avoidance Loop
+Mission 4 Define Your Commitment
+Know your code  |  Commitment  |  Code  |  3–5 minutes
+Hook Decide what showing up looks like on an ordinary day.
+Select You fulfill your responsibilities through consistent effort and perseverance. Discipline · Consistency · Follow-Through.
+Trigger Spray the fragrance. Then begin the assigned task.
+Act
+Pick the definition that fits you best, then make it yours. Change any word that doesn’t sound like you.
+Choose one way to do it
+1. Describe showing up for a person who relies on you.
+2. Describe giving a priority regular, protected attention.
+3. Describe returning to a useful practice after missing it.
+Record
+For me, commitment means…
+Example 1 Giving my important work ten focused minutes and returning at the next opportunity if I miss.
+Example 2 Keeping regular time with my family and honestly rescheduling when a real conflict arises.
+Done when One clear Commitment line is saved to your Personal Code.
+User note Choose a standard you can practice. “Never fail” gives you no useful way to recover.
+Implementation and sequence
+Defines Commitment, the third value, the first time the darker Commitment bottle is worn. Creates code line 3; Mission 7 puts it into action.
+Revision rationale Previous title: Commitment in Your Words. Builds returning after a miss into the definition of commitment.
+Mission 5 Give Credit Where Credit Is Due
+Know your code  |  Honor  |  Action  |  About 2 minutes
+Hook Notice what someone else has done for you, and tell them.
+Select Honor means recognizing other people’s contributions and treating them with respect.
+Trigger Spray the fragrance. Then begin the assigned task.
+Act
+Tell one person exactly what they did that you appreciate and why it mattered. Send the message or say it to them today.
+Choose one way to do it
+1. Thank someone close to you for a specific way they supported you.
+2. Give a coworker credit for something they made easier.
+3. Thank someone whose everyday effort you usually take for granted.
+Record
+Who did you thank, and what did you tell them?
+Example 1 I thanked my brother for checking in while I was having a rough week.
+Example 2 I told my coworker her careful handover helped me finish the job.
+Done when You have expressed the appreciation. Thinking it or drafting it is preparation.
+Implementation and sequence
+Puts the Honor line from Mission 2 into action with an achievable act of respect.
+Revision rationale Previous title: Prove It. Keeps the quick first win, but makes respect and giving credit its explicit purpose.
+Mission 6 Break the Avoidance Loop
 Know your code  |  Courage  |  Action  |  2–5 minutes
 Hook Break the task you're avoiding into one small, manageable step.
 Select Courage means moving toward a worthwhile task while discomfort is still there.
@@ -304,28 +326,8 @@ Example 2 I was dreading the application. I completed the contact section.
 Done when One real step is finished. The whole task does not have to be.
 User note Choose an ordinary, manageable task. This mission is about useful discomfort, not taking unnecessary risks.
 Implementation and sequence
-Adds useful discomfort after the first win. Later Missions 17 and 22 develop sustained focus and goal-directed courage.
+Puts the Courage line from Mission 3 into action. Missions 17 and 22 later develop sustained focus and goal-directed courage.
 Revision rationale Previous title: Stop Putting It Off. Defines a manageable avoided task and requires a real first step.
-Mission 6 Define Your Commitment
-Know your code  |  Commitment  |  Code  |  3–5 minutes
-Hook Decide what showing up looks like on an ordinary day.
-Select Commitment means showing up and doing the work, especially on ordinary days.
-Trigger Spray the fragrance. Then begin the assigned task.
-Act
-Pick the definition that fits you best, then make it yours. Change any word that doesn’t sound like you.
-Choose one way to do it
-1. Describe showing up for a person who relies on you.
-2. Describe giving a priority regular, protected attention.
-3. Describe returning to a useful practice after missing it.
-Record
-For me, commitment means…
-Example 1 Giving my important work ten focused minutes and returning at the next opportunity if I miss.
-Example 2 Keeping regular time with my family and honestly rescheduling when a real conflict arises.
-Done when One clear Commitment line is saved to your Personal Code.
-User note Choose a standard you can practice. “Never fail” gives you no useful way to recover.
-Implementation and sequence
-Turns follow-through into a repeatable standard with recovery. Creates code line 3.
-Revision rationale Previous title: Commitment in Your Words. Builds returning after a miss into the definition of commitment.
 Mission 7 Keep One Small Promise
 Know your code  |  Commitment  |  Action  |  Time varies
 Hook Give yourself a reason to trust your own word.
@@ -343,7 +345,7 @@ Example 1 I promised to return the borrowed drill today, and I dropped it off.
 Example 2 I promised myself five minutes on the paperwork, and I completed that time.
 Done when The promise has been kept. A promise for later stays a draft.
 Implementation and sequence
-Adds follow-through to the first two values. Prepares the continuing promise in Mission 12.
+Puts the Commitment line from Mission 4 into action. Prepares what matters most in Mission 12.
 Revision rationale Previous title: Keep Your Word. Distinguishes making a promise from fulfilling it; offers a route when no promise is pending.
 Mission 8 Own Your Part
 Build self-trust  |  Honor  |  Action  |  5–10 minutes
@@ -385,9 +387,9 @@ Implementation and sequence
 Makes asking for help a legitimate expression of courage. Informs the Courage line and later goal work.
 Revision rationale Previous title: Act Before You Are Ready. Replaces another generic start with the distinct skill of asking for help or feedback.
 Mission 10 Remember Your Own Strength
-Build self-trust  |  Honor  |  Reflection  |  3–5 minutes
+Build self-trust  |  Commitment  |  Reflection  |  3–5 minutes
 Hook When self-doubt sets in, remind yourself of something you've already done well.
-Select An honest memory gives you a concrete example of a value you have already practiced.
+Select Commitment means knowing you have kept going before, so you can keep going again.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Recall one specific time you acted with honor, courage, or commitment. Name the difficulty, what you actually did, and the quality you want to use again.
@@ -481,12 +483,12 @@ Example 2 My line is to follow through. I completed the call I had promised.
 Done when You can name the code line and the action you have completed.
 User note If the action is later today, save a draft and return after it happens.
 Implementation and sequence
-Requires all five saved code lines from Missions 8–12. Practices one line before the wider application stage.
+Requires all five saved code lines (Missions 2, 3, 4, 11 and 12). Practices one line before the wider application stage.
 Revision rationale Previous title: Your Personal Code. Requires the record to name both the code line and the action that practiced it.
 Mission 15 Make Room for Someone
-Put your values to work  |  Commitment  |  Action  |  3–5 minutes
+Put your values to work  |  Courage  |  Action  |  3–5 minutes
 Hook A person who matters deserves a real place in your week.
-Select Commitment makes care practical by giving it time and follow-through.
+Select Courage includes reaching out first, instead of waiting for someone else to make the time.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Arrange one specific time to give someone your attention. Ask what works for them and reserve a time you can keep.
@@ -504,9 +506,9 @@ Implementation and sequence
 Show the saved promise when available. Completion is contacting someone and reserving time, not attending the event.
 Revision rationale Previous title: Make Time for Them. Adds contact with the other person and distinguishes proposed time from an agreed meeting.
 Mission 16 Support the Man Doing the Work
-Put your values to work  |  Commitment  |  Action  |  2–10 minutes
+Put your values to work  |  Honor  |  Action  |  2–10 minutes
 Hook You can’t lead well running on empty. Take care of the man doing the work.
-Select Commitment includes maintaining your capacity to keep showing up.
+Select Honor includes respecting yourself enough to look after the man who has to keep his word.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Notice one basic need you have neglected today. Take one small, appropriate step to care for yourself before your next demanding task.
@@ -539,7 +541,7 @@ What did you work on, and what progress did you make?
 Example 1 I spent ten minutes drafting the introduction to my proposal and finished one paragraph.
 Example 2 I practiced the first exercise in my course for ten uninterrupted minutes.
 Done when You have completed the focused block and can name what you worked on.
-User note If ten minutes is unrealistic today, use two deliberate minutes and record that honestly. This mission helps you practice staying with a task; Mission 5 focused on getting started.
+User note If ten minutes is unrealistic today, use two deliberate minutes and record that honestly. This mission helps you practice staying with a task; Mission 6 focused on getting started.
 Implementation and sequence
 Show the promise when available. Requires doing the timed work; planning a work block does not complete it.
 Revision rationale Previous title: Do the Important Thing. Replaces another start with a focused work interval and a concrete progress record.
@@ -664,9 +666,9 @@ Implementation and sequence
 Require the same saved aim from 21. Distinguish completed preparation from the future practice it supports.
 Revision rationale Previous title: Get 1 Percent Better. Replaces the unmeasured 1% claim with preparing the next repetition of the same aim.
 Mission 24 Protect Your Yes
-Build lasting momentum  |  Courage  |  Action  |  2–10 minutes
+Build lasting momentum  |  Honor  |  Action  |  2–10 minutes
 Hook A meaningful yes sometimes needs a respectful no.
-Select Courage includes tolerating a little discomfort to honor a considered priority.
+Select Honor means keeping your word to what matters, even when that takes a respectful no.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Identify one optional demand or distraction that competes with your seven-day aim. Decline, defer, or limit it today so you can protect time for that aim.
@@ -684,9 +686,9 @@ Implementation and sequence
 Require the same saved aim from 21. Make an actual decision today; writing a hypothetical boundary is insufficient.
 Revision rationale Previous title: Protect What Matters. Practices a respectful boundary or decision in the moment, tied to a chosen aim.
 Mission 25 Remove One Recurring Distraction
-Build lasting momentum  |  Commitment  |  Action  |  About 3 minutes
+Build lasting momentum  |  Courage  |  Action  |  About 3 minutes
 Hook Fix the interruption that keeps stealing the same time.
-Select Commitment includes changing a repeated obstacle instead of relying only on willpower.
+Select Courage includes giving up an easy comfort to protect what matters to you.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Choose a recurring distraction that interferes with your seven-day aim. Change one setting or part of your environment so it is less likely to interrupt your next practice.
@@ -784,9 +786,9 @@ Implementation and sequence
 Require all five saved code lines. Show the code and a way to select lines for sharing. Do not automatically send or publish anything.
 Revision rationale Previous title: Share Your Personal Code. Explains a selected standard and its practical behavior to a trusted person; no public disclosure is required.
 Mission 30 Carry Your Momentum Forward
-Build lasting momentum  |  Commitment  |  Plan  |  5–10 minutes
+Build lasting momentum  |  Courage  |  Plan  |  5–10 minutes
 Hook Take what worked with you into the next month.
-Select Commitment is the ongoing practice of returning to a worthwhile direction.
+Select Courage means carrying on by your own choice, with no mission telling you what to do next.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
 Review your saved actions and any practice plan. Keep or adjust one practice for the next 30 days. Write what you learned, the action you will repeat, its starting cue, and how you will restart after a miss.
@@ -799,9 +801,9 @@ I learned ____. After ____, I will ____. If I miss, I will ____.
 Example 1 I learned mornings work best. After breakfast, I will study ten minutes. If I miss, I will do one exercise at the next opportunity.
 Example 2 I learned short calls are easier to keep. After Sunday lunch, I will call someone close to me. If we cannot connect, I will arrange another time.
 Done when Your next practice, fragrance, frequency, and future review date are saved.
-User note Use One-Off Actions to record future repetitions. Your code, missions, and Proof Log stay with you. Thirty missions are a starting practice, not a guarantee that a habit is permanent.
+User note Use Live It to record future repetitions. Your code, missions, and Proof Log stay with you. Thirty missions are a starting practice, not a guarantee that a habit is permanent.
 Implementation and sequence
-Show recent actions and any aim/practice. Require frequency and future review date. Future repetitions go into One-Off Actions.
+Show recent actions and any aim/practice. Require frequency and future review date. Future repetitions go into Live It.
 Revision rationale Previous title: Choose the Next Mission. Uses evidence and the earlier plan to choose what to keep or adjust for the next month.
 Acceptance tests for content and interaction
 Kai should return a pass or fail result for each scenario, with evidence for failures and a link to the build tested. Use synthetic accounts. Tests below are production requirements; their presence here does not mean the prototype has already passed them.

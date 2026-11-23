@@ -485,6 +485,17 @@ export default function MissionForm({
         {/* The page's one primary action spans the full width, out from
             under the step indent, so it never wraps. */}
         <div className="mt-4 -ml-12 space-y-2">
+          {/* Which bottle this saves with, right where he commits (Antonio
+              couldn't tell which he had picked, 23 Nov). */}
+          {!editing && (
+            <p className="text-center text-[14px] text-ink-2">
+              Recording with{" "}
+              <span className="font-semibold text-ink-0">{TRIGGERS[trigger].provedWith}</span>
+              {trigger !== def.recommendedTrigger && (
+                <> (this Mission suggests {TRIGGERS[def.recommendedTrigger].provedWith})</>
+              )}
+            </p>
+          )}
           <Button loading={pending === "save"} onClick={() => void save()}>
             {primaryLabel(def, editing)}
           </Button>
@@ -501,7 +512,7 @@ export default function MissionForm({
               {draftState === "saved" && (
                 <>
                   <Check aria-hidden size={14} className="text-gold-300" />
-                  Saved. Come back any time to finish it.
+                  Draft saved. It isn&apos;t complete until you tap the button above.
                 </>
               )}
               {draftState === "failed" &&

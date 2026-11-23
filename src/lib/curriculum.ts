@@ -79,14 +79,14 @@ export const isLegacy = (record: Mission): boolean =>
 /* ---------- saved context ---------- */
 
 /**
- * The five Personal Code lines (revision 2.2): the three definitions, each
- * paired with an action the next day (2, 4, 6), then his line and what
- * matters most (11, 12). Migration 0012 holds the same numbers.
+ * The five Personal Code lines (revision 2.3): the three definitions, one
+ * after another (2, 3, 4), each put into action in 5, 6 and 7, then his line
+ * and what matters most (11, 12). Migration 0013 holds the same numbers.
  */
 export const CODE_LINES = [
   { number: 2, label: "For me, honor means…" },
-  { number: 4, label: "For me, courage means…" },
-  { number: 6, label: "For me, commitment means…" },
+  { number: 3, label: "For me, courage means…" },
+  { number: 4, label: "For me, commitment means…" },
   { number: 11, label: "My line" },
   { number: 12, label: "What matters most" },
 ] as const;
@@ -298,6 +298,8 @@ export function validateRecord(
   if (!text) return "Write your record first.";
   const unfinished = unfinishedLine(text, def.starters);
   if (unfinished) return unfinished;
+  const junk = notRealWords(text);
+  if (junk) return junk;
   const limit = textLimitFor(def.number);
   if (text.length > limit) return `Keep it under ${limit.toLocaleString()} characters.`;
   if (textOnly) return null;
@@ -353,7 +355,7 @@ export function unfinishedLine(text: string, starters: readonly string[] = []): 
   const bare = new Set(starters.map(squash));
   for (const line of lines) {
     // A closed sentence is finished: one he ended himself ("…checking in."),
-    // or a complete option he picked as is (a definition on Missions 2, 4, 6).
+    // or a complete option he picked as is (a definition on Missions 2, 3, 4).
     if (/[.!?]["”’']?$/u.test(line)) continue;
     const plain = squash(line);
     if (bare.has(plain)) return "Finish the sentence you started, in your own words.";
@@ -361,6 +363,44 @@ export function unfinishedLine(text: string, starters: readonly string[] = []): 
     if (DANGLING.has(last.replace(/[^a-z’']/g, "")))
       return `Finish your sentence. It stops at “…${line.replace(/[….\s]+$/u, "").split(/\s+/).slice(-3).join(" ")}”.`;
   }
+  return null;
+}
+
+/* ---------- real words ---------- */
+
+const NO_VOWEL_OK = new Set(["hmm", "mrs", "shh", "nth", "pfft", "tsk", "brr", "psst"]);
+
+/** A word that reads as keyboard mash, not a word. */
+function isJunkWord(word: string): boolean {
+  return (
+    (word.length >= 3 &&
+      word !== word.toUpperCase() &&
+      !/[aeiouy]/i.test(word) &&
+      !NO_VOWEL_OK.has(word.toLowerCase())) ||
+    /[b-df-hj-np-tv-xz]{6,}/i.test(word) ||
+    /([a-z])\1\1\1/i.test(word)
+  );
+}
+
+/**
+ * Null when the answer reads as words; otherwise the message to show.
+ * Refuses keyboard mash ("sdkjfghdfskjhg", "Fhj"; Antonio's Loom, 23 Nov):
+ * an answer whose junk words make up 40% or more of its letters. A word is
+ * junk with three or more letters, not all capitals (TV, CRM) and no vowel
+ * (y counts), or six consonants in a row, or one letter four times running.
+ * `oneOff`: a Live It action also needs at least two words.
+ * The server's `missions_real_words` trigger (migration 0013) holds the
+ * same rule.
+ */
+export function notRealWords(text: string, { oneOff = false } = {}): string | null {
+  const words = (text.match(/[A-Za-z’']+/g) ?? [])
+    .map((w) => w.replace(/[’']/g, ""))
+    .filter(Boolean);
+  const total = words.reduce((n, w) => n + w.length, 0);
+  const junk = words.filter(isJunkWord).reduce((n, w) => n + w.length, 0);
+  if (total === 0 || junk * 10 >= total * 4)
+    return "That doesn't read as words yet. Write it in a sentence.";
+  if (oneOff && words.length < 2) return "Say a little more about what you did.";
   return null;
 }
 

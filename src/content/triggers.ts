@@ -52,14 +52,14 @@ export const STAR_STEPS = [
     letter: "A",
     name: "Act",
     text: "Take one small action that's aligned with the value, or recall a time you lived it.",
-    example: "Example: spray Honor, then do or remember something honorable.",
+    example: "Example: spray Honor, then do something honorable or remember a time you acted honorably.",
   },
   {
     letter: "R",
     name: "Record",
     // Curriculum revision 2: Record covers reflections, code and plans too,
     // and is honest about which of them are evidence.
-    text: "Log what you did, recalled, defined, or planned. Completed actions build your evidence; plans describe practice still ahead.",
+    text: "Log what you did. Every completed action is proof that you are becoming the man you know yourself to be.",
   },
 ] as const;
 

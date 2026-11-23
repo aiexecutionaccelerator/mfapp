@@ -124,6 +124,18 @@ function ensureLoaded(): void {
   if (Date.now() - loadedAt > STALE_MS) void load();
 }
 
+/* Back online, or the saved app brought back to the front: fetch again if
+   the last load failed or is stale, so a blip heals itself. */
+if (typeof window !== "undefined") {
+  const revive = () => {
+    if (document.visibilityState === "hidden") return;
+    if (cache.error || incomplete(cache)) void load();
+    else ensureLoaded();
+  };
+  window.addEventListener("online", revive);
+  document.addEventListener("visibilitychange", revive);
+}
+
 /* ---------- cache patches (applied only after a write succeeds) ---------- */
 
 /* A confirmed write proves the backend is reachable again, so each patch

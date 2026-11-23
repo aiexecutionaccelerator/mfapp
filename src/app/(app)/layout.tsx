@@ -5,6 +5,7 @@ import { useEffect, type ReactNode } from "react";
 import BuyRow from "@/components/BuyRow";
 import TabBar from "@/components/TabBar";
 import { useAppData } from "@/lib/data/store";
+import { SignedOutError } from "@/lib/data/types";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -16,7 +17,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   }, [profile, router]);
 
   useEffect(() => {
-    if (error) router.replace("/welcome");
+    // Only a lost sign-in goes to /welcome. Any other load error (offline,
+    // a timeout) leaves him where he is; screens offer a retry.
+    if (error instanceof SignedOutError) router.replace("/welcome");
   }, [error, router]);
 
   return (

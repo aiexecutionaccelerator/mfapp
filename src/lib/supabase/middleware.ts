@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { isAuthRetryableFetchError } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 import { SUPABASE_ANON_KEY, SUPABASE_URL, isDemo } from "@/lib/env";
 
@@ -62,7 +63,12 @@ export async function updateSession(request: NextRequest) {
 
   const {
     data: { user },
+    error,
   } = await supabase.auth.getUser();
+
+  // Auth unreachable (offline, a timeout): don't treat that as signed out.
+  // The page loads and the app retries; a real sign-out still redirects.
+  if (!user && isAuthRetryableFetchError(error)) return response;
 
   if (!user) {
     const url = request.nextUrl.clone();

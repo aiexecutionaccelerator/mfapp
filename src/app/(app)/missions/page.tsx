@@ -90,7 +90,7 @@ function MissionCard({
   );
 }
 
-/** The home of the app: the thirty Missions, and one door out to a one-off. */
+/** The home of the app: the thirty Missions. Live It is the center tab. */
 export default function MissionListPage() {
   const { showToast } = useToast();
   const { profile, missions, drafts, error, refresh } = useAppData();
@@ -216,18 +216,6 @@ export default function MissionListPage() {
         </Button>
       </section>
 
-      {/* The second door: something outside the thirty, any time. */}
-      <Link href="/action/declare" className="mt-8 block">
-        <div className="glass card-hover flex items-center gap-3 rounded-[14px] px-4 py-4">
-          <span className="min-w-0 flex-1">
-            <span className="eyebrow block text-gold-300">ONE-OFF ACTION</span>
-            <span className="mt-1.5 block text-[15px] leading-snug text-ink-1">
-              Something else? Log it here.
-            </span>
-          </span>
-          <ChevronRight aria-hidden className="shrink-0 text-ink-2" size={20} />
-        </div>
-      </Link>
 
       <FragranceTrio />
     </main>

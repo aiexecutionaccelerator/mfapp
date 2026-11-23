@@ -637,10 +637,11 @@ body::after {
   animation: page-enter 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* No fade (23 Nov): starting dim read as a loading flash on every tap.
+   The screen is there at full strength and only settles 4px. */
 @keyframes page-enter {
   from {
-    opacity: 0.35;
-    transform: translateY(6px);
+    transform: translateY(4px);
   }
   /* "none", not blur(0): any filter or transform left on the wrapper would
      trap position: fixed children inside it. */

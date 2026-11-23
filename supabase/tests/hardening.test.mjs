@@ -97,8 +97,8 @@ check("S2", "resetting the marker doesn't re-arm the email",
 /* ---------- 30/30 email: once, removed records don't count ---------- */
 const tomorrow = (await one(`select (current_date + 7)::text as d`)).d;
 async function complete(user, n, extra = "") {
-  // Revision 2.2 order (migration 0012).
-  const kind = n === 10 ? "reflection" : [2, 4, 6, 11, 12, 13].includes(n) ? "code" : [21, 27, 30].includes(n) ? "plan" : "action";
+  // Revision 2.3 order (migration 0013).
+  const kind = n === 10 ? "reflection" : [2, 3, 4, 11, 12, 13].includes(n) ? "code" : [21, 27, 30].includes(n) ? "plan" : "action";
   await db.query(
     `insert into public.missions (user_id, trigger, action_text, reflection, status, completed_at, mission_number, confirmed, focus_area, frequency, review_date${extra ? ", removed_at" : ""})
      values ($1, 'honor', $2, $2, 'completed', now(), $3, $4, $5, $6, $7${extra ? ", now()" : ""})`,
@@ -174,12 +174,12 @@ await asAdmin();
 const events = await one(`select count(*)::int as n from public.analytics_events where user_id = $1`, [A]);
 check("S6", "analytics capped at 300 an hour per user, silently", events.n === 300, `${events.n} rows`);
 
-/* ---------- 0012: the revision 2.2 order ---------- */
+/* ---------- 0013: the revision 2.3 order ---------- */
 await asAdmin();
 const kinds = (await db.query(`select n, public.mission_kind(n) as k from unnest(array[1,2,3,6,10,11,13,14]) as n`)).rows;
 const kindOf12 = Object.fromEntries(kinds.map((x) => [x.n, x.k]));
-check("O1", "kinds follow the new order (2, 4, 6, 11 to 13 code; 10 reflection; 1, 3, 14 actions)",
-  kindOf12[1] === "action" && kindOf12[2] === "code" && kindOf12[3] === "action" && kindOf12[6] === "code" &&
+check("O1", "kinds follow the new order (2, 3, 4, 11 to 13 code; 10 reflection; 1, 6, 14 actions)",
+  kindOf12[1] === "action" && kindOf12[2] === "code" && kindOf12[3] === "code" && kindOf12[6] === "action" &&
   kindOf12[10] === "reflection" && kindOf12[11] === "code" && kindOf12[13] === "code" && kindOf12[14] === "action",
   JSON.stringify(kindOf12));
 const D = "00000000-0000-0000-0000-00000000000d";
@@ -191,12 +191,12 @@ const save = (n, text, confirmed = false, photo = null) =>
      values ($1, 'honor', $2, $2, 'completed', now(), $3, $4, $5)`,
     [D, text, n, confirmed, photo],
   );
-for (const n of [2, 4, 6, 11]) await save(n, `Code line ${n}.`);
-r = await expectError(`insert into public.missions (user_id, trigger, action_text, status, completed_at, mission_number, confirmed) values ($1,'honor','Acted on my line.','completed',now(),14,true)`, [D], /Missions 2, 4, 6, 11 and 12/);
+for (const n of [2, 3, 4, 11]) await save(n, `Code line ${n}.`);
+r = await expectError(`insert into public.missions (user_id, trigger, action_text, status, completed_at, mission_number, confirmed) values ($1,'honor','Acted on my line.','completed',now(),14,true)`, [D], /Missions 2, 3, 4, 11 and 12/);
 check("O2", "Mission 14 waits for all five code lines in their new places", r.ok, r.detail);
 await save(12, "What matters most.");
 const m14ok = await db.query(`insert into public.missions (user_id, trigger, action_text, status, completed_at, mission_number, confirmed) values ($1,'honor','Acted on my line.','completed',now(),14,true) returning kind`, [D]);
-check("O2", "with 2, 4, 6, 11 and 12 saved, Mission 14 completes", m14ok.rows[0]?.kind === "action");
+check("O2", "with 2, 3, 4, 11 and 12 saved, Mission 14 completes", m14ok.rows[0]?.kind === "action");
 const shrine = await save(1, "My bottles are on my dresser.", true, "data:image/jpeg;base64,xx").then(() => true, (e) => e.message);
 check("O3", "the shrine (Mission 1) takes a photo", shrine === true, String(shrine));
 r = await expectError(`insert into public.missions (user_id, trigger, action_text, status, completed_at, mission_number, confirmed, photo_url) values ($1,'honor','x.','completed',now(),7,true,'data:image/jpeg;base64,xx')`, [D], /Photos are for Missions 1 and 19/);
@@ -230,6 +230,33 @@ r = await expectError(`update public.missions set reflection = 'Getting back to'
 check("U3", "editing a record into a half-sentence is refused", r.ok, r.detail);
 const removal = await db.query(`update public.missions set removed_at = now() where id = $1 returning id`, [whole.rows[0].id]);
 check("U4", "removing a record never trips the check", removal.rows.length === 1);
+await asAdmin();
+
+/* ---------- 0013: real words ---------- */
+const W = "00000000-0000-0000-0000-00000000000e";
+await db.exec(`insert into auth.users values ('${W}', 'w@example.com') on conflict do nothing`);
+await as(W);
+const say = (text, n) =>
+  db.query(
+    `insert into public.missions (user_id, trigger, action_text, reflection, status, completed_at, mission_number, confirmed)
+     values ($1, 'honor', $2, $2, 'completed', now(), $3, true) returning id`,
+    [W, text, n],
+  );
+const sayError = (text, n, pattern) =>
+  expectError(
+    `insert into public.missions (user_id, trigger, action_text, reflection, status, completed_at, mission_number, confirmed)
+     values ($1, 'honor', $2, $2, 'completed', now(), $3, true)`,
+    [W, text, n],
+    pattern,
+  );
+for (const [text, n] of [["sdkjfghdfskjhg", null], ["Fhj", 6], ["asdfjkl qwrtzp.", 8]]) {
+  r = await sayError(text, n, /read as words/);
+  check("W1", `keyboard mash is refused: "${text}" on ${n ?? "Live It"}`, r.ok, r.detail);
+}
+r = await sayError("Called.", null, /a little more/);
+check("W2", "a Live It action needs at least two words", r.ok, r.detail);
+const fine = await say("I watched TV with my son.", null).then(() => say("Family.", 12)).then(() => true, (e) => e.message);
+check("W3", "real answers save: capitals like TV, and one-word code lines on Missions", fine === true, String(fine));
 await asAdmin();
 
 /* ---------- the app's normal writes still work ---------- */

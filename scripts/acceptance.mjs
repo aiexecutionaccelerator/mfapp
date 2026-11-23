@@ -38,9 +38,9 @@ const assert = (ok, msg) => {
 /* ---------- state helpers (demo storage) ---------- */
 
 const KIND = (n) =>
-  n === null ? "action" : n === 10 ? "reflection" : [2, 4, 6, 11, 12, 13].includes(n) ? "code" : [21, 27, 30].includes(n) ? "plan" : "action";
-// The five Personal Code lines in the revision 2.2 order.
-const CODE = [2, 4, 6, 11, 12];
+  n === null ? "action" : n === 10 ? "reflection" : [2, 3, 4, 11, 12, 13].includes(n) ? "code" : [21, 27, 30].includes(n) ? "plan" : "action";
+// The five Personal Code lines in the revision 2.3 order.
+const CODE = [2, 3, 4, 11, 12];
 const TRIGGERS = ["honor", "courage", "commitment"];
 const day = (offset) => {
   const d = new Date(Date.now() + offset * 86400000);
@@ -134,12 +134,12 @@ await scenario("C02", "every Mission fits a 375px phone: no horizontal scroll, s
 
 await scenario("C03", "a starter fills only the start of the answer; changing scent never ticks or completes; the chosen scent is saved and used", async () => {
   await reset([]);
-  await open(3);
+  await open(5);
   await page.getByRole("group", { name: "Start with" }).getByRole("button", { name: "I thanked my…" }).click();
   assert((await field().inputValue()) === "I thanked my ", "the starter didn't fill the start of the answer");
   // 19 Nov: a bare starter can't be saved, and a second chip adds, never replaces.
   await confirmBox().check();
-  await button("RECORD · COMPLETE MISSION 3").click();
+  await button("RECORD · COMPLETE MISSION 5").click();
   await page.getByText("Finish the sentence you started, in your own words.").waitFor();
   assert((await stored()).length === 0, "a bare starter was saved");
   await confirmBox().uncheck();
@@ -148,7 +148,7 @@ await scenario("C03", "a starter fills only the start of the answer; changing sc
   // A starter moves the cursor to the end one frame later; let it land before typing.
   await page.waitForFunction(() => document.activeElement?.tagName === "TEXTAREA");
   await field().fill("I thanked my brother for the lift.\nI gave my coworker credit for staying late with");
-  await button("RECORD · COMPLETE MISSION 3").click();
+  await button("RECORD · COMPLETE MISSION 5").click();
   await page.getByText("Finish your sentence. It stops at “…staying late with”.").waitFor();
   assert((await storedDrafts()).length === 0 || (await storedDrafts())[0].trigger === "honor", "draft state off");
   assert(!(await confirmBox().isChecked()), "the confirmation got ticked");
@@ -158,7 +158,7 @@ await scenario("C03", "a starter fills only the start of the answer; changing sc
   await page.getByText("You fulfill your responsibilities through consistent effort and perseverance.").waitFor();
   await field().fill("I thanked my neighbor for watching the house.");
   await confirmBox().check();
-  await button("RECORD · COMPLETE MISSION 3").click();
+  await button("RECORD · COMPLETE MISSION 5").click();
   await page.getByText("You acted with Commitment.").waitFor();
   assert((await stored())[0].trigger === "commitment", "chosen scent not saved");
   assert((await storedDrafts()).length === 0, "the autosaved draft outlived the record");
@@ -173,7 +173,7 @@ await scenario("C04", "blank text or no confirmation blocks completion in the UI
   await button("RECORD · COMPLETE MISSION 5").click();
   await page.getByText(/I have taken this action/).first().waitFor();
   assert((await stored()).length === 0, "a record was created");
-  await page.getByText(/Saved\. Come back any time/).waitFor();
+  await page.getByText(/Draft saved\. It isn.t complete/).waitFor();
   assert((await storedDrafts()).length === 1, "draft not saved");
   await page.goto(`${BASE}/progress`);
   assert((await page.getByText("0/30", { exact: true }).count()) === 1, "progress moved");
@@ -208,7 +208,7 @@ await scenario("C06", "a draft survives reload without credit; completing it cle
   await reset([]);
   await open(7);
   await field().fill("I promised to return the drill.");
-  await page.getByText(/Saved\. Come back any time/).waitFor();
+  await page.getByText(/Draft saved\. It isn.t complete/).waitFor();
   await page.reload();
   await page.getByText("DRAFT SAVED", { exact: true }).waitFor();
   assert((await field().inputValue()) === "I promised to return the drill.", "draft text lost");
@@ -319,13 +319,13 @@ await scenario("D01", "14 or 29 blocked with a code line missing or removed, wit
   lines[2].removed_at = new Date().toISOString();
   await reset(lines);
   await open(14);
-  await page.getByText("Your code line from Mission 6 isn't saved yet.").waitFor();
-  await page.getByRole("link", { name: /GO TO MISSION 6/ }).waitFor();
+  await page.getByText("Your code line from Mission 4 isn't saved yet.").waitFor();
+  await page.getByRole("link", { name: /GO TO MISSION 4/ }).waitFor();
   await field().fill("My line is to own mistakes. I corrected an update I had sent.");
   await confirmBox().check();
   await button("RECORD · COMPLETE MISSION 14").click();
-  await page.getByText("Your code line from Mission 6 isn't saved yet.").nth(1).waitFor();
-  await open(6);
+  await page.getByText("Your code line from Mission 4 isn't saved yet.").nth(1).waitFor();
+  await open(4);
   await button("RESTORE").click();
   await page.getByText("Restored.").waitFor();
   await open(14);
@@ -355,7 +355,7 @@ await scenario("D03", "a 22 draft made before 21 picks up the newly saved aim, k
   await reset([]);
   await open(22);
   await field().fill("I asked the tutor about the exercise I didn't understand.");
-  await page.getByText(/Saved\. Come back any time/).waitFor();
+  await page.getByText(/Draft saved\. It isn.t complete/).waitFor();
   await open(21);
   await field().fill("Finish lesson one this week, because it moves my qualification forward.");
   await page.getByText("Work", { exact: true }).click();
@@ -443,12 +443,12 @@ await scenario("D07", "review dates: missing, today and past refused; a future d
 
 await scenario("D08", "double click and a second tab: one record, no false success, text kept with a clear message", async () => {
   await reset([]);
-  await open(3);
+  await open(5);
   await field().fill("I promised to call back and I did.");
   await confirmBox().check();
-  await button("RECORD · COMPLETE MISSION 3").dblclick();
+  await button("RECORD · COMPLETE MISSION 5").dblclick();
   await page.getByText("MISSION COMPLETE.").waitFor();
-  assert((await stored()).filter((r) => r.mission_number === 3).length === 1, "double click duplicated");
+  assert((await stored()).filter((r) => r.mission_number === 5).length === 1, "double click duplicated");
   const tab = await context.newPage();
   await open(8);
   await tab.goto(`${BASE}/missions/8`);
@@ -551,6 +551,37 @@ for (const [id, name] of [
     note("Covered by supabase/tests/curriculum_v2.test.mjs, folded in below.");
   });
 }
+
+await scenario("L01", "Live It is the center tab: S.T.A.R. steps, keyboard mash refused, a real answer logs proof outside the 30", async () => {
+  await reset([]);
+  await page.goto(`${BASE}/missions`);
+  const tabs = page.getByRole("navigation").getByRole("link");
+  assert((await tabs.nth(2).innerText()).trim().toUpperCase() === "LIVE IT", "Live It isn't the center tab");
+  await tabs.nth(2).click();
+  await page.waitForURL("**/live");
+  for (const step of ["S: Select", "T: Trigger", "A: Act", "R: Record"])
+    await page.getByRole("region", { name: step }).waitFor();
+  await page.getByRole("radio", { name: "honor" }).click();
+  await page.locator("textarea").fill("sdkjfghdfskjhg");
+  await button("LOG THIS ACTION").click();
+  await page.getByText("That doesn't read as words yet.", { exact: false }).waitFor();
+  assert((await stored()).length === 0, "keyboard mash was logged");
+  await page.locator("textarea").fill("I told my boss the truth about the delay.");
+  await button("LOG THIS ACTION").click();
+  await page.getByText("You acted with Honor.").waitFor();
+  const rows = await stored();
+  assert(rows.length === 1 && rows[0].mission_number === null && rows[0].trigger === "honor", "not logged as a Live It action");
+});
+
+await scenario("L02", "a Mission refuses keyboard mash too", async () => {
+  await reset([]);
+  await open(5);
+  await field().fill("Fhj");
+  await confirmBox().check();
+  await button("RECORD · COMPLETE MISSION 5").click();
+  await page.getByText("That doesn't read as words yet.", { exact: false }).waitFor();
+  assert((await stored()).length === 0, "keyboard mash was saved");
+});
 
 await browser.close();
 

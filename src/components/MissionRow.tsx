@@ -29,7 +29,7 @@ function badge(mission: Mission): { label: string; className: string } {
 
 /** The title a record was made under: an old record keeps its old task. */
 export function recordTitle(mission: Mission): string {
-  if (mission.mission_number === null) return "ONE-OFF ACTION";
+  if (mission.mission_number === null) return "LIVE IT";
   const def = isLegacy(mission)
     ? getMissionDefV1(mission.mission_number)
     : getMissionDef(mission.mission_number);

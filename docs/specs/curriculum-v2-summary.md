@@ -4,6 +4,28 @@ Source: `curriculum-v2-spec.docx` (full text in `curriculum-v2-spec.txt`).
 Prepared for Antonio Centeno, 28 Oct 2026. **This is the implementation
 contract. The exact copy for all 30 Missions is in the .txt, not here.**
 
+## Revision 2.3 (Antonio's second Loom, 23 Nov 2026)
+
+- **Order:** 1 Build Your Shrine, 2 Define Honor, 3 Define Courage, 4 Define
+  Commitment, 5 Give Credit, 6 Break the Avoidance Loop, 7 Keep One Small
+  Promise. Each definition is put into action in 5, 6 and 7 (the recap after
+  7 pairs them). 8 to 30 keep their numbers.
+- **Fragrance rotation:** never the same recommended fragrance twice in a
+  row; 11 Courage, 10 Honor, 9 Commitment. Opens on Courage (the one most men
+  like best); nobody is asked to wear Commitment before Mission 4. Changed
+  value: 1, 10, 15, 16, 24, 25, 30 (their Select lines rewritten).
+- **Code lines** are 2, 3, 4, 11, 12 (`CODE_LINES`); kinds: 2, 3, 4, 11 to 13
+  code, 10 reflection. Server: migration **0013** (also the real-words rule).
+- **Mission 1:** Build Your Shrine; shrine explained (trophy cases, Stoic
+  busts via Ryan Holiday); one question, "Where is your shrine?"; starters
+  "I set my bottles on…", "I cleared a spot on my…", "I placed my bottles…".
+- **Define Missions** use the onboarding definitions as their Select line,
+  and offer "All three Scent Triggers" under the idea.
+- **Live It** (was One-Off Action) is the raised center tab, with the four
+  S.T.A.R. steps. `/action/declare` redirects there.
+- **Keyboard mash** ("sdkjfghdfskjhg", "Fhj") is refused on Missions and
+  Live It (`notRealWords`; Live It also needs two words).
+
 ## Revision 2.2 (Antonio, 19 Nov 2026)
 
 The course is re-ordered so he defines each value and then acts on it the

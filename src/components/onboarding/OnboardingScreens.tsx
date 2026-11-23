@@ -158,7 +158,7 @@ export default function OnboardingScreens({
               <Button onClick={onDone}>GOT IT</Button>
             ) : (
               <Button loading={pending} onClick={onStart}>
-                START MISSION 1
+                SEE YOUR 30 MISSIONS
               </Button>
             )}
           </BottomActions>

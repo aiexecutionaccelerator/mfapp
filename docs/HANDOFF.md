@@ -48,6 +48,19 @@ Spec: `docs/specs/curriculum-v2-summary.md` (full text alongside). Review
 report: `docs/specs/review-report.md`. Results: `docs/specs/acceptance-results.md`.
 Where this section and older notes below disagree, this section wins.
 
+**Revision 2.3 (23 Nov 2026, v3.3.0, Antonio's second Loom)** is at the top of
+the spec summary: Define Courage and Commitment move to 3 and 4, fragrances
+rotate (never twice in a row; 11 Courage / 10 Honor / 9 Commitment), Mission
+1 is Build Your Shrine, One-Off Action is now **Live It** (center tab, S.T.A.R.
+steps), and keyboard mash is refused. Server: migration **0013** (clear test
+records for Missions 3 to 7 first). Also: onboarding ends on the Missions
+home, not inside Mission 1; the chosen bottle shows beside the Record button;
+the draft line says it isn't complete; "Edit in Mission N"; the name limit is
+60 everywhere; screens no longer dim on every tap; and a failed load (offline,
+a timeout) no longer sends him to /welcome, only a real sign-out does
+(`SignedOutError`), which was why Antonio kept "getting logged out". If it
+still happens, check Supabase Auth → Sessions (time-box / inactivity limits).
+
 **Revision 2.1 (18 Nov 2026)** simplified the Mission screen: no S.T.A.R.
 reminder link, a lean Act step, tap-to-start `starters` on Record that fill
 the answer, and drafts that save themselves (no SAVE DRAFT button). Details

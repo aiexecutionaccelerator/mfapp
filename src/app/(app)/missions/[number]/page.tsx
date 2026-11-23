@@ -19,7 +19,7 @@ import Spinner from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/Toast";
 import { getMissionDef, stageOf, type MissionDef } from "@/content/missions";
 import { getMissionDefV1 } from "@/content/missions-v1";
-import { TRIGGERS } from "@/content/triggers";
+import { TRIGGERS, TRIGGER_ORDER } from "@/content/triggers";
 import { track } from "@/lib/analytics";
 import {
   KIND_LABELS,
@@ -156,7 +156,7 @@ function MissionDetailInner({
         </p>
         <p className="mt-5 text-center text-[17px] text-ink-1">
           {allDone
-            ? "Keep going. Log what you practice next as One-Off Actions."
+            ? "Keep going. Log what you practice next in Live It."
             : "It's in your Proof Log."}
         </p>
         <div className="mt-8 rise-in" style={{ animationDelay: "400ms" }}>
@@ -240,6 +240,24 @@ function MissionDetailInner({
           <p className="mt-3 text-[15px] leading-snug text-ink-1">{def.intro}</p>
         )}
       </div>
+
+      {/* The Define Missions keep all three definitions one tap away, so he
+          needn't hunt for them in Settings (Antonio, 23 Nov). */}
+      {def.kind === "code" && def.number <= 4 && (
+        <Disclosure label="All three Scent Triggers" className="mt-3">
+          <dl className="space-y-3 px-4 pb-4">
+            {TRIGGER_ORDER.map((t) => (
+              <div key={t}>
+                <dt className="eyebrow text-gold-300">{TRIGGERS[t].name}</dt>
+                <dd className="mt-1 text-[15px] leading-snug text-ink-0">
+                  {TRIGGERS[t].definition}
+                  <span className="mt-1 block text-[13px] text-ink-2">{TRIGGERS[t].words}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </Disclosure>
+      )}
 
       {/* Antonio's answer (19 Nov): the video sits at the top of every
           Mission that has one. No video, nothing here. */}

@@ -110,7 +110,8 @@ export default function OnboardingPage() {
     }
   }
 
-  /** Straight into Mission 1 — the first action is the point. */
+  /** To the 30-Day Mission home first, so he sees the whole course before
+   *  Mission 1 (Antonio, 23 Nov: "then I know what's going on"). */
   async function finish() {
     finishing.current = true;
     setPending(true);
@@ -120,7 +121,7 @@ export default function OnboardingPage() {
       window.sessionStorage.removeItem(NAME_KEY);
       window.sessionStorage.removeItem(IDENTITY_KEY);
       track("onboarding_completed");
-      router.replace("/missions/1");
+      router.replace("/missions");
     } catch {
       finishing.current = false;
       setPending(false);
@@ -142,7 +143,7 @@ export default function OnboardingPage() {
               label="Name"
               value={name}
               onChange={setName}
-              maxLength={40}
+              maxLength={60}
               autoComplete="name"
             />
           </div>

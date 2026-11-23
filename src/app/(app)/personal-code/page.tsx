@@ -168,7 +168,7 @@ export default function PersonalCodePage() {
           reading what he stands for — point him at the way to act on it
           any day, not just the thirty. Never printed. */}
       <Link
-        href="/action/declare"
+        href="/live"
         onClick={() => track("personal_code_one_off_opened")}
         className="print-hide mt-8 block"
       >
@@ -176,8 +176,8 @@ export default function PersonalCodePage() {
           <span className="min-w-0 flex-1">
             <span className="eyebrow block text-gold-300">LIVE IT EVERY DAY</span>
             <span className="mt-1.5 block text-[15px] leading-snug text-ink-1">
-              Your code isn&apos;t just for the 30 Missions. Log a One-Off
-              Action any time you live it.
+              Your code isn&apos;t just for the 30 Missions. Log it in Live It
+              any time you act on it.
             </span>
           </span>
           <ChevronRight aria-hidden size={20} className="shrink-0 text-ink-2" />

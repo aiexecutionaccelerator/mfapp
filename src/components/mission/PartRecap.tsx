@@ -20,7 +20,7 @@ import { formatDay } from "@/lib/utils";
 export const RECAP_AFTER = new Set([7, 14, 21, 30]);
 
 const LESSONS = {
-  7: "You defined each value, then lived it within a day. That is the whole method: decide, then do.",
+  7: "You defined each value, then put it into action. That is the whole method: decide, then do.",
   14: "Every kept promise and owned mistake is evidence. Self-trust is built from evidence, not from feeling confident.",
   21: "Values show up in how you spend your time, attention and energy, not in what you say about them.",
   30: "What you keep doing is what makes you the man you described.",
@@ -77,12 +77,12 @@ export default function PartRecap({
   );
 }
 
-/** After 7: each definition beside the action he took the next day. */
+/** After 7: each definition beside the action that put it to work. */
 function DefinedThenDid({ text }: { text: (n: number) => string | null }) {
   const pairs = [
-    { value: "Honor", defined: 2, did: 3 },
-    { value: "Courage", defined: 4, did: 5 },
-    { value: "Commitment", defined: 6, did: 7 },
+    { value: "Honor", defined: 2, did: 5 },
+    { value: "Courage", defined: 3, did: 6 },
+    { value: "Commitment", defined: 4, did: 7 },
   ];
   return (
     <div className="mt-5 space-y-3">
@@ -225,8 +225,8 @@ function Graduation({
       )}
 
       <div className="mt-5 grid grid-cols-2 gap-3 text-center text-[14px]">
-        <Link href="/action/declare" className="press rounded-[14px] border border-[var(--line-strong)] px-3 py-3 text-ink-0">
-          Keep logging One-Off Actions
+        <Link href="/live" className="press rounded-[14px] border border-[var(--line-strong)] px-3 py-3 text-ink-0">
+          Keep logging in Live It
         </Link>
         <Link href="/personal-code" className="press rounded-[14px] border border-[var(--line-strong)] px-3 py-3 text-ink-0">
           Share your code with someone you trust
