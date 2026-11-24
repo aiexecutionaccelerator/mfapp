@@ -12,7 +12,7 @@ import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
 import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
-import { notRealWords } from "@/lib/curriculum";
+import { notRealWords, unfinishedLine } from "@/lib/curriculum";
 import { store, useAppData } from "@/lib/data/store";
 import { GainSummary } from "@/components/game/Level";
 import { gainFrom } from "@/lib/game";
@@ -26,28 +26,28 @@ const ACT: Record<Trigger, string> = {
   commitment: "Do one thing that shows commitment: show up, follow through, put in the reps. Or remember a time you kept going.",
 };
 
-/** Tap one to use it as is, or edit it into your own words. */
+/** Tap one to start the sentence, then finish it with what you did. */
 const STARTERS: Record<Trigger, string[]> = {
   honor: [
-    "Told the truth even though it was awkward.",
-    "Kept my word on something I said I'd do.",
-    "Owned up to a mistake instead of making excuses.",
-    "Gave someone the credit they deserved.",
-    "Did the right thing when nobody was watching.",
+    "Telling the truth was going to be awkward, but I ",
+    "I'd made a promise I could've backed out of, but I ",
+    "I messed up, and instead of making excuses I ",
+    "Someone else did the work, so I made sure I ",
+    "Nobody was watching, but I still ",
   ],
   courage: [
-    "Had a conversation I'd been putting off.",
-    "Spoke up when I didn't agree.",
-    "Asked for help instead of going it alone.",
-    "Said no to something that wasn't right for me.",
-    "Tried something new even though I was nervous.",
+    "I'd been putting off a hard conversation, but today I ",
+    "I didn't agree, and instead of staying quiet I ",
+    "I was struggling, so instead of going it alone I ",
+    "Something didn't feel right, so I said no and ",
+    "I was nervous, but I went ahead and ",
   ],
   commitment: [
-    "Worked out even though I didn't feel like it.",
-    "Followed through on something I started.",
-    "Showed up for my family when I was tired.",
-    "Stuck to my plan instead of taking the easy way out.",
-    "Got the boring stuff done without putting it off.",
+    "I was tired, but even though I didn't feel like it, I ",
+    "I wanted to quit halfway through, but I ",
+    "My family needed me after a long day, so I ",
+    "The easy way out was right there, but I ",
+    "I'd been putting off the boring stuff, so today I ",
   ],
 };
 
@@ -89,7 +89,9 @@ function Activate() {
   async function logIt() {
     const entry = text.trim();
     if (submitting.current) return;
-    const problem = !entry ? "Write what you did first." : notRealWords(entry, { oneOff: true });
+    const problem = !entry
+      ? "Write what you did first."
+      : (unfinishedLine(entry, STARTERS[trigger]) ?? notRealWords(entry, { oneOff: true }));
     if (problem) {
       setError(problem);
       return;
@@ -188,7 +190,7 @@ function Activate() {
           maxLength={PROOF_TEXT_MAX}
           multiline
           rows={4}
-          placeholder="Pick one above, or write your own."
+          placeholder="Tap a starter above, or write your own."
           aria-describedby={error ? "activate-error" : undefined}
         />
         <p
