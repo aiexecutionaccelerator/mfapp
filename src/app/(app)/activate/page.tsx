@@ -28,9 +28,36 @@ const ACT: Record<Trigger, string> = {
 
 /** Tap one to start, finish it in your own words. */
 const STARTERS: Record<Trigger, string[]> = {
-  honor: ["I told the truth about ", "I kept my word to ", "I owned up to "],
-  courage: ["I spoke up about ", "I made the call to ", "I went first and "],
-  commitment: ["I showed up for ", "I followed through on ", "I didn’t skip "],
+  honor: [
+    "I told the truth about ",
+    "I kept my word to ",
+    "I owned up to ",
+    "I apologized to ",
+    "I gave credit to ",
+    "I stood up for ",
+    "I paid back ",
+    "I treated someone with respect when ",
+  ],
+  courage: [
+    "I spoke up about ",
+    "I made the call to ",
+    "I had the hard conversation with ",
+    "I asked for ",
+    "I said no to ",
+    "I faced ",
+    "I tried something new: ",
+    "I went first and ",
+  ],
+  commitment: [
+    "I showed up for ",
+    "I followed through on ",
+    "I trained even though ",
+    "I finished ",
+    "I got up early and ",
+    "I didn’t skip ",
+    "I made time for ",
+    "I stuck to my plan and ",
+  ],
 };
 
 function isTrigger(value: string | null): value is Trigger {
