@@ -51,7 +51,7 @@ Where this section and older notes below disagree, this section wins.
 **Revision 2.3 (23 Nov 2026, v3.3.0, Antonio's second Loom)** is at the top of
 the spec summary: Define Courage and Commitment move to 3 and 4, fragrances
 rotate (never twice in a row; 11 Courage / 10 Honor / 9 Commitment), Mission
-1 is Build Your Shrine, One-Off Action is now **Live It** (center tab, S.T.A.R.
+1 is Build Your Shrine, One-Off Action is now **Ignite** (center tab, S.T.A.R.
 steps), and keyboard mash is refused. Server: migration **0013** (clear test
 records for Missions 3 to 7 first). Also: onboarding ends on the Missions
 home, not inside Mission 1; the chosen bottle shows beside the Record button;

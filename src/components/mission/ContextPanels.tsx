@@ -92,7 +92,7 @@ export function ContextPanels({
               <li key={m.id}>
                 <p className="whitespace-pre-wrap">{recordText(m)}</p>
                 <p className="mt-0.5 text-[13px] text-ink-2">
-                  {m.mission_number ? `Mission ${m.mission_number}` : "Live It"}
+                  {m.mission_number ? `Mission ${m.mission_number}` : "Ignite"}
                   {m.completed_at ? ` · ${formatDate(m.completed_at)}` : ""}
                 </p>
               </li>

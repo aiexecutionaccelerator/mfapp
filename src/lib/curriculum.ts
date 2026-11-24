@@ -388,7 +388,7 @@ function isJunkWord(word: string): boolean {
  * an answer whose junk words make up 40% or more of its letters. A word is
  * junk with three or more letters, not all capitals (TV, CRM) and no vowel
  * (y counts), or six consonants in a row, or one letter four times running.
- * `oneOff`: a Live It action also needs at least two words.
+ * `oneOff`: an Ignite action also needs at least two words.
  * The server's `missions_real_words` trigger (migration 0013) holds the
  * same rule.
  */

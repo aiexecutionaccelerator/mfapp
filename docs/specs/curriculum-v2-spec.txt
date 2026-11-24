@@ -205,7 +205,7 @@ Titles
 22–30
 22 Take the Step You Are Avoiding23 Make Tomorrow Easier24 Protect Your Yes25 Remove One Recurring Distraction26 Recover Without Excuses27 Build a Practice You Can Keep28 Repeat What Worked29 Let Someone Support Your Standard30 Carry Your Momentum Forward
 
-Revision 2.3 (23 Nov 2026, Antonio's second Loom): Define Courage and Define Commitment follow Define Honor (3 and 4); Give Credit moves to 5 and Break the Avoidance Loop to 6, so each definition is put into action in 5, 6 and 7. The recommended fragrances rotate so no fragrance repeats two Missions in a row: 11 Courage, 10 Honor, 9 Commitment, opening on Courage and wearing Commitment first at Mission 4 (1, 10, 15, 16, 24, 25 and 30 changed value). Mission 1 is now Build Your Shrine, with one question; the three Define Missions use the onboarding definitions. One-Off Actions are now Live It, the center tab. The S.T.A.R. Act example and Record line were reworded (below).
+Revision 2.3 (23 Nov 2026, Antonio's second Loom): Define Courage and Define Commitment follow Define Honor (3 and 4); Give Credit moves to 5 and Break the Avoidance Loop to 6, so each definition is put into action in 5, 6 and 7. The recommended fragrances rotate so no fragrance repeats two Missions in a row: 11 Courage, 10 Honor, 9 Commitment, opening on Courage and wearing Commitment first at Mission 4 (1, 10, 15, 16, 24, 25 and 30 changed value). Mission 1 is now Build Your Shrine, with one question; the three Define Missions use the onboarding definitions. One-Off Actions are now Ignite, the center tab. The S.T.A.R. Act example and Record line were reworded (below).
 
 Revision 2.2 (19 Nov 2026): Missions 1 to 10 re-ordered so each value is defined and then acted on; Missions 1, 2, 4, 6, 11, 12, 13 and 16 rewritten. The Mission pages below are current; the overview above them predates the re-order. Each Mission also has an idea line, starters and, for 11 and 13, an intro: see src/content/missions.ts.
 
@@ -801,9 +801,9 @@ I learned ____. After ____, I will ____. If I miss, I will ____.
 Example 1 I learned mornings work best. After breakfast, I will study ten minutes. If I miss, I will do one exercise at the next opportunity.
 Example 2 I learned short calls are easier to keep. After Sunday lunch, I will call someone close to me. If we cannot connect, I will arrange another time.
 Done when Your next practice, fragrance, frequency, and future review date are saved.
-User note Use Live It to record future repetitions. Your code, missions, and Proof Log stay with you. Thirty missions are a starting practice, not a guarantee that a habit is permanent.
+User note Use Ignite to record future repetitions. Your code, missions, and Proof Log stay with you. Thirty missions are a starting practice, not a guarantee that a habit is permanent.
 Implementation and sequence
-Show recent actions and any aim/practice. Require frequency and future review date. Future repetitions go into Live It.
+Show recent actions and any aim/practice. Require frequency and future review date. Future repetitions go into Ignite.
 Revision rationale Previous title: Choose the Next Mission. Uses evidence and the earlier plan to choose what to keep or adjust for the next month.
 Acceptance tests for content and interaction
 Kai should return a pass or fail result for each scenario, with evidence for failures and a link to the build tested. Use synthetic accounts. Tests below are production requirements; their presence here does not mean the prototype has already passed them.

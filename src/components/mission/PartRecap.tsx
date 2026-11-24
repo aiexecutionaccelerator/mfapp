@@ -225,8 +225,8 @@ function Graduation({
       )}
 
       <div className="mt-5 grid grid-cols-2 gap-3 text-center text-[14px]">
-        <Link href="/live" className="press rounded-[14px] border border-[var(--line-strong)] px-3 py-3 text-ink-0">
-          Keep logging in Live It
+        <Link href="/ignite" className="press rounded-[14px] border border-[var(--line-strong)] px-3 py-3 text-ink-0">
+          Keep logging in Ignite
         </Link>
         <Link href="/personal-code" className="press rounded-[14px] border border-[var(--line-strong)] px-3 py-3 text-ink-0">
           Share your code with someone you trust

@@ -9,7 +9,7 @@
 --    only those numbers changed. src/lib/curriculum.ts (CODE_LINES) and
 --    src/content/missions.ts hold the same numbers: keep them in step.
 -- 2. Keyboard mash is refused ("sdkjfghdfskjhg", "Fhj"), on Missions and on
---    Live It actions (no number), which also need at least two words. The
+--    Ignite actions (no number), which also need at least two words. The
 --    rule matches notRealWords() in src/lib/curriculum.ts: keep them in step.
 --
 -- Records saved under the old order keep their numbers: clear test records

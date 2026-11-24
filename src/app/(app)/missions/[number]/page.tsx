@@ -156,7 +156,7 @@ function MissionDetailInner({
         </p>
         <p className="mt-5 text-center text-[17px] text-ink-1">
           {allDone
-            ? "Keep going. Log what you practice next in Live It."
+            ? "Keep going. Log what you practice next in Ignite."
             : "It's in your Proof Log."}
         </p>
         <div className="mt-8 rise-in" style={{ animationDelay: "400ms" }}>

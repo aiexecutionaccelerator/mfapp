@@ -1,16 +1,17 @@
 "use client";
 
-import { BookOpen, Flame, ScrollText, Settings, TrendingUp } from "lucide-react";
+import { BookOpen, ScrollText, Settings, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import FireIcon from "@/components/FireIcon";
 import { cn } from "@/lib/utils";
 
-// Live It sits in the middle (Antonio, 23 Nov): a day he wears the fragrance
+// Ignite sits in the middle (Antonio, 23 Nov): a day he wears the fragrance
 // outside the 30, one tap from anywhere.
 const TABS = [
   { href: "/missions", label: "Missions", Icon: BookOpen },
   { href: "/log", label: "Log", Icon: ScrollText },
-  { href: "/live", label: "Live It", Icon: Flame, center: true },
+  { href: "/ignite", label: "Ignite", Icon: null, center: true as const },
   { href: "/progress", label: "Progress", Icon: TrendingUp },
   { href: "/settings", label: "Settings", Icon: Settings },
 ];
@@ -38,7 +39,7 @@ export default function TabBar() {
                     href={href}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "relative flex min-h-[60px] flex-col items-center justify-end gap-1 pb-2 transition-colors duration-200",
+                      "fire-link relative flex min-h-[60px] flex-col items-center justify-end gap-1 pb-2 transition-colors duration-200",
                       active ? "text-gold-300" : "text-ink-1 hover:text-ink-0",
                     )}
                   >
@@ -46,11 +47,11 @@ export default function TabBar() {
                     <span
                       aria-hidden
                       className={cn(
-                        "absolute -top-5 flex h-12 w-12 items-center justify-center rounded-full bg-gold-gradient text-[#07090D] shadow-[0_6px_20px_rgba(201,166,72,.3)] ring-4 ring-[var(--bg-1)] transition-transform duration-300",
+                        "fire-btn absolute -top-5 flex h-12 w-12 items-center justify-center rounded-full bg-gold-gradient ring-4 ring-[var(--bg-1)]",
                         active && "scale-105",
                       )}
                     >
-                      <Icon size={22} />
+                      <FireIcon />
                     </span>
                     <span className="text-[12px] tracking-[0.04em] whitespace-nowrap uppercase">
                       {label}

@@ -37,12 +37,12 @@ function isTrigger(value: string | null): value is Trigger {
 }
 
 /**
- * Live It (Antonio's Loom, 23 Nov; was "One-Off Action"): a day he wears the
+ * Ignite (Antonio's Loom, 23 Nov; was "One-Off Action"): a day he wears the
  * fragrance outside the 30 Missions. The center tab. The same S.T.A.R. steps
  * as a Mission, asking what he did that's aligned with the value. It logs
  * proof and never counts toward the 30/30.
  */
-function LiveIt() {
+function Ignite() {
   const params = useSearchParams();
   const { showToast } = useToast();
   const initial = params.get("trigger");
@@ -119,7 +119,7 @@ function LiveIt() {
     <main className="flex flex-1 flex-col pt-6">
       <Eyebrow tone="gold">Outside the 30 Missions</Eyebrow>
       <div aria-hidden className="rule-fade mt-3" />
-      <Headline className="mt-4">LIVE IT</Headline>
+      <Headline className="mt-4">IGNITE</Headline>
       <p className="mt-3 text-[19px] leading-snug text-ink-0">
         Wearing the fragrance today? Log what you did with it.
       </p>
@@ -140,7 +140,7 @@ function LiveIt() {
       </StarStep>
 
       <StarStep letter="R" name="Record" last>
-        <p id="live-prompt" className="text-[17px] leading-snug text-ink-0">
+        <p id="ignite-prompt" className="text-[17px] leading-snug text-ink-0">
           What did you do that&apos;s aligned with {value.toLowerCase()}?
         </p>
         <div role="group" aria-label="Start with" className="mt-3 flex flex-wrap gap-2">
@@ -170,10 +170,10 @@ function LiveIt() {
           multiline
           rows={4}
           placeholder="Tap a starter above, or write your own."
-          aria-describedby={error ? "live-error" : undefined}
+          aria-describedby={error ? "ignite-error" : undefined}
         />
         <p
-          id="live-error"
+          id="ignite-error"
           role="alert"
           className={cn("mt-4 text-[15px] leading-snug text-[var(--danger)]", !error && "sr-only")}
         >
@@ -192,10 +192,10 @@ function LiveIt() {
   );
 }
 
-export default function LiveItPage() {
+export default function IgnitePage() {
   return (
     <Suspense fallback={null}>
-      <LiveIt />
+      <Ignite />
     </Suspense>
   );
 }

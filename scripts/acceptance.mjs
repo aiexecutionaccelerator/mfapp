@@ -552,13 +552,13 @@ for (const [id, name] of [
   });
 }
 
-await scenario("L01", "Live It is the center tab: S.T.A.R. steps, keyboard mash refused, a real answer logs proof outside the 30", async () => {
+await scenario("L01", "Ignite is the center tab: S.T.A.R. steps, keyboard mash refused, a real answer logs proof outside the 30", async () => {
   await reset([]);
   await page.goto(`${BASE}/missions`);
   const tabs = page.getByRole("navigation").getByRole("link");
-  assert((await tabs.nth(2).innerText()).trim().toUpperCase() === "LIVE IT", "Live It isn't the center tab");
+  assert((await tabs.nth(2).innerText()).trim().toUpperCase() === "IGNITE", "Ignite isn't the center tab");
   await tabs.nth(2).click();
-  await page.waitForURL("**/live");
+  await page.waitForURL("**/ignite");
   for (const step of ["S: Select", "T: Trigger", "A: Act", "R: Record"])
     await page.getByRole("region", { name: step }).waitFor();
   await page.getByRole("radio", { name: "honor" }).click();
@@ -570,7 +570,7 @@ await scenario("L01", "Live It is the center tab: S.T.A.R. steps, keyboard mash 
   await button("LOG THIS ACTION").click();
   await page.getByText("You acted with Honor.").waitFor();
   const rows = await stored();
-  assert(rows.length === 1 && rows[0].mission_number === null && rows[0].trigger === "honor", "not logged as a Live It action");
+  assert(rows.length === 1 && rows[0].mission_number === null && rows[0].trigger === "honor", "not logged as an Ignite action");
 });
 
 await scenario("L02", "a Mission refuses keyboard mash too", async () => {

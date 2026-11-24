@@ -90,7 +90,7 @@ function MissionCard({
   );
 }
 
-/** The home of the app: the thirty Missions. Live It is the center tab. */
+/** The home of the app: the thirty Missions. Ignite is the center tab. */
 export default function MissionListPage() {
   const { showToast } = useToast();
   const { profile, missions, drafts, error, refresh } = useAppData();
@@ -148,8 +148,7 @@ export default function MissionListPage() {
         next={continueNumber}
       />
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        30 Missions, one a day. Each builds on the last. Miss a day and nothing
-        resets. Pick up at the next one.
+        One Mission a day for 30 days.
       </p>
 
       {profile.set_status === "ordered" && (

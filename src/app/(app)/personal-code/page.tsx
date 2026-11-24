@@ -168,15 +168,15 @@ export default function PersonalCodePage() {
           reading what he stands for — point him at the way to act on it
           any day, not just the thirty. Never printed. */}
       <Link
-        href="/live"
+        href="/ignite"
         onClick={() => track("personal_code_one_off_opened")}
         className="print-hide mt-8 block"
       >
         <div className="glass flex items-center gap-3 rounded-[14px] border-[rgba(201,166,72,.35)] px-4 py-4">
           <span className="min-w-0 flex-1">
-            <span className="eyebrow block text-gold-300">LIVE IT EVERY DAY</span>
+            <span className="eyebrow block text-gold-300">IGNITE ANY DAY</span>
             <span className="mt-1.5 block text-[15px] leading-snug text-ink-1">
-              Your code isn&apos;t just for the 30 Missions. Log it in Live It
+              Your code isn&apos;t just for the 30 Missions. Log it in Ignite
               any time you act on it.
             </span>
           </span>

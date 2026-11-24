@@ -34,7 +34,7 @@ export default function LogPage() {
       <Headline>PROOF LOG</Headline>
 
       <p className="mt-4 text-[15px] leading-relaxed text-ink-1">
-        Every Mission and every Live It action you complete lands here. Actions are
+        Every Mission and every Ignite action you complete lands here. Actions are
         your evidence. Reflections, code and plans are marked as what they are.
       </p>
       {missions && (
