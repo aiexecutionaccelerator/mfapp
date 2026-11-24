@@ -4,7 +4,7 @@ import { BookOpen, Power, ScrollText, Settings, TrendingUp } from "lucide-react"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { createPortal } from "react-dom";
+import PowerOn from "@/components/PowerOn";
 import { cn } from "@/lib/utils";
 
 // Activate sits in the middle (Antonio, 23 Nov): a day he wears the fragrance
@@ -20,18 +20,13 @@ const TABS = [
 export default function TabBar() {
   const pathname = usePathname();
   // The power-on effect plays once per press, over the whole screen.
-  const [powering, setPowering] = useState(0);
+  const [powering, setPowering] = useState<{ key: number; x: number; y: number } | null>(null);
 
   return (
     <>
-    {powering > 0 &&
-      createPortal(
-        <div key={powering} aria-hidden className="power-on" onAnimationEnd={(e) => e.target === e.currentTarget && setPowering(0)}>
-          <div className="power-on-beam" />
-          <div className="power-on-scan" />
-        </div>,
-        document.body,
-      )}
+    {powering && (
+      <PowerOn key={powering.key} origin={powering} onDone={() => setPowering(null)} />
+    )}
     <nav className="print-hide fixed inset-x-0 bottom-0 z-30 flex justify-center">
       {/* Solid, not glass: content scrolling underneath must never show
           through the navigation, and it fades out before reaching the bar. */}
@@ -50,7 +45,12 @@ export default function TabBar() {
                   <Link
                     href={href}
                     aria-current={active ? "page" : undefined}
-                    onClick={() => setPowering((n) => n + 1)}
+                    onClick={(e) => {
+                      // The signals start from the button itself.
+                      const btn = e.currentTarget.querySelector(".power-btn");
+                      const r = (btn ?? e.currentTarget).getBoundingClientRect();
+                      setPowering({ key: Date.now(), x: r.left + r.width / 2, y: r.top + r.height / 2 });
+                    }}
                     className={cn(
                       "power-link relative flex min-h-[60px] flex-col items-center justify-end gap-1 pb-2 transition-colors duration-200",
                       active ? "text-gold-300" : "text-ink-1 hover:text-ink-0",
