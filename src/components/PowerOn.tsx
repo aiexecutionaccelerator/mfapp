@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
  * The Activate button's power-on (24 Nov). Electric signals leave the power
  * button and run up circuit traces to the top of the screen; behind them a
  * line of light rises and the screen above it comes on. Only inside the
- * app's phone-width column, never the whole desktop screen. About a second,
+ * app's phone-width column, never the whole desktop screen. About two seconds,
  * then it removes itself. Styles: "Power" in globals.css.
  */
 export default function PowerOn({
@@ -36,7 +36,7 @@ export default function PowerOn({
       const y3 = y2 - (0.2 + ((i * 53) % 19) / 100) * oy;
       return {
         d: `M${ox} ${oy - 20} V${oy - 20 - rise1} H${x1} V${y2} H${x2} V${y3} H${x1} V0`,
-        delay: (i % 4) * 40 + (Math.abs(lane - 0.5) * 120),
+        delay: (i % 4) * 80 + Math.abs(lane - 0.5) * 240,
         end: x1,
       };
     });
@@ -59,7 +59,7 @@ export default function PowerOn({
           <g key={i}>
             <path d={t.d} pathLength={1} className="power-trace" style={{ animationDelay: `${t.delay}ms` }} />
             <path d={t.d} pathLength={1} className="power-signal" style={{ animationDelay: `${t.delay}ms` }} />
-            <circle cx={t.end} cy={2} r={2.5} className="power-node" style={{ animationDelay: `${t.delay + 380}ms` }} />
+            <circle cx={t.end} cy={2} r={2.5} className="power-node" style={{ animationDelay: `${t.delay + 760}ms` }} />
           </g>
         ))}
         <circle cx={ox} cy={oy} r={26} className="power-ring" />
