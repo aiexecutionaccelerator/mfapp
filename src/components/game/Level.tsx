@@ -104,10 +104,6 @@ export function LevelCard({ game }: { game: GameState }) {
           <p className="mt-1 text-[12px] text-ink-2">Best streak</p>
         </div>
       </div>
-      <p className="mt-4 text-[12px] leading-snug text-ink-2">
-        Missions give 100 XP, Ignite actions 30 (three a day), and every day of a streak adds a little.
-        Finishing the 30 Missions takes you to level 30.
-      </p>
     </section>
   );
 }
