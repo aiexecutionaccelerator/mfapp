@@ -7,7 +7,6 @@ import FragranceCue from "@/components/FragranceCue";
 import { StarStep } from "@/components/mission/MissionForm";
 import CompletionMedal from "@/components/motion/CompletionMedal";
 import Button from "@/components/ui/Button";
-import Eyebrow from "@/components/ui/Eyebrow";
 import Field from "@/components/ui/Field";
 import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
@@ -121,9 +120,7 @@ function Activate() {
 
   return (
     <main className="flex flex-1 flex-col pt-6">
-      <Eyebrow tone="gold">Outside the 30 Missions</Eyebrow>
-      <div aria-hidden className="rule-fade mt-3" />
-      <Headline className="mt-4">ACTIVATE</Headline>
+      <Headline>ACTIVATE</Headline>
       <p className="mt-3 text-[19px] leading-snug text-ink-0">
         Wearing the fragrance today? Log what you did with it.
       </p>
