@@ -26,37 +26,28 @@ const ACT: Record<Trigger, string> = {
   commitment: "Do one thing that shows commitment: show up, follow through, put in the reps. Or remember a time you kept going.",
 };
 
-/** Tap one to start, finish it in your own words. */
+/** Tap one to use it as is, or edit it into your own words. */
 const STARTERS: Record<Trigger, string[]> = {
   honor: [
-    "I admitted my mistake before anyone caught it, when I ",
-    "I kept a promise I could have quietly dropped, to ",
-    "I told the truth when a white lie would have been easier, about ",
-    "I apologized without making excuses to ",
-    "I gave credit in front of others to ",
-    "I stood up for someone who wasn’t in the room when ",
-    "I paid back what I owed without being reminded, to ",
-    "I showed respect to someone who could do nothing for me when ",
+    "Told the truth even though it was awkward.",
+    "Kept my word on something I said I'd do.",
+    "Owned up to a mistake instead of making excuses.",
+    "Gave someone the credit they deserved.",
+    "Did the right thing when nobody was watching.",
   ],
   courage: [
-    "I started the conversation I’d been avoiding with ",
-    "I made the call I’d been putting off to ",
-    "I told someone honestly how I felt about ",
-    "I asked for help instead of struggling alone with ",
-    "I said no, even though it was uncomfortable, to ",
-    "I spoke up when I disagreed about ",
-    "I did something that made me nervous when I ",
-    "I made the first move and reached out to ",
+    "Had a conversation I'd been putting off.",
+    "Spoke up when I didn't agree.",
+    "Asked for help instead of going it alone.",
+    "Said no to something that wasn't right for me.",
+    "Tried something new even though I was nervous.",
   ],
   commitment: [
-    "I got my workout in even though I didn’t feel like it by ",
-    "I got up when the alarm went off instead of snoozing, and ",
-    "I went back and finished the job I’d left half done, ",
-    "I showed up for my family even though I was tired by ",
-    "I stuck to my plan instead of taking the easy way out when ",
-    "I put my phone away and gave my full attention to ",
-    "I did the boring but important work of ",
-    "I kept going on a hard day by ",
+    "Worked out even though I didn't feel like it.",
+    "Followed through on something I started.",
+    "Showed up for my family when I was tired.",
+    "Stuck to my plan instead of taking the easy way out.",
+    "Got the boring stuff done without putting it off.",
   ],
 };
 
@@ -179,7 +170,7 @@ function Activate() {
               onClick={() => applyStarter(starter)}
               className="press min-h-11 rounded-full border border-[var(--line-strong)] bg-[rgba(18,23,34,.6)] px-3.5 py-2 text-left text-[14px] leading-snug text-ink-1 transition-colors duration-200 hover:border-[var(--gold-500)] hover:text-ink-0 active:border-[var(--gold-500)]"
             >
-              {`${starter.trim()}…`}
+              {/[.!?]$/.test(starter.trim()) ? starter.trim() : `${starter.trim()}…`}
             </button>
           ))}
         </div>
@@ -197,7 +188,7 @@ function Activate() {
           maxLength={PROOF_TEXT_MAX}
           multiline
           rows={4}
-          placeholder="Tap a starter above, or write your own."
+          placeholder="Pick one above, or write your own."
           aria-describedby={error ? "activate-error" : undefined}
         />
         <p
