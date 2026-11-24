@@ -1,5 +1,7 @@
 "use client";
 
+import { Achievements, LevelCard } from "@/components/game/Level";
+import { computeGame } from "@/lib/game";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Button from "@/components/ui/Button";
@@ -44,11 +46,14 @@ export default function ProgressPage() {
   }
 
   const stats = computeStats(missions);
+  const game = computeGame(missions);
   const complete = stats.missionsCompleted >= MISSION_COUNT;
 
   return (
     <main className="pt-4 pb-8">
       <Headline>YOUR PROGRESS</Headline>
+
+      <LevelCard game={game} />
 
       {/* Actions only: things he did, from Missions and Ignite.
           Reflections, code and plans are saved work, not evidence of a deed,
@@ -106,6 +111,8 @@ export default function ProgressPage() {
       >
         VIEW MY PERSONAL CODE
       </Button>
+
+      <Achievements game={game} />
     </main>
   );
 }

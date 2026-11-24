@@ -4,6 +4,7 @@ import { Check, ChevronRight, Play } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import FragranceTrio from "@/components/FragranceTrio";
+import { LevelChip } from "@/components/game/Level";
 import MissionTrack from "@/components/MissionTrack";
 import Button from "@/components/ui/Button";
 import Eyebrow, { AccentDot } from "@/components/ui/Eyebrow";
@@ -15,6 +16,7 @@ import { MISSIONS, STAGES, type MissionDef } from "@/content/missions";
 import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
 import { useAppData } from "@/lib/data/store";
+import { computeGame } from "@/lib/game";
 import {
   MISSION_COUNT,
   completedMissionNumbers,
@@ -134,14 +136,16 @@ export default function MissionListPage() {
     <main className="pt-4">
       <div className="flex items-center justify-between gap-2">
         <Wordmark />
-        {stats.missionsCompleted > 0 && (
-          <span className="glass eyebrow shrink-0 rounded-full px-3 py-2 text-gold-300">
-            {stats.missionsCompleted}/{MISSION_COUNT} COMPLETE
-          </span>
-        )}
+        {/* The level, always on top of home (24 Nov); taps through to Progress. */}
+        <LevelChip game={computeGame(missions)} />
       </div>
 
       <Headline className="mt-6">YOUR 30-DAY MISSION</Headline>
+      {stats.missionsCompleted > 0 && (
+        <p className="eyebrow mt-3 text-gold-300">
+          {stats.missionsCompleted}/{MISSION_COUNT} COMPLETE
+        </p>
+      )}
       <MissionTrack
         className="mt-5"
         completed={completed}

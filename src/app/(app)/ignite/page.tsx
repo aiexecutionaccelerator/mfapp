@@ -14,8 +14,10 @@ import { useToast } from "@/components/ui/Toast";
 import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
 import { notRealWords } from "@/lib/curriculum";
-import { store } from "@/lib/data/store";
-import { PROOF_TEXT_MAX, type Trigger } from "@/lib/data/types";
+import { store, useAppData } from "@/lib/data/store";
+import { GainSummary } from "@/components/game/Level";
+import { gainFrom } from "@/lib/game";
+import { PROOF_TEXT_MAX, type Mission, type Trigger } from "@/lib/data/types";
 import { cn } from "@/lib/utils";
 
 /** What acting on each value can look like on an ordinary day. */
@@ -50,7 +52,8 @@ function Ignite() {
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const [logged, setLogged] = useState<Trigger | null>(null);
+  const [logged, setLogged] = useState<Mission | null>(null);
+  const { missions } = useAppData();
   const submitting = useRef(false);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const value = TRIGGERS[trigger].provedWith;
@@ -77,13 +80,13 @@ function Ignite() {
     submitting.current = true;
     setPending(true);
     try {
-      await store.logProof({
+      const saved = await store.logProof({
         trigger,
         action_text: entry.slice(0, PROOF_TEXT_MAX),
         action_category: "one-off",
       });
       track("freeform_mission_completed", { selectedTrigger: trigger });
-      setLogged(trigger);
+      setLogged(saved);
       setText("");
       window.scrollTo({ top: 0 });
     } catch (e) {
@@ -102,8 +105,9 @@ function Ignite() {
         <CompletionMedal quiet />
         <Headline className="mt-8">PROOF LOGGED.</Headline>
         <p className="font-display gold-shimmer mt-4 text-[26px] leading-snug">
-          You acted with {TRIGGERS[logged].provedWith}.
+          You acted with {TRIGGERS[logged.trigger].provedWith}.
         </p>
+        {missions && <GainSummary gain={gainFrom(missions, logged)} />}
         <p className="mt-5 text-[17px] text-ink-1">It&apos;s in your Proof Log. It doesn&apos;t count toward the 30.</p>
         <div className="mt-10 space-y-2">
           <Button onClick={() => setLogged(null)}>LOG ANOTHER</Button>

@@ -8,6 +8,8 @@ import NavAction from "@/components/NavAction";
 import CompletionMedal from "@/components/motion/CompletionMedal";
 import { ContextPanels } from "@/components/mission/ContextPanels";
 import PartRecap, { RECAP_AFTER } from "@/components/mission/PartRecap";
+import { GainSummary } from "@/components/game/Level";
+import { gainFrom } from "@/lib/game";
 import MissionVideo from "@/components/MissionVideo";
 import MissionForm, { type FormMode } from "@/components/mission/MissionForm";
 import Button from "@/components/ui/Button";
@@ -159,6 +161,7 @@ function MissionDetailInner({
             ? "Keep going. Log what you practice next in Ignite."
             : "It's in your Proof Log."}
         </p>
+        <GainSummary gain={gainFrom(missions, justSaved)} />
         <div className="mt-8 rise-in" style={{ animationDelay: "400ms" }}>
           <div className="flex items-baseline justify-between">
             <span className="eyebrow text-ink-2">YOUR 30</span>

@@ -5,7 +5,7 @@ production build in demo mode (on-device storage), plus `npm run test:db`
 (every migration on an in-process Postgres with first-curriculum data, then
 0009). Synthetic data only.
 
-**App scenarios: 28/28 pass. Database checks: 36/36 pass.**
+**App scenarios: 30/30 pass. Database checks: 36/36 pass.**
 
 | ID | Scenario | Result | Notes |
 |---|---|---|---|
@@ -37,6 +37,8 @@ production build in demo mode (on-device storage), plus `npm run test:db`
 | D14 | rollback with revision 2 records present (database; see test:db) | PASS | Covered by supabase/tests/curriculum_v2.test.mjs, folded in below. |
 | L01 | Ignite is the center tab: S.T.A.R. steps, keyboard mash refused, a real answer logs proof outside the 30 | PASS |  |
 | L02 | a Mission refuses keyboard mash too | PASS |  |
+| G01 | the full course reaches level 30 or more; level on home; streak and The Thirty on Progress | PASS |  |
+| G02 | a save shows the XP it earned and any achievement it unlocked | PASS |  |
 
 ## Database checks (`npm run test:db`)
 

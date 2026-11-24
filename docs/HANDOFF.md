@@ -48,6 +48,16 @@ Spec: `docs/specs/curriculum-v2-summary.md` (full text alongside). Review
 report: `docs/specs/review-report.md`. Results: `docs/specs/acceptance-results.md`.
 Where this section and older notes below disagree, this section wins.
 
+**Levels, XP, streak and achievements (24 Nov 2026, v3.4.0):** all in
+`src/lib/game.ts`, replayed from the records (nothing stored, no migration;
+removing a record removes its XP). Missions 100 XP, Ignite 30 (three a day
+count), streak days up to +20, achievements 25/50/100/250 by rarity (Common,
+Magic, Rare, Unique, framed after Path of Exile's item colours in
+`components/game/Badge.tsx`). Level 30 is exactly the XP of the 30 Missions
+plus the course achievements; cap 100 (~27k XP, curve exponent 1.618). Level
+chip on home, level card, streak and the 27 achievements (3 hidden) on
+Progress, "+XP" and unlocks on every success screen.
+
 **Revision 2.3 (23 Nov 2026, v3.3.0, Antonio's second Loom)** is at the top of
 the spec summary: Define Courage and Commitment move to 3 and 4, fragrances
 rotate (never twice in a row; 11 Courage / 10 Honor / 9 Commitment), Mission

@@ -583,6 +583,30 @@ await scenario("L02", "a Mission refuses keyboard mash too", async () => {
   assert((await stored()).length === 0, "keyboard mash was saved");
 });
 
+await scenario("G01", "the full course reaches level 30 or more; level on home; streak and The Thirty on Progress", async () => {
+  await reset(range(1, 30).map((n) => record(n)));
+  await page.goto(`${BASE}/missions`);
+  const chip = page.getByRole("link", { name: /^Level \d+/ });
+  const level = Number((await chip.getAttribute("aria-label")).match(/^Level (\d+)/)[1]);
+  assert(level >= 30 && level <= 40, `level ${level} after the course`);
+  await page.goto(`${BASE}/progress`);
+  await page.getByText(`Level ${level} ·`, { exact: false }).first().waitFor();
+  await page.getByRole("button", { name: "The Thirty, earned" }).waitFor();
+  await page.getByRole("button", { name: "Eternal Flame, earned" }).waitFor();
+  await page.getByRole("button", { name: "Hidden achievement, not earned yet" }).first().waitFor();
+});
+
+await scenario("G02", "a save shows the XP it earned and any achievement it unlocked", async () => {
+  await reset([]);
+  await open(1);
+  await field().fill("I set my bottles on the shelf by my watch.");
+  await confirmBox().check();
+  await button("RECORD · COMPLETE MISSION 1").click();
+  await page.getByText("MISSION COMPLETE.").waitFor();
+  await page.getByText("+125 XP").waitFor();
+  await page.getByText("First Light").waitFor();
+});
+
 await browser.close();
 
 /* ---------- fold in the database checks and write the report ---------- */
