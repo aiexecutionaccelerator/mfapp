@@ -21,10 +21,10 @@ contract. The exact copy for all 30 Missions is in the .txt, not here.**
   "I set my bottles on…", "I cleared a spot on my…", "I placed my bottles…".
 - **Define Missions** use the onboarding definitions as their Select line,
   and offer "All three Scent Triggers" under the idea.
-- **Ignite** (was One-Off Action) is the raised center tab, with the four
+- **Activate** (was One-Off Action) is the raised center tab, with the four
   S.T.A.R. steps. `/action/declare` redirects there.
 - **Keyboard mash** ("sdkjfghdfskjhg", "Fhj") is refused on Missions and
-  Ignite (`notRealWords`; Ignite also needs two words).
+  Activate (`notRealWords`; Activate also needs two words).
 
 ## Revision 2.2 (Antonio, 19 Nov 2026)
 

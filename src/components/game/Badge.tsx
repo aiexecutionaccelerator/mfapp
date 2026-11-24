@@ -1,7 +1,7 @@
 import {
-  Anvil, Atom, BookOpen, Cog, Compass, Crown, Eye, Flame, FlameKindling, House,
+  Anvil, Atom, BatteryFull, Power, Zap, BookOpen, Cog, Compass, Crown, Eye, Flame, FlameKindling, House,
   Infinity as InfinityIcon, Link as LinkIcon, Lock, MountainSnow, Moon, Scroll,
-  ShieldCheck, Sparkle, Sparkles, Star, Sun, Sunrise, Sunset, Sword, Swords,
+  ShieldCheck, Star, Sunrise, Sunset, Sword, Swords,
   Triangle, Wind, type LucideIcon,
 } from "lucide-react";
 import { useId } from "react";
@@ -12,7 +12,7 @@ const GLYPHS: Record<Glyph, LucideIcon> = {
   sunrise: Sunrise, scroll: Scroll, triangle: Triangle, compass: Compass,
   shield: ShieldCheck, cog: Cog, book: BookOpen, crown: Crown, home: House,
   flame: Flame, flames: FlameKindling, anvil: Anvil, infinity: InfinityIcon,
-  spark: Sparkle, wildfire: Sparkles, pyre: Sun, sword: Sword, lion: Swords,
+  spark: Power, wildfire: Zap, pyre: BatteryFull, sword: Sword, lion: Swords,
   chain: LinkIcon, trinity: Atom, wind: Wind, moon: Moon, dawn: Sunset,
   eye: Eye, star: Star, summit: MountainSnow,
 };

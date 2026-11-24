@@ -39,12 +39,12 @@ function isTrigger(value: string | null): value is Trigger {
 }
 
 /**
- * Ignite (Antonio's Loom, 23 Nov; was "One-Off Action"): a day he wears the
+ * Activate (Antonio's Loom, 23 Nov; was "One-Off Action"): a day he wears the
  * fragrance outside the 30 Missions. The center tab. The same S.T.A.R. steps
  * as a Mission, asking what he did that's aligned with the value. It logs
  * proof and never counts toward the 30/30.
  */
-function Ignite() {
+function Activate() {
   const params = useSearchParams();
   const { showToast } = useToast();
   const initial = params.get("trigger");
@@ -123,7 +123,7 @@ function Ignite() {
     <main className="flex flex-1 flex-col pt-6">
       <Eyebrow tone="gold">Outside the 30 Missions</Eyebrow>
       <div aria-hidden className="rule-fade mt-3" />
-      <Headline className="mt-4">IGNITE</Headline>
+      <Headline className="mt-4">ACTIVATE</Headline>
       <p className="mt-3 text-[19px] leading-snug text-ink-0">
         Wearing the fragrance today? Log what you did with it.
       </p>
@@ -144,7 +144,7 @@ function Ignite() {
       </StarStep>
 
       <StarStep letter="R" name="Record" last>
-        <p id="ignite-prompt" className="text-[17px] leading-snug text-ink-0">
+        <p id="activate-prompt" className="text-[17px] leading-snug text-ink-0">
           What did you do that&apos;s aligned with {value.toLowerCase()}?
         </p>
         <div role="group" aria-label="Start with" className="mt-3 flex flex-wrap gap-2">
@@ -174,10 +174,10 @@ function Ignite() {
           multiline
           rows={4}
           placeholder="Tap a starter above, or write your own."
-          aria-describedby={error ? "ignite-error" : undefined}
+          aria-describedby={error ? "activate-error" : undefined}
         />
         <p
-          id="ignite-error"
+          id="activate-error"
           role="alert"
           className={cn("mt-4 text-[15px] leading-snug text-[var(--danger)]", !error && "sr-only")}
         >
@@ -196,10 +196,10 @@ function Ignite() {
   );
 }
 
-export default function IgnitePage() {
+export default function ActivatePage() {
   return (
     <Suspense fallback={null}>
-      <Ignite />
+      <Activate />
     </Suspense>
   );
 }

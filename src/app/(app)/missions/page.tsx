@@ -92,7 +92,7 @@ function MissionCard({
   );
 }
 
-/** The home of the app: the thirty Missions. Ignite is the center tab. */
+/** The home of the app: the thirty Missions. Activate is the center tab. */
 export default function MissionListPage() {
   const { showToast } = useToast();
   const { profile, missions, drafts, error, refresh } = useAppData();

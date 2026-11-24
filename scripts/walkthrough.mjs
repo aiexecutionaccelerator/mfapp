@@ -257,7 +257,7 @@ await shot("fragrance-trio");
 await page.goto(`${BASE}/personal-code`);
 await page.getByText("MY PERSONAL CODE").first().waitFor();
 await page.getByText("Doing what I say I will do").waitFor();
-await page.getByText("IGNITE ANY DAY").waitFor();
+await page.getByText("ACTIVATE ANY DAY").waitFor();
 await shot("personal-code");
 
 // Mission 13: his identity statement pre-filled; viewing doesn't complete it
@@ -277,13 +277,13 @@ await page.getByText("BEFORE YOU COMPLETE THIS MISSION").waitFor();
 await page.getByRole("link", { name: /GO TO MISSION 21/ }).waitFor();
 await shot("mission-22-needs-aim");
 
-// I — Ignite: the center tab, the four S.T.A.R. steps, one click
+// I — Activate: the center tab, the four S.T.A.R. steps, one click
 await page.goto(`${BASE}/missions`);
-await page.getByRole("navigation").getByRole("link", { name: "Ignite" }).click();
-await page.waitForURL("**/ignite");
+await page.getByRole("navigation").getByRole("link", { name: "Activate" }).click();
+await page.waitForURL("**/activate");
 await page.getByRole("radio", { name: "courage" }).click();
 await page.getByLabel("What did you do that's aligned with courage?").fill("Made the call I'd been dodging.");
-await shot("ignite");
+await shot("activate");
 await page.getByRole("button", { name: "LOG THIS ACTION" }).click();
 await page.getByText("PROOF LOGGED.").waitFor();
 await page.getByRole("button", { name: "LOG ANOTHER" }).waitFor();
@@ -311,8 +311,8 @@ for (const path of ["/missions", "/log", "/progress", "/settings"]) {
 // J — Proof Log: every record, labelled with what it is
 await page.goto(`${BASE}/log`);
 await page.getByText("6 records · 4 actions").waitFor();
-const oneOffRow = page.getByRole("link").filter({ hasText: "IGNITE" }).first();
-if ((await oneOffRow.count()) === 0) fail("no Ignite entry");
+const oneOffRow = page.getByRole("link").filter({ hasText: "ACTIVATE" }).first();
+if ((await oneOffRow.count()) === 0) fail("no Activate entry");
 await page.getByText("MISSION 6 · BREAK THE AVOIDANCE LOOP").waitFor();
 const codeRow = page.getByRole("link").filter({ hasText: "MISSION 2 · DEFINE YOUR HONOR" });
 if ((await codeRow.getByText("CODE", { exact: true }).count()) !== 1)
@@ -346,7 +346,7 @@ await page.getByText("Doing what I say I will do").waitFor();
 await page.goto(`${BASE}/missions`);
 await page.getByText("5/30 COMPLETE").waitFor();
 
-// K — Progress: actions only (Missions 1, 5, 6 and the Ignite action); x/30 counts
+// K — Progress: actions only (Missions 1, 5, 6 and the Activate action); x/30 counts
 // the code Mission too
 await page.goto(`${BASE}/progress`);
 await page.getByText("YOUR PROGRESS").waitFor();

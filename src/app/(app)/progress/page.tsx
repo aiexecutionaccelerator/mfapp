@@ -55,7 +55,7 @@ export default function ProgressPage() {
 
       <LevelCard game={game} />
 
-      {/* Actions only: things he did, from Missions and Ignite.
+      {/* Actions only: things he did, from Missions and Activate.
           Reflections, code and plans are saved work, not evidence of a deed,
           so they count toward x/30 but never here (curriculum revision 2).
           The three cards below always sum to this number. Each action is 1%
@@ -82,11 +82,11 @@ export default function ProgressPage() {
         <GlassCard className="mt-6 border-[rgba(201,166,72,.35)]">
           <Eyebrow tone="gold">30-DAY MISSION COMPLETE</Eyebrow>
           <p className="mt-3 text-[15px] leading-relaxed text-ink-1">
-            Keep going. Log each repetition of your practice in Ignite.
+            Keep going. Log each repetition of your practice in Activate.
           </p>
           <div className="mt-5">
-            <Button onClick={() => router.push("/ignite")}>
-              IGNITE
+            <Button onClick={() => router.push("/activate")}>
+              ACTIVATE
             </Button>
           </div>
         </GlassCard>

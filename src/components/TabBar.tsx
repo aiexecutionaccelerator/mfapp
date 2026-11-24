@@ -1,25 +1,37 @@
 "use client";
 
-import { BookOpen, ScrollText, Settings, TrendingUp } from "lucide-react";
+import { BookOpen, Power, ScrollText, Settings, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import FireIcon from "@/components/FireIcon";
+import { useState } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
-// Ignite sits in the middle (Antonio, 23 Nov): a day he wears the fragrance
+// Activate sits in the middle (Antonio, 23 Nov): a day he wears the fragrance
 // outside the 30, one tap from anywhere.
 const TABS = [
   { href: "/missions", label: "Missions", Icon: BookOpen },
   { href: "/log", label: "Log", Icon: ScrollText },
-  { href: "/ignite", label: "Ignite", Icon: null, center: true as const },
+  { href: "/activate", label: "Activate", Icon: null, center: true as const },
   { href: "/progress", label: "Progress", Icon: TrendingUp },
   { href: "/settings", label: "Settings", Icon: Settings },
 ];
 
 export default function TabBar() {
   const pathname = usePathname();
+  // The power-on effect plays once per press, over the whole screen.
+  const [powering, setPowering] = useState(0);
 
   return (
+    <>
+    {powering > 0 &&
+      createPortal(
+        <div key={powering} aria-hidden className="power-on" onAnimationEnd={(e) => e.target === e.currentTarget && setPowering(0)}>
+          <div className="power-on-beam" />
+          <div className="power-on-scan" />
+        </div>,
+        document.body,
+      )}
     <nav className="print-hide fixed inset-x-0 bottom-0 z-30 flex justify-center">
       {/* Solid, not glass: content scrolling underneath must never show
           through the navigation, and it fades out before reaching the bar. */}
@@ -38,20 +50,23 @@ export default function TabBar() {
                   <Link
                     href={href}
                     aria-current={active ? "page" : undefined}
+                    onClick={() => setPowering((n) => n + 1)}
                     className={cn(
-                      "fire-link relative flex min-h-[60px] flex-col items-center justify-end gap-1 pb-2 transition-colors duration-200",
+                      "power-link relative flex min-h-[60px] flex-col items-center justify-end gap-1 pb-2 transition-colors duration-200",
                       active ? "text-gold-300" : "text-ink-1 hover:text-ink-0",
                     )}
                   >
-                    {/* The raised gold button: the one action outside the 30. */}
+                    {/* The raised power button: the one action outside the 30. */}
                     <span
                       aria-hidden
                       className={cn(
-                        "fire-btn absolute -top-5 flex h-12 w-12 items-center justify-center rounded-full bg-gold-gradient ring-4 ring-[var(--bg-1)]",
+                        "power-btn absolute -top-5 flex h-12 w-12 items-center justify-center rounded-full bg-gold-gradient ring-4 ring-[var(--bg-1)]",
                         active && "scale-105",
                       )}
                     >
-                      <FireIcon />
+                      <span className="power-face flex h-9 w-9 items-center justify-center rounded-full bg-[#0d1017]">
+                        <Power size={20} strokeWidth={2.4} className="power-glyph" />
+                      </span>
                     </span>
                     <span className="text-[12px] tracking-[0.04em] whitespace-nowrap uppercase">
                       {label}
@@ -96,5 +111,6 @@ export default function TabBar() {
         </div>
       </div>
     </nav>
+    </>
   );
 }

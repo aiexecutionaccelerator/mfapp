@@ -10,10 +10,10 @@ import type { Mission, Trigger } from "@/lib/data/types";
  * record takes its XP away until it is restored.
  *
  * Level 30 lands with the course: the XP for level 30 is exactly what the
- * 30 Missions and the course achievements give together. Streaks, Ignite
+ * 30 Missions and the course achievements give together. Streaks, Activate
  * actions and the other achievements are extra, so most men will reach 30 a
  * little before Mission 30. The cap is 100. Each level costs more than the
- * last (the curve's exponent is 1.618); one Ignite action a day with a
+ * last (the curve's exponent is 1.618); one Activate action a day with a
  * streak going reaches 100 in about a year after the course.
  */
 
@@ -38,9 +38,9 @@ export const RARITY_LABEL: Record<Rarity, string> = {
 /* ---------- XP sources ---------- */
 
 export const MISSION_XP = 100;
-export const IGNITE_XP = 30;
-/** Ignite actions past this many in one day still count as proof, not XP. */
-export const IGNITE_XP_PER_DAY = 3;
+export const ACTIVATE_XP = 30;
+/** Activate actions past this many in one day still count as proof, not XP. */
+export const ACTIVATE_XP_PER_DAY = 3;
 /** Each day of a streak after the first adds 2 XP to that day, up to 20. */
 const streakBonus = (streak: number) => Math.min(Math.max(streak - 1, 0), 10) * 2;
 
@@ -82,10 +82,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "steady-flame", name: "Steady Flame", how: "Act seven days in a row.", rarity: "magic", glyph: "flames" },
   { id: "forged-in-fire", name: "Forged in Fire", how: "Act 14 days in a row.", rarity: "rare", glyph: "anvil" },
   { id: "eternal-flame", name: "Eternal Flame", how: "Act 30 days in a row.", rarity: "unique", glyph: "infinity" },
-  // Ignite
-  { id: "strike-the-flint", name: "Strike the Flint", how: "Log your first Ignite action.", rarity: "normal", glyph: "spark" },
-  { id: "wildfire", name: "Wildfire", how: "Log 25 Ignite actions.", rarity: "rare", glyph: "wildfire" },
-  { id: "a-hundred-fires", name: "A Hundred Fires", how: "Log 100 Ignite actions.", rarity: "unique", glyph: "pyre" },
+  // Activate (the power button)
+  { id: "strike-the-flint", name: "Power On", how: "Log your first Activate action.", rarity: "normal", glyph: "spark" },
+  { id: "wildfire", name: "Overdrive", how: "Log 25 Activate actions.", rarity: "rare", glyph: "wildfire" },
+  { id: "a-hundred-fires", name: "Full Power", how: "Log 100 Activate actions.", rarity: "unique", glyph: "pyre" },
   // The three values
   { id: "honor-bound", name: "Honor Bound", how: "Take 10 actions with Honor.", rarity: "magic", glyph: "sword" },
   { id: "fearless", name: "Fearless", how: "Take 10 actions with Courage.", rarity: "magic", glyph: "lion" },
@@ -230,7 +230,7 @@ export function computeGame(missions: Mission[], now: Date = new Date()): GameSt
       ignites += 1;
       const today = (ignitesByDay.get(day) ?? 0) + 1;
       ignitesByDay.set(day, today);
-      if (today <= IGNITE_XP_PER_DAY) xp += IGNITE_XP;
+      if (today <= ACTIVATE_XP_PER_DAY) xp += ACTIVATE_XP;
       earn("strike-the-flint", at);
       if (ignites >= 25) earn("wildfire", at);
       if (ignites >= 100) earn("a-hundred-fires", at);

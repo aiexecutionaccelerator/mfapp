@@ -3,13 +3,13 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
 
-/** The old one-off address: Ignite is the center tab now (23 Nov). */
+/** The old one-off address: Activate is the center tab now (23 Nov). */
 function Redirect() {
   const router = useRouter();
   const params = useSearchParams();
   useEffect(() => {
     const trigger = params.get("trigger");
-    router.replace(trigger ? `/ignite?trigger=${encodeURIComponent(trigger)}` : "/ignite");
+    router.replace(trigger ? `/activate?trigger=${encodeURIComponent(trigger)}` : "/activate");
   }, [params, router]);
   return null;
 }

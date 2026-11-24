@@ -1098,9 +1098,9 @@ export const MISSIONS: MissionDef[] = [
       "I learned I took on too much. After ",
     ],
     doneWhen: "Your next practice, fragrance, frequency, and future review date are saved.",
-    note: "Use Ignite to record future repetitions. Your code, missions, and Proof Log stay with you. Thirty missions are a starting practice, not a guarantee that a habit is permanent.",
+    note: "Use Activate to record future repetitions. Your code, missions, and Proof Log stay with you. Thirty missions are a starting practice, not a guarantee that a habit is permanent.",
     youtubeId: null,
-    implementation: "Show recent actions and any aim/practice. Require frequency and future review date. Future repetitions go into Ignite.",
+    implementation: "Show recent actions and any aim/practice. Require frequency and future review date. Future repetitions go into Activate.",
     rationale: "Previous title: Choose the Next Mission. Uses evidence and the earlier plan to choose what to keep or adjust for the next month.",
   },
 ];

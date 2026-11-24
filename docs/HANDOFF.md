@@ -50,7 +50,7 @@ Where this section and older notes below disagree, this section wins.
 
 **Levels, XP, streak and achievements (24 Nov 2026, v3.4.0):** all in
 `src/lib/game.ts`, replayed from the records (nothing stored, no migration;
-removing a record removes its XP). Missions 100 XP, Ignite 30 (three a day
+removing a record removes its XP). Missions 100 XP, Activate 30 (three a day
 count), streak days up to +20, achievements 25/50/100/250 by rarity (Common,
 Magic, Rare, Unique, framed after Path of Exile's item colours in
 `components/game/Badge.tsx`). Level 30 is exactly the XP of the 30 Missions
@@ -61,7 +61,7 @@ Progress, "+XP" and unlocks on every success screen.
 **Revision 2.3 (23 Nov 2026, v3.3.0, Antonio's second Loom)** is at the top of
 the spec summary: Define Courage and Commitment move to 3 and 4, fragrances
 rotate (never twice in a row; 11 Courage / 10 Honor / 9 Commitment), Mission
-1 is Build Your Shrine, One-Off Action is now **Ignite** (center tab, S.T.A.R.
+1 is Build Your Shrine, One-Off Action is now **Activate** (center tab, S.T.A.R.
 steps), and keyboard mash is refused. Server: migration **0013** (clear test
 records for Missions 3 to 7 first). Also: onboarding ends on the Missions
 home, not inside Mission 1; the chosen bottle shows beside the Record button;
