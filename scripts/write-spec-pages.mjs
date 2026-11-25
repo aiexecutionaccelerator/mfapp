@@ -34,7 +34,7 @@ for (const block of body.split(/\n  \{\n/).slice(1)) {
     `${STAGE[str("stage")]}  |  ${cap(str("recommendedTrigger"))}  |  ${cap(str("kind"))}  |  ${str("time")}`,
     `Hook ${str("hook")}`,
     `Select ${str("select")}`,
-    "Trigger Spray your Scent Trigger. Then begin the assigned task.",
+    "Trigger Spray your Scent Trigger.",
     "Act",
     str("action"),
     "Choose one way to do it",

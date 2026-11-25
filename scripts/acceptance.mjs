@@ -164,7 +164,7 @@ await scenario("C03", "a starter fills only the start of the answer; changing sc
   assert((await stored()).length === 0, "a record was saved");
   await field().fill("");
   await page.getByRole("radio", { name: "commitment" }).click();
-  await page.getByText("You do your part again and again, even when it gets hard.").waitFor();
+  await page.getByText("Recording with Commitment", { exact: false }).waitFor();
   await field().fill("I thanked my neighbor for watching the house.");
   await confirmBox().check();
   await button("RECORD · COMPLETE MISSION 5").click();
@@ -423,7 +423,7 @@ await scenario("D06", "28 blocked with only code and plans; available after a re
   await reset([record(2), record(21), record(27), record(null)]);
   await open(28);
   assert((await page.getByText("BEFORE YOU COMPLETE THIS MISSION").count()) === 0, "still blocked");
-  await page.getByText("FROM YOUR PROOF LOG").waitFor();
+  await page.getByText("FROM YOUR PROOF LOG", { exact: true }).waitFor();
   assert((await stored()).every((r) => r.mission_number !== 28), "viewing completed 28");
 });
 

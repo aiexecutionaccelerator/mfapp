@@ -314,20 +314,11 @@ export default function MissionForm({
           recommended={def.recommendedTrigger}
           onChange={touch(setTrigger)}
         />
-        {/* What the chosen bottle stands for here: the Mission's own line for
-            the one it suggests, the value's definition for the others. */}
-        <p
-          key={trigger}
-          aria-live="polite"
-          className="fade-in mt-3 text-[15px] leading-snug text-ink-1"
-        >
-          {trigger === def.recommendedTrigger ? def.select : TRIGGERS[trigger].definition}
-        </p>
       </StarStep>
 
       <StarStep letter="T" name="Trigger">
         <p className="text-[17px] text-ink-0">
-          Spray your Scent Trigger. Then begin the assigned task.
+          Spray your Scent Trigger.
         </p>
       </StarStep>
 

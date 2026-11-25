@@ -215,9 +215,9 @@ Mission 1 Build Your Shrine
 Know your code  |  Courage  |  Action  |  About 2 minutes
 Hook Build a shrine to self-improvement. It’s one spot that reminds you every day to become the man you know yourself to be.
 Select Courage starts in plain sight. Your shrine reminds you every day who you’re working to become.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Pick a spot you walk past every morning. Keep it away from heat and direct sunlight. Then place your set there.
+Pick a spot you walk past every morning. Then place your set there.
 Choose one way to do it
 1. Put them next to your watch, where you get ready each morning.
 2. Put them on a shady shelf in your bedroom.
@@ -235,9 +235,9 @@ Mission 2 Define Your Honor
 Know your code  |  Honor  |  Code  |  3–5 minutes
 Hook Decide what honor means to you in one sentence.
 Select You live by a moral code. You tell the truth, keep your promises and own your actions. Integrity · Responsibility · Respect.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Pick the line that fits you best. Then make it yours. Change any word that doesn’t sound like you.
+Pick the line that fits you best. Then make it yours.
 Choose one way to do it
 1. Honesty: how will you tell the truth?
 2. Responsibility: how will you own your part?
@@ -255,9 +255,9 @@ Mission 3 Define Your Courage
 Know your code  |  Courage  |  Code  |  3–5 minutes
 Hook Courage is acting while you’re still afraid.
 Select You do what you know is right, even when you’re afraid or under pressure. Speak Honestly · Move First · Act Despite Fear.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Pick the line that fits you best. Then make it yours. Change any word that doesn’t sound like you.
+Pick the line that fits you best. Then make it yours.
 Choose one way to do it
 1. Name a hard conversation you tend to avoid.
 2. Name a time you need to ask for help.
@@ -275,9 +275,9 @@ Mission 4 Define Your Commitment
 Know your code  |  Commitment  |  Code  |  3–5 minutes
 Hook Decide what showing up looks like.
 Select You do your part again and again, even when it gets hard. Discipline · Consistency · Follow-Through.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Pick the line that fits you best. Then make it yours. Change any word that doesn’t sound like you.
+Pick the line that fits you best. Then make it yours.
 Choose one way to do it
 1. Describe showing up for someone who counts on you.
 2. Describe making time for what matters most and protecting it.
@@ -295,9 +295,9 @@ Mission 5 Give Credit Where Credit Is Due
 Know your code  |  Honor  |  Action  |  About 2 minutes
 Hook Notice what others have done for you. Then have the courage to tell them.
 Select Honor means seeing what other people did for you and giving them credit.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Tell one person exactly what they did and why it mattered to you. Send the message or say it to them today.
+Tell one person exactly what they did and why it mattered to you.
 Choose one way to do it
 1. Thank someone close to you for a specific way they helped you.
 2. Give a coworker credit for something they made easier.
@@ -314,9 +314,9 @@ Mission 6 Break It Into Small Steps
 Know your code  |  Courage  |  Action  |  2–5 minutes
 Hook Break the task you’ve been putting off into small steps.
 Select Courage means moving toward a task that matters, even while it feels uncomfortable.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Choose a task you’ve put off because it feels uncomfortable or too big. Break it into parts. Then take action on the first one.
+Choose a task you’ve put off. Break it into parts. Then take action on the first one.
 Choose one way to do it
 1. Send the email you’ve been putting off.
 2. Book the appointment you keep delaying.
@@ -334,9 +334,9 @@ Mission 7 Keep One Small Promise
 Know your code  |  Commitment  |  Action  |  Time varies
 Hook Give yourself a reason to trust your own word.
 Select Commitment turns what you said into something people can count on. That includes you.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Choose a small promise you can keep today. Ideally it takes less than five minutes.
+Choose a small promise you can keep today.
 Choose one way to do it
 1. Return a call or message when you said you would.
 2. Finish a small job you agreed to handle.
@@ -353,9 +353,9 @@ Mission 8 Own Your Part
 Build self-trust  |  Honor  |  Action  |  5–10 minutes
 Hook Self-respect includes admitting when you got something wrong.
 Select Honor means owning what you did, without blaming others or demanding forgiveness.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Choose one small mistake or task you dropped. Admit it plainly. Then take one practical step to make it right.
+Choose one small mistake. Admit it plainly. Then take one step to make it right.
 Choose one way to do it
 1. Correct wrong information you gave someone, and tell them what changed.
 2. Admit you missed something you were responsible for, and finish part of it.
@@ -373,7 +373,7 @@ Mission 9 Humble Yourself and Ask for Help
 Build self-trust  |  Courage  |  Action  |  2–5 minutes
 Hook Asking for help takes strength, not weakness.
 Select Courage means admitting what you don’t know and what you need.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
 Ask one clear question. Or ask for one specific piece of help.
 Choose one way to do it
@@ -392,9 +392,9 @@ Mission 10 Remember Your Own Strength
 Build self-trust  |  Commitment  |  Reflection  |  3–5 minutes
 Hook When self-doubt sets in, remember that you’ve beaten hard times before.
 Select Commitment means knowing you’ve kept going before. So you can keep going again.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Recall one specific time you acted with honor, courage or commitment. Name what was hard, what you did and the strength you want to use again.
+Recall one specific time you acted with honor, courage or commitment.
 Choose one way to do it
 1. Recall telling the truth when hiding it would have been easier.
 2. Recall taking a step forward while you were nervous.
@@ -412,9 +412,9 @@ Mission 11 Draw Your Line
 Build self-trust  |  Honor  |  Code  |  3–5 minutes
 Hook Name one rule you live by and won’t break.
 Select Honor is easier to hold when you’ve already decided how you’ll handle pressure.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Write one line you stand for and won’t bend on. Keep it about what you do, not what others do.
+Write one line you stand for and won’t bend on.
 Choose one way to do it
 1. Instead of hiding a mistake, admit it and fix it.
 2. Instead of taking credit you didn’t earn, name the person who did the work.
@@ -431,9 +431,9 @@ Mission 12 Choose What Matters Most
 Build self-trust  |  Commitment  |  Code  |  3–5 minutes
 Hook Pick one goal that really matters to you.
 Select Commitment needs a direction. What you choose here guides the missions that come later.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Choose one goal that matters to you. Pick one you can make real progress on in the next few weeks. Then say why it matters.
+Choose one goal you can make real progress on in the next few weeks. Then say why it matters.
 Choose one way to do it
 1. Choose a person: give someone you care about regular, full attention.
 2. Choose a personal goal: spend a short block of time on its next step.
@@ -451,7 +451,7 @@ Mission 13 Name the Man You Are Becoming
 Build self-trust  |  Courage  |  Code  |  About 3 minutes
 Hook Describe the man you’re working to become.
 Select Courage means choosing how you’ll act before you feel confident.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
 Read the statement below. Keep it, add any lines that fit or write your own.
 Choose one way to do it
@@ -471,9 +471,9 @@ Mission 14 Put Your Code to Work
 Build self-trust  |  Honor  |  Action  |  5–10 minutes
 Hook Choose one line of your code and act on it today.
 Select Acting on your Personal Code turns your standards into how you live. Pick the Scent Trigger that matches the line you act on.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Read your Personal Code below. Pick one line. Then take one small action today that puts it to work.
+Pick one line of your Personal Code. Then take one small action today that puts it to work.
 Choose one way to do it
 1. Live your Honor line: correct a mistake or make a fair call.
 2. Live your Courage line: ask for something or speak up respectfully.
@@ -491,9 +491,9 @@ Mission 15 Make Room for Someone
 Put your values to work  |  Courage  |  Action  |  3–5 minutes
 Hook The people who matter deserve a real place in your week.
 Select Courage means reaching out first instead of waiting for them to make the time.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Set up one specific time to give someone your full attention. Ask what works for them. Then save a time you can keep.
+Set up one specific time to give someone your full attention.
 Choose one way to do it
 1. Suggest a call with a friend and block the time in your calendar.
 2. Agree on a short walk or talk with someone close to you.
@@ -511,9 +511,9 @@ Mission 16 Support the Man Doing the Work
 Put your values to work  |  Honor  |  Action  |  2–10 minutes
 Hook You can’t lead well running on empty. Take care of the man doing the work.
 Select Honor includes respecting yourself enough to take care of the man who has to keep his word.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Notice one basic need you’ve ignored today. Take one small step to take care of it before your next big task.
+Notice one basic need you’ve ignored today. Take one small step to take care of it.
 Choose one way to do it
 1. Take a short movement break that suits your body.
 2. Step away from screens for a few quiet minutes.
@@ -531,9 +531,9 @@ Mission 17 Finish One Focused Block
 Put your values to work  |  Commitment  |  Action  |  2–10 minutes
 Hook Being busy is easy. Give your top priority your full attention.
 Select Commitment means giving your goal real time, even if you don’t finish the whole project.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Choose one small task that moves your goal forward. Set a timer for ten minutes. Put one distraction away. Work on that task until the timer goes off.
+Set a timer for ten minutes. Work on one task that moves your goal forward until it goes off.
 Choose one way to do it
 1. Write or build one small part of an important project.
 2. Work through one section of a skill you’re learning.
@@ -551,9 +551,9 @@ Mission 18 Face One Useful Fact
 Put your values to work  |  Courage  |  Action  |  5–10 minutes
 Hook You make better decisions when you know the truth.
 Select Courage means looking at the facts before you decide what to do.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Check one source of information you’ve been avoiding about something that matters to you. Find one fact. Then name the next question or step it points to.
+Check one source of information you’ve been avoiding. Find one fact.
 Choose one way to do it
 1. Look at a bank statement or a list of subscriptions you’ve been avoiding.
 2. Compare your calendar with the goal you say matters most.
@@ -571,7 +571,7 @@ Mission 19 Make Your Priority Easier
 Put your values to work  |  Commitment  |  Action  |  2–5 minutes
 Hook Set up your space so the right action is easy to start.
 Select Commitment includes setting yourself up to follow through.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
 Remove one obstacle from the place where you work on your goal. Make your next step easier to start.
 Choose one way to do it
@@ -591,9 +591,9 @@ Mission 20 Be Useful on Purpose
 Put your values to work  |  Honor  |  Action  |  3–10 minutes
 Hook Respect shows when you actually help.
 Select Honor means helping in a way that respects what the other person needs and wants.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Notice something someone has said they need. Give one small piece of help you can finish today. Don’t take over.
+Give one small piece of help you can finish today.
 Choose one way to do it
 1. Send something useful to answer a question someone asked.
 2. Take on a small shared job that you can fairly handle.
@@ -611,9 +611,9 @@ Mission 21 Choose One Direction
 Put your values to work  |  Commitment  |  Plan  |  3–5 minutes
 Hook Use what you’ve learned to decide where your effort goes next.
 Select Commitment means putting your effort into one goal you chose for a reason.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Look back at your goal from Mission 12 and the actions you’ve taken. Pick one focus area and one result you can see in the next seven days.
+Pick one focus area and one result you can see in the next seven days.
 Choose one way to do it
 1. Keep working on the goal you chose in Mission 12.
 2. Shrink a big goal down to one result you can reach in seven days.
@@ -631,9 +631,9 @@ Mission 22 Take the Step You Keep Putting Off
 Build lasting momentum  |  Courage  |  Action  |  2–10 minutes
 Hook Bring courage to the direction you chose.
 Select Courage helps your aim get past that first moment when you want to quit.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Read your seven-day aim below. Find the small step you most want to avoid. Then take a small version of it now.
+Find the small step you most want to avoid. Then take a small version of it now.
 Choose one way to do it
 1. Ask for the information or help you need to move forward.
 2. Start the small part you keep putting off.
@@ -651,9 +651,9 @@ Mission 23 Set Up Your Next Step
 Build lasting momentum  |  Commitment  |  Action  |  2–5 minutes
 Hook Get ready for next time while the lesson is fresh.
 Select Commitment gets easier when starting again takes less effort.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Using the same seven-day aim, prepare something now that makes your next step easier. Decide when you’ll use it.
+Prepare something now that makes your next step easier. Decide when you’ll use it.
 Choose one way to do it
 1. Open what you’ll need for your next work session.
 2. Block out a short time and put what you need where you’ll see it.
@@ -671,9 +671,9 @@ Mission 24 Protect Your Yes
 Build lasting momentum  |  Honor  |  Action  |  2–10 minutes
 Hook Saying yes to what matters sometimes means a respectful no.
 Select Honor means keeping your word to what matters, even when that takes a respectful no.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Find one extra request or distraction that’s getting in the way of your seven-day aim. Say no to it, push it back or limit it today. Use the time for your aim.
+Find one request or distraction that’s getting in the way of your seven-day aim. Say no to it, push it back or limit it today.
 Choose one way to do it
 1. Politely say no to an extra request you don’t have time for.
 2. Offer a later time for something that can wait.
@@ -691,9 +691,9 @@ Mission 25 Shut Down One Distraction
 Build lasting momentum  |  Courage  |  Action  |  About 3 minutes
 Hook Fix the interruption that keeps stealing your time.
 Select Courage includes giving up an easy comfort to protect what matters.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Pick a distraction that keeps getting in the way of your seven-day aim. Change one setting or one part of your space so it’s less likely to interrupt you next time.
+Change one setting or one part of your space so a distraction is less likely to interrupt you.
 Choose one way to do it
 1. Turn off notifications you don’t need during your practice time.
 2. Put your phone out of reach for a work session or a conversation.
@@ -711,9 +711,9 @@ Mission 26 Recover Without Excuses
 Build lasting momentum  |  Honor  |  Action  |  2–10 minutes
 Hook When you slip, take an honest next step.
 Select Honor means owning your part. Getting back to work rebuilds trust.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Think of one recent time you slipped on a promise or a goal. Name your part without beating yourself up. Then take the smallest step to fix it or start again today.
+Name one recent slip without beating yourself up. Then take the smallest step to start again today.
 Choose one way to do it
 1. Restart a practice you missed, for a short amount of time.
 2. Admit a commitment you missed and fix part of it now.
@@ -731,9 +731,9 @@ Mission 27 Build a Practice You Can Keep
 Build lasting momentum  |  Commitment  |  Plan  |  5 minutes
 Hook Plan your next repeat before your motivation fades.
 Select Commitment gets practical when you know when to start, what to do and what to do on a bad day. Pick the Scent Trigger you’ll use as your cue.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Turn your seven-day aim, or another goal you choose now, into one practice you can repeat. Write when you’ll start, what you’ll do and a smaller backup for a hard day.
+Write when you’ll start, what you’ll do and a smaller backup for a hard day.
 Choose one way to do it
 1. Use something you do every day as the signal to start a short practice.
 2. Use a set time each week to follow through with someone.
@@ -751,9 +751,9 @@ Mission 28 Repeat What Worked
 Build lasting momentum  |  Courage  |  Action  |  Time varies
 Hook Build confidence by doing it again.
 Select Courage grows when you keep doing useful actions, even while you still feel unsure.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Read the actions in your Proof Log below. Pick one that helped you live your code or reach your goal. Then repeat a small version of it today.
+Pick one action from your Proof Log. Then repeat a small version of it today.
 Choose one way to do it
 1. Repeat a request or conversation that felt uncomfortable before.
 2. Repeat a focused session that moved an important goal forward.
@@ -771,9 +771,9 @@ Mission 29 Share Your Code With Someone You Trust
 Build lasting momentum  |  Honor  |  Action  |  3–10 minutes
 Hook Let someone you trust know what you’re working on.
 Select Honor means being clear about the standards you live by.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Pick one or more lines from your Personal Code. Share them with someone you trust. Explain one behavior you’re working on. Then ask how they can support you.
+Share one line of your Personal Code with someone you trust. Then ask how they can support you.
 Choose one way to do it
 1. Tell a trusted friend which line you’re working on and why.
 2. Read a line to someone close to you and explain the action behind it.
@@ -791,9 +791,9 @@ Mission 30 Carry Your Momentum Forward
 Build lasting momentum  |  Courage  |  Plan  |  5–10 minutes
 Hook Take what worked with you into the next month.
 Select Courage means keeping going by your own choice, with no mission telling you what to do next.
-Trigger Spray your Scent Trigger. Then begin the assigned task.
+Trigger Spray your Scent Trigger.
 Act
-Look back at your actions and your practice plan. Keep or adjust one practice for the next 30 days. Write what you learned, what you’ll repeat, when you’ll start and how you’ll restart if you miss.
+Keep or adjust one practice for the next 30 days.
 Choose one way to do it
 1. Keep a practice that worked and make next month realistic.
 2. Shrink a practice that was too big so you can repeat it more often.

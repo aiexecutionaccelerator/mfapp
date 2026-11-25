@@ -74,10 +74,10 @@ export default function OnboardingScreens({
         <div className="mt-6 flex flex-1 flex-col">
           <Headline>MORE THAN COLOGNE</Headline>
           <p className="mt-5 text-[17px] leading-relaxed text-ink-1">
-            Mission Fragrances are Scent Triggers: colognes with a job. They work through olfactory conditioning. That simply means your brain learns to link a scent with a feeling. Smell is the sense most closely tied to memory and emotion.
+            Mission Fragrances are Scent Triggers: colognes with a job. Your brain learns to link a scent with a feeling.
           </p>
           <p className="mt-4 text-[17px] leading-relaxed text-ink-1">
-            Spray before you act. Do the hard work. Log it. Repeat that enough times and the scent becomes more than something you wear.
+            Spray before you act. Do the hard work. Log it.
           </p>
           <p className="font-display text-gold-gradient mt-6 text-[22px] leading-snug">
             It becomes your signal to be the man you know yourself to be.
@@ -85,7 +85,6 @@ export default function OnboardingScreens({
           <MissionVideo
             youtubeId={INTRO_VIDEOS.moreThanFragrance}
             title="This Is More Than Fragrance"
-            defaultOpen
           />
           <BottomActions className="mt-8">
             <Button onClick={onNext}>NEXT</Button>
@@ -104,7 +103,6 @@ export default function OnboardingScreens({
             youtubeId={INTRO_VIDEOS.star}
             title="The S.T.A.R. demonstration"
             label="Watch Antonio demonstrate S.T.A.R."
-            defaultOpen
           />
           <BottomActions className="mt-8">
             <Button onClick={onNext}>NEXT</Button>

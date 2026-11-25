@@ -271,7 +271,6 @@ function MissionDetailInner({
           title={def.title}
           missionNumber={def.number}
           label="Watch Antonio explain this first"
-          defaultOpen
         />
       )}
     </>

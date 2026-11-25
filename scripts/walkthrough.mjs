@@ -113,10 +113,11 @@ await page.getByText("Build Your Shrine").first().waitFor();
 await page.getByText("KNOW YOUR CODE · MISSION 1").waitFor();
 await page.getByText("The idea", { exact: true }).waitFor();
 await page.getByText("A shrine to self-improvement is one spot", { exact: false }).waitFor();
-await page.getByRole("button", { name: /Play the video/ }).waitFor();
+await page.getByRole("button", { name: "Watch Antonio explain this first" }).waitFor();
+if ((await page.getByRole("button", { name: /Play the video/ }).count()) > 0) fail("Mission videos should start closed");
 for (const step of [/^SELECT YOUR SCENT TRIGGER$/, "TRIGGER", "ACT", "RECORD"])
   await page.getByText(step, { exact: true }).first().waitFor();
-await page.getByText("Spray your Scent Trigger. Then begin the assigned task.").waitFor();
+await page.getByText("Spray your Scent Trigger.", { exact: true }).waitFor();
 // Revision 2.1 (18 Nov): the Mission screen lost its extras.
 for (const gone of [
   "About 2 minutes · Action",
@@ -130,7 +131,7 @@ for (const gone of [
 if ((await page.getByRole("button", { name: /reminder of how the S.T.A.R. System works/ }).count()) > 0)
   fail("the S.T.A.R. reminder link should be gone");
 await shot("mission-1");
-await page.getByText("Think of your favorite team’s trophy case", { exact: false }).waitFor();
+await page.getByText("A shrine to self-improvement is one spot", { exact: false }).first().waitFor();
 for (const gone of ["isn’t for worship", "Ryan Holiday"])
   if ((await page.getByText(gone, { exact: false }).count()) > 0) fail(`"${gone}" should be gone from Mission 1`);
 const m1 = page.getByLabel("Where is your shrine to self-improvement?");
