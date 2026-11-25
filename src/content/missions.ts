@@ -121,7 +121,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "About 2 minutes",
     hook: "Build a shrine to self-improvement. It’s one spot that reminds you every day to become the man you know yourself to be.",
-    idea: "A shrine to self-improvement is one spot in your home or office. Every time you walk past it, your Scent Triggers remind you that you’re working to become your best self.",
+    idea: "A shrine to self-improvement is one spot in your home or office where you keep your Scent Triggers. You walk past it every day, and each time it reminds you that you’re working to become your best self. Think of a team’s trophy case: it shows every new player what’s possible.",
     select: "Courage starts in plain sight. Your shrine reminds you every day who you’re working to become.",
     action: "Pick a spot you walk past every morning. Then place your set there.",
     choices: [
@@ -155,7 +155,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "code",
     time: "3–5 minutes",
     hook: "Decide what honor means to you in one sentence.",
-    idea: "Honor means living by a moral code. You tell the truth. You keep your promises. You own your actions.",
+    idea: "Honor means living by a moral code. You tell the truth, keep your promises and own your actions, even when no one would find out. Today you put that into your own words.",
     select: "You live by a moral code. You tell the truth, keep your promises and own your actions. Integrity · Responsibility · Respect.",
     action: "Pick the line that fits you best. Then make it yours.",
     choices: [
@@ -188,7 +188,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "code",
     time: "3–5 minutes",
     hook: "Courage is acting while you’re still afraid.",
-    idea: "Courage isn’t the absence of fear. It’s doing the right thing while the fear is still there.",
+    idea: "Courage isn’t the absence of fear. It’s doing the right thing while the fear is still there. Most days that means a hard conversation or a first step, not something dramatic.",
     select: "You do what you know is right, even when you’re afraid or under pressure. Speak Honestly · Move First · Act Despite Fear.",
     action: "Pick the line that fits you best. Then make it yours.",
     choices: [
@@ -221,7 +221,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "code",
     time: "3–5 minutes",
     hook: "Decide what showing up looks like.",
-    idea: "Commitment means showing up. You do what you said you’d do. You cut out distractions. You finish what you start.",
+    idea: "Commitment means showing up and doing what you said you’d do. You cut out distractions and finish what you start. It counts most on the days you don’t feel like it.",
     select: "You do your part again and again, even when it gets hard. Discipline · Consistency · Follow-Through.",
     action: "Pick the line that fits you best. Then make it yours.",
     choices: [
@@ -254,7 +254,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "About 2 minutes",
     hook: "Notice what others have done for you. Then have the courage to tell them.",
-    idea: "None of us made it alone. Most of the people who helped us never got the thanks they deserved. Today we change that.",
+    idea: "None of us made it alone. Parents, teachers, coaches and friends helped us get where we are, and most of them never got the thanks they deserved. Today you change that for one of them.",
     select: "Honor means seeing what other people did for you and giving them credit.",
     action: "Tell one person exactly what they did and why it mattered to you.",
     choices: [
@@ -286,7 +286,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–5 minutes",
     hook: "Break the task you’ve been putting off into small steps.",
-    idea: "Most of us put off a task when it feels too big. The trick is to break it into smaller parts.",
+    idea: "Most of us put off a task when it feels too big. Break it into smaller parts and make the first step an easy one. Once that first step is done, the next one is easier to start.",
     select: "Courage means moving toward a task that matters, even while it feels uncomfortable.",
     action: "Choose a task you’ve put off. Break it into parts. Then take action on the first one.",
     choices: [
@@ -319,7 +319,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "Time varies",
     hook: "Give yourself a reason to trust your own word.",
-    idea: "Every promise you keep is proof that you’re a man of your word. Start small.",
+    idea: "When you keep breaking promises, even small ones, you stop believing yourself. Every promise you keep shows you that your word means something. Start with one small promise you know you can keep today.",
     select: "Commitment turns what you said into something people can count on. That includes you.",
     action: "Choose a small promise you can keep today.",
     choices: [
@@ -351,7 +351,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "5–10 minutes",
     hook: "Self-respect includes admitting when you got something wrong.",
-    idea: "Owning a mistake builds more trust than never making one.",
+    idea: "Everyone makes mistakes. Owning yours builds more trust than pretending it didn’t happen. Say plainly what you did wrong, then fix what you can.",
     select: "Honor means owning what you did, without blaming others or demanding forgiveness.",
     action: "Choose one small mistake. Admit it plainly. Then take one step to make it right.",
     choices: [
@@ -384,7 +384,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–5 minutes",
     hook: "Asking for help takes strength, not weakness.",
-    idea: "Pride stops a lot of men from asking for help. But asking makes your relationships stronger.",
+    idea: "Pride stops a lot of men from asking for help because they don’t want to look weak. But asking makes your relationships stronger. Most people like being able to help, and it gives them a chance to give back.",
     select: "Courage means admitting what you don’t know and what you need.",
     action: "Ask one clear question. Or ask for one specific piece of help.",
     choices: [
@@ -416,7 +416,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "reflection",
     time: "3–5 minutes",
     hook: "When self-doubt sets in, remember that you’ve beaten hard times before.",
-    idea: "You’re stronger than you give yourself credit for. You’ve already been through hard times to get where you are.",
+    idea: "Everyone doubts themselves sometimes. When that happens, remember a hard time you already got through. You did it once, and that’s proof you can do it again.",
     select: "Commitment means knowing you’ve kept going before. So you can keep going again.",
     action: "Recall one specific time you acted with honor, courage or commitment.",
     choices: [
@@ -449,7 +449,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "code",
     time: "3–5 minutes",
     hook: "Name one rule you live by and won’t break.",
-    idea: "Decide your line before the pressure hits. It’s what you will always do, or never do, no matter who is watching.",
+    idea: "Your line is a rule you set for yourself about what you will always do, or never do. Decide it ahead of time, before you’re under pressure. Then when the moment comes, you don’t have to argue with yourself. You just keep it.",
     select: "Honor is easier to hold when you’ve already decided how you’ll handle pressure.",
     action: "Write one line you stand for and won’t bend on.",
     choices: [
@@ -481,7 +481,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "code",
     time: "3–5 minutes",
     hook: "Pick one goal that really matters to you.",
-    idea: "A man with ten priorities has none.",
+    idea: "When you chase ten goals at once, you rarely make real progress on any of them. Picking one goal that matters gives the next few weeks a clear direction. You’ll use it in the missions that follow.",
     select: "Commitment needs a direction. What you choose here guides the missions that come later.",
     action: "Choose one goal you can make real progress on in the next few weeks. Then say why it matters.",
     choices: [
@@ -514,7 +514,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "code",
     time: "About 3 minutes",
     hook: "Describe the man you’re working to become.",
-    idea: "You act like the man you believe you are.",
+    idea: "You tend to act like the man you believe you are. Describing that man in plain words gives you something to aim for. Keep it about what he does, not how he feels.",
     select: "Courage means choosing how you’ll act before you feel confident.",
     action: "Read the statement below. Keep it, add any lines that fit or write your own.",
     choices: [
@@ -547,7 +547,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "5–10 minutes",
     hook: "Choose one line of your code and act on it today.",
-    idea: "A code you don’t use is just words.",
+    idea: "A code you never use is just words on a page. When you act on one line today, it starts to become a habit. Pick the line that fits what’s in front of you.",
     select: "Acting on your Personal Code turns your standards into how you live. Pick the Scent Trigger that matches the line you act on.",
     action: "Pick one line of your Personal Code. Then take one small action today that puts it to work.",
     choices: [
@@ -580,7 +580,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "3–5 minutes",
     hook: "The people who matter deserve a real place in your week.",
-    idea: "If you don’t plan time for the people who matter, they get whatever is left of your week.",
+    idea: "If you don’t plan time for the people who matter, they get whatever is left of your week. Putting time with them on the calendar first shows them they matter. It doesn’t need to be long, just real.",
     select: "Courage means reaching out first instead of waiting for them to make the time.",
     action: "Set up one specific time to give someone your full attention.",
     choices: [
@@ -613,7 +613,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–10 minutes",
     hook: "You can’t lead well running on empty. Take care of the man doing the work.",
-    idea: "Looking after yourself is part of the work. It’s not a break from it.",
+    idea: "Looking after yourself is part of the work. When you skip sleep, meals or rest, everything else gets harder. Taking care of the basics keeps you able to show up for others.",
     select: "Honor includes respecting yourself enough to take care of the man who has to keep his word.",
     action: "Notice one basic need you’ve ignored today. Take one small step to take care of it.",
     choices: [
@@ -646,7 +646,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–10 minutes",
     hook: "Being busy is easy. Give your top priority your full attention.",
-    idea: "Ten minutes of full focus on what matters usually beats an hour of half attention.",
+    idea: "Being busy can feel like progress, but often it isn’t. Ten minutes of full focus on one task usually gets more done than an hour of half attention. Today you practice giving one task your full attention.",
     select: "Commitment means giving your goal real time, even if you don’t finish the whole project.",
     action: "Set a timer for ten minutes. Work on one task that moves your goal forward until the timer goes off.",
     choices: [
@@ -679,7 +679,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "5–10 minutes",
     hook: "You make better decisions when you know the truth.",
-    idea: "You can’t fix what you won’t look at.",
+    idea: "You can’t fix a problem you won’t look at. Avoiding the facts usually makes the worry bigger. Looking at one real fact helps you decide your next step.",
     select: "Courage means looking at the facts before you decide what to do.",
     action: "Look at one thing you’ve been avoiding, like a bill, a bank balance or a test score. Find one fact.",
     choices: [
@@ -712,7 +712,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–5 minutes",
     hook: "Set up your space so the right action is easy to start.",
-    idea: "Willpower runs out. Your surroundings don’t.",
+    idea: "Willpower runs out, especially at the end of a long day. If your space makes the right action easy to start, you need less willpower to do it. Small changes, like setting things out the night before, make a big difference.",
     select: "Commitment includes setting yourself up to follow through.",
     action: "Remove one obstacle from the place where you work on your goal. Make your next step easier to start.",
     choices: [
@@ -746,7 +746,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "3–10 minutes",
     hook: "Respect shows when you actually help.",
-    idea: "A small bit of real help beats a big offer you never follow through on.",
+    idea: "Respect shows in what you actually do for people. A small bit of help you finish beats a big offer you never follow through on. Look for something someone needs right now.",
     select: "Honor means helping in a way that respects what the other person needs and wants.",
     action: "Give one small piece of help you can finish today.",
     choices: [
@@ -779,7 +779,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "plan",
     time: "3–5 minutes",
     hook: "Use what you’ve learned to decide where your effort goes next.",
-    idea: "Spend the next seven days on one result and see what you can do.",
+    idea: "When your effort is spread across too many things, nothing moves very far. Pick one result you want in the next seven days and focus on it. The next few missions will help you get there.",
     select: "Commitment means putting your effort into one goal you chose for a reason.",
     action: "Pick one focus area and one result you can see in the next seven days.",
     choices: [
@@ -812,7 +812,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–10 minutes",
     hook: "Bring courage to the direction you chose.",
-    idea: "The step you keep putting off is usually the one that matters most.",
+    idea: "The step you keep putting off is usually the one that matters most. The longer you wait, the bigger it feels. Taking a small version of it today breaks that cycle.",
     select: "Courage helps your aim get past that first moment when you want to quit.",
     action: "Find the small step you most want to avoid. Then take a small version of it now.",
     choices: [
@@ -845,7 +845,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–5 minutes",
     hook: "Get ready for next time while the lesson is fresh.",
-    idea: "The best time to get ready for your next step is right after this one.",
+    idea: "The best time to prepare for your next step is right after you finish this one. You still remember what slowed you down. Getting things ready now makes it easier to start next time.",
     select: "Commitment gets easier when starting again takes less effort.",
     action: "Prepare something now that makes your next step easier. Decide when you’ll use it.",
     choices: [
@@ -878,7 +878,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–10 minutes",
     hook: "Saying yes to what matters sometimes means a respectful no.",
-    idea: "A respectful no is how you keep your word to what matters.",
+    idea: "Every time you say yes, you give away time you can’t get back. Saying a respectful no to something less important protects time for what matters. It’s how you keep your word to your own goals.",
     select: "Honor means keeping your word to what matters, even when that takes a respectful no.",
     action: "Find one request or distraction that’s getting in the way of your seven-day aim. Say no to it, push it back or limit it today.",
     choices: [
@@ -911,7 +911,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "About 3 minutes",
     hook: "Fix the interruption that keeps stealing your time.",
-    idea: "The same distraction every day adds up to hours. Fix it once at the source.",
+    idea: "A small distraction that shows up every day can add up to hours each week. Fighting it with willpower every time wears you out. Fix it once, by changing a setting or your space, so it stops interrupting you.",
     select: "Courage includes giving up an easy comfort to protect what matters.",
     action: "Change one setting or one part of your space so a distraction is less likely to interrupt you.",
     choices: [
@@ -944,7 +944,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "2–10 minutes",
     hook: "When you slip, take an honest next step.",
-    idea: "Everyone slips. What builds trust is how fast you get back on track.",
+    idea: "Everyone slips sometimes. What matters is how quickly and honestly you get back on track. Own your part without beating yourself up, then take the next step.",
     select: "Honor means owning your part. Getting back to work rebuilds trust.",
     action: "Name one recent slip without beating yourself up. Then take the smallest step to start again today.",
     choices: [
@@ -977,7 +977,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "plan",
     time: "5 minutes",
     hook: "Plan your next repeat before your motivation fades.",
-    idea: "Tie your practice to something you already do. Add a smaller backup for bad days.",
+    idea: "A habit is easier to keep when it’s tied to something you already do, like brushing your teeth. Plan a smaller backup for days when things go wrong. That way you keep going even when motivation is low.",
     select: "Commitment gets practical when you know when to start, what to do and what to do on a bad day. Pick the Scent Trigger you’ll use as your cue.",
     action: "Write when you’ll start, what you’ll do and a smaller backup for a hard day.",
     choices: [
@@ -1010,7 +1010,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "Time varies",
     hook: "Build confidence by doing it again.",
-    idea: "The second time proves the first wasn’t luck.",
+    idea: "Doing something once can feel like luck. Doing it a second time shows you it wasn’t. Repeating what worked is how confidence grows.",
     select: "Courage grows when you keep doing useful actions, even while you still feel unsure.",
     action: "Pick one action from your Proof Log. Then repeat a small version of it today.",
     choices: [
@@ -1043,7 +1043,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "action",
     time: "3–10 minutes",
     hook: "Let someone you trust know what you’re working on.",
-    idea: "A standard someone else knows about is easier to keep.",
+    idea: "A goal someone else knows about is easier to keep. When you share your code with someone you trust, they can support you and check in on you. Pick someone who wants to see you do well.",
     select: "Honor means being clear about the standards you live by.",
     action: "Share one line of your Personal Code with someone you trust. Then ask how they can support you.",
     choices: [
@@ -1076,7 +1076,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "plan",
     time: "5–10 minutes",
     hook: "Take what worked with you into the next month.",
-    idea: "Thirty missions are a start, not a finish.",
+    idea: "Thirty missions are a start, not a finish. What you keep doing after today is what turns these missions into who you are. Choose one practice to keep going for the next 30 days.",
     select: "Courage means keeping going by your own choice, with no mission telling you what to do next.",
     action: "Keep or adjust one practice for the next 30 days.",
     choices: [
