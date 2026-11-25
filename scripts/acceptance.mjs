@@ -164,7 +164,7 @@ await scenario("C03", "a starter fills only the start of the answer; changing sc
   assert((await stored()).length === 0, "a record was saved");
   await field().fill("");
   await page.getByRole("radio", { name: "commitment" }).click();
-  await page.getByText("You fulfill your responsibilities through consistent effort and perseverance.").waitFor();
+  await page.getByText("You do your part again and again, even when it gets hard.").waitFor();
   await field().fill("I thanked my neighbor for watching the house.");
   await confirmBox().check();
   await button("RECORD · COMPLETE MISSION 5").click();
@@ -259,9 +259,9 @@ const missionsSource = readFileSync(new URL("../src/content/missions.ts", import
 
 await scenario("C08", "15 labels a proposal honestly; 20 says an offer alone is not completed help (content; not shown since 2.1)", async (note) => {
   for (const text of [
-    "Label a proposal as a proposal.",
-    "You have contacted the person and reserved or agreed on a time.",
-    "An offer to help later is still an intention.",
+    "If they haven’t said yes yet, call it a suggestion.",
+    "You’ve reached out and set or agreed on a time.",
+    "An offer to help later doesn’t count yet.",
   ])
     assert(missionsSource.includes(text), `missing from missions.ts: ${text}`);
   note("Revision 2.1 removed notes and Done when from the screen; the wording is kept in the content.");
@@ -269,8 +269,8 @@ await scenario("C08", "15 labels a proposal honestly; 20 says an offer alone is 
 
 await scenario("C09", "17 allows an honest two-minute fallback; 23 records preparation, not the later task (content; not shown since 2.1)", async (note) => {
   for (const text of [
-    "use two deliberate minutes and record that honestly",
-    "This records preparation. Record the next practice separately",
+    "do two minutes on purpose and record that honestly",
+    "This mission is about getting ready. Record the practice itself when you do it.",
   ])
     assert(missionsSource.includes(text), `missing from missions.ts: ${text}`);
   note("Revision 2.1 removed notes from the screen; the wording is kept in the content.");

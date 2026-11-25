@@ -327,7 +327,7 @@ export default function MissionForm({
 
       <StarStep letter="T" name="Trigger">
         <p className="text-[17px] text-ink-0">
-          Spray the fragrance. Then begin the assigned task.
+          Spray your Scent Trigger. Then begin the assigned task.
         </p>
       </StarStep>
 

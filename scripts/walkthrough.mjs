@@ -78,8 +78,8 @@ await page.getByRole("button", { name: "CONTINUE" }).click();
 
 // C — How It Works: three screens, then straight into Mission 1 (the shrine)
 await page.getByText("MORE THAN COLOGNE").first().waitFor();
-await page.getByText("Spray before you act. Do the hard thing. Log it.").waitFor();
-await page.getByText("It becomes the signal for the man you're about to be.").waitFor();
+await page.getByText("Spray before you act. Do the hard work. Log it.", { exact: false }).waitFor();
+await page.getByText("It becomes your signal to be the man you know yourself to be.").waitFor();
 if ((await page.getByText("twenty years").count()) > 0)
   fail("the twenty-years line is back");
 await shot("onboarding-1");
@@ -93,12 +93,12 @@ await page.getByText("Select your Scent Trigger.").first().waitFor();
 if ((await page.getByText(/core value you need/).count()) > 0)
   fail("S still says 'core value'");
 await page.getByText("Repeat the practice. Let your scent remind you").first().waitFor();
-await page.getByText("Use the S.T.A.R. System to condition yourself").waitFor();
+await page.getByText("Use the S.T.A.R. System to train your brain", { exact: false }).waitFor();
 await shot("onboarding-2-star");
 await page.getByRole("button", { name: "NEXT" }).click();
 await page.getByText("MEET YOUR SCENT TRIGGERS").waitFor();
 await page.getByText("You live by a moral code").waitFor();
-await page.getByText("You fulfill your responsibilities through consistent effort and perseverance.").waitFor();
+await page.getByText("You do your part again and again, even when it gets hard.").waitFor();
 await page.getByText("You have everything you need").waitFor();
 await shot("onboarding-3");
 await page.getByRole("button", { name: "SEE YOUR 30 MISSIONS" }).click();
@@ -112,11 +112,11 @@ await page.waitForURL("**/missions/1");
 await page.getByText("Build Your Shrine").first().waitFor();
 await page.getByText("KNOW YOUR CODE · MISSION 1").waitFor();
 await page.getByText("The idea", { exact: true }).waitFor();
-await page.getByText("A shrine to self-improvement is a single place", { exact: false }).waitFor();
+await page.getByText("A shrine to self-improvement is one spot", { exact: false }).waitFor();
 await page.getByRole("button", { name: /Play the video/ }).waitFor();
 for (const step of [/^SELECT YOUR SCENT TRIGGER$/, "TRIGGER", "ACT", "RECORD"])
   await page.getByText(step, { exact: true }).first().waitFor();
-await page.getByText("Spray the fragrance. Then begin the assigned task.").waitFor();
+await page.getByText("Spray your Scent Trigger. Then begin the assigned task.").waitFor();
 // Revision 2.1 (18 Nov): the Mission screen lost its extras.
 for (const gone of [
   "About 2 minutes · Action",
@@ -168,7 +168,7 @@ if (await page.evaluate(() => window.__flash))
 await page.getByText("Define Your Honor").first().waitFor();
 if ((await page.getByLabel("I have taken this action.").count()) > 0)
   fail("a code Mission asks for action confirmation");
-const honorLine = "Doing what I say I will do, and telling the truth even when it costs me.";
+const honorLine = "Doing what I say I will do and telling the truth, even when it costs me.";
 await page.getByRole("button", { name: honorLine }).click();
 if ((await page.getByLabel("For me, honor means…").inputValue()) !== honorLine)
   fail("picking a definition didn't fill it in");
@@ -183,7 +183,7 @@ await page.getByRole("button", { name: "CONTINUE TO MISSION 3" }).click();
 await page.waitForURL("**/missions/3");
 await page.getByText("Define Your Courage").first().waitFor();
 await page.getByRole("button", { name: "All three Scent Triggers" }).waitFor();
-const courageLine = "Doing the right thing even when I’m afraid of how it will go.";
+const courageLine = "Doing the right thing, even when I’m afraid of how it will go.";
 await page.getByRole("button", { name: courageLine }).click();
 await page.getByRole("button", { name: "SAVE TO MY CODE" }).click();
 await page.getByText("Your Personal Code is taking shape.").waitFor();
@@ -213,7 +213,7 @@ await shot("mission-5-complete");
 // G — Mission 6: change the scent, the draft saves itself, come back, finish
 await page.goto(`${BASE}/missions/6`);
 await page.getByText("MISSION 6 OF 30").waitFor();
-await page.getByText("Break the Avoidance Loop").first().waitFor();
+await page.getByText("Break It Into Small Steps").first().waitFor();
 await page.getByText("Recommended", { exact: true }).waitFor();
 await page.getByRole("radio", { name: "honor" }).click();
 if ((await page.getByRole("radio", { name: "honor" }).getAttribute("aria-checked")) !== "true")
@@ -221,7 +221,7 @@ if ((await page.getByRole("radio", { name: "honor" }).getAttribute("aria-checked
 await page.getByText("Recommended", { exact: true }).waitFor();
 await shot("mission-6-fragrance-switched");
 await page.getByRole("radio", { name: "courage" }).click();
-const m6 = page.getByLabel("What were you avoiding, and what first step did you take?");
+const m6 = page.getByLabel("What were you putting off, and what first step did you take?");
 await m6.fill("I was avoiding the insurance call.");
 // No draft button: it saves itself.
 await page.getByText(/Draft saved\. It isn.t complete/).waitFor();
@@ -252,7 +252,7 @@ await shot("mission-list-all", { full: true });
 await page.getByRole("button", { name: /SHOW LESS/ }).click();
 await page.getByText("YOUR THREE SCENT TRIGGERS").waitFor();
 await page.getByRole("button", { name: /What courage is for/i }).click();
-await page.getByText("You do what you know is right despite fear, danger, or pressure to do otherwise.").first().waitFor();
+await page.getByText("You do what you know is right, even when you’re afraid or under pressure.").first().waitFor();
 await shot("fragrance-trio");
 
 // The definition he picked is the first line of his Personal Code
@@ -315,7 +315,7 @@ await page.goto(`${BASE}/log`);
 await page.getByText("6 records · 4 actions").waitFor();
 const oneOffRow = page.getByRole("link").filter({ hasText: "ACTIVATE" }).first();
 if ((await oneOffRow.count()) === 0) fail("no Activate entry");
-await page.getByText("MISSION 6 · BREAK THE AVOIDANCE LOOP").waitFor();
+await page.getByText("MISSION 6 · BREAK IT INTO SMALL STEPS").waitFor();
 const codeRow = page.getByRole("link").filter({ hasText: "MISSION 2 · DEFINE YOUR HONOR" });
 if ((await codeRow.getByText("CODE", { exact: true }).count()) !== 1)
   fail("Mission 2 isn't labelled as Code in the log");

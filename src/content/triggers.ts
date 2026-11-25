@@ -7,9 +7,9 @@
 export const TRIGGERS = {
   honor: {
     name: "HONOR",
-    /** The definition from the missionfragrances.com sales page. */
+    /** The value in plain words (copy review, 25 Nov). */
     definition:
-      "You live by a moral code, tell the truth, keep promises, and own your actions.",
+      "You live by a moral code. You tell the truth, keep your promises and own your actions.",
     /** The keyword tags under the definition. */
     words: "Integrity · Responsibility · Respect",
     /** "You acted with Honor." */
@@ -18,14 +18,14 @@ export const TRIGGERS = {
   courage: {
     name: "COURAGE",
     definition:
-      "You do what you know is right despite fear, danger, or pressure to do otherwise.",
+      "You do what you know is right, even when you’re afraid or under pressure.",
     words: "Speak Honestly · Move First · Act Despite Fear",
     provedWith: "Courage",
   },
   commitment: {
     name: "COMMITMENT",
     definition:
-      "You fulfill your responsibilities through consistent effort and perseverance.",
+      "You do your part again and again, even when it gets hard.",
     words: "Discipline · Consistency · Follow-Through",
     provedWith: "Commitment",
   },
@@ -46,26 +46,26 @@ export const STAR_STEPS = [
   {
     letter: "T",
     name: "Trigger",
-    text: "Spray the fragrance.",
+    text: "Spray your Scent Trigger.",
   },
   {
     letter: "A",
     name: "Act",
-    text: "Take one small action that's aligned with the value, or recall a time you lived it.",
-    example: "Example: spray Honor, then do something honorable or remember a time you acted honorably.",
+    text: "Take one small action that lives out the value. Or remember a time you lived it.",
+    example: "Example: spray Honor. Then do something honorable, or remember a time you did.",
   },
   {
     letter: "R",
     name: "Record",
     // Curriculum revision 2: Record covers reflections, code and plans too,
     // and is honest about which of them are evidence.
-    text: "Log what you did. Every completed action is proof that you are becoming the man you know yourself to be.",
+    text: "Log what you did. Every action you finish is proof that you’re becoming the man you know yourself to be.",
   },
 ] as const;
 
 /** Under the four steps, wherever they appear. */
 export const STAR_CLOSER =
-  "Repeat the practice. Let your scent remind you of the values you choose to live.";
+  "Repeat the practice. Let your scent remind you of the values you choose to live by.";
 
 /**
  * Accents match the bottles: Honor = silver, Courage = gold, Commitment = black.
