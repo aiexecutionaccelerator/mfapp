@@ -648,7 +648,7 @@ export const MISSIONS: MissionDef[] = [
     hook: "Being busy is easy. Give your top priority your full attention.",
     idea: "Ten minutes of full focus on what matters usually beats an hour of half attention.",
     select: "Commitment means giving your goal real time, even if you don’t finish the whole project.",
-    action: "Set a timer for ten minutes. Work on one task that moves your goal forward until it goes off.",
+    action: "Set a timer for ten minutes. Work on one task that moves your goal forward until the timer goes off.",
     choices: [
       "Write or build one small part of an important project.",
       "Work through one section of a skill you’re learning.",
@@ -681,7 +681,7 @@ export const MISSIONS: MissionDef[] = [
     hook: "You make better decisions when you know the truth.",
     idea: "You can’t fix what you won’t look at.",
     select: "Courage means looking at the facts before you decide what to do.",
-    action: "Check one source of information you’ve been avoiding. Find one fact.",
+    action: "Look at one thing you’ve been avoiding, like a bill, a bank balance or a test score. Find one fact.",
     choices: [
       "Look at a bank statement or a list of subscriptions you’ve been avoiding.",
       "Compare your calendar with the goal you say matters most.",
@@ -779,7 +779,7 @@ export const MISSIONS: MissionDef[] = [
     kind: "plan",
     time: "3–5 minutes",
     hook: "Use what you’ve learned to decide where your effort goes next.",
-    idea: "Point seven days at one result and see what you can do.",
+    idea: "Spend the next seven days on one result and see what you can do.",
     select: "Commitment means putting your effort into one goal you chose for a reason.",
     action: "Pick one focus area and one result you can see in the next seven days.",
     choices: [
