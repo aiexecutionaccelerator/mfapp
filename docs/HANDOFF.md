@@ -48,6 +48,11 @@ Spec: `docs/specs/curriculum-v2-summary.md` (full text alongside). Review
 report: `docs/specs/review-report.md`. Results: `docs/specs/acceptance-results.md`.
 Where this section and older notes below disagree, this section wins.
 
+**Staging:** the `staging` branch deploys to
+https://staging--missionfragrances.netlify.app (Netlify branch deploys). The
+copy review from Antonio's sheet (25 Nov) is there first; merge to `main`
+once it's approved.
+
 **Round 3 (25 Nov 2026, Antonio's third Loom, v3.6.0):** Missions 1 and
 4–10 reworded in his words (Mission 9 is Humble Yourself and Ask for Help);
 the idea box uses one font size; any keyboard-mash word refuses a record,
