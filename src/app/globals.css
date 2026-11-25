@@ -1157,3 +1157,13 @@ select option {
   88% { bottom: 100%; opacity: 1; }
   100% { bottom: 100%; opacity: 0; }
 }
+
+/* iPhone "Save as an app": the arrow nudging down at Safari's Share button. */
+.save-arrow {
+  animation: save-arrow 1.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(242, 211, 91, 0.6));
+}
+@keyframes save-arrow {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 8px); }
+}

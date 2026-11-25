@@ -12,7 +12,7 @@ import Headline from "@/components/ui/Headline";
 import { useToast } from "@/components/ui/Toast";
 import { TRIGGERS } from "@/content/triggers";
 import { track } from "@/lib/analytics";
-import { notRealWords, unfinishedLine } from "@/lib/curriculum";
+import { notRealWords, unfinishedLine, withStarter } from "@/lib/curriculum";
 import { store, useAppData } from "@/lib/data/store";
 import { GainSummary } from "@/components/game/Level";
 import { gainFrom } from "@/lib/game";
@@ -76,7 +76,7 @@ function Activate() {
   const value = TRIGGERS[trigger].provedWith;
 
   function applyStarter(starter: string) {
-    setText((current) => (current.trim() ? `${current.trimEnd()}\n${starter}` : starter));
+    setText((current) => withStarter(current, starter, STARTERS[trigger]));
     setError(null);
     requestAnimationFrame(() => {
       const el = textRef.current;

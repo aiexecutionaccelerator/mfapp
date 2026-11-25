@@ -27,6 +27,7 @@ import {
   recordText,
   textLimitFor,
   validateRecord,
+  withStarter,
 } from "@/lib/curriculum";
 import { store } from "@/lib/data/store";
 import {
@@ -290,9 +291,8 @@ export default function MissionForm({
    * value, so the credit follows the code line he acted on (Mission 14).
    */
   function applyStarter(starter: string) {
-    const kept = text.replace(/\s+$/, "");
-    const next = kept ? `${kept}\n${starter}` : starter;
-    touch(setText)(next.slice(0, textLimitFor(def.number)));
+    const next = withStarter(text, starter, def.starters);
+    if (next !== text) touch(setText)(next.slice(0, textLimitFor(def.number)));
     const value = starter.match(/\bmy (Honor|Courage|Commitment) line\b/)?.[1];
     if (value) touch(setTrigger)(value.toLowerCase() as Trigger);
     track("mission_starter_used", { missionNumber: def.number });
@@ -508,14 +508,15 @@ export default function MissionForm({
               role="status"
               className="flex min-h-6 items-center justify-center gap-1.5 text-center text-[13px] text-ink-2"
             >
-              {draftState === "saving" && "Saving…"}
-              {draftState === "saved" && (
+              {/* One message at a time: an error replaces the draft note (25 Nov). */}
+              {!error && draftState === "saving" && "Saving…"}
+              {!error && draftState === "saved" && (
                 <>
                   <Check aria-hidden size={14} className="text-gold-300" />
                   Draft saved. It isn&apos;t complete until you tap the button above.
                 </>
               )}
-              {draftState === "failed" &&
+              {!error && draftState === "failed" &&
                 "Couldn't save yet. Your text is still here; we'll try again."}
             </p>
           )}

@@ -257,6 +257,13 @@ r = await sayError("Called.", null, /a little more/);
 check("W2", "a Live It action needs at least two words", r.ok, r.detail);
 const fine = await say("I watched TV with my son.", null).then(() => say("Family.", 12)).then(() => true, (e) => e.message);
 check("W3", "real answers save: capitals like TV, and one-word code lines on Missions", fine === true, String(fine));
+// 0014: mash anywhere refuses the answer, even after a real starter.
+for (const [text, n] of [["I told the truth when askjdfh", 10], ["sdgsdgf I placed my bottles on my desk", null], ["I gave recognition to someone who jhgdsajfha", 5]]) {
+  r = await sayError(text, n, /read as words/);
+  check("W4", `mash after a real start is refused: "${text}"`, r.ok, r.detail);
+}
+const ok14 = await say("Called mom, thx. Strengths matter.", null).then(() => true, (e) => e.message);
+check("W5", "short words people type (thx) and real clusters (strengths) still save", ok14 === true, String(ok14));
 await asAdmin();
 
 /* ---------- the app's normal writes still work ---------- */

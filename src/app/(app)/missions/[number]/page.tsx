@@ -240,7 +240,8 @@ function MissionDetailInner({
         <p className="eyebrow text-gold-300">The idea</p>
         <p className="mt-2 text-[17px] leading-snug text-ink-0">{def.idea}</p>
         {def.intro && (
-          <p className="mt-3 text-[15px] leading-snug text-ink-1">{def.intro}</p>
+          // One font size in the idea box (Antonio, 25 Nov).
+          <p className="mt-3 text-[17px] leading-snug text-ink-0">{def.intro}</p>
         )}
       </div>
 

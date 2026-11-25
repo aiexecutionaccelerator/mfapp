@@ -137,14 +137,23 @@ await scenario("C03", "a starter fills only the start of the answer; changing sc
   await open(5);
   await page.getByRole("group", { name: "Start with" }).getByRole("button", { name: "I thanked my…" }).click();
   assert((await field().inputValue()) === "I thanked my ", "the starter didn't fill the start of the answer");
-  // 19 Nov: a bare starter can't be saved, and a second chip adds, never replaces.
+  // A bare starter can't be saved; a second chip replaces a bare one (25 Nov),
+  // the same chip twice adds nothing, and a finished line is kept.
   await confirmBox().check();
   await button("RECORD · COMPLETE MISSION 5").click();
   await page.getByText("Finish the sentence you started, in your own words.").waitFor();
   assert((await stored()).length === 0, "a bare starter was saved");
   await confirmBox().uncheck();
-  await page.getByRole("group", { name: "Start with" }).getByRole("button", { name: "I gave my coworker credit for…" }).click();
-  assert((await field().inputValue()) === "I thanked my\nI gave my coworker credit for ", "the second chip replaced the first");
+  const chip = (name) => page.getByRole("group", { name: "Start with" }).getByRole("button", { name });
+  await chip("I gave my coworker credit for…").click();
+  assert((await field().inputValue()) === "I gave my coworker credit for ", "a bare starter wasn't replaced");
+  await chip("I gave my coworker credit for…").click();
+  assert((await field().inputValue()) === "I gave my coworker credit for ", "the same chip was added twice");
+  await page.waitForFunction(() => document.activeElement?.tagName === "TEXTAREA");
+  await page.waitForTimeout(100);
+  await field().fill("I thanked my brother for the lift.");
+  await chip("I gave my coworker credit for…").click();
+  assert((await field().inputValue()) === "I thanked my brother for the lift.\nI gave my coworker credit for ", `a finished line was dropped: ${JSON.stringify(await field().inputValue())}`);
   // A starter moves the cursor to the end one frame later; let it land before typing.
   await page.waitForFunction(() => document.activeElement?.tagName === "TEXTAREA");
   await field().fill("I thanked my brother for the lift.\nI gave my coworker credit for staying late with");
@@ -173,8 +182,9 @@ await scenario("C04", "blank text or no confirmation blocks completion in the UI
   await button("RECORD · COMPLETE MISSION 5").click();
   await page.getByText(/I have taken this action/).first().waitFor();
   assert((await stored()).length === 0, "a record was created");
-  await page.getByText(/Draft saved\. It isn.t complete/).waitFor();
-  assert((await storedDrafts()).length === 1, "draft not saved");
+  // The error shows alone (25 Nov); the draft still saves underneath it.
+  await page.waitForFunction(() => JSON.parse(localStorage.getItem("mission.drafts") ?? "[]").length === 1);
+  assert((await page.getByText(/Draft saved\. It isn.t complete/).count()) === 0, "the draft note showed with an error");
   await page.goto(`${BASE}/progress`);
   assert((await page.getByText("0/30", { exact: true }).count()) === 1, "progress moved");
   note("Server half: test:db C04 checks.");
@@ -564,7 +574,7 @@ await scenario("L01", "Activate is the center tab: S.T.A.R. steps, keyboard mash
   await page.getByRole("radio", { name: "honor" }).click();
   await page.locator("textarea").fill("sdkjfghdfskjhg");
   await button("LOG THIS ACTION").click();
-  await page.getByText("That doesn't read as words yet.", { exact: false }).waitFor();
+  await page.getByText("isn't a word", { exact: false }).waitFor();
   assert((await stored()).length === 0, "keyboard mash was logged");
   await page.locator("textarea").fill("I told my boss the truth about the delay.");
   await button("LOG THIS ACTION").click();
@@ -579,7 +589,7 @@ await scenario("L02", "a Mission refuses keyboard mash too", async () => {
   await field().fill("Fhj");
   await confirmBox().check();
   await button("RECORD · COMPLETE MISSION 5").click();
-  await page.getByText("That doesn't read as words yet.", { exact: false }).waitFor();
+  await page.getByText("isn't a word", { exact: false }).waitFor();
   assert((await stored()).length === 0, "keyboard mash was saved");
 });
 
@@ -593,7 +603,8 @@ await scenario("G01", "level = Missions done: the full course is level 30; level
   await page.getByText(`Level ${level}`, { exact: true }).first().waitFor();
   await page.getByRole("button", { name: "The Thirty, earned" }).waitFor();
   await page.getByRole("button", { name: "Eternal Flame, earned" }).waitFor();
-  await page.getByRole("button", { name: "Hidden achievement, not earned yet" }).first().waitFor();
+  assert((await page.getByRole("button", { name: "Hidden achievement, not earned yet" }).count()) === 0, "a hidden achievement shows before it's earned");
+  assert((await page.getByRole("button", { name: /, not earned yet$/ }).count()) <= 3, "more than three locked badges show");
 });
 
 await scenario("G02", "a save shows the new level and any achievement it unlocked", async () => {

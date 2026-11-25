@@ -112,7 +112,7 @@ await page.waitForURL("**/missions/1");
 await page.getByText("Build Your Shrine").first().waitFor();
 await page.getByText("KNOW YOUR CODE · MISSION 1").waitFor();
 await page.getByText("The idea", { exact: true }).waitFor();
-await page.getByText("A habit sticks when it has a place.", { exact: false }).waitFor();
+await page.getByText("A shrine to self-improvement is a single place", { exact: false }).waitFor();
 await page.getByRole("button", { name: /Play the video/ }).waitFor();
 for (const step of [/^SELECT YOUR SCENT TRIGGER$/, "TRIGGER", "ACT", "RECORD"])
   await page.getByText(step, { exact: true }).first().waitFor();
@@ -130,8 +130,10 @@ for (const gone of [
 if ((await page.getByRole("button", { name: /reminder of how the S.T.A.R. System works/ }).count()) > 0)
   fail("the S.T.A.R. reminder link should be gone");
 await shot("mission-1");
-await page.getByText("A shrine isn’t for worship.", { exact: false }).waitFor();
-const m1 = page.getByLabel("Where is your shrine?");
+await page.getByText("Think of your favorite team’s trophy case", { exact: false }).waitFor();
+for (const gone of ["isn’t for worship", "Ryan Holiday"])
+  if ((await page.getByText(gone, { exact: false }).count()) > 0) fail(`"${gone}" should be gone from Mission 1`);
+const m1 = page.getByLabel("Where is your shrine to self-improvement?");
 if ((await m1.inputValue()) !== "") fail("Mission 1's field should open blank");
 await page.getByRole("button", { name: "I set my bottles on…" }).click();
 if ((await m1.inputValue()) !== "I set my bottles on ") fail("the starter didn't fill the start");
@@ -385,14 +387,16 @@ await shot("using-your-set");
 // Share: the three Settings rows, the share screen, and the images it sends
 await page.goto(`${BASE}/settings`);
 await page.getByText("The man I am becoming").waitFor();
-for (const row of ["Share the app", "Share on social", "Save as an app on your phone"])
-  if ((await page.getByRole("button", { name: row, exact: true }).count()) !== 1)
-    fail(`Settings is missing the "${row}" row`);
+if ((await page.getByRole("button", { name: "Save as an app on your phone", exact: true }).count()) !== 1)
+  fail("Settings is missing Save as an app");
+for (const row of ["Share the app", "Share on social"])
+  if ((await page.getByRole("button", { name: row, exact: true }).count()) !== 0)
+    fail(`Settings still has "${row}" (removed 25 Nov)`);
 await page.getByRole("button", { name: "Save as an app on your phone" }).click();
 await page.getByText("SAVE IT AS AN APP").waitFor();
 await shot("settings-save-as-app", { full: false });
 await page.getByRole("button", { name: "GOT IT" }).click();
-await page.getByRole("button", { name: "Share on social", exact: true }).click();
+await page.goto(`${BASE}/share`);
 await page.getByRole("heading", { name: "SHARE THE APP" }).waitFor();
 for (const label of ["Messages", "WhatsApp", "Instagram", "Facebook", "X", "LinkedIn", "Email", "COPY"])
   if ((await page.getByText(label, { exact: true }).count()) < 1)

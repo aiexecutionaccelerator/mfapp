@@ -18,7 +18,6 @@ import pkg from "../../../../package.json";
 import { getMissionDef } from "@/content/missions";
 import { ConflictError, ValidationError } from "@/lib/data/types";
 import { PRODUCT } from "@/content/product";
-import { shareLink } from "@/lib/share";
 import { track } from "@/lib/analytics";
 import { store, useAppData } from "@/lib/data/store";
 import {
@@ -252,13 +251,6 @@ export default function SettingsPage() {
     }
   }
 
-  async function shareApp() {
-    const result = await shareLink();
-    track("app_shared", { via: "settings-link", result });
-    if (result === "copied") showToast("Link copied. Paste it anywhere.");
-    if (result === "failed") showToast("Couldn't share the link.");
-  }
-
   async function signOut() {
     try {
       await store.signOut();
@@ -403,12 +395,8 @@ export default function SettingsPage() {
         )}
       </Group>
 
-      <Group title="Share">
-        <LinkRow label="Share the app" onClick={() => void shareApp()} />
-        <LinkRow
-          label="Share on social"
-          onClick={() => router.push("/share")}
-        />
+      {/* Share rows removed (Antonio, 25 Nov); saving to the phone stays. */}
+      <Group title="On your phone">
         <SaveAsApp
           trigger={(open) => (
             <LinkRow label="Save as an app on your phone" onClick={open} />

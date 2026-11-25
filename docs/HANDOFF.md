@@ -48,6 +48,17 @@ Spec: `docs/specs/curriculum-v2-summary.md` (full text alongside). Review
 report: `docs/specs/review-report.md`. Results: `docs/specs/acceptance-results.md`.
 Where this section and older notes below disagree, this section wins.
 
+**Round 3 (25 Nov 2026, Antonio's third Loom, v3.6.0):** Missions 1 and
+4–10 reworded in his words (Mission 9 is Humble Yourself and Ask for Help);
+the idea box uses one font size; any keyboard-mash word refuses a record,
+even after a real starter (`notRealWords`, migration **0014**); a chip
+already in the box isn't added again and a bare starter is replaced
+(`withStarter`); an error hides the draft note; View My Personal Code waits
+for the first code line; sign-in goes straight to Missions/onboarding with a
+"Signing you in" state; Settings lost the two share rows; Save as an app is
+one tap where the browser offers an install prompt, and an arrowed two-step
+sheet on iPhone; Progress shows earned badges plus the next three.
+
 **Levels, streak and achievements (24 Nov 2026, simplified 25 Nov):** all in
 `src/lib/game.ts`, replayed from the records (nothing stored, no migration;
 removing a record removes its credit). Level = Missions completed (Mission 1

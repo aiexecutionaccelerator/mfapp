@@ -1,5 +1,6 @@
 "use client";
 
+import { codeLines } from "@/lib/curriculum";
 import { Achievements, LevelCard } from "@/components/game/Level";
 import { computeGame } from "@/lib/game";
 import { useRouter } from "next/navigation";
@@ -105,12 +106,15 @@ export default function ProgressPage() {
         />
       </div>
 
-      <Button
-        className="btn-shine mt-6 min-h-16 text-[17px]"
-        onClick={() => router.push("/personal-code")}
-      >
-        VIEW MY PERSONAL CODE
-      </Button>
+      {/* Only once there's a code to view: Mission 2 writes its first line. */}
+      {codeLines(missions).some((line) => line.value) && (
+        <Button
+          className="btn-shine mt-6 min-h-16 text-[17px]"
+          onClick={() => router.push("/personal-code")}
+        >
+          VIEW MY PERSONAL CODE
+        </Button>
+      )}
 
       <Achievements game={game} />
     </main>

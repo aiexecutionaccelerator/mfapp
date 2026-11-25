@@ -205,23 +205,25 @@ Titles
 22–30
 22 Take the Step You Are Avoiding23 Make Tomorrow Easier24 Protect Your Yes25 Remove One Recurring Distraction26 Recover Without Excuses27 Build a Practice You Can Keep28 Repeat What Worked29 Let Someone Support Your Standard30 Carry Your Momentum Forward
 
+Revision 2.4 (25 Nov 2026, Antonio's third Loom): Missions 1 and 4 to 10 reworded in his words for a 10th-grade reader. Mission 1's idea is one paragraph (no "worship", no Ryan Holiday) and always says "shrine to self-improvement"; Mission 9 is now Humble Yourself and Ask for Help; chips are positive and open-ended. Levels equal Missions completed; XP only after the course.
+
 Revision 2.3 (23 Nov 2026, Antonio's second Loom): Define Courage and Define Commitment follow Define Honor (3 and 4); Give Credit moves to 5 and Break the Avoidance Loop to 6, so each definition is put into action in 5, 6 and 7. The recommended fragrances rotate so no fragrance repeats two Missions in a row: 11 Courage, 10 Honor, 9 Commitment, opening on Courage and wearing Commitment first at Mission 4 (1, 10, 15, 16, 24, 25 and 30 changed value). Mission 1 is now Build Your Shrine, with one question; the three Define Missions use the onboarding definitions. One-Off Actions are now Activate, the center tab. The S.T.A.R. Act example and Record line were reworded (below).
 
 Revision 2.2 (19 Nov 2026): Missions 1 to 10 re-ordered so each value is defined and then acted on; Missions 1, 2, 4, 6, 11, 12, 13 and 16 rewritten. The Mission pages below are current; the overview above them predates the re-order. Each Mission also has an idea line, starters and, for 11 and 13, an intro: see src/content/missions.ts.
 
 Mission 1 Build Your Shrine
 Know your code  |  Courage  |  Action  |  About 2 minutes
-Hook Build a small shrine to self-improvement: one place that reminds you every day who you’re becoming.
+Hook Build a small shrine to self-improvement: one place that reminds you every day to become the man you know yourself to be.
 Select Courage starts in plain sight. A shrine says, every day, who you are working to become.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
-Choose one spot you pass every morning, away from heat and direct sunlight, and set your bottles there.
+Choose the spot for your shrine, preferably away from heat and direct sunlight, and place your set there.
 Choose one way to do it
 1. Put them beside your watch, where you get ready each morning.
 2. Put them on a shaded shelf in your bedroom.
 3. Put them on your dresser, next to your wallet and keys.
 Record
-Where is your shrine?
+Where is your shrine to self-improvement?
 Example 1 I set my bottles on the shelf beside my watch.
 Example 2 I cleared a spot on my dresser, next to my wallet and keys.
 Done when Your bottles are in place, somewhere you will see them every day.
@@ -271,7 +273,7 @@ Defines Courage straight after Honor. Creates code line 2; Mission 6 puts it int
 Revision rationale Previous title: Courage in Your Words. Names worthwhile discomfort and a behavior, with no encouragement to take reckless risks.
 Mission 4 Define Your Commitment
 Know your code  |  Commitment  |  Code  |  3–5 minutes
-Hook Decide what showing up looks like on an ordinary day.
+Hook Decide what showing up looks like.
 Select You fulfill your responsibilities through consistent effort and perseverance. Discipline · Consistency · Follow-Through.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
@@ -291,7 +293,7 @@ Defines Commitment, the third value, the first time the darker Commitment bottle
 Revision rationale Previous title: Commitment in Your Words. Builds returning after a miss into the definition of commitment.
 Mission 5 Give Credit Where Credit Is Due
 Know your code  |  Honor  |  Action  |  About 2 minutes
-Hook Notice what someone else has done for you, and tell them.
+Hook Notice what others have done for you and have the courage to recognize them.
 Select Honor means recognizing other people’s contributions and treating them with respect.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
@@ -310,11 +312,11 @@ Puts the Honor line from Mission 2 into action with an achievable act of respect
 Revision rationale Previous title: Prove It. Keeps the quick first win, but makes respect and giving credit its explicit purpose.
 Mission 6 Break the Avoidance Loop
 Know your code  |  Courage  |  Action  |  2–5 minutes
-Hook Break the task you're avoiding into one small, manageable step.
+Hook Break the task you’re avoiding into small, manageable steps.
 Select Courage means moving toward a worthwhile task while discomfort is still there.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
-Choose one useful task you have delayed because it feels uncomfortable. Take its first concrete step now. Keep the step small enough to finish in five minutes.
+Choose a task you’ve put off because it feels uncomfortable or too big. Break it into parts and take action on the first one.
 Choose one way to do it
 1. Send the straightforward email you have been putting off.
 2. Request an appointment you have delayed.
@@ -334,7 +336,7 @@ Hook Give yourself a reason to trust your own word.
 Select Commitment turns an intention into something another person—or you—can rely on.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
-Keep one small promise you have made to yourself or someone else. Choose one you can keep today, in less than five minutes.
+Choose a small promise you can keep today, preferably in less than five minutes.
 Choose one way to do it
 1. Return a call or message when you said you would.
 2. Finish a small responsibility you agreed to handle.
@@ -367,13 +369,13 @@ User note Choose an everyday situation that is safe to address. You do not need 
 Implementation and sequence
 Extends respect into accountability. Supplies a practical repair model for Missions 8, 11, and 26.
 Revision rationale Previous title: Honor Someone Who Matters. Replaces the second gratitude task with accountability and a practical repair.
-Mission 9 Ask Instead of Pretending
+Mission 9 Humble Yourself and Ask for Help
 Build self-trust  |  Courage  |  Action  |  2–5 minutes
-Hook You do not need every answer to take the next step.
+Hook Asking for help takes strength, not weakness.
 Select Courage includes letting yourself be a beginner and admitting what you need.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act
-Ask one clear question or request one specific piece of help with something that matters to you.
+Ask one clear question, or ask for one specific piece of help.
 Choose one way to do it
 1. Ask someone to explain a part of a task you do not understand.
 2. Request feedback on one specific piece of work.
@@ -388,7 +390,7 @@ Makes asking for help a legitimate expression of courage. Informs the Courage li
 Revision rationale Previous title: Act Before You Are Ready. Replaces another generic start with the distinct skill of asking for help or feedback.
 Mission 10 Remember Your Own Strength
 Build self-trust  |  Commitment  |  Reflection  |  3–5 minutes
-Hook When self-doubt sets in, remind yourself of something you've already done well.
+Hook When self-doubt sets in, remind yourself that you’re capable of overcoming it.
 Select Commitment means knowing you have kept going before, so you can keep going again.
 Trigger Spray the fragrance. Then begin the assigned task.
 Act

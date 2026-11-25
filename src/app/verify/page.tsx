@@ -6,6 +6,7 @@ import NavAction from "@/components/NavAction";
 import SaveAsApp from "@/components/SaveAsApp";
 import Button from "@/components/ui/Button";
 import Headline from "@/components/ui/Headline";
+import Spinner from "@/components/ui/Spinner";
 import { createClient } from "@/lib/supabase/client";
 
 const MIN_CODE_LENGTH = 6;
@@ -21,6 +22,7 @@ function VerifyInner() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState(0);
+  const [signedIn, setSignedIn] = useState(false);
   const submitting = useRef(false);
 
   useEffect(() => {
@@ -43,8 +45,16 @@ function VerifyInner() {
           type: "email",
         });
         if (verifyError) throw verifyError;
-        router.replace("/");
+        // Straight to the right screen (not via "/", whose server redirect
+        // showed a blank screen), with a signing-in state meanwhile.
+        setSignedIn(true);
+        const { data } = await supabase.auth.getUser();
+        const { data: profile } = data.user
+          ? await supabase.from("profiles").select("onboarding_completed").eq("id", data.user.id).maybeSingle()
+          : { data: null };
+        router.replace(profile?.onboarding_completed ? "/missions" : "/onboarding");
       } catch {
+        setSignedIn(false);
         setError("That code didn't work. Check it and try again, or resend.");
         setPending(false);
         submitting.current = false;
@@ -72,6 +82,15 @@ function VerifyInner() {
     if (otpError) {
       setError("Couldn't resend the code. Wait a moment and try again.");
     }
+  }
+
+  if (signedIn) {
+    return (
+      <main className="flex flex-1 flex-col items-center justify-center gap-4 text-ink-1" aria-live="polite">
+        <Spinner />
+        <p className="text-[15px]">Signing you in…</p>
+      </main>
+    );
   }
 
   return (

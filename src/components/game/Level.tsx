@@ -114,23 +114,22 @@ export function LevelCard({ game }: { game: GameState }) {
   );
 }
 
-/** Progress: every achievement, earned ones lit, hidden ones kept secret. */
+/**
+ * Progress: the achievements he has earned, then the next three to aim for.
+ * Not all 27 at once: a grid of locked badges confused people (Antonio,
+ * 25 Nov). Hidden ones appear only once earned.
+ */
 export function Achievements({ game }: { game: GameState }) {
   const [open, setOpen] = useState<AchievementDef | null>(null);
   const earned = open ? game.earnedById.get(open.id) : undefined;
   const count = game.earned.length;
-  // Earned first, in the order earned; then the rest in list order.
-  const ordered = [
-    ...game.earned.map((e) => e.def),
-    ...ACHIEVEMENTS.filter((a) => !game.earnedById.has(a.id)),
-  ];
+  const next = ACHIEVEMENTS.filter((a) => !a.hidden && !game.earnedById.has(a.id)).slice(0, 3);
+  const ordered = [...game.earned.map((e) => e.def), ...next];
   return (
     <section id="achievements" className="mt-10 scroll-mt-24">
       <div className="flex items-baseline justify-between">
         <p className="eyebrow text-ink-2">Achievements</p>
-        <p className="text-[13px] text-ink-2">
-          {count} of {ACHIEVEMENTS.length}
-        </p>
+        <p className="text-[13px] text-ink-2">{count} earned</p>
       </div>
       <ul className="mt-3 grid grid-cols-3 gap-2">
         {ordered.map((a) => {

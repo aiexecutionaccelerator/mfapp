@@ -366,40 +366,68 @@ export function unfinishedLine(text: string, starters: readonly string[] = []): 
   return null;
 }
 
+/* ---------- starters ---------- */
+
+/**
+ * The box after tapping a starter chip. A chip already in the box isn't
+ * added again, and a line that is only an unfinished starter is replaced
+ * rather than stacked (Antonio tapped one twice and spent 70 seconds
+ * deleting his way out, 25 Nov). Finished lines stay; the new starter goes
+ * on a new line after them. Complete-sentence options (the definitions)
+ * still add up, so he can keep all three.
+ */
+export function withStarter(text: string, starter: string, starters: readonly string[]): string {
+  const start = starter.trim();
+  const lines = text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+  if (lines.some((l) => l.toLowerCase().startsWith(start.toLowerCase().replace(/[….]+$/u, "")))) return text;
+  const bare = new Set(starters.filter((x) => !/[.!?]$/.test(x.trim())).map((x) => x.trim().toLowerCase()));
+  const kept = lines.filter((l) => !bare.has(l.replace(/[…\s]+$/u, "").toLowerCase()));
+  return kept.length ? `${kept.join("\n")}\n${starter}` : starter;
+}
+
 /* ---------- real words ---------- */
 
-const NO_VOWEL_OK = new Set(["hmm", "mrs", "shh", "nth", "pfft", "tsk", "brr", "psst"]);
+/** Short words with no vowel that people really type. */
+export const NO_VOWEL_OK = [
+  "hmm", "mrs", "shh", "nth", "pfft", "tsk", "brr", "psst", "thx", "pls", "plz",
+  "btw", "lbs", "hrs", "mph", "bbq", "dvd", "gps", "pdf", "nfl", "nba", "mlb",
+  "tbh", "smh", "ppl", "bc", "rn",
+] as const;
+const NO_VOWEL = new Set<string>(NO_VOWEL_OK);
+/** Letter pairs English words almost never contain: home-row mash. */
+export const MASH_PAIRS = /jh|hj|jf|fj|jg|gj|jk|kj|jq|qj|jx|xj|jz|zj|jv|vj|jw|wj|qg|gq|qk|kq|qx|xq|qz|zq|vq|qv|fq|qf|zx|xz|vx|xv|kz|zk|hx|xh|vf|fv/i;
 
 /** A word that reads as keyboard mash, not a word. */
 function isJunkWord(word: string): boolean {
+  if (NO_VOWEL.has(word.toLowerCase())) return false;
+  const runs = word.match(/[b-df-hj-np-tv-xz]{5,}/gi) ?? [];
   return (
-    (word.length >= 3 &&
-      word !== word.toUpperCase() &&
-      !/[aeiouy]/i.test(word) &&
-      !NO_VOWEL_OK.has(word.toLowerCase())) ||
-    /[b-df-hj-np-tv-xz]{6,}/i.test(word) ||
+    (word.length >= 3 && word !== word.toUpperCase() && !/[aeiouy]/i.test(word)) ||
+    MASH_PAIRS.test(word) ||
+    // Five consonants in a row only in real clusters (strengths, twelfths).
+    runs.some((run) => run.length >= 6 || !/th|ch|sh|ng/i.test(run)) ||
     /([a-z])\1\1\1/i.test(word)
   );
 }
 
 /**
  * Null when the answer reads as words; otherwise the message to show.
- * Refuses keyboard mash ("sdkjfghdfskjhg", "Fhj"; Antonio's Loom, 23 Nov):
- * an answer whose junk words make up 40% or more of its letters. A word is
- * junk with three or more letters, not all capitals (TV, CRM) and no vowel
- * (y counts), or six consonants in a row, or one letter four times running.
+ * Refuses keyboard mash anywhere in the answer, even after a real starter
+ * ("I told the truth when askjdfh", "sdgsdgf I placed my bottles"; Antonio's
+ * third Loom, 25 Nov). A word is junk with three or more letters, not all
+ * capitals (TV, CRM) and no vowel (y counts), or a letter pair English
+ * doesn't use (jh, kj, fj…), or five consonants in a row outside th/ch/sh/ng
+ * clusters, or one letter four times running.
  * `oneOff`: an Activate action also needs at least two words.
- * The server's `missions_real_words` trigger (migration 0013) holds the
- * same rule.
+ * The server's `not_real_words` (migration 0014) holds the same rule.
  */
 export function notRealWords(text: string, { oneOff = false } = {}): string | null {
   const words = (text.match(/[A-Za-z’']+/g) ?? [])
     .map((w) => w.replace(/[’']/g, ""))
     .filter(Boolean);
-  const total = words.reduce((n, w) => n + w.length, 0);
-  const junk = words.filter(isJunkWord).reduce((n, w) => n + w.length, 0);
-  if (total === 0 || junk * 10 >= total * 4)
-    return "That doesn't read as words yet. Write it in a sentence.";
+  const junk = words.find(isJunkWord);
+  if (words.length === 0) return "That doesn't read as words yet. Write it in a sentence.";
+  if (junk) return `“${junk}” isn't a word. Write it in a sentence.`;
   if (oneOff && words.length < 2) return "Say a little more about what you did.";
   return null;
 }
