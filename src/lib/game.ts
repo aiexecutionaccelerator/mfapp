@@ -2,31 +2,23 @@ import { CODE_LINES, isLive, kindOf } from "@/lib/curriculum";
 import type { Mission, Trigger } from "@/lib/data/types";
 
 /**
- * Levels, XP, the day streak and achievements (24 Nov 2026).
+ * Levels, the day streak and achievements (simplified 25 Nov 2026, after
+ * Antonio's third Loom: "It should coincide with the action").
+ *
+ * Your level is the number of Missions you've completed: Mission 1 done is
+ * level 1, all 30 is level 30. XP only starts after the course: each
+ * Activate action gives 100 XP, and each level from 30 to the cap of 50 costs
+ * more than the last (30 to 31 is one action, 49 to 50 about sixty; around
+ * 300 actions in all, so most of a year of daily use).
  *
  * Nothing here is stored. Everything is replayed from his records in the
- * order he completed them, so it can't drift, can't be gamed by editing a
- * counter, and every achievement knows the day it was earned. Removing a
- * record takes its XP away until it is restored.
- *
- * Level 30 lands with the course: the XP for level 30 is exactly what the
- * 30 Missions and the course achievements give together. Streaks, Activate
- * actions and the other achievements are extra, so most men will reach 30 a
- * little before Mission 30. The cap is 100. Each level costs more than the
- * last (the curve's exponent is 1.618); one Activate action a day with a
- * streak going reaches 100 in about a year after the course.
+ * order he completed them, so it can't drift and every achievement knows
+ * the day it was earned. Removing a record takes it away until restored.
  */
 
 /* ---------- rarity (after Path of Exile's item colours) ---------- */
 
 export type Rarity = "normal" | "magic" | "rare" | "unique";
-
-export const RARITY_XP: Record<Rarity, number> = {
-  normal: 25,
-  magic: 50,
-  rare: 100,
-  unique: 250,
-};
 
 export const RARITY_LABEL: Record<Rarity, string> = {
   normal: "Common",
@@ -34,15 +26,6 @@ export const RARITY_LABEL: Record<Rarity, string> = {
   rare: "Rare",
   unique: "Unique",
 };
-
-/* ---------- XP sources ---------- */
-
-export const MISSION_XP = 100;
-export const ACTIVATE_XP = 30;
-/** Activate actions past this many in one day still count as proof, not XP. */
-export const ACTIVATE_XP_PER_DAY = 3;
-/** Each day of a streak after the first adds 2 XP to that day, up to 20. */
-const streakBonus = (streak: number) => Math.min(Math.max(streak - 1, 0), 10) * 2;
 
 /* ---------- achievements ---------- */
 
@@ -60,9 +43,9 @@ export interface AchievementDef {
   rarity: Rarity;
   glyph: Glyph;
   hidden?: boolean;
-  /** Part of finishing the course: counted into the level-30 line. */
+  /** Part of finishing the course. */
   course?: boolean;
-  /** Earned by reaching a level: a badge only, no XP (no feedback loop). */
+  /** Earned by reaching a level. */
   level?: number;
 }
 
@@ -98,50 +81,32 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   // Levels
   { id: "awakened", name: "Awakened", how: "Reach level 10.", rarity: "magic", glyph: "eye", level: 10 },
   { id: "exemplar", name: "Exemplar", how: "Reach level 30.", rarity: "rare", glyph: "star", level: 30 },
-  { id: "exalted", name: "Exalted", how: "Reach level 50.", rarity: "unique", glyph: "star", level: 50 },
-  { id: "ascendant", name: "Ascendant", how: "Reach level 100.", rarity: "unique", glyph: "summit", level: 100 },
+  { id: "exalted", name: "Exalted", how: "Reach level 40.", rarity: "unique", glyph: "star", level: 40 },
+  { id: "ascendant", name: "Ascendant", how: "Reach level 50, the top level.", rarity: "unique", glyph: "summit", level: 50 },
 ];
-
-const xpOf = (a: AchievementDef) => (a.level ? 0 : RARITY_XP[a.rarity]);
 
 /* ---------- levels ---------- */
 
-export const LEVEL_CAP = 100;
+export const LEVEL_CAP = 50;
 export const COURSE_LEVEL = 30;
-const CURVE = 1.618;
+/** XP for each Activate action logged after the course. */
+export const ACTIVATE_XP = 100;
+const GROWTH = 1.24;
 
-/** XP that finishing the course gives: the level-30 line. */
-export const COURSE_XP =
-  30 * MISSION_XP + ACHIEVEMENTS.filter((a) => a.course).reduce((n, a) => n + xpOf(a), 0);
-
-/** Total XP needed to reach a level (level 1 = 0). */
-export function xpForLevel(level: number): number {
-  const l = Math.min(Math.max(level, 1), LEVEL_CAP);
-  if (l === COURSE_LEVEL) return COURSE_XP;
-  return Math.round(COURSE_XP * Math.pow((l - 1) / (COURSE_LEVEL - 1), CURVE));
+/** XP to go from `level` to `level + 1`, for levels 30 to 49. */
+export function xpToNext(level: number): number {
+  return Math.round((ACTIVATE_XP * Math.pow(GROWTH, level - COURSE_LEVEL)) / 100) * 100;
 }
 
-export function levelForXp(xp: number): number {
-  let level = 1;
-  while (level < LEVEL_CAP && xp >= xpForLevel(level + 1)) level += 1;
-  return level;
-}
-
-/** A name for each band of ten levels, shown beside the number. */
-export function titleForLevel(level: number): string {
-  const titles = [
-    "Initiate", // 1–9
-    "Seeker", // 10–19
-    "Warden", // 20–29
-    "Exemplar", // 30–39
-    "Vanguard", // 40–49
-    "Exalted", // 50–59
-    "Paragon", // 60–69
-    "Sovereign", // 70–79
-    "Mythic", // 80–89
-    "Eternal", // 90–99
-  ];
-  return level >= LEVEL_CAP ? "Ascendant" : titles[Math.floor(level / 10)];
+/** Where post-course XP puts him: level, and XP into / needed for the next. */
+function levelFromXp(xp: number) {
+  let level = COURSE_LEVEL;
+  let left = xp;
+  while (level < LEVEL_CAP && left >= xpToNext(level)) {
+    left -= xpToNext(level);
+    level += 1;
+  }
+  return { level, into: left, need: level < LEVEL_CAP ? xpToNext(level) : 0 };
 }
 
 /* ---------- the replay ---------- */
@@ -152,12 +117,11 @@ export interface Earned {
 }
 
 export interface GameState {
-  xp: number;
+  /** Missions completed (0–30); after the course, from XP, up to 50. */
   level: number;
-  title: string;
-  /** XP into this level, and the size of this level. */
-  intoLevel: number;
-  levelSize: number;
+  missionsDone: number;
+  /** After the course: total XP, XP into this level, XP this level needs. Null before. */
+  xp: { total: number; into: number; need: number } | null;
   /** Consecutive days with at least one completed record, ending today or yesterday. */
   streak: number;
   /** True when today already counts. */
@@ -179,13 +143,13 @@ export function computeGame(missions: Mission[], now: Date = new Date()): GameSt
     .filter((m) => isLive(m) && m.completed_at)
     .sort((a, b) => new Date(a.completed_at as string).getTime() - new Date(b.completed_at as string).getTime());
 
-  let xp = 0;
   const earned: Earned[] = [];
   const has = new Set<string>();
   const done = new Set<number>();
   const actions: Record<Trigger, number> = { honor: 0, courage: 0, commitment: 0 };
   let ignites = 0;
-  const ignitesByDay = new Map<string, number>();
+  let xp = 0;
+  const levelNow = () => (done.size < COURSE_LEVEL ? done.size : levelFromXp(xp).level);
   let streak = 0;
   let bestStreak = 0;
   let lastDay: string | null = null;
@@ -195,7 +159,6 @@ export function computeGame(missions: Mission[], now: Date = new Date()): GameSt
     const def = ACHIEVEMENTS.find((a) => a.id === id) as AchievementDef;
     has.add(id);
     earned.push({ def, at });
-    xp += xpOf(def);
   };
   const all = (from: number, to: number) => {
     for (let n = from; n <= to; n += 1) if (!done.has(n)) return false;
@@ -206,13 +169,12 @@ export function computeGame(missions: Mission[], now: Date = new Date()): GameSt
     const at = r.completed_at as string;
     const day = localDay(at);
 
-    // The streak, and the XP it adds on the first record of each day.
+    // The streak: one step per day with at least one record.
     if (day !== lastDay) {
       const gap = lastDay === null ? 1 : dayNumber(day) - dayNumber(lastDay);
       if (lastDay !== null && gap >= 4) earn("second-wind", at);
       streak = gap === 1 ? streak + 1 : 1;
       bestStreak = Math.max(bestStreak, streak);
-      xp += streakBonus(streak);
       lastDay = day;
       if (streak >= 3) earn("kindling", at);
       if (streak >= 7) earn("steady-flame", at);
@@ -222,15 +184,10 @@ export function computeGame(missions: Mission[], now: Date = new Date()): GameSt
 
     const n = r.mission_number;
     if (n !== null) {
-      if (!done.has(n)) {
-        done.add(n);
-        xp += MISSION_XP;
-      }
+      done.add(n);
     } else {
       ignites += 1;
-      const today = (ignitesByDay.get(day) ?? 0) + 1;
-      ignitesByDay.set(day, today);
-      if (today <= ACTIVATE_XP_PER_DAY) xp += ACTIVATE_XP;
+      if (done.size >= COURSE_LEVEL) xp += ACTIVATE_XP;
       earn("strike-the-flint", at);
       if (ignites >= 25) earn("wildfire", at);
       if (ignites >= 100) earn("a-hundred-fires", at);
@@ -257,8 +214,8 @@ export function computeGame(missions: Mission[], now: Date = new Date()): GameSt
     if (CODE_LINES.every((l) => done.has(l.number))) earn("codex", at);
     if (all(1, 30)) earn("the-thirty", at);
 
-    // Level badges: earned the moment the XP crosses the line.
-    const level = levelForXp(xp);
+    // Level badges: earned the moment the level is reached.
+    const level = levelNow();
     for (const a of ACHIEVEMENTS) if (a.level && level >= a.level) earn(a.id, at);
   }
 
@@ -267,15 +224,11 @@ export function computeGame(missions: Mission[], now: Date = new Date()): GameSt
   const sinceLast = lastDay ? dayNumber(today) - dayNumber(lastDay) : Infinity;
   const current = sinceLast <= 1 ? streak : 0;
 
-  const level = levelForXp(xp);
-  const floor = xpForLevel(level);
-  const next = level >= LEVEL_CAP ? floor : xpForLevel(level + 1);
+  const level = levelNow();
   return {
-    xp,
     level,
-    title: titleForLevel(level),
-    intoLevel: xp - floor,
-    levelSize: next - floor,
+    missionsDone: done.size,
+    xp: done.size < COURSE_LEVEL ? null : { total: xp, ...(({ into, need }) => ({ into, need }))(levelFromXp(xp)) },
     streak: current,
     streakToday: sinceLast === 0,
     bestStreak,
@@ -284,12 +237,12 @@ export function computeGame(missions: Mission[], now: Date = new Date()): GameSt
   };
 }
 
-/** What one save added: XP, a level-up, and the achievements it unlocked. */
+/** What one save added: XP (after the course), a level-up, and the achievements it unlocked. */
 export function gainFrom(missions: Mission[], saved: Mission) {
   const before = computeGame(missions.filter((m) => m.id !== saved.id));
   const after = computeGame(missions.some((m) => m.id === saved.id) ? missions : [...missions, saved]);
   return {
-    xp: after.xp - before.xp,
+    xp: after.xp && before.xp ? after.xp.total - before.xp.total : 0,
     levelUp: after.level > before.level ? after.level : null,
     unlocked: after.earned.filter((e) => !before.earnedById.has(e.def.id)).map((e) => e.def),
     after,

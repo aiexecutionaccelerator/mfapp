@@ -137,7 +137,7 @@ export default function MissionListPage() {
       <div className="flex items-center justify-between gap-2">
         <Wordmark />
         {/* The level, always on top of home (24 Nov); taps through to Progress. */}
-        <LevelChip game={computeGame(missions)} />
+        {stats.missionsCompleted > 0 && <LevelChip game={computeGame(missions)} />}
       </div>
 
       <Headline className="mt-6">YOUR 30-DAY MISSION</Headline>

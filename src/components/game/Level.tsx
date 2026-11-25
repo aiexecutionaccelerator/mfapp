@@ -8,8 +8,8 @@ import Sheet from "@/components/ui/Sheet";
 import {
   ACHIEVEMENTS,
   LEVEL_CAP,
+  COURSE_LEVEL,
   RARITY_LABEL,
-  RARITY_XP,
   type AchievementDef,
   type GameState,
 } from "@/lib/game";
@@ -36,9 +36,14 @@ export function LevelHex({ level, size = 40 }: { level: number; size?: number })
   );
 }
 
-/** A thin gold bar: how far into this level. */
-export function XpBar({ game, className }: { game: GameState; className?: string }) {
-  const pct = game.level >= LEVEL_CAP ? 100 : Math.round((game.intoLevel / game.levelSize) * 100);
+/** A thin gold bar: Missions done out of 30, then progress to the next level. */
+export function LevelBar({ game, className }: { game: GameState; className?: string }) {
+  const pct =
+    game.level >= LEVEL_CAP
+      ? 100
+      : game.xp === null
+        ? Math.round((game.missionsDone / COURSE_LEVEL) * 100)
+        : Math.round((game.xp.into / game.xp.need) * 100);
   return (
     <span className={`block h-1.5 overflow-hidden rounded-full bg-[rgba(245,241,232,.1)] ${className ?? ""}`}>
       <span
@@ -54,13 +59,13 @@ export function LevelChip({ game }: { game: GameState }) {
   return (
     <Link
       href="/progress#level"
-      aria-label={`Level ${game.level}, ${game.title}. ${game.streak}-day streak. Open your progress.`}
+      aria-label={`Level ${game.level}. ${game.streak}-day streak. Open your progress.`}
       className="glass press flex shrink-0 items-center gap-2 rounded-full py-1 pr-3 pl-1"
     >
       <LevelHex level={game.level} size={30} />
       <span className="flex flex-col gap-1">
-        <span className="eyebrow leading-none text-gold-300">LV {game.level}</span>
-        <XpBar game={game} className="w-12" />
+        <span className="eyebrow leading-none text-gold-300">LEVEL {game.level}</span>
+        <LevelBar game={game} className="w-14" />
       </span>
       {game.streak > 0 && (
         <span className="ml-1 flex items-center gap-0.5 text-[13px] font-semibold text-ink-0">
@@ -74,18 +79,19 @@ export function LevelChip({ game }: { game: GameState }) {
 
 /** Progress: the level card. */
 export function LevelCard({ game }: { game: GameState }) {
-  const toNext = game.levelSize - game.intoLevel;
   return (
     <section id="level" className="glass mt-8 scroll-mt-24 rounded-[18px] p-5">
       <div className="flex items-center gap-4">
         <LevelHex level={game.level} size={64} />
         <div className="min-w-0 flex-1">
-          <p className="eyebrow text-gold-300">Level {game.level} · {game.title}</p>
-          <XpBar game={game} className="mt-2.5" />
+          <p className="eyebrow text-gold-300">Level {game.level}</p>
+          <LevelBar game={game} className="mt-2.5" />
           <p className="mt-2 text-[13px] text-ink-2">
             {game.level >= LEVEL_CAP
-              ? `${game.xp.toLocaleString()} XP. The top level.`
-              : `${game.xp.toLocaleString()} XP · ${toNext.toLocaleString()} to level ${game.level + 1}`}
+              ? "The top level."
+              : game.xp === null
+                ? `${game.missionsDone} of ${COURSE_LEVEL} Missions. Each Mission you complete is one level.`
+                : `${game.xp.into.toLocaleString()} / ${game.xp.need.toLocaleString()} XP to level ${game.level + 1}. Each Activate action is 100 XP.`}
           </p>
         </div>
       </div>
@@ -154,7 +160,6 @@ export function Achievements({ game }: { game: GameState }) {
             <Badge rarity={open.rarity} glyph={open.glyph} earned={Boolean(earned)} hidden={open.hidden} size={96} />
             <p className="eyebrow mt-4" style={{ color: RARITY_STYLE[open.rarity].text }}>
               {RARITY_LABEL[open.rarity]}
-              {open.level ? "" : ` · ${RARITY_XP[open.rarity]} XP`}
             </p>
             <p className="mt-3 text-[17px] leading-snug text-ink-0">
               {open.hidden && !earned ? "Keep going. You'll know it when you earn it." : open.how}
@@ -169,22 +174,20 @@ export function Achievements({ game }: { game: GameState }) {
   );
 }
 
-/** Under a success screen: the XP the save earned, any level-up, any badges. */
+/** Under a success screen: the new level, and any achievements unlocked. */
 export function GainSummary({
   gain,
 }: {
   gain: { xp: number; levelUp: number | null; unlocked: AchievementDef[]; after: GameState };
 }) {
-  if (gain.xp <= 0 && !gain.unlocked.length) return null;
+  if (!gain.xp && !gain.levelUp && !gain.unlocked.length) return null;
   return (
     <div className="rise-in mt-6 flex flex-col items-center gap-3 text-center" style={{ animationDelay: "250ms" }}>
-      <p className="font-display text-[22px] leading-none text-gold-300">+{gain.xp} XP</p>
-      {gain.levelUp ? (
+      {gain.xp > 0 && <p className="font-display text-[22px] leading-none text-gold-300">+{gain.xp} XP</p>}
+      {gain.levelUp && (
         <p className="flex items-center gap-2 text-[15px] text-ink-0">
-          <LevelHex level={gain.levelUp} size={28} /> Level {gain.levelUp} · {gain.after.title}
+          <LevelHex level={gain.levelUp} size={28} /> You reached level {gain.levelUp}
         </p>
-      ) : (
-        <XpBar game={gain.after} className="w-40" />
       )}
       {gain.unlocked.map((a) => (
         <Link
